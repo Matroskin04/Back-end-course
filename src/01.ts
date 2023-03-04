@@ -8,7 +8,7 @@ function getNumber(str: string) {
 
         resultArr.push( parseInt( str.slice(i) ) );
         i += parseInt( str.slice(i) ).toString().length - 1;
-    } 
+    }
     return resultArr
 }
 getNumber('123fdf12vsd')
