@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express'
 import { productsRouter } from './routers/products-router';
-import { runDb } from './repositories/db';
 
 const app = express()
 const port = process.env.PORT || 5000
