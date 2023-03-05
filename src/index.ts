@@ -1,57 +1,60 @@
 import express, {Request, Response} from 'express'
+import bodyParser from "body-parser";
+
 const app = express()
 const port = 3000
 
-type videoType = {
-    "id": number,
-    "title": string,
-    "author": string,
-    "canBeDownloaded": boolean,
-    "minAgeRestriction": any,
-    "createdAt": string,
-    "publicationDate": string,
-    "availableResolutions": Array<string>
-};
-type allVideosType = Array<videoType>;
-type errorArrType = [{"message": string, "field": string}];
-type errorType = {"errorsMessages": errorArrType};
+const students = [{id: 1, name: 'Vlad'}, {id: 2, name: 'Nikita'}]
 
-let allVideos: allVideosType= []
-const createdAt = new Date().toISOString();
-const publicationDate = new Date(Date.now() + ( 3600 * 1000 * 24)).toISOString();
-const availableResolutions = [ 'P144', 'P240', 'P360', 'P480',
-                                'P720', 'P1080', 'P1440', 'P2160' ]
 
-app.get('/hometask-01/videos', (req: Request, res: Response) => {
-    res.status(200).send(allVideos)
+const parserMiddeleware = bodyParser({})
+app.use(parserMiddeleware)
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello World!')
 })
-app.post('/hometask-01/videos', (req: Request, res: Response) => {
-    if (req.body.availableResolutions.each((p: string) => availableResolutions.includes(p))
-        && req.body.title < 41 && req.body.author.length < 21) {
-        const newVideo: videoType = {
-            "id": allVideos[allVideos.length - 1]?.id + 1 || 0,
-            "title": req.body.title,
-            "author": req.body.author,
-            "canBeDownloaded": true,
-            "minAgeRestriction": 5,
-            "createdAt": createdAt,
-            "publicationDate": publicationDate,
-            "availableResolutions": req.body.availableResolutions
-        }
-        res.status(201).send(newVideo)
+app.get('/students', (req: Request, res: Response) => {
+    if (req.query.name) {
+        let partName = req.query.name.toString();
+        res.send(students.filter(p => p.name.indexOf(partName) !== -1))
     } else {
-        let error: errorType = {
-            "errorsMessages": [
-                {
-                    "message": "string",
-                    "field": "string"
-                }
-            ]
+        res.send(students)
+    }
+})
+app.get('/students/:currentStudent', (req: Request, res: Response) => {
+    let student = students.find(p => p.name === req.params.currentStudent)
+    if (!student) res.send(404)
+    else res.send(student)
+})
+app.delete('/students/:id', (req: Request, res: Response) => {
+    for (let i = 0; i < students.length; i++) {
+        if (students[i].id === +req.params.id) {
+            students.splice(i,1);
+            res.send(204);
+            return;
         }
-        res.status(400).send(error)
+    }
+    res.send(404)
+})
+app.post('/students', (req: Request, res: Response) => {
+    const newStudent = {
+        id: +(new Date()),
+        name: req.body.name
+    }
+    students.push(newStudent)
+    res.status(201).send(newStudent)
+})
+app.put('/students/:elem', (req: Request, res: Response) => {
+    let elem = +req.params.elem
+    if (elem < students.length) {
+        students[elem].name = req.body.name
+        res.status(200).send(students[elem])
+    } else {
+        res.send(404)
     }
 })
 
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
-})
+}) 
