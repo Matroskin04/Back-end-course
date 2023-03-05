@@ -1,7 +1,7 @@
 {
   "name": "lesson",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "src/index1.ts",
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
