@@ -1,8 +1,15 @@
 import express, {Request, Response} from 'express'
+import bodyParser from "body-parser";
+
 const app = express()
 const port = 3000
 
 const students = [{id: 1, name: 'Vlad'}, {id: 2, name: 'Nikita'}]
+
+
+const parserMiddeleware = bodyParser({})
+app.use(parserMiddeleware)
+
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')
 })
@@ -36,6 +43,15 @@ app.post('/students', (req: Request, res: Response) => {
     }
     students.push(newStudent)
     res.status(201).send(newStudent)
+})
+app.put('/students/:elem', (req: Request, res: Response) => {
+    let elem = +req.params.elem
+    if (elem < students.length) {
+        students[elem].name = req.body.name
+        res.status(200).send(students[elem])
+    } else {
+        res.send(404)
+    }
 })
 
 
