@@ -57,11 +57,11 @@ const checkError = (body: any) => {
                 }
         )
     }
-    if (typeof body.minAgeRestriction !== 'boolean'
-        && typeof body.minAgeRestriction !== 'undefined') {
+    if (typeof body.canBeDownloaded !== 'boolean'
+        && typeof body.canBeDownloaded !== 'undefined') {
         arrErrors.push({
                 message: 'The type must be boolean',
-                field: 'minAgeRestriction'
+                field: 'canBeDownloaded'
             }
         )
     }
