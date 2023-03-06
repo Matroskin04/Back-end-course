@@ -85,6 +85,12 @@ const checkError = (body: any) => {
                     field: 'minAgeRestriction'
                 }
         )
+    } if (!isNaN(body.publicationDate)) {
+        arrErrors.push({
+                message: 'publicationDate must be Date',
+                field: 'publicationDate'
+            }
+        )
     }
 }
 app.get('/', (req: Request, res: Response) => {
