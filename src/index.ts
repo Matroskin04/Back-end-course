@@ -9,7 +9,7 @@ type videoType = {
     "title": string,
     "author": string,
     "canBeDownloaded": boolean,
-    "minAgeRestriction": any,
+    "minAgeRestriction": number,
     "createdAt": string,
     "publicationDate": string,
     "availableResolutions": Array<string>
@@ -120,6 +120,16 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
         res.status(201).send(newVideo);
     }
 })
+app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
+    for (let key of allVideos) {
+        if (key.id === +req.params.id) {
+            res.status(200).send(key);
+            return;
+        }
+    }
+    res.send(400)
+})
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
