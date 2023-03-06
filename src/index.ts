@@ -19,8 +19,8 @@ type errorObjType = { message: string, field: string };
 type errorType = { errorsMessages: Array<errorObjType> };
 
 let allVideos: allVideosType = [];
-let singleError: Array<errorObjType> = [];
-let allErrors: errorType = {errorsMessages: singleError};
+let arrErrors: Array<errorObjType> = [];
+let allErrors: errorType = {errorsMessages: arrErrors};
 const createdAt = new Date().toISOString();
 const publicationDate = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const availableResolutions = ['P144', 'P240', 'P360', 'P480',
@@ -31,40 +31,40 @@ app.use(parserMiddeleware)
 
 const checkError = (req: Request) => {
     if (typeof req.body.title !== 'string') {
-        singleError.push({
+        arrErrors.push({
                 message: 'The type must be string',
                 field: 'title'
             }
         )
     } else if (req.body.title.length > 40) {
-        singleError.push({
+        arrErrors.push({
                 message: 'The string must be less than 40 characters',
                 field: 'title'
             }
         )
     }
     if (typeof req.body.author !== 'string') {
-        singleError.push({
+        arrErrors.push({
                 message: 'The type must be string',
                 field: 'author'
             }
         )
     } else if (req.body.author.length > 20) {
-        singleError.push({
+        arrErrors.push({
                     message: 'The string must be less than 20 characters',
                     field: 'author'
                 }
         )
     }
     if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
-        singleError.push({
+        arrErrors.push({
                     message: 'availableResolutions must contain variants from suggested',
                     field: 'availableResolutions'
                 }
         )
     }
     if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
-        singleError.push({
+        arrErrors.push({
                     message: 'Length must be from 1 to 18 characters',
                     field: 'minAgeRestriction'
                 }
@@ -79,9 +79,9 @@ app.get('/hometask-01/videos', (req: Request, res: Response) => {
 })
 app.post('/hometask-01/videos', (req: Request, res: Response) => {
     checkError(req)
-    if (singleError.length > 0) {
+    if (arrErrors.length > 0) {
         res.status(400).send(allErrors);
-        singleError = [];
+        arrErrors = [];
         return;
     } else {
         const newVideo: videoType = {
@@ -111,9 +111,9 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
             checkError(req)
-            if (singleError.length > 0) {
+            if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
-                singleError = [];
+                arrErrors = [];
                 return;
             } else {
             key.title = req.body.title ?? key.title;
