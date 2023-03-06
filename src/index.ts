@@ -129,87 +129,69 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
             if (req.body.title.length > 40) {
-                let currentError: errorType = {
+                allErrors.push({
                     "errorsMessages": [
                         {
                             "message": 'The string must be less than 40 characters',
                             "field": 'title'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (typeof req.body.title !== 'string') {
-                let currentError: errorType = {
+                })
+            }
+            if (typeof req.body.title !== 'string') {
+                allErrors.push({
                     "errorsMessages": [
                         {
                             "message": 'The type must be string',
                             "field": 'title'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (req.body.author.length > 20) {
-                let currentError: errorType = {
+                })
+            }
+            if (req.body.author.length > 20) {
+                allErrors.push({
                     "errorsMessages": [
                         {
                             "message": 'The string must be less than 20 characters',
                             "field": 'author'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (typeof req.body.author !== 'string') {
-                let currentError: errorType = {
+                })
+            }
+            if (typeof req.body.author !== 'string') {
+                allErrors.push({
                     "errorsMessages": [
                         {
                             "message": 'The type must be string',
                             "field": 'author'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
-                let currentError: errorType = {
+                })
+            }
+            if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
+                allErrors.push({
                     "errorsMessages": [
                         {
                             "message": 'availableResolutions must contain variants from suggested',
                             "field": 'availableResolutions'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (typeof req.body.minAgeRestriction !== 'number'
-                        || req.body.minAgeRestriction > 18
-                        || req.body.minAgeRestriction < 1) {
-                let currentError: errorType = {
+                })
+            }
+            if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
+                allErrors.push({
                     "errorsMessages": [
                         {
-                            "message": 'Number must be from 1 to 18 characters',
+                            "message": 'Length must be from 1 to 18 characters',
                             "field": 'minAgeRestriction'
                         }
                     ]
-                };
-                res.status(400).send(currentError)
-            } else if (typeof req.body.canBeDownloaded !== 'boolean') {
-                let currentError: errorType = {
-                    "errorsMessages": [
-                        {
-                            "message": 'canBeDownloaded must be boolean',
-                            "field": 'canBeDownloaded'
-                        }
-                    ]
-                };
-                res.status(400).send(currentError)
-            } else if (typeof req.body.publicationDate !== 'string') {
-                let currentError: errorType = {
-                    "errorsMessages": [
-                        {
-                            "message": 'publicationDate must be string',
-                            "field": 'publicationDate'
-                        }
-                    ]
-                };
-                res.status(400).send(currentError)
+                })
+            }
+            if (allErrors.length > 0) {
+                res.status(400).send(allErrors);
+                allErrors = [];
+                return;
             } else {
             key.title = req.body.title ?? key.title;
             key.author = req.body.author ?? key.author;
