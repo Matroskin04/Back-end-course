@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = 3000
+const port = 3004
 
 type videoType = {
     "id": number,
@@ -31,30 +31,28 @@ const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 
 const checkError = (req: Request) => {
-    if (req.body.title?.length > 40) {
+    if (typeof req.body.title !== 'string') {
+        singleError.push({
+                message: 'The type must be string',
+                field: 'title'
+            }
+        )
+    } else if (req.body.title.length > 40) {
         singleError.push({
                 message: 'The string must be less than 40 characters',
                 field: 'title'
             }
         )
     }
-    if (typeof req.body.title !== 'string') {
-        singleError.push({
-                    message: 'The type must be string',
-                    field: 'title'
-                }
-        )
-    }
-    if (req.body.author?.length > 20) {
-        singleError.push({
-                    message: 'The string must be less than 20 characters',
-                    field: 'author'
-                }
-        )
-    }
     if (typeof req.body.author !== 'string') {
         singleError.push({
-                    message: 'The type must be string',
+                message: 'The type must be string',
+                field: 'author'
+            }
+        )
+    } else if (req.body.author.length > 20) {
+        singleError.push({
+                    message: 'The string must be less than 20 characters',
                     field: 'author'
                 }
         )
