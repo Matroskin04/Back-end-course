@@ -82,6 +82,7 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
     checkError(req)
     if (arrErrors.length > 0) {
         res.status(400).send(allErrors);
+        return;
     } else {
         const newVideo: videoType = {
             "id": allVideos.at(-1) ? allVideos[allVideos.length - 1].id + 1 : 0,
@@ -107,7 +108,6 @@ app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
     res.send(404)
 })
 app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
-    arrErrors = [];
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
             checkError(req)
