@@ -88,7 +88,7 @@ const checkError = (body: any) => {
     }
 }
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello")
+    res.send("Hello!!")
 })
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
@@ -129,7 +129,7 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
             checkError(req.body)
             if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
-                arrErrors = [];
+                arrErrors.length = 0;
                 return
             } else {
             key.title = req.body.title ?? key.title;
