@@ -88,7 +88,7 @@ const checkError = (body: any) => {
     }
 }
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello!!")
+    res.send("Hello")
 })
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
