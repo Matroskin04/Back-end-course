@@ -122,7 +122,7 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
             checkError(req.body)
             if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
-                arrErrors.length = 0;
+                arrErrors.splice(0, arrErrors.length);
                 return;
             } else {
             key.title = req.body.title ?? key.title;
