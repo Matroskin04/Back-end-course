@@ -57,7 +57,8 @@ const checkError = (body: any) => {
                 }
         )
     }
-    if (typeof body.canBeDownloaded !== 'boolean') {
+    if (typeof body.canBeDownloaded !== 'boolean'
+        && typeof body.canBeDownloaded !== 'undefined') {
         arrErrors.push({
                 message: 'The type must be boolean',
                 field: 'canBeDownloaded'
