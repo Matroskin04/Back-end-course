@@ -30,7 +30,7 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480',
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello")
+    res.send("Hello!!!")
 })
 
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
@@ -99,6 +99,7 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
     }
     if (allErrors.length > 0) {
         res.status(400).send(allErrors);
+        allErrors = [];
         return;
     } else {
         const newVideo: videoType = {
