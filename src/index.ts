@@ -72,9 +72,16 @@ const checkError = (body: any) => {
                 }
         )
     }
-    if (body.minAgeRestriction?.length > 18 || body.minAgeRestriction?.length < 1) {
+    if (typeof body.minAgeRestriction !== 'number'
+        && typeof body.minAgeRestriction !== 'undefined') {
         arrErrors.push({
-                    message: 'Length must be from 1 to 18 characters',
+                message: 'minAgeRestriction must be number',
+                field: 'minAgeRestriction'
+            }
+        )
+    } else if (+body.minAgeRestriction > 18 || +body.minAgeRestriction < 1) {
+        arrErrors.push({
+                    message: 'Number must be from 1 to 18 characters',
                     field: 'minAgeRestriction'
                 }
         )
@@ -122,8 +129,8 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
             checkError(req.body)
             if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
-                arrErrors.splice(0, arrErrors.length);
-                return;
+                arrErrors = [];
+                return
             } else {
             key.title = req.body.title ?? key.title;
             key.author = req.body.author ?? key.author;
