@@ -28,7 +28,7 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480',
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello!")
+    res.send("Hello!!!")
 })
 
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
@@ -238,7 +238,7 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
 }
     res.send(404)
 })
-app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
+app.delete('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
             allVideos.splice(key.id, 1);
