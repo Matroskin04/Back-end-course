@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = 3002
+const port = 3001
 
 type videoType = {
     "id": number,
@@ -28,7 +28,7 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480',
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello!")
+    res.send("Hello!!!")
 })
 
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
@@ -204,8 +204,7 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
                     ]
                 };
                 res.status(400).send(currentError)
-            } else if (req.body.canBeDownloaded !== 'true'
-                    && req.body.canBeDownloaded !== 'false') {
+            } else if (typeof req.body.canBeDownloaded !== 'boolean') {
                 let currentError: errorType = {
                     "errorsMessages": [
                         {
@@ -219,8 +218,8 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
                 let currentError: errorType = {
                     "errorsMessages": [
                         {
-                            "message": 'canBeDownloaded must be boolean',
-                            "field": 'canBeDownloaded'
+                            "message": 'publicationDate must be string',
+                            "field": 'publicationDate'
                         }
                     ]
                 };
@@ -236,8 +235,8 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
             return;
         }
     }
-    res.send(404)
 }
+    res.send(404)
 })
 
 
