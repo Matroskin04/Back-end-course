@@ -18,10 +18,10 @@ type allVideosType = Array<videoType>;
 type errorObjType = { "message": string, "field": string };
 type errorArrType = Array<errorObjType>;
 type errorType = { "errorsMessages": errorArrType };
-type errorFinal = Array<errorType>;
 
 let allVideos: allVideosType = [];
-let allErrors: errorFinal= [];
+let singleError: errorArrType = [];
+let allErrors: errorType= {errorsMessages: singleError};
 const createdAt = new Date().toISOString();
 const publicationDate = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const availableResolutions = ['P144', 'P240', 'P360', 'P480',
@@ -32,77 +32,59 @@ app.use(parserMiddeleware)
 
 const checkError = (req: Request) => {
     if (req.body.title?.length > 40) {
-        allErrors.push({
-            "errorsMessages": [
-                {
-                    "message": 'The string must be less than 40 characters',
-                    "field": 'title'
-                }
-            ]
-        })
+        singleError.push({
+                "message": 'The string must be less than 40 characters',
+                "field": 'title'
+            }
+        )
     }
     if (typeof req.body.title !== 'string') {
-        allErrors.push({
-            "errorsMessages": [
-                {
+        singleError.push({
                     "message": 'The type must be string',
                     "field": 'title'
                 }
-            ]
-        })
+        )
     }
     if (req.body.author?.length > 20) {
-        allErrors.push({
-            "errorsMessages": [
-                {
+        singleError.push({
                     "message": 'The string must be less than 20 characters',
                     "field": 'author'
                 }
-            ]
-        })
+        )
     }
     if (typeof req.body.author !== 'string') {
-        allErrors.push({
-            "errorsMessages": [
-                {
+        singleError.push({
                     "message": 'The type must be string',
                     "field": 'author'
                 }
-            ]
-        })
+        )
     }
     if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
-        allErrors.push({
-            "errorsMessages": [
-                {
+        singleError.push({
                     "message": 'availableResolutions must contain variants from suggested',
                     "field": 'availableResolutions'
                 }
-            ]
-        })
+        )
     }
     if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
-        allErrors.push({
-            "errorsMessages": [
-                {
+        singleError.push({
                     "message": 'Length must be from 1 to 18 characters',
                     "field": 'minAgeRestriction'
                 }
-            ]
-        })
+        )
     }
 }
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello World!!!")
+    res.send("Hello!")
 })
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
 })
 app.post('/hometask-01/videos', (req: Request, res: Response) => {
     checkError(req)
-    if (allErrors.length > 0) {
+    if (singleError.length > 0) {
         res.status(400).send(allErrors);
-        allErrors = [];
+        singleError = [];
         return;
     } else {
         const newVideo: videoType = {
@@ -132,9 +114,9 @@ app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
             checkError(req)
-            if (allErrors.length > 0) {
+            if (singleError.length > 0) {
                 res.status(400).send(allErrors);
-                allErrors = [];
+                singleError = [];
                 return;
             } else {
             key.title = req.body.title ?? key.title;
