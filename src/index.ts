@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = 3002
+const port = 2342
 
 type videoType = {
     "id": number,
@@ -29,41 +29,46 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480',
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 
-const checkError = (req: Request) => {
-    if (typeof req.body.title !== 'string') {
+const checkError = (body: any) => {
+    if (typeof body.title !== 'string') {
+        console.log('title')
         arrErrors.push({
                 message: 'The type must be string',
                 field: 'title'
             }
         )
-    } else if (req.body.title.length > 40) {
+    } else if (body.title.length > 40) {
+        console.log('title')
         arrErrors.push({
                 message: 'The string must be less than 40 characters',
                 field: 'title'
             }
         )
     }
-    if (typeof req.body.author !== 'string') {
+    if (typeof body.author !== 'string') {
+        console.log('author')
         arrErrors.push({
                 message: 'The type must be string',
                 field: 'author'
             }
         )
-    } else if (req.body.author.length > 20) {
+    } else if (body.author.length > 20) {
+        console.log('author')
         arrErrors.push({
                     message: 'The string must be less than 20 characters',
                     field: 'author'
                 }
         )
     }
-    if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
+    if (!body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
+        console.log('availableResolutions')
         arrErrors.push({
                     message: 'availableResolutions must contain variants from suggested',
                     field: 'availableResolutions'
                 }
         )
     }
-    if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
+    if (body.minAgeRestriction?.length > 18 || body.minAgeRestriction?.length < 1) {
         arrErrors.push({
                     message: 'Length must be from 1 to 18 characters',
                     field: 'minAgeRestriction'
@@ -78,10 +83,10 @@ app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
 })
 app.post('/hometask-01/videos', (req: Request, res: Response) => {
-    checkError(req)
+    checkError(req.body);
     if (arrErrors.length > 0) {
         res.status(400).send(allErrors);
-        arrErrors = [];
+        arrErrors.length = 0;
         return;
     } else {
         const newVideo: videoType = {
@@ -110,7 +115,7 @@ app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
 app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
-            checkError(req)
+            checkError(req.body)
             if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
                 arrErrors = [];
