@@ -31,7 +31,7 @@ const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 
 const checkError = (req: Request) => {
-    if (req.body.title.length > 40) {
+    if (req.body.title?.length > 40) {
         allErrors.push({
             "errorsMessages": [
                 {
@@ -51,7 +51,7 @@ const checkError = (req: Request) => {
             ]
         })
     }
-    if (req.body.author.length > 20) {
+    if (req.body.author?.length > 20) {
         allErrors.push({
             "errorsMessages": [
                 {
@@ -126,7 +126,7 @@ app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
             return;
         }
     }
-    res.send(400)
+    res.send(404)
 })
 app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
