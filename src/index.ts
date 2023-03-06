@@ -161,14 +161,8 @@ app.delete('/hometask-01/videos/:id', (req: Request, res: Response) => {
     res.send(404)
 })
 app.delete('/hometask-01/testing/all-data', (req: Request, res: Response) => {
-    for (let key of allVideos) {
-        if (key.id === +req.params.id) {
-            allVideos.splice(key.id, 1);
-            res.send(204);
-            return;
-        }
-    }
-    res.send(404)
+    allVideos = [];
+    res.send(204)
 })
 
 
