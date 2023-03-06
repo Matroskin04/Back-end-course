@@ -33,43 +33,43 @@ app.use(parserMiddeleware)
 const checkError = (req: Request) => {
     if (req.body.title?.length > 40) {
         singleError.push({
-                "message": 'The string must be less than 40 characters',
-                "field": 'title'
+                message: 'The string must be less than 40 characters',
+                field: 'title'
             }
         )
     }
     if (typeof req.body.title !== 'string') {
         singleError.push({
-                    "message": 'The type must be string',
-                    "field": 'title'
+                    message: 'The type must be string',
+                    field: 'title'
                 }
         )
     }
     if (req.body.author?.length > 20) {
         singleError.push({
-                    "message": 'The string must be less than 20 characters',
-                    "field": 'author'
+                    message: 'The string must be less than 20 characters',
+                    field: 'author'
                 }
         )
     }
     if (typeof req.body.author !== 'string') {
         singleError.push({
-                    "message": 'The type must be string',
-                    "field": 'author'
+                    message: 'The type must be string',
+                    field: 'author'
                 }
         )
     }
     if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
         singleError.push({
-                    "message": 'availableResolutions must contain variants from suggested',
-                    "field": 'availableResolutions'
+                    message: 'availableResolutions must contain variants from suggested',
+                    field: 'availableResolutions'
                 }
         )
     }
     if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
         singleError.push({
-                    "message": 'Length must be from 1 to 18 characters',
-                    "field": 'minAgeRestriction'
+                    message: 'Length must be from 1 to 18 characters',
+                    field: 'minAgeRestriction'
                 }
         )
     }
