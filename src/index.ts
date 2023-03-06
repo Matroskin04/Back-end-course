@@ -97,10 +97,10 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
         res.status(400).send(currentError)
     } else {
         const newVideo: videoType = {
-            "id": allVideos[allVideos.length - 1]?.id + 1 || 0,
+            "id": allVideos[allVideos.length - 1]?.id + 1 ?? 0,
             "title": req.body.title,
             "author": req.body.author,
-            "canBeDownloaded": req.body.canBeDownloaded || true,
+            "canBeDownloaded": req.body.canBeDownloaded ?? true,
             "minAgeRestriction": req.body.minAgeRestriction || 5,
             "createdAt": createdAt,
             "publicationDate": publicationDate,
