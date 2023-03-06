@@ -97,7 +97,7 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
             "id": allVideos[allVideos.length - 1]?.id + 1 || 0,
             "title": req.body.title,
             "author": req.body.author,
-            "canBeDownloaded": true,
+            "canBeDownloaded": req.body.canBeDownloaded || true,
             "minAgeRestriction": 5,
             "createdAt": createdAt,
             "publicationDate": publicationDate,
