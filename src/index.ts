@@ -9,12 +9,12 @@ type videoType = {
     "title": string,
     "author": string,
     "canBeDownloaded": boolean,
-    "minAgeRestriction": any,
+    "minAgeRestriction": number | null,
     "createdAt": string,
     "publicationDate": string,
     "availableResolutions": Array<string>
 };
-/*type bodyType = {
+type bodyType = {
     "id"?: number,
     "title"?: string,
     "author"?: string,
@@ -23,7 +23,7 @@ type videoType = {
     "createdAt"?: string,
     "publicationDate"?: string,
     "availableResolutions"?: Array<string>
-};*/
+};
 type allVideosType = Array<videoType>;
 type errorObjType = { message: string, field: string };
 type errorType = { errorsMessages: Array<errorObjType> };
@@ -43,7 +43,7 @@ const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 
 
-const checkError = (body: any) => {  // тип длля body
+const checkError = (body: bodyType) => {  // тип длля body
     if (typeof body.title !== 'string') {
         arrErrors.push({
                 message: 'The type must be string',
@@ -78,7 +78,7 @@ const checkError = (body: any) => {  // тип длля body
             }
         )
     }
-    if (!body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
+    if (!body.availableResolutions?.every((p: string) => availableResolutions.includes(p))) {
         arrErrors.push({
                     message: 'availableResolutions must contain variants from suggested',
                     field: 'availableResolutions'
@@ -92,7 +92,7 @@ const checkError = (body: any) => {  // тип длля body
                 field: 'minAgeRestriction'
             }
         )
-    } else if (+body.minAgeRestriction > 18 || +body.minAgeRestriction < 1) {
+    } else if (+body.minAgeRestriction! > 18 || +body.minAgeRestriction! < 1) {
         arrErrors.push({
                     message: 'Number must be from 1 to 18 characters',
                     field: 'minAgeRestriction'
