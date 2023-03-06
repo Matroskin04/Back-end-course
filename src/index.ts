@@ -78,10 +78,10 @@ app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
 })
 app.post('/hometask-01/videos', (req: Request, res: Response) => {
-    arrErrors = [];
     checkError(req)
     if (arrErrors.length > 0) {
         res.status(400).send(allErrors);
+        arrErrors = [];
         return;
     } else {
         const newVideo: videoType = {
