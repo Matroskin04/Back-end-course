@@ -58,7 +58,7 @@ const checkError = (body: any) => {
         )
     }
     if (typeof body.minAgeRestriction !== 'boolean'
-        || typeof body.minAgeRestriction !== 'undefined') {
+        && typeof body.minAgeRestriction !== 'undefined') {
         arrErrors.push({
                 message: 'The type must be boolean',
                 field: 'minAgeRestriction'
