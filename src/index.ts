@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = 3002
+const port = 3001
 
 type videoType = {
     "id": number,
@@ -27,6 +27,9 @@ const availableResolutions = [ 'P144', 'P240', 'P360', 'P480',
 
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
+app.get('/', (req: Request, res: Response) => {
+    res.send("Hello W!")
+})
 
 app.get('/hometask-01/videos', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
@@ -97,8 +100,8 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
             "id": allVideos[allVideos.length - 1]?.id + 1 || 0,
             "title": req.body.title,
             "author": req.body.author,
-            "canBeDownloaded": req.body.canBeDownloaded || null,
-            "minAgeRestriction": 5,
+            "canBeDownloaded": req.body.canBeDownloaded || true,
+            "minAgeRestriction": req.body.minAgeRestriction || 5,
             "createdAt": createdAt,
             "publicationDate": publicationDate,
             "availableResolutions": req.body.availableResolutions
