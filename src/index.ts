@@ -38,7 +38,6 @@ const checkError = (body: any) => {
             }
         )
     } else if (body.title.length > 40) {
-        console.log('title')
         arrErrors.push({
                 message: 'The string must be less than 40 characters',
                 field: 'title'
@@ -46,22 +45,26 @@ const checkError = (body: any) => {
         )
     }
     if (typeof body.author !== 'string') {
-        console.log('author')
         arrErrors.push({
                 message: 'The type must be string',
                 field: 'author'
             }
         )
     } else if (body.author.length > 20) {
-        console.log('author')
         arrErrors.push({
                     message: 'The string must be less than 20 characters',
                     field: 'author'
                 }
         )
     }
+    if (typeof body.canBeDownloaded !== 'boolean') {
+        arrErrors.push({
+                message: 'The type must be boolean',
+                field: 'canBeDownloaded'
+            }
+        )
+    }
     if (!body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
-        console.log('availableResolutions')
         arrErrors.push({
                     message: 'availableResolutions must contain variants from suggested',
                     field: 'availableResolutions'
