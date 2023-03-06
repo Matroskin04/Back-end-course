@@ -29,13 +29,7 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480',
 const parserMiddeleware = bodyParser({})
 app.use(parserMiddeleware)
 
-app.get('/', (req: Request, res: Response) => {
-    res.send("Hello!")
-})
-app.get('/hometask-01/videos', (req: Request, res: Response) => {
-    res.status(200).send(allVideos)
-})
-app.post('/hometask-01/videos', (req: Request, res: Response) => {
+const checkError = (req: Request) => {
     if (typeof req.body.title !== 'string') {
         arrErrors.push({
                 message: 'The type must be string',
@@ -57,25 +51,34 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
         )
     } else if (req.body.author.length > 20) {
         arrErrors.push({
-                message: 'The string must be less than 20 characters',
-                field: 'author'
-            }
+                    message: 'The string must be less than 20 characters',
+                    field: 'author'
+                }
         )
     }
     if (!req.body.availableResolutions.every((p: string) => availableResolutions.includes(p))) {
         arrErrors.push({
-                message: 'availableResolutions must contain variants from suggested',
-                field: 'availableResolutions'
-            }
+                    message: 'availableResolutions must contain variants from suggested',
+                    field: 'availableResolutions'
+                }
         )
     }
     if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
         arrErrors.push({
-                message: 'Length must be from 1 to 18 characters',
-                field: 'minAgeRestriction'
-            }
+                    message: 'Length must be from 1 to 18 characters',
+                    field: 'minAgeRestriction'
+                }
         )
     }
+}
+app.get('/', (req: Request, res: Response) => {
+    res.send("Hello!")
+})
+app.get('/hometask-01/videos', (req: Request, res: Response) => {
+    res.status(200).send(allVideos)
+})
+app.post('/hometask-01/videos', (req: Request, res: Response) => {
+    checkError(req)
     if (arrErrors.length > 0) {
         res.status(400).send(allErrors);
         arrErrors = [];
@@ -107,6 +110,7 @@ app.get('/hometask-01/videos/:id', (req: Request, res: Response) => {
 app.put('/hometask-01/videos/:id', (req: Request, res: Response) => {
     for (let key of allVideos) {
         if (key.id === +req.params.id) {
+            checkError(req)
             if (arrErrors.length > 0) {
                 res.status(400).send(allErrors);
                 arrErrors = [];
