@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = 3004
+const port = 3002
 
 type videoType = {
     "id": number,
@@ -15,13 +15,12 @@ type videoType = {
     "availableResolutions": Array<string>
 };
 type allVideosType = Array<videoType>;
-type errorObjType = { "message": string, "field": string };
-type errorArrType = Array<errorObjType>;
-type errorType = { "errorsMessages": errorArrType };
+type errorObjType = { message: string, field: string };
+type errorType = { errorsMessages: Array<errorObjType> };
 
 let allVideos: allVideosType = [];
-let singleError: errorArrType = [];
-let allErrors: errorType= {errorsMessages: singleError};
+let singleError: Array<errorObjType> = [];
+let allErrors: errorType = {errorsMessages: singleError};
 const createdAt = new Date().toISOString();
 const publicationDate = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const availableResolutions = ['P144', 'P240', 'P360', 'P480',
