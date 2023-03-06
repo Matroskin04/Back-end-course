@@ -95,16 +95,6 @@ app.post('/hometask-01/videos', (req: Request, res: Response) => {
             ]
         };
         res.status(400).send(currentError)
-    } else if (req.body.minAgeRestriction?.length > 18 || req.body.minAgeRestriction?.length < 1) {
-        let currentError: errorType = {
-            "errorsMessages": [
-                {
-                    "message": 'Length must be from 1 to 18 characters',
-                    "field": 'minAgeRestriction'
-                }
-            ]
-        };
-        res.status(400).send(currentError)
     } else {
         const newVideo: videoType = {
             "id": allVideos[allVideos.length - 1]?.id + 1 ?? 0,
