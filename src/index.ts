@@ -9,7 +9,7 @@ type videoType = {
     "title": string,
     "author": string,
     "canBeDownloaded": boolean,
-    "minAgeRestriction": number,
+    "minAgeRestriction": any,
     "createdAt": string,
     "publicationDate": string,
     "availableResolutions": Array<string>
