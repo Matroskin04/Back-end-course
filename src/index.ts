@@ -98,7 +98,7 @@ const checkError = (body: bodyType) => {  // тип длля body
                     field: 'minAgeRestriction'
                 }
         )
-    } if (!isNaN(body.publicationDate)) {
+    } if (typeof body.publicationDate !== "string") {
         arrErrors.push({
                 message: 'publicationDate must be Date',
                 field: 'publicationDate'
