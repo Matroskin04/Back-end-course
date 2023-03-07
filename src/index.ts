@@ -98,8 +98,16 @@ const checkError = (body: bodyType) => {  // тип длля body
                     field: 'minAgeRestriction'
                 }
         )
-    } if (typeof body.publicationDate !== "undefined"
-        && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(body.publicationDate)) {
+    }
+    if (typeof body.publicationDate !== "string"
+        && typeof body.publicationDate !== "undefined") {
+        arrErrors.push({
+                message: 'publicationDate must be string',
+                field: 'publicationDate'
+            }
+        )
+    } else if (typeof body.publicationDate !== "undefined"
+        && !/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(body.publicationDate)) {
         arrErrors.push({
                 message: 'publicationDate must be Date',
                 field: 'publicationDate'
