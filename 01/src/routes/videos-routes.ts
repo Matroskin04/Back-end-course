@@ -1,13 +1,14 @@
 import {Request, Response, Router} from "express";
-import type {videoType, bodyType} from '../types'
+import type {bodyType} from '../types'
 import {arrErrors, allVideos, allErrors} from "../index";
+import {videosRepositories} from "../repositories/videos-repositories";
 
 const now = new Date()
-const createdAt = now.toISOString();
-const publicationDate = new Date(now.setDate(now.getDate() + 1)).toISOString();
-const availableResolutions = ['P144', 'P240', 'P360', 'P480',
+export const createdAt = now.toISOString();
+export const publicationDate = new Date(now.setDate(now.getDate() + 1)).toISOString();
+export const availableResolutions = ['P144', 'P240', 'P360', 'P480',
     'P720', 'P1080', 'P1440', 'P2160']
-const checkError = (body: bodyType) => {  // тип длля body
+export const checkError = (body: bodyType) => {  // тип длля body
     if (typeof body.title !== 'string') {
         arrErrors.push({
                 message: 'The type must be string',
@@ -84,24 +85,13 @@ videosRoutes.get('/', (req: Request, res: Response) => {
     res.status(200).send(allVideos)
 })
 videosRoutes.post('/', (req: Request, res: Response) => {
-    checkError(req.body);
-    if (arrErrors.length > 0) {
-        res.status(400).send(allErrors);
+        const result = videosRepositories.createVideo(req.body)
+    if (result === allErrors) {
+        res.status(400).send(result);
         arrErrors.length = 0;
         return;
     } else {
-        const newVideo: videoType = {
-            "id": allVideos.at(-1) ? allVideos.at(-1)!.id + 1 : 0,
-            "title": req.body.title,
-            "author": req.body.author,
-            "canBeDownloaded": req.body.canBeDownloaded ?? false,
-            "minAgeRestriction": req.body.minAgeRestriction ?? null,
-            "createdAt": createdAt,
-            "publicationDate": publicationDate,
-            "availableResolutions": req.body.availableResolutions
-        };
-        allVideos.push(newVideo);
-        res.status(201).send(newVideo);
+        res.status(201).send(result);
     }
 })
 videosRoutes.get('/:id', (req: Request, res: Response) => {
