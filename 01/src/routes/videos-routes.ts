@@ -8,7 +8,7 @@ export const createdAt = now.toISOString();
 export const publicationDate = new Date(now.setDate(now.getDate() + 1)).toISOString();
 export const availableResolutions = ['P144', 'P240', 'P360', 'P480',
     'P720', 'P1080', 'P1440', 'P2160']
-export const checkError = (body: bodyType) => {  // тип длля body
+export const checkError = (body: bodyType) => {
     if (typeof body.title !== 'string') {
         arrErrors.push({
                 message: 'The type must be string',
