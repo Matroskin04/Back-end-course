@@ -11,23 +11,36 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
 }
 
 export const checkErrorsBlog = [
-    body('name').isString()
-                      .trim()
-                      .not()
-                      .isEmpty()
-                      .isLength({max: 15})
-                      .withMessage('The name should be sting and its length must be less then 16'),
+    body('name')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .trim()
+        .not()
+        .isEmpty()
+        .isLength({max: 15})
+        .withMessage('The name should be sting and its length must be less then 16'),
 
-    body('description').isString()
-                      .trim()
-                      .not()
-                      .isEmpty()
-                      .isLength({max: 500})
-                      .withMessage('The description should be sting and its length must be less then 501'),
+    body('description')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .trim()
+        .not()
+        .isEmpty()
+        .isLength({max: 500})
+        .withMessage('The description should be sting and its length must be less then 501'),
 
-    body('websiteUrl').isString()
-                            .trim()
-                            .isURL({require_protocol: true, allow_underscores: true, require_tld: false})
-                            .isLength({max: 100})
-                            .withMessage('The websiteUrl should be URL and its length must be less then 101'),
+    body('websiteUrl')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .trim()
+        .isURL({require_protocol: true, allow_underscores: true, require_tld: false})
+        .bail()
+        .isLength({max: 100})
+        .withMessage('The websiteUrl should be URL and its length must be less then 101'),
 ]

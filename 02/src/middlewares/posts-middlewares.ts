@@ -6,17 +6,46 @@ export let CountElemOfPost: number = 0;
 
 export const checkErrorsPost = [
 
-    body('title').isString().withMessage('The title must be string'),
-    body('title').isLength({max: 30}).withMessage('The length should be less then 31'),
+    body('title')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .bail()
+        .trim()
+        .not()
+        .isEmpty()
+        .isLength({max: 30}).withMessage('The title should be string and its length should be less then 31'),
 
-    body('shortDescription').isString().withMessage('The shortDescription must be string'),
-    body('shortDescription').isLength({max: 100}).withMessage('The length should be less then 101'),
+    body('shortDescription')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .bail()
+        .trim()
+        .not()
+        .isEmpty()
+        .isLength({max: 100}).withMessage('The shortDescription should be string and its length should be less then 101'),
 
-    body('content').isString().withMessage('The content must be string'),
-    body('content').isLength({max: 1000}).withMessage('The length should be less then 1001'),
+    body('content')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .bail()
+        .trim()
+        .not()
+        .isEmpty().isLength({max: 1000}).withMessage('The content should be string and its length should be less then 1001'),
 
-    body('blogId').isString().withMessage('The title must be string'),
-    body('blogId').custom( value => {
+    body('blogId')
+        .exists()
+        .bail()
+        .withMessage('There isn\'t this meaning')
+        .isString()
+        .bail()
+        .withMessage('The title must be string')
+        .custom( value => {
 
         for ( let key of allBlogs ) {
 
