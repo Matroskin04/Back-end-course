@@ -18,5 +18,6 @@ export const checkErrorsBlog = [
     body('description').isLength({max: 500}).withMessage('The length should be less then 501'),
 
     body('websiteUrl').isString().withMessage('The websiteUrl should be string'),
+    body('websiteUrl').isURL({allow_underscores: true, require_tld: false}).withMessage('The websiteUrl should be URL'),
     body('websiteUrl').isLength({max: 100}).withMessage('The length should be less then 101'),
 ]

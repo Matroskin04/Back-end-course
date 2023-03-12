@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {postsRepositories} from "../repositories/posts-repositories";
 import {authorization} from "../middlewares/blogs-middlewares";
-import {checkErrorsPost, checkExistingPostId} from "../middlewares/posts-middlewares";
+import {checkErrorsPost} from "../middlewares/posts-middlewares";
 import {validationResult} from "express-validator";
 import {errorsMessagesType} from "../types";
 
@@ -14,7 +14,7 @@ postsRoutes.get('/', (req: Request, res: Response) => {
     const result = postsRepositories.getAllPosts()
     res.status(200).send(result)
 });
-postsRoutes.post('/', authorization, checkExistingPostId, checkErrorsPost, (req: Request, res: Response) => {
+postsRoutes.post('/', authorization, checkErrorsPost, (req: Request, res: Response) => {
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
@@ -45,7 +45,7 @@ postsRoutes.get('/:id', (req: Request, res: Response) => {
     result ? res.status(200).send(result)
            : res.send(404)
 });
-postsRoutes.put('/:id', authorization, checkExistingPostId, checkErrorsPost, (req: Request, res: Response) => {
+postsRoutes.put('/:id', authorization, checkErrorsPost, (req: Request, res: Response) => {
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {

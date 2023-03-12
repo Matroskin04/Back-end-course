@@ -1,5 +1,4 @@
 import {body} from "express-validator";
-import {Request, Response, NextFunction} from "express";
 import {allBlogs} from "../repositories/blogs-repositories";
 
 
@@ -17,19 +16,14 @@ export const checkErrorsPost = [
     body('content').isLength({max: 1000}).withMessage('The length should be less then 1001'),
 
     body('blogId').isString().withMessage('The title must be string'),
-]
+    body('blogId').custom( value => {
 
-export const checkExistingPostId = (req: Request, res: Response, next: NextFunction) => {
+        for ( let key of allBlogs ) {
 
-    for ( let key of allBlogs ) {
-
-
-        if ( +key.id === +req.body.blogId ) {
-            return next() // НУЖЕН РЕТЕРН?
+            if ( +value === +key.id ) {
+                return true
+            }
         }
-
-        CountElemOfPost++
-    }
-
-    return res.status(400).send('There is no such blogId')
-}
+        throw new Error('There isn\'t such blogId')
+    })
+]
