@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import {postsRoutes} from "./routes/posts-routes";
 import {testingRoutes} from "./routes/testing-routes";
 
-const app = express()
+export const app = express()
 const port = 3000
 
 

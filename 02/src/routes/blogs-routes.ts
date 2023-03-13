@@ -1,5 +1,5 @@
 import {Router, Request, Response} from "express";
-import {blogsRepositories} from "../repositories/blogs-repositories";
+import {allBlogs, blogsRepositories} from "../repositories/blogs-repositories";
 import {authorization, checkErrorsBlog} from "../middlewares/blogs-middlewares";
 import {validationResult} from "express-validator";
 import {errorsMessagesType} from "../types";
@@ -11,9 +11,7 @@ let allErrors: {
 
 blogsRoutes.get('/', (req: Request, res: Response) => {
 
-    const result = blogsRepositories.getBlogs();
-
-    res.status(200).send(result);
+    res.status(200).send(allBlogs);
 })
 blogsRoutes.post('/', authorization, checkErrorsBlog, (req: Request, res: Response) => {
 

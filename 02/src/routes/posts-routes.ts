@@ -1,5 +1,5 @@
 import {Router, Request, Response} from "express";
-import {postsRepositories} from "../repositories/posts-repositories";
+import {allPosts, postsRepositories} from "../repositories/posts-repositories";
 import {authorization} from "../middlewares/blogs-middlewares";
 import {checkErrorsPost} from "../middlewares/posts-middlewares";
 import {validationResult} from "express-validator";
@@ -11,8 +11,7 @@ let allErrorsPost: {
 };
 postsRoutes.get('/', (req: Request, res: Response) => {
 
-    const result = postsRepositories.getAllPosts()
-    res.status(200).send(result)
+    res.status(200).send(allPosts)
 });
 postsRoutes.post('/', authorization, checkErrorsPost, (req: Request, res: Response) => {
 
@@ -41,7 +40,8 @@ postsRoutes.post('/', authorization, checkErrorsPost, (req: Request, res: Respon
 });
 postsRoutes.get('/:id', (req: Request, res: Response) => {
 
-    const result = postsRepositories.getSinglePost(+req.params.id)
+    const result = allPosts.find(p => +p.id === +req.params.id)
+
     result ? res.status(200).send(result)
            : res.send(404)
 });

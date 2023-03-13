@@ -6,10 +6,6 @@ export let allPosts: Array<postType> = [];
 let post: postType;
 export const postsRepositories = {
 
-    getAllPosts() {
-        return allPosts;
-    },
-
     createPost(body: bodyPostType) {
 
         post = {
@@ -24,18 +20,6 @@ export const postsRepositories = {
         allPosts.push(post);
 
         return post
-    },
-
-    getSinglePost(id: number) {
-        for (let key of allPosts) {
-
-            if (+key.id === id) {
-
-                return key
-            }
-        }
-
-        return false
     },
 
     updatePost(bodyPost: bodyPostType, id: number) {

@@ -5,10 +5,6 @@ export let allBlogs: Array<blog> = [];
 
 export const blogsRepositories = {
 
-    getBlogs() {
-        return allBlogs
-    },
-
     createBlog(bodyBlog: bodyBlogType) {
 
         const blog = {
@@ -21,19 +17,11 @@ export const blogsRepositories = {
     },
 
     getSingleBlogs(id: number) {
-        for (let key of allBlogs) {
-
-            if ( +key.id === id ) {
-
-                return key
-            }
-        }
-
-        return false
+        return allBlogs.find( p => +p.id === id );
     },
 
     updateBlog(bodyBlog: bodyBlogType, id: number) {
-        for (let key of allBlogs) {
+        for ( let key of allBlogs ) {
 
             if ( +key.id === id ) {
 
@@ -41,11 +29,11 @@ export const blogsRepositories = {
               key.description = bodyBlog.description;
               key.websiteUrl = bodyBlog.websiteUrl;
 
-              return true
+              return true;
             }
         }
 
-        return false
+        return false;
     },
 
     deleteSingleBlog(id: number) {
