@@ -13,6 +13,7 @@ app.use(bodyParser({}))
 app.use('/hometask-02/blogs', blogsRoutes)
 app.use('/hometask-02/posts', postsRoutes)
 app.use('/hometask-02/testing/all-data', testingRoutes)
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

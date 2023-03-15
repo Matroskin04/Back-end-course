@@ -1,13 +1,22 @@
 const http = require('http')
+const path = require('path')
+const fs = require('fs')
+const url = require('url')
 
 let counter = 0;
 
+const FAVICON = path.join(__dirname, 'public', 'favicon.ico')
 
 const server = http.createServer( (request, response) => {
 
-    if (request.url === '/favicon.ico') {
-        response.writeHead(200, {'Content-Type': image/x-icon})
-        response.end()
+    const pathname = url.parse(request.url).pathname;
+
+    if (request.method === 'GET' && pathname === '/favicon.ico') {
+
+        response.setHeader('Content-Type', 'image/png');
+
+        fs.createReadStream(FAVICON).pipe(response);
+
         return;
     }
 
@@ -16,6 +25,10 @@ const server = http.createServer( (request, response) => {
     response.write('Counter: ' + counter)
 
     response.end()
-    })
+
+});
+
+
+
 
 server.listen(3001)
