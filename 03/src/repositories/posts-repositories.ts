@@ -1,5 +1,5 @@
-import {bodyPostType, postType} from "../types";
-import {allBlogs} from "./blogs-repositories";
+import {bodyPostType, postType} from "../repositories/types-posts-repositories";
+import {allBlogs} from "./blogs-db-repositories";
 import {CountElemOfPost} from "../middlewares/posts-middlewares";
 
 export let allPosts: Array<postType> = [];

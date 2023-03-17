@@ -1,19 +1,34 @@
-import {Router, Request, Response} from "express";
-import {allBlogs, blogsRepositories} from "../repositories/blogs-repositories";
+import {Router, Response} from "express";
+import {allBlogs, blogsDbRepositories} from "../repositories/blogs-db-repositories";
 import {authorization, checkErrorsBlog} from "../middlewares/blogs-middlewares";
+import {
+    errorsMessagesType,
+    RequestWithBody,
+    RequestWithParams,
+    RequestWithParamsAndBody,
+    RequestWithQuery
+} from "../types";
 import {validationResult} from "express-validator";
-import {errorsMessagesType} from "../types";
+import {QueryBlogsModel} from "../models/BlogsModels/QueryBlogsModel";
+import {ApiAllBlogsModels} from "../models/BlogsModels/ApiAllBlogsModels";
+import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
+import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
+import {ApiBlogModel} from "../models/BlogsModels/ApiBlogModel";
+import {UriBlogModel} from "../models/BlogsModels/UriBlogModel";
+import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 
 export const blogsRoutes = Router();
-let allErrors: {
+let allErrorsBlogs: {
     errorsMessages: errorsMessagesType
 }
 
-blogsRoutes.get('/', (req: Request, res: Response) => {
+blogsRoutes.get('/', (req: RequestWithQuery<QueryBlogsModel>,
+                                   res: Response<ApiAllBlogsModels>) => {
 
     res.status(200).send(allBlogs);
 })
-blogsRoutes.post('/', authorization, checkErrorsBlog, (req: Request, res: Response) => {
+blogsRoutes.post('/', authorization, checkErrorsBlog, async (req: RequestWithBody<CreateBlogModel>,
+                                                            res: Response<ApiAllErrorsModels | ApiBlogModel>) => {
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
@@ -27,25 +42,29 @@ blogsRoutes.post('/', authorization, checkErrorsBlog, (req: Request, res: Respon
 
     if (!errors.isEmpty()) {
 
-        allErrors = {
+        allErrorsBlogs = {
             errorsMessages: errors.array()
         };
-        return res.status(400).send(allErrors);
+
+        return res.status(400).send(allErrorsBlogs);
 
     } else {
-        const result = blogsRepositories.createBlog(req.body);
+        const result = await blogsDbRepositories.createBlog(req.body);
+
         return res.status(201).send(result);
     }
 })
-blogsRoutes.get('/:id', (req: Request, res: Response) => {
+blogsRoutes.get('/:id', async (req: RequestWithParams<UriBlogModel>,
+                               res: Response<ApiBlogModel | number>) => {
 
-    const result = blogsRepositories.getSingleBlogs(+req.params.id);
+    const result = await blogsDbRepositories.getSingleBlogs(+req.params.id);
 
     result ? res.status(200).send(result)
-           : res.send(404);
+        : res.send(404);
 })
 
-blogsRoutes.put('/:id', authorization, checkErrorsBlog, (req: Request, res: Response) => {
+blogsRoutes.put('/:id', authorization, checkErrorsBlog, async (req: RequestWithParamsAndBody<UriBlogModel, UpdateBlogModel>,
+                                                               res: Response<number | ApiAllErrorsModels>) => {
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
@@ -57,24 +76,28 @@ blogsRoutes.put('/:id', authorization, checkErrorsBlog, (req: Request, res: Resp
     });
     const errors = myValidationResult(req);
 
-    allErrors = {
-        errorsMessages: errors.array()
-    }; //в функцию
 
     if (!errors.isEmpty()) {
-        return res.status(400).send(allErrors);
+
+        allErrorsBlogs = {
+            errorsMessages: errors.array()
+        };
+
+        return res.status(400).send(allErrorsBlogs);
 
     } else {
-        const result = blogsRepositories.updateBlog(req.body, +req.params.id);
+        const result = await blogsDbRepositories.updateBlog(req.body, +req.params.id);
+
         result ? res.send(204)
-                : res.send(404);
+            : res.send(404);
     }
 })
-blogsRoutes.delete('/:id', authorization, (req: Request, res: Response) => {
+blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<{ id: string }>,
+                                                 res: Response<number>) => {
 
-    const result = blogsRepositories.deleteSingleBlog(+req.params.id);
+    const result = await blogsDbRepositories.deleteSingleBlog(+req.params.id);
 
-    if ( result ) {
+    if (result) {
         return res.send(204);
 
     } else {

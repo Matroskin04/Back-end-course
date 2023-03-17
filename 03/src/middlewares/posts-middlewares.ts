@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {allBlogs} from "../repositories/blogs-repositories";
+import {allBlogs} from "../repositories/blogs-db-repositories";
 
 
 export let CountElemOfPost: number = 0;

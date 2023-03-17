@@ -17,3 +17,4 @@ app.use('/hometask-02/testing/all-data', testingRoutes)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+

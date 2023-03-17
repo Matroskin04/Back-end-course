@@ -1,0 +1,1 @@
+export type QueryAllPostsModel = {title: string};

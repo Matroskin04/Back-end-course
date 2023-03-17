@@ -4,11 +4,11 @@ import {body} from "express-validator";
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
     let authHeader: string | undefined = req.headers['authorization'];
 
-    if (authHeader !== undefined && authHeader === `Basic ${btoa('admin:qwerty')}`) {
+    if (authHeader !== undefined && authHeader === `Basic ${Buffer.from('admin:qwerty').toString('base64')}`) {
         next()
 
     } else {
-        res.send(401) //Buffer.from('admin:qwerty').toString('base64')
+        res.send(401)
     }
 }
 

@@ -1,11 +1,11 @@
-import {blog, bodyBlogType} from "../types";
+import {blogType, bodyBlogType} from "./types-blogs-repositories";
 
-export let allBlogs: Array<blog> = [];
+export let allBlogs: Array<blogType> = [];
 
 
 export const blogsRepositories = {
 
-    createBlog(bodyBlog: bodyBlogType): blog {
+    createBlog(bodyBlog: bodyBlogType): blogType {
 
         const blog = {
             id: Date.now().toString(),
@@ -16,11 +16,11 @@ export const blogsRepositories = {
         return blog
     },
 
-    getSingleBlogs(id: number) {
+    getSingleBlogs(id: number): undefined | blogType {
         return allBlogs.find( p => +p.id === id );
     },
 
-    updateBlog(bodyBlog: bodyBlogType, id: number) {
+    updateBlog(bodyBlog: bodyBlogType, id: number): boolean {
         for ( let key of allBlogs ) {
 
             if ( +key.id === id ) {
@@ -36,7 +36,7 @@ export const blogsRepositories = {
         return false;
     },
 
-    deleteSingleBlog(id: number) {
+    deleteSingleBlog(id: number): boolean {
         for ( let i = 0; i < allBlogs.length; i++ ) {
 
             if ( +allBlogs[i].id === id ) {

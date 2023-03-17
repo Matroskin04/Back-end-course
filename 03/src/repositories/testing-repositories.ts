@@ -1,5 +1,5 @@
 import {allPosts} from "./posts-repositories";
-import {allBlogs} from "./blogs-repositories";
+import {allBlogs} from "./blogs-db-repositories";
 
 export const testingRepositories = {
 
