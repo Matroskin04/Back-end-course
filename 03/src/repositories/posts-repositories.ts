@@ -1,12 +1,17 @@
-import {bodyPostType, postType} from "../repositories/types-posts-repositories";
-import {allBlogs} from "./blogs-db-repositories";
-import {CountElemOfPost} from "../middlewares/posts-middlewares";
+import {bodyPostType, postType} from "./types-posts-repositories";
+import {blogsCollection, postsCollection} from "../db";
 
-export let allPosts: Array<postType> = [];
 let post: postType;
 export const postsRepositories = {
 
-    createPost(body: bodyPostType): postType {
+    async getAllPosts() {
+
+        return postsCollection.find({}).toArray();
+    },
+
+    async createPost(body: bodyPostType): Promise<postType> {
+
+        const blogName = await blogsCollection.find( { id: body.blogId } ).toArray()
 
         post = {
             id: Date.now().toString(),
@@ -14,38 +19,35 @@ export const postsRepositories = {
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
-            blogName: allBlogs[CountElemOfPost].name
+            blogName: blogName[0].name,
+            createdAt: new Date().toISOString()
         }
 
-        allPosts.push(post);
+        await postsCollection.insertOne(post);
 
         return post
     },
 
-    updatePost(bodyPost: bodyPostType, id: number) {
-        for ( let key of allPosts ) {
+    async getSinglePost(id: string): Promise<postType | null> {
 
-            if ( +key.id === id ) {
-
-                key.title = bodyPost.title;
-                key.shortDescription = bodyPost.shortDescription;
-                key.content = bodyPost.content;
-
-                return true
-            }
-        }
-        return false
+        return await postsCollection.findOne({id: id});
     },
 
-    deleteSinglePost(id: number) {
-        for ( let i = 0; i < allPosts.length; i++ ) {
+    async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {
 
-            if ( +allPosts[i].id === id ) {
-                allPosts.splice(i, 1)
+        const result = await postsCollection.updateOne({id: id}, {
+            title: bodyPost.title,
+            shortDescription: bodyPost.shortDescription,
+            content: bodyPost.content
+        });
 
-                return true
-            }
-        }
-        return false
+        return result.modifiedCount > 0;
+    },
+
+    async deleteSinglePost(id: string): Promise<boolean> {
+
+        const result = await postsCollection.deleteOne({id: id})
+
+        return result.deletedCount > 0;
     }
 }

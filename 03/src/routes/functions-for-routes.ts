@@ -1,8 +1,9 @@
-/*import {validationResult} from "express-validator";
-import {errorsMessagesType} from "../types";
+import {validationResult} from "express-validator";
+import {RequestWithBody} from "../types";
+import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
+import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
 
-
-export const getFoundErrors = (req: Request) => {
+export const GetErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel>) => {
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
             return {
@@ -13,8 +14,5 @@ export const getFoundErrors = (req: Request) => {
     });
     const errors = myValidationResult(req);
 
-    allErrorsPost = {
-        errorsMessages: errors.array()
-    };
+    return errors.array()
 }
- */

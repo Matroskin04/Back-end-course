@@ -1,8 +1,5 @@
 import {body} from "express-validator";
-import {allBlogs} from "../repositories/blogs-db-repositories";
-
-
-export let CountElemOfPost: number = 0;
+import {blogsCollection} from "../db";
 
 export const checkErrorsPost = [
 
@@ -15,7 +12,8 @@ export const checkErrorsPost = [
         .trim()
         .not()
         .isEmpty()
-        .isLength({max: 30}).withMessage('The title should be string and its length should be less then 31'),
+        .isLength({max: 30})
+        .withMessage('The title should be string and its length should be less then 31'),
 
     body('shortDescription')
         .exists()
@@ -26,7 +24,8 @@ export const checkErrorsPost = [
         .trim()
         .not()
         .isEmpty()
-        .isLength({max: 100}).withMessage('The shortDescription should be string and its length should be less then 101'),
+        .isLength({max: 100})
+        .withMessage('The shortDescription should be string and its length should be less then 101'),
 
     body('content')
         .exists()
@@ -36,7 +35,9 @@ export const checkErrorsPost = [
         .bail()
         .trim()
         .not()
-        .isEmpty().isLength({max: 1000}).withMessage('The content should be string and its length should be less then 1001'),
+        .isEmpty()
+        .isLength({max: 1000})
+        .withMessage('The content should be string and its length should be less then 1001'),
 
     body('blogId')
         .exists()
@@ -46,14 +47,13 @@ export const checkErrorsPost = [
         .isString()
         .bail()
         .withMessage('The title must be string')
-        .custom( value => {
+        .custom( async (value): Promise<boolean | void> => {
+            const result = await blogsCollection.findOne({id: value})
 
-        for ( let key of allBlogs ) {
-
-            if ( +value === +key.id ) {
-                return true
+            if (result) {
+                return true;
             }
-        }
-        throw new Error('There isn\'t such blogId')
-    })
+
+            throw new Error('There isn\'t such blogId')
+        })
 ]

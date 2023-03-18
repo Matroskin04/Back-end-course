@@ -1,50 +1,52 @@
 import {blogType, bodyBlogType} from "./types-blogs-repositories";
+import {blogsCollection} from "../db";
 
-export let allBlogs: Array<blogType> = [];
 
 
 export const blogsDbRepositories = {
+
+    async getAllBlogs(): Promise<Array<blogType>> {
+
+        return blogsCollection.find({}).toArray()
+    },
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
 
         const blog = {
             id: Date.now().toString(),
-            ...bodyBlog
+            ...bodyBlog,
+            createdAt: new Date().toISOString(),
+            isMembership: false
         }
-        allBlogs.push(blog);
 
-        return blog
+        await blogsCollection.insertOne(blog);
+
+        return blog;
     },
 
-    async getSingleBlogs(id: number): Promise<undefined | blogType> {
-        return allBlogs.find( p => +p.id === id );
+    async getSingleBlog(id: string): Promise<null | blogType> {
+
+        return await blogsCollection.findOne({id: id});
     },
 
-    async updateBlog(bodyBlog: bodyBlogType, id: number): Promise<boolean> {
-        for ( let key of allBlogs ) {
+    async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
 
-            if ( +key.id === id ) {
+        const result = await blogsCollection.updateOne({id: id}, {
+            $set: {
 
-              key.name = bodyBlog.name;
-              key.description = bodyBlog.description;
-              key.websiteUrl = bodyBlog.websiteUrl;
-
-              return true;
+                name: bodyBlog.name,
+                description: bodyBlog.description,
+                websiteUrl: bodyBlog.websiteUrl
             }
-        }
+        })
 
-        return false;
+        return result.modifiedCount > 0;
     },
 
-    async deleteSingleBlog(id: number): Promise<boolean> {
-        for ( let i = 0; i < allBlogs.length; i++ ) {
+    async deleteSingleBlog(id: string): Promise<boolean> {
 
-            if ( +allBlogs[i].id === id ) {
-                allBlogs.splice(i, 1)
+        const result = await blogsCollection.deleteOne({id: id});
 
-                return true
-            }
-        }
-        return false
+        return result.deletedCount > 0;
     }
 }

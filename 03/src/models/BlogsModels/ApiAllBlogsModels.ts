@@ -1,4 +1,4 @@
-import {blog} from "../../repositories/types-blogs-repositories";
+import {blogType} from "../../repositories/types-blogs-repositories";
 
 
-export type ApiAllBlogsModels = Array<blog>;
+export type ApiAllBlogsModels = Array<blogType>;

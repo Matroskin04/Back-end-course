@@ -5,6 +5,7 @@ export type postType = {
     content:	string
     blogId:	string
     blogName:	string
+    createdAt: string
 }
 
 export type bodyPostType = {
