@@ -11,7 +11,6 @@ const mongoUri = process.env.MONGO_URL
 if (!mongoUri) {
     throw new Error('URL isn\'t found')
 }
-
 const client = new MongoClient(mongoUri);
 const db = client.db()
 export const blogsCollection = db.collection<blogType>('blogs');
