@@ -6,7 +6,7 @@ export const postsRepositories = {
 
     async getAllPosts() {
 
-        return postsCollection.find({}).toArray();
+        return postsCollection.find({}, {projection: {_id: 0}}).toArray();
     },
 
     async createPost(body: bodyPostType): Promise<postType> {
@@ -30,7 +30,7 @@ export const postsRepositories = {
 
     async getSinglePost(id: string): Promise<postType | null> {
 
-        return await postsCollection.findOne({id: id});
+        return await postsCollection.findOne({id: id}, {projection: {_id: 0}});
     },
 
     async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {
