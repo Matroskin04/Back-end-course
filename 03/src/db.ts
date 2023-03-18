@@ -5,9 +5,11 @@ import {postType} from "./repositories/types-posts-repositories";
 
 dotenv.config()
 
-const mongoUri = process.env.mongoURI || 'mongodb+srv://Egor:Kubik262602@cluster0.dqcw9ff.mongodb.net/Website_for_programmers?retryWrites=true&w=majority';
-console.log(process.env.MONGO_URL)
+const mongoUri = process.env.MONGO_URL
 
+if (!mongoUri) {
+    throw new Error('URL isn\'t found')
+}
 const client = new MongoClient(mongoUri);
 const db = client.db()
 export const blogsCollection = db.collection<blogType>('blogs');
