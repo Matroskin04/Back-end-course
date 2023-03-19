@@ -25,6 +25,8 @@ export const postsRepositories = {
 
         await postsCollection.insertOne(post);
 
+        delete post['_id']
+
         return post
     },
 

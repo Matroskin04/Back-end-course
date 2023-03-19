@@ -11,7 +11,7 @@ export const blogsDbRepositories = {
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
 
-        const blog = {
+        const blog: blogType = {
             id: Date.now().toString(),
             ...bodyBlog,
             createdAt: new Date().toISOString(),
@@ -19,6 +19,8 @@ export const blogsDbRepositories = {
         }
 
         await blogsCollection.insertOne(blog);
+
+        delete blog['_id']
 
         return blog;
     },

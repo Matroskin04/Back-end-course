@@ -5,6 +5,7 @@ export type blogType = {
     websiteUrl: string
     createdAt:	string
     isMembership: boolean
+    _id?: string
 }
 
 export type bodyBlogType = {

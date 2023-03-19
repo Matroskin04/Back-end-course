@@ -6,6 +6,8 @@ export type postType = {
     blogId:	string
     blogName:	string
     createdAt: string
+    _id?: string
+
 }
 
 export type bodyPostType = {
