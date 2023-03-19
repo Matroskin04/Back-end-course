@@ -36,9 +36,11 @@ export const postsRepositories = {
     async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {
 
         const result = await postsCollection.updateOne({id: id}, {
-            title: bodyPost.title,
-            shortDescription: bodyPost.shortDescription,
-            content: bodyPost.content
+            $set: {
+                title: bodyPost.title,
+                shortDescription: bodyPost.shortDescription,
+                content: bodyPost.content
+            }
         });
 
         return result.modifiedCount > 0;
