@@ -6,7 +6,7 @@ export const blogsDbRepositories = {
 
     async getAllBlogs(): Promise<Array<blogType>> {
 
-        return blogsCollection.find({}, {projection: {_id: 0}}).toArray()
+        return blogsCollection.find({}).toArray()
     },
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
@@ -25,7 +25,7 @@ export const blogsDbRepositories = {
 
     async getSingleBlog(id: string): Promise<null | blogType> {
 
-        return await blogsCollection.findOne({id: id}, {projection: {_id: 0}});
+        return await blogsCollection.findOne({id: id});
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
