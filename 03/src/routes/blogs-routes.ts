@@ -7,14 +7,12 @@ import {
     RequestWithParamsAndBody,
     RequestWithQuery
 } from "../types";
-import {QueryBlogsModel} from "../models/BlogsModels/QueryBlogsModel";
-import {ApiAllBlogsModels} from "../models/BlogsModels/ApiAllBlogsModels";
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
-import {ApiBlogModel} from "../models/BlogsModels/ApiBlogModel";
-import {UriBlogModel} from "../models/BlogsModels/UriBlogModel";
+import {ApiBlogModel, ApiAllBlogsModels} from "../models/BlogsModels/ApiBlogModel";
+import {UriBlogModel, QueryBlogsModel} from "../models/BlogsModels/UriBlogModel";
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
-import {GetErrors} from "./functions-for-routes";
+import {getErrors} from "../middlewares/validation-middlewares";
 
 export const blogsRoutes = Router();
 
@@ -25,17 +23,9 @@ blogsRoutes.get('/', async (req: RequestWithQuery<QueryBlogsModel>,
 
     res.status(200).send(result);
 })
-blogsRoutes.post('/', authorization, checkErrorsBlog, async (req: RequestWithBody<CreateBlogModel>,
+blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: RequestWithBody<CreateBlogModel>,
                                                             res: Response<ApiAllErrorsModels | ApiBlogModel>) => {
 
-    const errorArray = GetErrors(req)
-
-    if ( errorArray.length > 0 ) {
-
-        return res.status(400).send({
-            errorsMessages: errorArray
-        });
-    }
 
     const result = await blogsDbRepositories.createBlog(req.body);
     return res.status(201).send(result);
@@ -49,17 +39,9 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<UriBlogModel>,
         : res.send(404);
 })
 
-blogsRoutes.put('/:id', authorization, checkErrorsBlog, async (req: RequestWithParamsAndBody<UriBlogModel, UpdateBlogModel>,
+blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,  async (req: RequestWithParamsAndBody<UriBlogModel, UpdateBlogModel>,
                                                                res: Response<number | ApiAllErrorsModels>) => {
 
-    const errorArray = GetErrors(req)
-
-    if ( errorArray.length > 0 ) {
-
-        return res.status(400).send({
-            errorsMessages: errorArray
-        });
-    }
 
     const result = await blogsDbRepositories.updateBlog(req.body, req.params.id);
 

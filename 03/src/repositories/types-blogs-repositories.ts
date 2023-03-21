@@ -1,11 +1,10 @@
 export type blogType = {
-    id: string
+    id?: string
     name: string
     description: string
     websiteUrl: string
-    createdAt:	string
+    createdAt: string
     isMembership: boolean
-    _id?: string
 }
 
 export type bodyBlogType = {

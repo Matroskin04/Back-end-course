@@ -1,34 +1,36 @@
-const http = require('http')
-const path = require('path')
-const fs = require('fs')
-const url = require('url')
+var http = require('http');
+var path = require('path');
+var fs = require('fs');
+var url = require('url');
 
 let counter = 0;
+var server = http.createServer();
 
-const FAVICON = path.join(__dirname, 'public', 'favicon.ico')
+// Location of your favicon in the filesystem.
+var FAVICON = path.join(__dirname, 'public', 'favicon.png');
 
-const server = http.createServer( (request, response) => {
+var server = http.createServer(function(req, res) {
 
-    const pathname = url.parse(request.url).pathname;
+    var pathname = url.parse(req.url).pathname;
 
-    if (request.method === 'GET' && pathname === '/favicon.ico') {
+    if (req.method === 'GET' && pathname === '/favicon.ico') {
 
-        response.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Type', 'image/png');
 
-        fs.createReadStream(FAVICON).pipe(response);
+        // Serve your favicon and finish response.
+        //
+        // You don't need to call `.end()` yourself because
+        // `pipe` will do it automatically.
+        fs.createReadStream(FAVICON).pipe(res);
 
         return;
     }
 
-    counter++
+        counter++
+        res.write('Counter: ' + counter)
 
-    response.write('Counter: ' + counter)
-
-    response.end()
+        res.end();
 
 });
-
-
-
 
 server.listen(3001)

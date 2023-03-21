@@ -1,9 +1,11 @@
-import {validationResult} from "express-validator";
 import {RequestWithBody} from "../types";
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
+import {validationResult} from "express-validator";
+import {NextFunction, Response} from "express";
 
-export const GetErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel>) => {
+export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel>,
+                          res: Response, next: NextFunction) => {
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
@@ -16,5 +18,11 @@ export const GetErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel
     });
     const errors = myValidationResult(req);
 
-    return errors.array()
+    if ( errors.array().length > 0 ) {
+
+        res.status(400).send({
+            errorsMessages: errors.array()
+        })
+
+    } else next()
 }

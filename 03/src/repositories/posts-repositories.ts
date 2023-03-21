@@ -1,38 +1,43 @@
 import {bodyPostType, postType} from "./types-posts-repositories";
 import {blogsCollection, postsCollection} from "../db";
 
-let post: postType;
+function renameMongoIdPost(post: any
+): postType {
+    post.id = post._id;
+    delete post._id;
+    return post;
+}
 export const postsRepositories = {
 
     async getAllPosts() {
 
-        return postsCollection.find({}, {projection: {_id: 0}}).toArray();
+        const allPosts = await postsCollection.find({}, {projection: {_id: 0}}).toArray();
+        return allPosts.map(p => renameMongoIdPost(p));
     },
 
     async createPost(body: bodyPostType): Promise<postType> {
 
-        const blogName = await blogsCollection.find( { id: body.blogId } ).toArray()
+        const blogName = await blogsCollection.find( { id: body.blogId } ).toArray();
 
-        post = {
-            id: Date.now().toString(),
+        const post: postType = {
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
             blogName: blogName[0].name,
             createdAt: new Date().toISOString()
-        }
+        };
 
         await postsCollection.insertOne(post);
+        renameMongoIdPost(post);
 
-        delete post['_id']
-
-        return post
+        return post;
     },
 
     async getSinglePost(id: string): Promise<postType | null> {
 
-        return await postsCollection.findOne({id: id}, {projection: {_id: 0}});
+        const singlePost = await postsCollection.findOne({id: id});
+        return renameMongoIdPost(singlePost);
     },
 
     async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {

@@ -1,6 +1,5 @@
-export type ApiBlogModel = {
-    id: string
-    name: string
-    description: string
-    websiteUrl: string
-}
+import {blogType} from "../../repositories/types-blogs-repositories";
+
+export type ApiBlogModel = blogType
+
+export type ApiAllBlogsModels = Array<blogType>;

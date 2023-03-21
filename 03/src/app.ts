@@ -21,5 +21,4 @@ const startApp = async () => {
         console.log(`Example app listening on port ${port}`)
     })
 }
-
 startApp()

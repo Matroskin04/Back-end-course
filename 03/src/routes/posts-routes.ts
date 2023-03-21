@@ -8,14 +8,12 @@ import {
     RequestWithParamsAndBody,
     RequestWithQuery
 } from "../types";
-import {QueryAllPostsModel} from "../models/PostsModels/QueryAllPostsModel";
-import {ApiAllPostsModel} from "../models/PostsModels/ApiAllPostsModel";
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
-import {ApiPostModel} from "../models/PostsModels/ApiPostModel";
-import {UriPostModel} from "../models/PostsModels/UriPostModel";
+import {ApiPostModel, ApiAllPostsModel} from "../models/PostsModels/ApiPostModel";
+import {UriPostModel,QueryAllPostsModel} from "../models/PostsModels/UriPostModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
-import {GetErrors} from "./functions-for-routes";
+import {getErrors} from "../middlewares/validation-middlewares";
 
 export const postsRoutes = Router();
 
@@ -26,17 +24,9 @@ postsRoutes.get('/', async (req: RequestWithQuery<QueryAllPostsModel>,
 
     res.status(200).send(result);
 });
-postsRoutes.post('/', authorization, checkErrorsPost, async (req: RequestWithBody<CreatePostModel>,
+postsRoutes.post('/', authorization, checkErrorsPost, getErrors, async (req: RequestWithBody<CreatePostModel>,
                                                              res: Response<ApiPostModel | ApiAllErrorsModels>) => {
 
-    const errorArray = GetErrors(req)
-
-    if ( errorArray.length > 0 ) {
-
-        return res.status(400).send({
-            errorsMessages: errorArray
-        });
-    }
         const result = await postsRepositories.createPost(req.body)
         res.status(201).send(result)
 
@@ -49,17 +39,8 @@ postsRoutes.get('/:id', async (req: RequestWithParams<UriPostModel>,
     result ? res.status(200).send(result)
         : res.send(404)
 });
-postsRoutes.put('/:id', authorization, checkErrorsPost, async (req: RequestWithParamsAndBody<UriPostModel, UpdatePostModel>,
+postsRoutes.put('/:id', authorization, checkErrorsPost, getErrors, async (req: RequestWithParamsAndBody<UriPostModel, UpdatePostModel>,
                                                                res: Response<number | ApiAllErrorsModels>) => {
-
-    const errorArray = GetErrors(req);
-
-    if ( errorArray.length > 0 ) {
-
-        return res.status(400).send({
-            errorsMessages: errorArray
-        });
-    }
 
         const result = await postsRepositories.updatePost(req.body, req.params.id);
         result ? res.send(204)
