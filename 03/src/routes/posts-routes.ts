@@ -20,8 +20,8 @@ export const postsRoutes = Router();
 
 postsRoutes.get('/', async (req: RequestWithQuery<QueryAllPostsModel>,
                             res: Response<ApiAllPostsModel>) => {
-    const result = await postsRepositories.getAllPosts();
 
+    const result = await postsRepositories.getAllPosts();
     res.status(200).send(result);
 });
 postsRoutes.post('/', authorization, checkErrorsPost, getErrors, async (req: RequestWithBody<CreatePostModel>,

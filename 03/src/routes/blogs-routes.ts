@@ -19,8 +19,8 @@ export const blogsRoutes = Router();
 
 blogsRoutes.get('/', async (req: RequestWithQuery<QueryBlogsModel>,
                             res: Response<ApiAllBlogsModels>) => {
-    const result = await blogsDbRepositories.getAllBlogs()
 
+    const result = await blogsDbRepositories.getAllBlogs()
     res.status(200).send(result);
 })
 blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: RequestWithBody<CreateBlogModel>,
@@ -28,7 +28,7 @@ blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: Req
 
 
     const result = await blogsDbRepositories.createBlog(req.body);
-    return res.status(201).send(result);
+    res.status(201).send(result);
 })
 blogsRoutes.get('/:id', async (req: RequestWithParams<UriBlogModel>,
                                res: Response<ApiBlogModel | number>) => {

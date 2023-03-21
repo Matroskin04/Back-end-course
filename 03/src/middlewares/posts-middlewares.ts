@@ -1,5 +1,6 @@
 import {body} from "express-validator";
 import {blogsCollection} from "../db";
+import {ObjectId} from "mongodb";
 
 export const checkErrorsPost = [
 
@@ -48,7 +49,7 @@ export const checkErrorsPost = [
         .bail()
         .withMessage('The title must be string')
         .custom( async (value): Promise<boolean | void> => {
-            const result = await blogsCollection.findOne({id: value})
+            const result = await blogsCollection.findOne({_id: new ObjectId(value)})
 
             if (result) {
                 return true;

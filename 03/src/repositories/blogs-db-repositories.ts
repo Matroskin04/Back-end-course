@@ -1,5 +1,6 @@
 import {blogType, bodyBlogType} from "./types-blogs-repositories";
 import {blogsCollection} from "../db";
+import {ObjectId} from "mongodb";
 
 function renameMongoIdBlog(blog: any
 ): blogType {
@@ -32,13 +33,13 @@ export const blogsDbRepositories = {
 
     async getSingleBlog(id: string): Promise<null | blogType> {
 
-        const singleBlog = await blogsCollection.findOne({id: id});
+        const singleBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
         return renameMongoIdBlog(singleBlog)
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
 
-        const result = await blogsCollection.updateOne({id: id}, {
+        const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
 
                 name: bodyBlog.name,
@@ -52,7 +53,7 @@ export const blogsDbRepositories = {
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
-        const result = await blogsCollection.deleteOne({id: id});
+        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)});
 
         return result.deletedCount > 0;
     }
