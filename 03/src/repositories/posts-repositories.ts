@@ -38,7 +38,11 @@ export const postsRepositories = {
     async getSinglePost(id: string): Promise<postType | null> {
 
         const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
-        return renameMongoIdPost(singlePost);
+
+        if (singlePost) {
+            return renameMongoIdPost(singlePost);
+        }
+        return null
     },
 
     async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {

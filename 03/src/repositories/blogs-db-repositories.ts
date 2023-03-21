@@ -34,7 +34,11 @@ export const blogsDbRepositories = {
     async getSingleBlog(id: string): Promise<null | blogType> {
 
         const singleBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
-        return renameMongoIdBlog(singleBlog)
+
+        if (singleBlog) {
+            return renameMongoIdBlog(singleBlog);
+        }
+        return null;
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
