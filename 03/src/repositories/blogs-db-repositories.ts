@@ -17,28 +17,15 @@ export const blogsDbRepositories = {
         return allBlogs.map(p => renameMongoIdBlog(p))
     },
 
-    async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
-
-        const blog: blogType = {
-            ...bodyBlog,
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        }
+    async createBlog(blog: blogType): Promise<void> {
 
         await blogsCollection.insertOne(blog);
-        renameMongoIdBlog(blog);
-
-        return blog;
+        return;
     },
 
     async getSingleBlog(id: string): Promise<null | blogType> {
 
-        const singleBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
-
-        if (singleBlog) {
-            return renameMongoIdBlog(singleBlog);
-        }
-        return null;
+        return await blogsCollection.findOne({_id: new ObjectId(id)});
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {

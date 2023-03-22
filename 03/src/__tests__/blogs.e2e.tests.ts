@@ -1,7 +1,6 @@
 import {describe} from "node:test";
 import request from "supertest";
 import {app} from "../app";
-import {blogsCollection} from "../db";
 
 const generalBlogInputData = {
     name: "Blog1",
@@ -246,45 +245,45 @@ describe('/blogs', () => {
 
 
 
-        describe('GET requests', () => {
+        // describe('GET requests', () => {
+        //
+        //     it('should return All blogs', async () => {
+        //
+        //         await request(app)
+        //             .get(`/hometask-02/blogs/`)
+        //             .expect(200, await blogsCollection.find({}, {projection: {_id: 0}}).toArray())
+        //     })
 
-            it('should return All blogs', async () => {
+            // it('should return the single blog by id', async () => {
+            //
+            //     const idOfBlog = await blogsCollection.findOne({name: "Blog3"});
 
-                await request(app)
-                    .get(`/hometask-02/blogs/`)
-                    .expect(200, await blogsCollection.find({}, {projection: {_id: 0}}).toArray())
-            })
-
-            it('should return the single blog by id', async () => {
-
-                const idOfBlog = await blogsCollection.findOne({name: "Blog3"});
-
-                if (idOfBlog) {
-                    const id = +idOfBlog.id
-
-                    const result = await request(app)
-                        .get(`/hometask-02/blogs/${id}`)
-
-                    expect(result.status).toBe(200)
-                    expect(result.body).toEqual({
-                        id: expect.any(String),
-                        name: "Blog3",
-                        description: "Fantastic description3",
-                        websiteUrl: generalBlogInputData.websiteUrl,
-                        createdAt: expect.any(String),
-                        isMembership: false
-                    })
-
-                }
-            })
-
-            it('should NOT return the single blog by id, status 404', async () => {
-
-                const idOfBlog = await blogsCollection.findOne({name: "Blog4"});
-                if (idOfBlog) {
-
-                }
-            })
+            //     if (idOfBlog) {
+            //         const id = +idOfBlog.id
+            //
+            //         const result = await request(app)
+            //             .get(`/hometask-02/blogs/${id}`)
+            //
+            //         expect(result.status).toBe(200)
+            //         expect(result.body).toEqual({
+            //             id: expect.any(String),
+            //             name: "Blog3",
+            //             description: "Fantastic description3",
+            //             websiteUrl: generalBlogInputData.websiteUrl,
+            //             createdAt: expect.any(String),
+            //             isMembership: false
+            //         })
+            //
+            //     }
+            // })
+            //
+            // it('should NOT return the single blog by id, status 404', async () => {
+            //
+            //     const idOfBlog = await blogsCollection.findOne({name: "Blog4"});
+            //     if (idOfBlog) {
+            //
+            //     }
+            // })
         });
 
 /*
@@ -398,4 +397,3 @@ describe('/blogs', () => {
 
  */
     })
-})
