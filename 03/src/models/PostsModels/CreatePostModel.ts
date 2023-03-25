@@ -4,3 +4,9 @@ export type CreatePostModel = {
     "content": "string",
     "blogId": "string"
 }
+
+export type CreatePostByBlogIdModel = {
+    title:	string
+    shortDescription:	string
+    content:	string
+}

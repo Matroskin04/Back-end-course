@@ -1,21 +1,11 @@
 import {blogType, bodyBlogType} from "./types-blogs-repositories";
-import {blogsCollection} from "../db";
+import {blogsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
+import {postType} from "./types-posts-repositories";
 
-function renameMongoIdBlog(blog: any
-): blogType {
-    blog.id = blog._id;
-    delete blog._id;
-    return blog;
-}
 
 export const blogsDbRepositories = {
 
-    async getAllBlogs(): Promise<Array<blogType>> {
-
-        const allBlogs = await blogsCollection.find({}).toArray();
-        return allBlogs.map(p => renameMongoIdBlog(p))
-    },
 
     async createBlog(blog: blogType): Promise<void> {
 
@@ -23,9 +13,10 @@ export const blogsDbRepositories = {
         return;
     },
 
-    async getSingleBlog(id: string): Promise<null | blogType> {
+    async createPostByBlogId(post: postType): Promise<void> {
 
-        return await blogsCollection.findOne({_id: new ObjectId(id)});
+        await postsCollection.insertOne(post);
+        return;
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {

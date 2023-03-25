@@ -1,10 +1,10 @@
 import {RequestWithBody} from "../types";
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
-import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
+import {CreatePostByBlogIdModel, CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {validationResult} from "express-validator";
 import {NextFunction, Response} from "express";
 
-export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel>,
+export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel>,
                           res: Response, next: NextFunction) => {
 
     const myValidationResult = validationResult.withDefaults({

@@ -1,7 +1,11 @@
 import {bodyBlogType, blogType} from "../repositories/types-blogs-repositories";
 import {blogsDbRepositories} from "../repositories/blogs-db-repositories";
+import {bodyPostByBlogIdType, postType} from "../repositories/types-posts-repositories";
+import {blogsCollection} from "../db";
+import {renameMongoIdPost} from "./posts-service";
+import {ObjectId} from "mongodb";
 
-function renameMongoIdBlog(blog: any
+export function renameMongoIdBlog(blog: any //TODO тип
 ): blogType {
     blog.id = blog._id;
     delete blog._id;
@@ -9,11 +13,6 @@ function renameMongoIdBlog(blog: any
 }
 
 export const blogsService = {
-
-    async getAllBlogs(): Promise<Array<blogType>> {
-
-        return await blogsDbRepositories.getAllBlogs();
-    },
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
 
@@ -29,14 +28,26 @@ export const blogsService = {
         return blog;
     },
 
-    async getSingleBlog(id: string): Promise<null | blogType> {
+    async createPostByBlogId(blogId: string, body: bodyPostByBlogIdType): Promise<null | postType> {
+        // проверка в БД наличия блога - нормально для бизнес слоя?
+        const hasCollectionBlogId = await blogsCollection.findOne({_id: new ObjectId(blogId) });
 
-        const singleBlog = await blogsDbRepositories.getSingleBlog(id);
+        if (hasCollectionBlogId) {
+            const post: postType = {
+                title: body.title,
+                shortDescription: body.shortDescription,
+                content: body.content,
+                blogId: blogId,
+                blogName: hasCollectionBlogId.name,
+                createdAt: new Date().toISOString()
+            };
+            await blogsDbRepositories.createPostByBlogId(post);
+            renameMongoIdPost(post)
 
-        if (singleBlog) {
-            return renameMongoIdBlog(singleBlog);
+            return post
         }
-        return null;
+
+        return null
     },
 
     async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {

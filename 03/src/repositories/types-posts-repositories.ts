@@ -15,3 +15,9 @@ export type bodyPostType = {
     content:	string
     blogId:	string
 }
+
+export type bodyPostByBlogIdType = {
+    title:	string
+    shortDescription:	string
+    content:	string
+}
