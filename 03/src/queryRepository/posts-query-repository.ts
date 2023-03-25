@@ -42,6 +42,7 @@ export const postsQueryRepository = {
     },
 
     async getSinglePost(id: string): Promise<null | postType> {
+
         const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
 
         if (singlePost) {
