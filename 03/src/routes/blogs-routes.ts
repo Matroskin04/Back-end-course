@@ -36,7 +36,6 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<ParamsBlogModel>,
                                res: Response<ApiBlogModel | number>) => {
 
     const result = await blogsQueryRepository.getSingleBlog(req.params.id);
-    console.log(result)
     result ? res.status(200).send(result)
         : res.send(404);
 })
