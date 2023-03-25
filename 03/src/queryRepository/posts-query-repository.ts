@@ -49,5 +49,4 @@ export const postsQueryRepository = {
         }
         return null;
     }
-
 }
