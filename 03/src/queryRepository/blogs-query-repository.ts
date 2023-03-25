@@ -27,7 +27,7 @@ export const blogsQueryRepository = {
 
         const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
         const paramsOfElems = await variablesForReturnBlog(query);
-        const countAllBlogsSort = await postsCollection
+        const countAllBlogsSort = await blogsCollection
             .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
             .count();
 
