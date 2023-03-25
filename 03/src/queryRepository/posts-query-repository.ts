@@ -27,7 +27,7 @@ export const postsQueryRepository = {
         const paramsOfElems = await variablesForReturn(query);
 
         const allPosts = await postsCollection
-            .find({title: {$regex: searchNameTerm ?? ''} })
+            .find({title: {$regex: searchNameTerm ?? '', $options: 'i'} })
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();

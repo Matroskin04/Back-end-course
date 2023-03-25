@@ -29,7 +29,7 @@ export const blogsQueryRepository = {
         const paramsOfElems = await variablesForReturn(query);
 
         const allBlogs = await blogsCollection
-            .find({name: {$regex: searchNameTerm ?? ''} })
+            .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();
