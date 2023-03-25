@@ -37,7 +37,7 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<ParamsBlogModel>,
 
     const result = await blogsQueryRepository.getSingleBlog(req.params.id);
     result ? res.status(200).send(result)
-        : res.send(404);
+        : res.sendStatus(404);
 })
 
 blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<ParamsBlogIdModel, QueryBlogsModel>,
@@ -45,7 +45,7 @@ blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<ParamsBl
 
     const result = await blogsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
     result ? res.status(200).send(result)
-        : res.send(404);
+        : res.sendStatus(404);
 })
 
 blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: RequestWithBody<CreateBlogModel>,
@@ -62,7 +62,7 @@ blogsRoutes.post('/:blogId/posts', authorization, checkErrorsPostByBlogId, getEr
 
     const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
     result ? res.status(201).send(result)
-        : res.send(404);
+        : res.sendStatus(404);
 })
 
 blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
@@ -71,8 +71,8 @@ blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
 
     const result = await blogsService.updateBlog(req.body, req.params.id);
 
-    result ? res.send(204)
-            : res.send(404);
+    result ? res.sendStatus(204)
+            : res.sendStatus(404);
 })
 blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<{ id: string }>,
                                                  res: Response<number>) => {
@@ -80,9 +80,9 @@ blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<{ id: st
     const result = await blogsService.deleteSingleBlog(req.params.id);
 
     if (result) {
-        return res.send(204);
+        return res.sendStatus(204);
 
     } else {
-        return res.send(404);
+        return res.sendStatus(404);
     }
 })
