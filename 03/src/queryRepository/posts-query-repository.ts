@@ -12,10 +12,8 @@ async function variablesForReturn(query: QueryPostsModel | null = null): Promise
         pageSize: query?.pageSize ?? 10,
         sortBy: query?.sortBy ?? "createdAt",
         sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await postsCollection.count()
     }
     variables.paramSort = {[variables.sortBy]: variables.sortDirection}; //TODO типизация
-    variables.pagesCount = Math.ceil(+variables.totalCount / +variables.pageSize);
 
     return variables
 }
@@ -33,10 +31,10 @@ export const postsQueryRepository = {
             .sort(paramsOfElems.paramSort).toArray();
 
         return {
-            pagesCount: +paramsOfElems.pagesCount!,  //TODO Убрать воскл. знак
+            pagesCount:  Math.ceil(allPosts.length / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
-            totalCount: +paramsOfElems.totalCount,
+            totalCount: allPosts.length,
             items: allPosts.map(p => renameMongoIdPost(p))
         }
     },

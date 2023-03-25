@@ -13,10 +13,8 @@ async function variablesForReturn(query: QueryBlogsModel | null = null): Promise
         pageSize: query?.pageSize ?? 10,
         sortBy: query?.sortBy ?? "createdAt",
         sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await blogsCollection.count()
     }
     variables.paramSort = {[variables.sortBy]: variables.sortDirection}; //TODO типизация
-    variables.pagesCount = Math.ceil(+variables.totalCount / +variables.pageSize);
 
     return variables
 }
@@ -35,17 +33,17 @@ export const blogsQueryRepository = {
             .sort(paramsOfElems.paramSort).toArray();
 
         return {
-            pagesCount: +paramsOfElems.pagesCount!,  //TODO Убрать воскл. знак
+            pagesCount:  Math.ceil(allBlogs.length / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
-            totalCount: +paramsOfElems.totalCount,
+            totalCount: allBlogs.length,
             items: allBlogs.map(p => renameMongoIdBlog(p))
         }
     },
 
     async getPostsOfBlog(blogId: string, query: QueryBlogsModel | null = null): Promise<null | postsOfBlogPaginationType> {
 
-        const paramsOfElems = await variablesForReturn(query)
+        const paramsOfElems = await variablesForReturn(query);
 
         const allPosts = await postsCollection
             .find({blogId: blogId})
@@ -56,10 +54,10 @@ export const blogsQueryRepository = {
         if ( allPosts.length === 0 ) return null
 
         return {
-            pagesCount: +paramsOfElems.pagesCount!, //TODO Воскл знак
+            pagesCount:  Math.ceil(allPosts.length / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
-            totalCount: +paramsOfElems.totalCount,
+            totalCount: allPosts.length,
             items: allPosts.map(p => renameMongoIdPost(p))
         }
     },
