@@ -7,16 +7,16 @@ import {blogType} from "../repositories/types-blogs-repositories";
 import {ObjectId} from "mongodb";
 import {variablesForReturnPost} from "./posts-query-repository";
 
+async function variablesForReturnBlog(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> { //TODO отдельно перед этим переменные
 
-async function variablesForReturnBlog(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> {
     const variables: variablesForReturnType = {
         pageNumber: query?.pageNumber ?? 1,
         pageSize: query?.pageSize ?? 10,
         sortBy: query?.sortBy ?? "createdAt",
         sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await blogsCollection.count()
+        totalCount: await blogsCollection.countDocuments(),
     }
-    variables.paramSort = {[variables.sortBy]: variables.sortDirection}; //TODO типизация
+    variables.paramSort  = {[variables.sortBy]: variables.sortDirection};
 
     return variables
 }
@@ -27,9 +27,9 @@ export const blogsQueryRepository = {
 
         const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
         const paramsOfElems = await variablesForReturnBlog(query);
+
         const countAllBlogsSort = await blogsCollection
-            .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
-            .count();
+            .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} }); //TODO чем заменить
 
         const allBlogsOnPages = await blogsCollection
             .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
@@ -49,7 +49,7 @@ export const blogsQueryRepository = {
     async getPostsOfBlog(blogId: string, query: QueryBlogsModel | null = null): Promise<null | postsOfBlogPaginationType> {
 
         const paramsOfElems = await variablesForReturnPost(query);
-        const countAllPostsSort = await postsCollection.find({blogId: blogId}).count(); //TODO Вынести в variable
+        const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});
 
         const allPostsOnPages = await postsCollection
             .find({blogId: blogId})

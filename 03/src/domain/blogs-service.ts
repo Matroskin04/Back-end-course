@@ -1,11 +1,10 @@
 import {bodyBlogType, blogType} from "../repositories/types-blogs-repositories";
 import {blogsDbRepositories} from "../repositories/blogs-db-repositories";
 import {bodyPostByBlogIdType, postType} from "../repositories/types-posts-repositories";
-import {blogsCollection} from "../db";
 import {renameMongoIdPost} from "./posts-service";
-import {ObjectId} from "mongodb";
+import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
-export function renameMongoIdBlog(blog: any //TODO тип
+export function renameMongoIdBlog(blog: any //TODO сделать через копию | Куда убрать
 ): blogType {
     blog.id = blog._id;
     delete blog._id;
@@ -29,8 +28,8 @@ export const blogsService = {
     },
 
     async createPostByBlogId(blogId: string, body: bodyPostByBlogIdType): Promise<null | postType> {
-        // проверка в БД наличия блога - нормально для бизнес слоя?
-        const hasCollectionBlogId = await blogsCollection.findOne({_id: new ObjectId(blogId) });
+        //checking the existence of a blog
+        const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId); //TODO В миддлвеер? Как отправить статус
 
         if (hasCollectionBlogId) {
             const post: postType = {

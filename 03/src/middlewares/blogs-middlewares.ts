@@ -8,7 +8,7 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
         next()
 
     } else {
-        res.send(401)
+        res.sendStatus(401) //
     }
 }
 

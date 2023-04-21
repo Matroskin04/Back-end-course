@@ -1,7 +1,6 @@
 import {bodyPostType, postType} from "../repositories/types-posts-repositories";
-import {blogsCollection} from "../db";
-import {ObjectId} from "mongodb";
 import {postsRepositories} from "../repositories/posts-repositories";
+import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
 export function renameMongoIdPost(post: any
 ): postType {
@@ -14,14 +13,14 @@ export const postsService = {
 
     async createPost(body: bodyPostType): Promise<postType> {
 
-        const blogName = await blogsCollection.find( { _id: new ObjectId(body.blogId) } ).toArray(); //TODO запрос в repo для проверка наличия блога
+        const blogName = await blogsQueryRepository.getSingleBlog(body.blogId); //TODO запрашивать в repo для проверка наличия блога или напрямую?
 
         const post: postType = {
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
-            blogName: blogName[0].name,
+            blogName: blogName!.name,
             createdAt: new Date().toISOString()
         };
         await postsRepositories.createPost(post);

@@ -6,15 +6,16 @@ import {renameMongoIdPost} from "../domain/posts-service";
 import {postType} from "../repositories/types-posts-repositories";
 import {ObjectId} from "mongodb";
 
-export async function variablesForReturnPost(query: QueryPostsModel | null = null): Promise<variablesForReturnType> { //TODO Вынести общую для post and blog?
+export async function variablesForReturnPost(query: QueryPostsModel | null = null): Promise<variablesForReturnType> {
+
     const variables: variablesForReturnType = {
         pageNumber: query?.pageNumber ?? 1,
         pageSize: query?.pageSize ?? 10,
         sortBy: query?.sortBy ?? "createdAt",
         sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await postsCollection.count()
+        totalCount: await postsCollection.countDocuments()
     }
-    variables.paramSort = {[variables.sortBy]: variables.sortDirection}; //TODO типизация
+    variables.paramSort = {[variables.sortBy]: variables.sortDirection};
 
     return variables
 }
@@ -22,11 +23,12 @@ export async function variablesForReturnPost(query: QueryPostsModel | null = nul
 export const postsQueryRepository = {
 
     async getAllPosts(query: QueryPostsModel | null = null): Promise<postPaginationType> {
+
         const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
         const paramsOfElems = await variablesForReturnPost(query);
+
         const countAllPostsSort = await postsCollection
-            .find({title: {$regex: searchNameTerm ?? '', $options: 'i'} })
-            .count();
+            .countDocuments({title: {$regex: searchNameTerm ?? '', $options: 'i'} });
 
 
         const allPostsOnPages = await postsCollection

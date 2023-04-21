@@ -23,7 +23,6 @@ export const blogsDbRepositories = {
 
         const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
-
                 name: bodyBlog.name,
                 description: bodyBlog.description,
                 websiteUrl: bodyBlog.websiteUrl

@@ -1,13 +1,13 @@
 {
-  "name": "03",
+  "name": "03-04-hw",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "/src/app.ts",
   "license": "MIT",
   "scripts": {
     "dev": "yarn nodemon --inspect dist/app.js",
     "watch": "tsc -w",
     "start": "node dist/index.js",
-    "test": "jest -i"
+    "test": "jest --forceExit --config jest.config.js"
   },
   "dependencies": {
     "@types/jest": "^29.5.0",

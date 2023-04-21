@@ -50,7 +50,7 @@ export const checkErrorsPost = [
         .withMessage('The title must be string')
         .custom( async (value): Promise<boolean | void> => {
 
-            const result = await blogsCollection.findOne({_id: new ObjectId(value)})  //TODO Разобраться ошибка генерируется монгошкой со своим текстом
+            const result = await blogsCollection.findOne({_id: new ObjectId(value)})
 
             if (result) {
                 return true;

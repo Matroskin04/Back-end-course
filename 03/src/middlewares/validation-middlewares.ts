@@ -18,6 +18,8 @@ export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel
     });
     const errors = myValidationResult(req);
 
+    if (errors.array)
+
     if ( errors.array().length > 0 ) {
 
         res.status(400).send({
