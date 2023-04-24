@@ -6,9 +6,9 @@ import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
 export function renameMongoIdBlog(blog: any
 ): blogType {
-    const blogCopy: any = {...blog, id: blog._id }
-    delete blogCopy._id;
-    return blogCopy;
+    blog.id = blog._id;
+    delete blog._id;
+    return blog;
 }
 
 export const blogsService = {
