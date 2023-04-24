@@ -4,9 +4,9 @@ import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
 export function renameMongoIdPost(post: any
 ): postType {
-    post.id = post._id;
-    delete post._id;
-    return post;
+    const postCopy: any = {...post, id: post._id }
+    delete postCopy._id;
+    return postCopy;
 }
 
 export const postsService = {
@@ -24,9 +24,7 @@ export const postsService = {
             createdAt: new Date().toISOString()
         };
         await postsRepositories.createPost(post);
-        renameMongoIdPost(post);
-
-        return post;
+        return renameMongoIdPost(post)
     },
 
     async updatePost(body: bodyPostType, id: string): Promise<boolean> {
