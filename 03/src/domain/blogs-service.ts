@@ -22,9 +22,7 @@ export const blogsService = {
         }
 
         await blogsDbRepositories.createBlog(blog);
-        renameMongoIdBlog(blog);
-
-        return blog;
+        return renameMongoIdBlog(blog);
     },
 
     async createPostByBlogId(blogId: string, body: bodyPostByBlogIdType): Promise<null | postType> {
