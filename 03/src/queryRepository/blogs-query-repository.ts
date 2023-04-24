@@ -5,9 +5,8 @@ import {blogPaginationType, postsOfBlogPaginationType, variablesForReturnType} f
 import {renameMongoIdPost} from "../domain/posts-service";
 import {blogType} from "../repositories/types-blogs-repositories";
 import {ObjectId} from "mongodb";
-import {variablesForReturnPost} from "./posts-query-repository";
 
-async function variablesForReturnBlog(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> {
+export async function variablesForReturn(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> {
 
     const pageNumber = query?.pageNumber ?? 1;
     const pageSize = query?.pageSize ?? 10;
@@ -31,7 +30,7 @@ export const blogsQueryRepository = {
     async getAllBlogs(query: QueryBlogsModel | null = null): Promise<blogPaginationType> {
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
-        const paramsOfElems = await variablesForReturnBlog(query);
+        const paramsOfElems = await variablesForReturn(query);
 
         const countAllBlogsSort = await blogsCollection
             .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} });
@@ -53,7 +52,7 @@ export const blogsQueryRepository = {
 
     async getPostsOfBlog(blogId: string, query: QueryBlogsModel | null = null): Promise<null | postsOfBlogPaginationType> {
 
-        const paramsOfElems = await variablesForReturnPost(query);
+        const paramsOfElems = await variablesForReturn(query);
         const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});
 
         const allPostsOnPages = await postsCollection

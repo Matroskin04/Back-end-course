@@ -1,31 +1,17 @@
 import {postPaginationType} from "./types-posts-query-repository";
 import {QueryPostsModel} from "../models/PostsModels/UriPostModel";
 import {postsCollection} from "../db";
-import {variablesForReturnType} from "./types-blogs-query-repository";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {postType} from "../repositories/types-posts-repositories";
 import {ObjectId} from "mongodb";
-
-export async function variablesForReturnPost(query: QueryPostsModel | null = null): Promise<variablesForReturnType> {
-
-    const variables: variablesForReturnType = {
-        pageNumber: query?.pageNumber ?? 1,
-        pageSize: query?.pageSize ?? 10,
-        sortBy: query?.sortBy ?? "createdAt",
-        sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await postsCollection.countDocuments()
-    }
-    variables.paramSort = {[variables.sortBy]: variables.sortDirection};
-
-    return variables
-}
+import {variablesForReturn} from "./blogs-query-repository";
 
 export const postsQueryRepository = {
 
     async getAllPosts(query: QueryPostsModel | null = null): Promise<postPaginationType> {
 
         const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
-        const paramsOfElems = await variablesForReturnPost(query);
+        const paramsOfElems = await variablesForReturn(query);
 
         const countAllPostsSort = await postsCollection
             .countDocuments({title: {$regex: searchNameTerm ?? '', $options: 'i'} });
