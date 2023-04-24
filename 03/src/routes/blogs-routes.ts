@@ -29,7 +29,7 @@ export const blogsRoutes = Router();
 blogsRoutes.get('/', async (req: RequestWithQuery<QueryBlogsModel>,
                             res: Response<ApiAllBlogsModels>) => {
 
-    const result = await blogsQueryRepository.getAllBlogs(req.query)
+    const result = await blogsQueryRepository.getAllBlogs(req.query);
     res.status(200).send(result);
 })
 

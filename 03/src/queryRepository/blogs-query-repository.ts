@@ -7,29 +7,34 @@ import {blogType} from "../repositories/types-blogs-repositories";
 import {ObjectId} from "mongodb";
 import {variablesForReturnPost} from "./posts-query-repository";
 
-async function variablesForReturnBlog(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> { //TODO отдельно перед этим переменные
+async function variablesForReturnBlog(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> {
 
-    const variables: variablesForReturnType = {
-        pageNumber: query?.pageNumber ?? 1,
-        pageSize: query?.pageSize ?? 10,
-        sortBy: query?.sortBy ?? "createdAt",
-        sortDirection: query?.sortDirection === 'asc' ? 1 : -1,
-        totalCount: await blogsCollection.countDocuments(),
+    const pageNumber = query?.pageNumber ?? 1;
+    const pageSize = query?.pageSize ?? 10;
+    const sortBy = query?.sortBy ?? "createdAt";
+    const sortDirection = query?.sortDirection === 'asc' ? 1 : -1;
+    const totalCount = await blogsCollection.countDocuments();
+    const paramSort = {sortBy: sortDirection};
+
+    return {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        totalCount,
+        paramSort
     }
-    variables.paramSort  = {[variables.sortBy]: variables.sortDirection};
-
-    return variables
 }
 
 export const blogsQueryRepository = {
 
     async getAllBlogs(query: QueryBlogsModel | null = null): Promise<blogPaginationType> {
 
-        const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
+        const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturnBlog(query);
 
         const countAllBlogsSort = await blogsCollection
-            .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} }); //TODO чем заменить
+            .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} });
 
         const allBlogsOnPages = await blogsCollection
             .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })

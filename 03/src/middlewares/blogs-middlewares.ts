@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import {body} from "express-validator";
+import { Buffer } from 'node:buffer';
 
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
-    let authHeader: string | undefined = req.headers['authorization'];
+    const authHeader: string | undefined = req.headers['authorization'];
 
     if (authHeader !== undefined && authHeader === `Basic ${Buffer.from('admin:qwerty').toString('base64')}`) {
         next()
@@ -24,8 +25,7 @@ export const checkErrorsBlog = [
         .bail()
         .withMessage('It should be a string')
 
-        .not()
-        .isEmpty()
+        .notEmpty()
         .bail()
         .withMessage('It should not be not empty')
 
@@ -42,8 +42,7 @@ export const checkErrorsBlog = [
         .bail()
         .withMessage('It should be a string')
 
-        .not()
-        .isEmpty()
+        .notEmpty()
         .bail()
         .withMessage('It should not be not empty')
 

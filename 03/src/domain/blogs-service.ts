@@ -4,11 +4,11 @@ import {bodyPostByBlogIdType, postType} from "../repositories/types-posts-reposi
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
-export function renameMongoIdBlog(blog: any //TODO сделать через копию | Куда убрать
+export function renameMongoIdBlog(blog: any
 ): blogType {
-    blog.id = blog._id;
-    delete blog._id;
-    return blog;
+    const blogCopy: any = {...blog, id: blog._id }
+    delete blogCopy._id;
+    return blogCopy;
 }
 
 export const blogsService = {
@@ -29,7 +29,7 @@ export const blogsService = {
 
     async createPostByBlogId(blogId: string, body: bodyPostByBlogIdType): Promise<null | postType> {
         //checking the existence of a blog
-        const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId); //TODO В миддлвеер? Как отправить статус
+        const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
 
         if (hasCollectionBlogId) {
             const post: postType = {

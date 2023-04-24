@@ -22,6 +22,6 @@ export type variablesForReturnType = {
     pageSize: string | number
     sortBy: string
     sortDirection: number
-    paramSort?: any
+    paramSort: any
     totalCount: number
 }
