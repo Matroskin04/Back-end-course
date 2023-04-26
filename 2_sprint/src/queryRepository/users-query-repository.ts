@@ -1,6 +1,6 @@
 import {usersCollection} from "../db";
 import {variablesForReturn} from "./blogs-query-repository";
-import {renameMongoIdUser} from "../domain/users-service";
+import {mappingUser} from "../domain/users-service";
 import {QueryModel} from "../models/UriModels";
 import {usersPaginationType} from "./types-users-query-repository";
 import {userType} from "../repositories/types-users-repositories";
@@ -25,17 +25,18 @@ export const usersQueryRepository = {
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllUsersSort,
-            items: allUsersOnPages.map(p => renameMongoIdUser(p))
+            items: allUsersOnPages.map(p => mappingUser(p))
         }
     },
 
-    async getUserByLoginOrEmail(logOrEmail: string): Promise<userType | false> {
+    async getUserByLoginOrEmail(logOrEmail: string): Promise<userType | null> {
 
         const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
         if (user) {
-            return user;
+            // @ts-ignore
+            return user; // todo Ошибка вероятно из-за 'or' (2+ сущности) - ставить игнор нормально?
         }
-        return false;
+        return null;
     }
 }

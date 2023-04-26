@@ -1,11 +1,11 @@
-import {userType} from "../../repositories/types-users-repositories";
+import {bodyUserType, userOutPutType, userType} from "../../repositories/types-users-repositories";
 
-export type ApiUserModel = userType
+export type ApiUserModel = userOutPutType
 
 export type ApiAllUsersModels = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: Array<userType>
+    items: Array<userOutPutType>
 }

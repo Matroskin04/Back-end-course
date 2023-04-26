@@ -1,8 +1,9 @@
 import {usersRepositories} from "../repositories/users-repositories";
-import {bodyUserType, userType} from "../repositories/types-users-repositories";
+import {bodyUserType, userOutPutType, userType} from "../repositories/types-users-repositories";
 import bcrypt from "bcrypt";
+import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
-export function renameMongoIdUser(user: any): userType { // todo поправить тип с монгощной айди
+export function mappingUser(user: any): userOutPutType { // todo поправить тип с монгощной айди
     return {
         id: user._id,
         login: user.login,
@@ -12,21 +13,27 @@ export function renameMongoIdUser(user: any): userType { // todo поправи�
 }
 export const usersService = {
 
-    async createUser(bodyUser: bodyUserType): Promise<userType> {
+    async createUser(bodyUser: bodyUserType): Promise<userOutPutType> {
+
+        // const hasEmail = await usersCollection.findOne({email: bodyUser.email}); - проверка на наличие такого же емаила
+        // const hasLogin = await usersCollection.findOne({login: bodyUser.login});
+
+        const passHash = await this._generateHash(bodyUser.password);
 
         const user: userType = {
             login: bodyUser.login,
             email: bodyUser.email,
             createdAt: new Date().toISOString(),
+            passwordHash: passHash
         }
 
-        await usersRepositories.createUser(user)
-        return renameMongoIdUser(user)
+        await usersRepositories.createUser(user);
+        return mappingUser(user);
     },
 
     async deleteSingleUser(id: string): Promise<boolean> {
 
-        return await usersRepositories.deleteSingleUser(id)
+        return await usersRepositories.deleteSingleUser(id);
     },
 
     async _generateHash(password: string) {
@@ -36,5 +43,11 @@ export const usersService = {
 
     async checkCredentials(loginOrEmail: string, password: string) {
 
+        const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
+        if (!user) {
+            return false
+        }
+
+        return await bcrypt.compare(password, user.passwordHash);
     }
 }
