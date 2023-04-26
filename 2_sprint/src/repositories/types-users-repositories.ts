@@ -3,6 +3,14 @@ export type userType = {
     login: string
     email: string
     createdAt: string
+    passwordHash: string
+}
+
+export type userOutPutType = {
+    id?: string
+    login: string
+    email: string
+    createdAt: string
 }
 
 export type bodyUserType = {

@@ -3,6 +3,7 @@ import {variablesForReturn} from "./blogs-query-repository";
 import {renameMongoIdUser} from "../domain/users-service";
 import {QueryModel} from "../models/UriModels";
 import {usersPaginationType} from "./types-users-query-repository";
+import {userType} from "../repositories/types-users-repositories";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryModel | null = null): Promise<usersPaginationType> {
@@ -26,5 +27,15 @@ export const usersQueryRepository = {
             totalCount: countAllUsersSort,
             items: allUsersOnPages.map(p => renameMongoIdUser(p))
         }
+    },
+
+    async getUserByLoginOrEmail(logOrEmail: string): Promise<userType | false> {
+
+        const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
+
+        if (user) {
+            return user;
+        }
+        return false;
     }
 }

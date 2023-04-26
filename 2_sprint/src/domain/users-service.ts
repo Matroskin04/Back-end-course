@@ -1,5 +1,6 @@
 import {usersRepositories} from "../repositories/users-repositories";
 import {bodyUserType, userType} from "../repositories/types-users-repositories";
+import bcrypt from "bcrypt";
 
 export function renameMongoIdUser(user: any): userType { // todo поправить тип с монгощной айди
     return {
@@ -26,5 +27,14 @@ export const usersService = {
     async deleteSingleUser(id: string): Promise<boolean> {
 
         return await usersRepositories.deleteSingleUser(id)
+    },
+
+    async _generateHash(password: string) {
+
+        return await bcrypt.hash(password, 10)
+    },
+
+    async checkCredentials(loginOrEmail: string, password: string) {
+
     }
 }

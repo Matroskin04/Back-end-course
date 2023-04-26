@@ -12,7 +12,7 @@ export const usersRepositories = {
 
     async deleteSingleUser(id: string): Promise<boolean> {
 
-        const result = await usersCollection.deleteOne({_id: new ObjectId((id))});
+        const result = await usersCollection.deleteOne({_id: new ObjectId(id)} );
         return result.deletedCount > 0;
     }
 }

@@ -16,7 +16,7 @@ app.use(bodyParser({}))
 app.use('/hometask-02/blogs', blogsRoutes)
 app.use('/hometask-02/posts', postsRoutes)
 app.use('/hometask-02/users', usersRoutes)
-app.use('/hometask-02/users', authRoutes)
+app.use('/hometask-02/auth', authRoutes)
 app.use('/hometask-02/testing/all-data', testingRoutes)
 const startApp = async () => {
     await runDb();

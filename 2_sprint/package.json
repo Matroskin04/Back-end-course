@@ -10,6 +10,8 @@
     "test": "jest --forceExit --config jest.config.js"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/bcrypt-nodejs": "^0.0.31",
     "@types/jest": "^29.5.0",
     "@types/supertest": "^2.0.12",
     "bcrypt": "^5.1.0",
