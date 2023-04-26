@@ -9,7 +9,7 @@ export const authRoutes = Router();
 
 authRoutes.post('/login',  checkErrorsAuth, getErrors, async (req: RequestWithBody<LoginInputModel>, res: Response<number>) => {
 
-    const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+    const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
     result ? res.sendStatus(204)
         : res.sendStatus(401)
 })
