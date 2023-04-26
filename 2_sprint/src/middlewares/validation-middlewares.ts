@@ -3,9 +3,11 @@ import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {CreatePostByBlogIdModel, CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {validationResult} from "express-validator";
 import {NextFunction, Response} from "express";
+import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
+import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 
-export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel>,
-                          res: Response, next: NextFunction) => {
+export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel | CreateUserModel>,
+                          res: Response<ApiAllErrorsModels>, next: NextFunction) => { // todo void добавлять не нужно?
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
@@ -16,7 +18,7 @@ export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel
             }
         }
     });
-    const errors = myValidationResult(req); //TODO полученные ошибки перемещаются в req? Зачем передаем req
+    const errors = myValidationResult(req);
 
     if ( errors.array().length > 0 ) {
 

@@ -11,6 +11,7 @@ export function renameMongoIdBlog(blog: any //Todo иммутабельност�
     return blog;
 }
 
+
 export const blogsService = {
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {

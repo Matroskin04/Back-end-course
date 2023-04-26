@@ -1,5 +1,5 @@
 import {postPaginationType} from "./types-posts-query-repository";
-import {QueryPostsModel} from "../models/PostsModels/UriPostModel";
+import {QueryModel} from "../models/PostsModels/UriPostModel";
 import {postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {postType} from "../repositories/types-posts-repositories";
@@ -8,9 +8,9 @@ import {variablesForReturn} from "./blogs-query-repository";
 
 export const postsQueryRepository = {
 
-    async getAllPosts(query: QueryPostsModel | null = null): Promise<postPaginationType> {
+    async getAllPosts(query: QueryModel | null = null): Promise<postPaginationType> {
 
-        const searchNameTerm: string | null = query?.searchNameTerm ? query.searchNameTerm : null;
+        const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
 
         const countAllPostsSort = await postsCollection

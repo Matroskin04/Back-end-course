@@ -1,12 +1,12 @@
 import {blogsCollection, postsCollection} from "../db";
-import {QueryBlogsModel} from "../models/BlogsModels/UriBlogModel";
 import {renameMongoIdBlog} from "../domain/blogs-service";
 import {blogPaginationType, postsOfBlogPaginationType, variablesForReturnType} from "./types-blogs-query-repository";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {blogType} from "../repositories/types-blogs-repositories";
 import {ObjectId} from "mongodb";
+import {QueryModel} from "../models/UriModels";
 
-export async function variablesForReturn(query: QueryBlogsModel | null = null): Promise<variablesForReturnType> {
+export async function variablesForReturn(query: QueryModel | null = null): Promise<variablesForReturnType> {
 
     const pageNumber = query?.pageNumber ?? 1;
     const pageSize = query?.pageSize ?? 10;
@@ -27,7 +27,7 @@ export async function variablesForReturn(query: QueryBlogsModel | null = null): 
 
 export const blogsQueryRepository = {
 
-    async getAllBlogs(query: QueryBlogsModel | null = null): Promise<blogPaginationType> {
+    async getAllBlogs(query: QueryModel | null = null): Promise<blogPaginationType> { // todo если query не отправляется, то его значение null?
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
@@ -50,7 +50,7 @@ export const blogsQueryRepository = {
         }
     },
 
-    async getPostsOfBlog(blogId: string, query: QueryBlogsModel | null = null): Promise<null | postsOfBlogPaginationType> {
+    async getPostsOfBlog(blogId: string, query: QueryModel | null = null): Promise<null | postsOfBlogPaginationType> {
 
         const paramsOfElems = await variablesForReturn(query);
         const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});

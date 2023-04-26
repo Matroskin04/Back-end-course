@@ -1,5 +1,5 @@
 import {Router, Response} from "express";
-import {authorization, checkErrorsBlog} from "../middlewares/blogs-middlewares";
+import {checkErrorsBlog} from "../middlewares/blogs-middlewares";
 import {
     RequestWithBody,
     RequestWithParams,
@@ -9,12 +9,7 @@ import {
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
 import {ApiBlogModel, ApiAllBlogsModels} from "../models/BlogsModels/ApiBlogModel";
-import {
-    ParamsBlogIdModel,
-    ParamsBlogModel,
-    QueryBlogsModel,
-    QueryPostsOfBlogModel
-} from "../models/BlogsModels/UriBlogModel";
+import {ParamsBlogIdModel, ApiPostsOfBlogModel} from "../models/BlogsModels/UriBlogModel";
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 import {getErrors} from "../middlewares/validation-middlewares";
 import {blogsService} from "../domain/blogs-service";
@@ -22,18 +17,20 @@ import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {postType} from "../repositories/types-posts-repositories";
 import {CreatePostByBlogIdModel} from "../models/PostsModels/CreatePostModel";
 import {checkErrorsPostByBlogId} from "../middlewares/posts-middlewares";
+import {authorization} from "../middlewares/authorization-middelwares";
+import {paramsModels, QueryModel} from "../models/UriModels";
 
 export const blogsRoutes = Router();
 
 
-blogsRoutes.get('/', async (req: RequestWithQuery<QueryBlogsModel>,
+blogsRoutes.get('/', async (req: RequestWithQuery<QueryModel>,
                             res: Response<ApiAllBlogsModels>) => {
 
     const result = await blogsQueryRepository.getAllBlogs(req.query);
     res.status(200).send(result);
 })
 
-blogsRoutes.get('/:id', async (req: RequestWithParams<ParamsBlogModel>,
+blogsRoutes.get('/:id', async (req: RequestWithParams<paramsModels>,
                                res: Response<ApiBlogModel | number>) => {
 
     const result = await blogsQueryRepository.getSingleBlog(req.params.id);
@@ -41,8 +38,8 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<ParamsBlogModel>,
         : res.sendStatus(404);
 })
 
-blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<ParamsBlogIdModel, QueryBlogsModel>,
-                                         res: Response<QueryPostsOfBlogModel | number>) => {
+blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<ParamsBlogIdModel, QueryModel>,
+                                         res: Response<ApiPostsOfBlogModel | number>) => {
 
     const result = await blogsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
     result ? res.status(200).send(result)
@@ -66,7 +63,7 @@ blogsRoutes.post('/:blogId/posts', authorization, checkErrorsPostByBlogId, getEr
 })
 
 blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
-    async (req: RequestWithParamsAndBody<ParamsBlogModel, UpdateBlogModel>,
+    async (req: RequestWithParamsAndBody<paramsModels, UpdateBlogModel>,
            res: Response<number | ApiAllErrorsModels>) => {
 
     const result = await blogsService.updateBlog(req.body, req.params.id);
@@ -75,7 +72,7 @@ blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
             : res.sendStatus(404);
 })
 blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<{ id: string }>,
-                                                 res: Response<number>) => {
+                                                 res: Response<number>) => { // todo number или void
 
     const result = await blogsService.deleteSingleBlog(req.params.id);
 

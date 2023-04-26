@@ -66,11 +66,16 @@ export const checkErrorsPostByBlogId = [
         .exists()
         .bail()
         .withMessage('There isn\'t this meaning')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('It should not be not empty')
+
         .isLength({max: 30})
         .withMessage('The title should be string and its length should be less then 31'),
 
@@ -78,11 +83,16 @@ export const checkErrorsPostByBlogId = [
         .exists()
         .bail()
         .withMessage('There isn\'t this meaning')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('It should not be not empty')
+
         .isLength({max: 100})
         .withMessage('The shortDescription should be string and its length should be less then 101'),
 
@@ -90,11 +100,16 @@ export const checkErrorsPostByBlogId = [
         .exists()
         .bail()
         .withMessage('There isn\'t this meaning')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('It should not be not empty')
+
         .isLength({max: 1000})
         .withMessage('The content should be string and its length should be less then 1001')
 ]

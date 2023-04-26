@@ -10,7 +10,6 @@ export function renameMongoIdBlog(blog: any //Todo иммутабельност�
     delete blog._id;
     return blog;
 }
-
 export const blogsService = {
 
     async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
@@ -39,9 +38,7 @@ export const blogsService = {
                 createdAt: new Date().toISOString()
             };
             await blogsDbRepositories.createPostByBlogId(post);
-            renameMongoIdPost(post)
-
-            return post
+            return renameMongoIdPost(post)
         }
 
         return null
