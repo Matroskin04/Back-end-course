@@ -1,6 +1,6 @@
 /node_modules
 /dist
-.idea
+/.idea
 yarn-error.log
 .env
 testing.ts

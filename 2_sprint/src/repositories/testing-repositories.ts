@@ -1,11 +1,16 @@
-import {blogsCollection, postsCollection} from "../db";
+import {blogsCollection, postsCollection, usersCollection} from "../db";
 
 export const testingRepositories = {
 
-    async deleteAllPosts() {
-        await postsCollection.deleteMany({});
-        await blogsCollection.deleteMany({});
+    async deleteAllPosts(): Promise<void> {
+        try {
+            await postsCollection.deleteMany({});
+            await blogsCollection.deleteMany({});
+            await usersCollection.deleteMany({});
 
-        return true;
+            return;
+        } catch (err) {
+            throw new Error(`Error: ${err}`)
+        }
     }
 }
