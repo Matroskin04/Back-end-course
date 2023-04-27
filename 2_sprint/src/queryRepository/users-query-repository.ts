@@ -1,21 +1,25 @@
 import {usersCollection} from "../db";
 import {variablesForReturn} from "./blogs-query-repository";
 import {mappingUser} from "../domain/users-service";
-import {QueryModel} from "../models/UriModels";
 import {usersPaginationType} from "./types-users-query-repository";
 import {userType} from "../repositories/types-users-repositories";
+import {QueryUserModel} from "../models/UsersModels/UriUserModel";
 export const usersQueryRepository = {
 
-    async getAllUsers(query: QueryModel | null = null): Promise<usersPaginationType> {
+    async getAllUsers(query: QueryUserModel | null = null): Promise<usersPaginationType> {
 
-        const searchNameTerm: string | null = query?.searchNameTerm ?? null;
+        const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
+        const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
 
         const countAllUsersSort = await usersCollection
-            .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} });
+            .countDocuments({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
+                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]});
+
 
         const allUsersOnPages = await usersCollection
-            .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
+            .find({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
+                               {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();
