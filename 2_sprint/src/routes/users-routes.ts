@@ -11,7 +11,6 @@ import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 import {checkErrorsUsers} from "../middlewares/users-middlewares";
 
 export const usersRoutes = Router();
-//todo типизация
 usersRoutes.get('/', authorization, async (req: RequestWithQuery<QueryModel>,
                                            res: Response<ApiAllUsersModels>) => {
 

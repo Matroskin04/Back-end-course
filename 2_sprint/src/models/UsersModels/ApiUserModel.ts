@@ -1,4 +1,4 @@
-import {bodyUserType, userOutPutType, userType} from "../../repositories/types-users-repositories";
+import {userOutPutType} from "../../repositories/types-users-repositories";
 
 export type ApiUserModel = userOutPutType
 

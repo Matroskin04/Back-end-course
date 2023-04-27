@@ -1,10 +1,10 @@
 import {postPaginationType} from "./types-posts-query-repository";
-import {QueryModel} from "../models/PostsModels/UriPostModel";
 import {postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {postType} from "../repositories/types-posts-repositories";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./blogs-query-repository";
+import {QueryModel} from "../models/UriModels";
 
 export const postsQueryRepository = {
 
