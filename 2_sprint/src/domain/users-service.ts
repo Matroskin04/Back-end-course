@@ -36,18 +36,18 @@ export const usersService = {
         return await usersRepositories.deleteSingleUser(id);
     },
 
-    async _generateHash(password: string) {
+    async _generateHash(password: string): Promise<string> {
 
         return await bcrypt.hash(password, 10)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string) {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<userType | false> {
 
         const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
         if (!user) {
             return false
         }
 
-        return await bcrypt.compare(password, user.passwordHash);
+        return await bcrypt.compare(password, user.passwordHash) ? user : false;
     }
 }

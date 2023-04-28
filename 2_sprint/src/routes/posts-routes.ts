@@ -6,7 +6,7 @@ import {
     RequestWithParams,
     RequestWithParamsAndBody,
     RequestWithQuery
-} from "../types";
+} from "../types/types";
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
 import {ApiPostModel, ApiAllPostsModel} from "../models/PostsModels/ApiPostModel";

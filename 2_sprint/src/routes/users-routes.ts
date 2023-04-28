@@ -3,7 +3,7 @@ import {getErrors} from "../middlewares/validation-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {usersService} from "../domain/users-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types";
+import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/types";
 import {paramsModels, QueryModel} from "../models/UriModels";
 import {ApiAllUsersModels, ApiUserModel} from "../models/UsersModels/ApiUserModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";

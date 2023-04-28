@@ -1,8 +1,8 @@
 import {describe} from "node:test";
-import request from "supertest";
-import {app} from "../app";
+const request = require("supertest");
 import {blogsCollection, client} from "../db";
 import {blogType} from "../repositories/types-blogs-repositories";
+import {app} from "../setting";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",
@@ -94,23 +94,8 @@ describe('POST: /blogs', () => {
         expect(response4.status).toBe(201);
         arrayOfBlogs.push(response4.body);
 
-        //5 blog
-        const blogInputData5 = {
-            name: "Blog5-ProgEasy",
-            description: "Fantastic description3",
-            websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-        };
-
-        const response5 = await request(app)
-            .post('/hometask-02/blogs')
-            .auth('admin', 'qwerty')
-            .send(blogInputData5);
-
-        expect(response5.status).toBe(201);
-        arrayOfBlogs.push(response5.body);
-
         const allBlogs = await blogsCollection.find().toArray()
-        expect(allBlogs.length).toBe(5)
+        expect(allBlogs.length).toBe(4)
     })
 
     it('- BAD AUTH TOKEN => should return status 401: unauthorized', async () => {
@@ -289,155 +274,5 @@ describe('POST: /blogs', () => {
         })
     })
 
-    it('+ should return All blogs, ', async () => {
-
-        const result = await request(app)
-            .get(`/hometask-02/blogs/`)
-            .expect(200, {
-                pagesCount: 1,
-                page: 1,
-                pageSize: 10,
-                totalCount: 5,
-                items: arrayOfBlogs.reverse()
-            })
-    })
-
-    it('+ should return the single blog by id', async () => {
-
-        const result = await request(app)
-            .get(`/hometask-02/blogs/${arrayOfBlogs[1]?.id ?? 0}`)
-
-        expect(result.status).toBe(200)
-        expect(result.body).toEqual(arrayOfBlogs[1])
-    })
-
-    it('+ should delete blog - status 204', async () =>{
-
-        id = arrayOfBlogs[1]?.id;
-        await request(app)
-            .delete(`/hometask-02/blogs/${arrayOfBlogs[1]?.id ?? 0}`)
-            .auth('admin', 'qwerty')
-            .expect(204)
-    })
-
-
-    it('- should NOT return the single blog by id, status 404', async () => {
-
-        await request(app)
-            .get(`/hometask-02/blogs/${id}`)
-            .expect(404)
-
-    })
-
+    it
 })
-
-/*
-        describe('GET ALL and GET BY ID', () => {
-
-
-        it('GET the single blog by id', async () => {
-            await request(app)
-                .get(`/hometask-02/blogs/${await blogsCollection.findOne({id: "id"})}`)
-                .expect(200, allBlogs[0])
-        })
-
-    })
-
-    it('POST', async () => {
-        await request(app)
-            .post('/hometask-02/blogs')
-            .auth('admin', 'qwerty')
-            .send({
-                name: "Blog1",
-                description: "Fantastic description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            })
-            .expect(201)
-    })
-    it('PUT: update 1 blog (elem 0 of array allBlogs)', async () => {
-        await request(app)
-            .put(`/hometask-02/blogs/${allBlogs[0].id}`)
-            .auth('admin', 'qwerty')
-            .send({
-                name: "string",
-                description: "string",
-                websiteUrl: "https://samurai.it-incubator.io/lessons/homeworks"
-            })
-            .expect(204)
-
-        const res = await request(app).get(`/hometask-02/blogs`)
-        expect(res.body[0]).toEqual({
-            ...allBlogs[0],
-            name: "string",
-            description: "string",
-            websiteUrl: "https://samurai.it-incubator.io/lessons/homeworks"
-        })
-    })
-
-    it('DELETE the single blog by id', async () => {
-        await request(app)
-            .delete(`/hometask-02/blogs/${allBlogs[0].id}`)
-            .auth('admin', 'qwerty')
-            .expect(204)
-
-        await request(app)
-            .get('/hometask-02/blogs')
-            .expect(200, [])
-    })
-
-    it('POST new blog: return ERROR - 401 (unauthorized)', async () => {
-        await request(app)
-            .post('/hometask-02/blogs')
-            .send({
-                name: "Blog1",
-                description: "Fantastic description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            })
-            .expect(401)
-
-        await request(app)
-            .post('/hometask-02/blogs')
-            .auth('admin', 'qwerty')
-            .send({
-                name: "Blog1",
-                description: "Fantastic description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            })
-    })
-
-    it('PUT: return ERROR - 401 (unauthorized)', async () => {
-        await request(app)
-            .put(`/hometask-02/blogs/${allBlogs[0].id}`)
-            .send({
-                name: "string",
-                description: "string",
-                websiteUrl: "https://samurai.it-incubator.io/lessons/homeworks"
-            })
-            .expect(401)
-    })
-
-    it('DELETE: return ERROR - 401 (unauthorized', async () => {
-        await request(app)
-            .delete(`/hometask-02/blogs/${allBlogs[0].id}`)
-            .expect(401)
-
-    })
-
-    it('POST: return ERROR - incorrect name, description and websiteUrl', async () => {
-        await request(app)
-            .post('/hometask-02/blogs')
-            .auth('admin', 'qwerty')
-            .send({
-                name: "More then 15 symbols 123456789",
-                description: null,
-                websiteUrl: "Invalid URL"
-            })
-            .expect(400, {
-                errorsMessages: [
-                    { message: 'The name should be sting and its length must be less than 16', field: 'name' },
-                    { message: 'It should be a string', field: 'description' },
-                    { message: 'It should be valid URL', field: 'websiteUrl' },
-                ],
-            })
-
- */

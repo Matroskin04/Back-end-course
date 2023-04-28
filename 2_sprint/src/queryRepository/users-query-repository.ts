@@ -14,7 +14,7 @@ export const usersQueryRepository = {
 
         const countAllUsersSort = await usersCollection
             .countDocuments({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
-                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]});
+                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]}); // todo КАК: при 1 параметре - пересечение. При двух - объединение
 
 
         const allUsersOnPages = await usersCollection

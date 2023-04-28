@@ -2,6 +2,7 @@ import {MongoClient} from 'mongodb'
 import dotenv from 'dotenv'
 import {blogType} from "./repositories/types-blogs-repositories";
 import {postType} from "./repositories/types-posts-repositories";
+import {userType} from "./repositories/types-users-repositories";
 
 dotenv.config()
 
@@ -13,9 +14,9 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const db = client.db()
-export const blogsCollection = db.collection<blogType>('blogs');
+export const blogsCollection = db.collection<blogType>('blogs'); // todo если поменять где будет ругаться
 export const postsCollection = db.collection<postType>('posts')
-export const usersCollection = db.collection('users') // todo типизация
+export const usersCollection = db.collection<userType>('users')
 
 export async function runDb() {
     try {

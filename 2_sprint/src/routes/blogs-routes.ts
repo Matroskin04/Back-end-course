@@ -5,7 +5,7 @@ import {
     RequestWithParams,
     RequestWithParamsAndBody, RequestWithParamsAndQuery,
     RequestWithQuery
-} from "../types";
+} from "../types/types";
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
 import {ApiBlogModel, ApiAllBlogsModels} from "../models/BlogsModels/ApiBlogModel";

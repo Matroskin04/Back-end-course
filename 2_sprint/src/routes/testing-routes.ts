@@ -6,5 +6,5 @@ export const testingRoutes = Router();
 testingRoutes.delete('/', (req: Request, res: Response) => {
 
     testingRepositories.deleteAllPosts();
-    res.send(204);
+    res.sendStatus(204);
 });
