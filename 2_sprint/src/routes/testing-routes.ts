@@ -3,8 +3,8 @@ import {testingRepositories} from "../repositories/testing-repositories";
 
 export const testingRoutes = Router();
 
-testingRoutes.delete('/', (req: Request, res: Response) => {
+testingRoutes.delete('/', async (req: Request, res: Response) => {
 
-    testingRepositories.deleteAllPosts();
+    await testingRepositories.deleteAllPosts();
     res.sendStatus(204);
 });

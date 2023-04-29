@@ -1,3 +1,4 @@
+
 export type postType = {
     id?:	string
     title:	string
@@ -21,3 +22,4 @@ export type bodyPostByBlogIdType = {
     shortDescription:	string
     content:	string
 }
+

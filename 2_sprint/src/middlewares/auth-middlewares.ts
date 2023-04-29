@@ -31,7 +31,7 @@ export const checkErrorsAuth = [
         .withMessage('The length should be from 6 to 20'),
 ]
 
-export const checkToken = async (req: Request, res: Response, next: NextFunction) => {
+export const checkToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     if (!req.headers.authorization) {
         res.sendStatus(401);
@@ -44,6 +44,7 @@ export const checkToken = async (req: Request, res: Response, next: NextFunction
     if (userId) {
         req.userId = userId;
         next();
+        return;
     }
     res.sendStatus(401)
 }

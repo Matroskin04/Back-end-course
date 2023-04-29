@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 
-export const checkErrorsUsers = [
+export const validateBodyOfUser = [
 
     body('login')
         .exists()

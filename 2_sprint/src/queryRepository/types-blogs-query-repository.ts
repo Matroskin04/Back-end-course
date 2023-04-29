@@ -23,5 +23,4 @@ export type variablesForReturnType = {
     sortBy: string
     sortDirection: number
     paramSort: any
-    totalCount: number
 }

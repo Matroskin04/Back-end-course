@@ -13,8 +13,7 @@ export const jwtService = {
     async getUserIdByToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, privateKey);
-            console.log(decode)
+            const decode: any = jwt.verify(token, privateKey); // todo как избавиться от any
             return new ObjectId(decode.userId)
 
         } catch (err) {

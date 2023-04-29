@@ -4,7 +4,6 @@ export type ParamsBlogIdModel = {
     blogId: string
 }
 
-
 export type ApiPostsOfBlogModel = {
     pagesCount: number
     page: number

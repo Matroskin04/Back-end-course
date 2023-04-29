@@ -12,7 +12,6 @@ export async function variablesForReturn(query: QueryModel | null = null): Promi
     const pageSize = query?.pageSize ?? 10;
     const sortBy = query?.sortBy ?? "createdAt";
     const sortDirection = query?.sortDirection === 'asc' ? 1 : -1;
-    const totalCount = await blogsCollection.countDocuments();
     const paramSort = {[sortBy]: sortDirection};
 
     return {
@@ -20,7 +19,6 @@ export async function variablesForReturn(query: QueryModel | null = null): Promi
         pageSize,
         sortBy,
         sortDirection,
-        totalCount,
         paramSort
     }
 }
@@ -31,6 +29,7 @@ export const blogsQueryRepository = {
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
+
 
         const countAllBlogsSort = await blogsCollection
             .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} });

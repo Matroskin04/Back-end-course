@@ -5,6 +5,7 @@ import {postsRoutes} from "./routes/posts-routes";
 import {usersRoutes} from "./routes/users-routes";
 import {authRoutes} from "./routes/auth-routes";
 import {testingRoutes} from "./routes/testing-routes";
+import {commentsRoutes} from "./routes/comments-service";
 
 
 export const privateKey = process.env.PRIVATE_KEY || 'testingKey123' // todo куда
@@ -16,4 +17,5 @@ app.use('/hometask-02/blogs', blogsRoutes)
 app.use('/hometask-02/posts', postsRoutes)
 app.use('/hometask-02/users', usersRoutes)
 app.use('/hometask-02/auth', authRoutes)
+app.use('/hometask-02/comments', commentsRoutes)
 app.use('/hometask-02/testing/all-data', testingRoutes)

@@ -2,7 +2,7 @@ import {body} from "express-validator";
 import {blogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
-export const checkErrorsPost = [
+export const validateBodyOfPost = [
 
     body('title')
         .exists()

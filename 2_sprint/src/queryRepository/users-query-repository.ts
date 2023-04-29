@@ -4,6 +4,7 @@ import {mappingUser} from "../domain/users-service";
 import {usersPaginationType} from "./types-users-query-repository";
 import {userType} from "../repositories/types-users-repositories";
 import {QueryUserModel} from "../models/UsersModels/UriUserModel";
+import {ObjectId} from "mongodb";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel | null = null): Promise<usersPaginationType> {
@@ -40,6 +41,16 @@ export const usersQueryRepository = {
         if (user) {
             // @ts-ignore
             return user; // todo Ошибка вероятно из-за 'or' (2+ сущности) - ставить игнор нормально?
+        }
+        return null;
+    },
+
+    async getUserByUserId(userId: ObjectId): Promise<userType | null> {
+
+        const user = await usersCollection.findOne({_id: userId}); // todo делать проверку? По идее userId всегда есть
+
+        if (user) {
+            return user;
         }
         return null;
     }

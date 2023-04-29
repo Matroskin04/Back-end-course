@@ -1,6 +1,7 @@
 import {bodyPostType, postType} from "./types-posts-repositories";
-import {postsCollection} from "../db";
+import {commentsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
+import {commentType} from "./types-comments-repositories";
 
 
 export const postsRepositories = {
@@ -8,6 +9,12 @@ export const postsRepositories = {
     async createPost(post: postType): Promise<void> {
 
         await postsCollection.insertOne(post);
+        return;
+    },
+
+    async createCommentByPostId(comment: commentType): Promise<void> {
+
+        await commentsCollection.insertOne(comment);
         return;
     },
 

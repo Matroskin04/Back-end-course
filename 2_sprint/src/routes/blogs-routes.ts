@@ -1,5 +1,5 @@
 import {Router, Response} from "express";
-import {checkErrorsBlog} from "../middlewares/blogs-middlewares";
+import {validateBodyOfBlog} from "../middlewares/blogs-middlewares";
 import {
     RequestWithBody,
     RequestWithParams,
@@ -39,15 +39,15 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<paramsModels>,
 })
 
 blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<ParamsBlogIdModel, QueryModel>,
-                                         res: Response<ApiPostsOfBlogModel | number>) => {
+                                         res: Response<ApiPostsOfBlogModel>) => {
 
     const result = await blogsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
     result ? res.status(200).send(result)
         : res.sendStatus(404);
 })
 
-blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: RequestWithBody<CreateBlogModel>,
-                                                                        res: Response<ApiAllErrorsModels | ApiBlogModel>) => {
+blogsRoutes.post('/', authorization, validateBodyOfBlog, getErrors, async (req: RequestWithBody<CreateBlogModel>,
+                                                                           res: Response<ApiAllErrorsModels | ApiBlogModel>) => {
 
     const result = await blogsService.createBlog(req.body);
     res.status(201).send(result);
@@ -55,14 +55,14 @@ blogsRoutes.post('/', authorization, checkErrorsBlog, getErrors, async (req: Req
 
 blogsRoutes.post('/:blogId/posts', authorization, checkErrorsPostByBlogId, getErrors,
     async (req: RequestWithParamsAndBody<ParamsBlogIdModel, CreatePostByBlogIdModel>,
-           res: Response<ApiAllErrorsModels | postType | number>) => {
+           res: Response<ApiAllErrorsModels | postType>) => {
 
     const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
     result ? res.status(201).send(result)
         : res.sendStatus(404);
 })
 
-blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
+blogsRoutes.put('/:id', authorization, validateBodyOfBlog, getErrors,
     async (req: RequestWithParamsAndBody<paramsModels, UpdateBlogModel>,
            res: Response<number | ApiAllErrorsModels>) => {
 
@@ -72,7 +72,7 @@ blogsRoutes.put('/:id', authorization, checkErrorsBlog, getErrors,
             : res.sendStatus(404);
 })
 blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<{ id: string }>,
-                                                 res: Response<number>) => { // todo number или void
+                                                 res: Response<void>) => { // todo response типизировать? void?
 
     const result = await blogsService.deleteSingleBlog(req.params.id);
 

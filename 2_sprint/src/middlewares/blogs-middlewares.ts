@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 
 
-export const checkErrorsBlog = [
+export const validateBodyOfBlog = [
 
     body('name')
         .exists()

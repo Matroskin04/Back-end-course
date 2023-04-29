@@ -1,10 +1,11 @@
-import {postPaginationType} from "./types-posts-query-repository";
-import {postsCollection} from "../db";
+import {commentOfPostPaginationType, postPaginationType} from "./types-posts-query-repository";
+import {commentsCollection, postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {postType} from "../repositories/types-posts-repositories";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./blogs-query-repository";
 import {QueryModel} from "../models/UriModels";
+import {mappingComment} from "../domain/comments-service";
 
 export const postsQueryRepository = {
 
@@ -40,5 +41,33 @@ export const postsQueryRepository = {
             return renameMongoIdPost(singlePost);
         }
         return null;
+    },
+
+    async getCommentOfPost(query: QueryModel | null = null, id: string): Promise<commentOfPostPaginationType | null> {
+
+        const post = await this.getSinglePost(id);
+        if (!post) {
+            return null
+        }
+
+        const paramsOfElems = await variablesForReturn(query);
+
+        const countAllCommentsOfPost = await commentsCollection
+            .countDocuments({postId: id});
+
+
+        const allCommentOfPostsOnPages = await commentsCollection
+            .find({postId: id})
+            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
+            .limit(+paramsOfElems.pageSize)
+            .sort(paramsOfElems.paramSort).toArray();
+
+        return {
+            pagesCount:  Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),
+            page: +paramsOfElems.pageNumber,
+            pageSize: +paramsOfElems.pageSize,
+            totalCount: countAllCommentsOfPost,
+            items: allCommentOfPostsOnPages.map(p => mappingComment(p))
+        }
     }
 }

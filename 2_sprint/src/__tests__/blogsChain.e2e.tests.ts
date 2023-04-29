@@ -2,7 +2,6 @@ import {describe} from "node:test";
 import {client} from "../db";
 import request from "supertest";
 import {app} from "../setting";
-import exp = require("constants");
 
 let idOfBlog: string;
 describe('Blogs All operation, chains: /blogs', () => {

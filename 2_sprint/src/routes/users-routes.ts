@@ -8,7 +8,7 @@ import {paramsModels, QueryModel} from "../models/UriModels";
 import {ApiAllUsersModels, ApiUserModel} from "../models/UsersModels/ApiUserModel";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
-import {checkErrorsUsers} from "../middlewares/users-middlewares";
+import {validateBodyOfUser} from "../middlewares/users-middlewares";
 
 export const usersRoutes = Router();
 usersRoutes.get('/', authorization, async (req: RequestWithQuery<QueryModel>,
@@ -18,8 +18,8 @@ usersRoutes.get('/', authorization, async (req: RequestWithQuery<QueryModel>,
     res.status(200).send(result);
 })
 
-usersRoutes.post('/', authorization, checkErrorsUsers, getErrors, async (req: RequestWithBody<CreateUserModel>,
-                                                                         res: Response<ApiAllErrorsModels | ApiUserModel>) =>{
+usersRoutes.post('/', authorization, validateBodyOfUser, getErrors, async (req: RequestWithBody<CreateUserModel>,
+                                                                           res: Response<ApiAllErrorsModels | ApiUserModel>) =>{
     const result = await usersService.createUser(req.body);
     res.status(201).send(result);
 })

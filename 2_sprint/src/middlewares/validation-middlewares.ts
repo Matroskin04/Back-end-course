@@ -6,9 +6,11 @@ import {NextFunction, Response} from "express";
 import {ApiAllErrorsModels} from "../models/ApiAllErrorsModels";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 import {LoginInputModel} from "../models/AuthModels/LoginInputModel";
+import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 
-export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel
-                              | CreatePostByBlogIdModel | CreateUserModel | LoginInputModel>,
+type getErrorsType = CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel
+                    | CreateUserModel | LoginInputModel | CreateCommentByPostIdModel
+export const getErrors = (req: RequestWithBody<getErrorsType>,
                           res: Response<ApiAllErrorsModels>, next: NextFunction) => { // todo void добавлять не нужно?
 
     const myValidationResult = validationResult.withDefaults({

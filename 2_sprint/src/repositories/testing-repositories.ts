@@ -1,4 +1,4 @@
-import {blogsCollection, postsCollection, usersCollection} from "../db";
+import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../db";
 
 export const testingRepositories = {
 
@@ -7,6 +7,7 @@ export const testingRepositories = {
             await postsCollection.deleteMany({});
             await blogsCollection.deleteMany({});
             await usersCollection.deleteMany({});
+            await commentsCollection.deleteMany({});
 
             return;
         } catch (err) {
