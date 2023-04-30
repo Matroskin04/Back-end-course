@@ -15,8 +15,8 @@ export function renameMongoIdPost(post: any
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
-        blogId:	post.id,
-        blogName: post.blogId,
+        blogId:	post.blogId,
+        blogName: post.blogName,
         createdAt: post.createdAt
     }
 }
