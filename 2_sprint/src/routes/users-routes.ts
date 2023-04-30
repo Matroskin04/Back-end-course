@@ -8,7 +8,7 @@ import {UriIdModel} from "../models/UriModels";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
-import {validateBodyOfUser} from "../middlewares/users-middlewares";
+import {validateBodyOfUser} from "../middlewares/users-validation-middlewares";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 
 export const usersRoutes = Router();

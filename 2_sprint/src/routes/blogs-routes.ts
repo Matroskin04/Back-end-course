@@ -1,5 +1,5 @@
 import {Router, Response} from "express";
-import {validateBodyOfBlog} from "../middlewares/blogs-middlewares";
+import {validateBodyOfBlog} from "../middlewares/blogs-validation-middlewares";
 import {
     RequestWithBody,
     RequestWithParams,
@@ -16,7 +16,7 @@ import {blogsService} from "../domain/blogs-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {CreatePostByBlogIdModel} from "../models/PostsModels/CreatePostModel";
-import {checkErrorsPostByBlogId} from "../middlewares/posts-middlewares";
+import {checkErrorsPostByBlogId} from "../middlewares/posts-validation-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {UriIdModel} from "../models/UriModels";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";

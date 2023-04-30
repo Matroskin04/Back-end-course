@@ -2,7 +2,7 @@ import {Router, Response, Request} from "express";
 import {RequestWithBody} from "../types/types";
 import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthInputModel";
 import {usersService} from "../domain/users-service";
-import {checkErrorsAuth, checkToken} from "../middlewares/auth-middlewares";
+import {checkErrorsAuth, checkToken} from "../middlewares/auth-validation-middlewares";
 import {getErrors} from "../middlewares/validation-middlewares";
 import {jwtService} from "../domain/jwt-service";
 import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
