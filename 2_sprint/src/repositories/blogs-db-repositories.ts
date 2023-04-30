@@ -1,25 +1,25 @@
-import {blogType, bodyBlogType} from "./types-blogs-repositories";
+import {BlogType, BodyBlogType} from "./repositories-types/blogs-types-repositories";
 import {blogsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {postType} from "./types-posts-repositories";
+import {PostType} from "./repositories-types/posts-types-repositories";
 
 
 export const blogsDbRepositories = {
 
 
-    async createBlog(blog: blogType): Promise<void> {
+    async createBlog(blog: BlogType): Promise<void> {
 
         await blogsCollection.insertOne(blog);
         return;
     },
 
-    async createPostByBlogId(post: postType): Promise<void> {
+    async createPostByBlogId(post: PostType): Promise<void> {
 
         await postsCollection.insertOne(post);
         return;
     },
 
-    async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
+    async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
         const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {

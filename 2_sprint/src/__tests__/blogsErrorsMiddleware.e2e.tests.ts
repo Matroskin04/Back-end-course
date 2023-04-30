@@ -1,7 +1,7 @@
 import {describe} from "node:test";
 const request = require("supertest");
 import {blogsCollection, client} from "../db";
-import {blogType} from "../repositories/types-blogs-repositories";
+import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
 import {app} from "../setting";
 
 const generalBlogInputData = {
@@ -9,7 +9,7 @@ const generalBlogInputData = {
     description: "Fantastic description",
     websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
 };
-const arrayOfBlogs: Array<blogType | null> = [];
+const arrayOfBlogs: Array<BlogType | null> = [];
 let id: string | undefined
 
 

@@ -1,9 +1,9 @@
 import {usersRepositories} from "../repositories/users-repositories";
-import {bodyUserType, userOutPutType, userType} from "../repositories/types-users-repositories";
+import {BodyUserType, UserOutPutType, UserType} from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcrypt";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
-export function mappingUser(user: any): userOutPutType { // todo поправить тип с монгощной айди
+export function mappingUser(user: any): UserOutPutType { // todo поправить тип с монгощной айди
     return {
         id: user._id,
         login: user.login,
@@ -13,14 +13,14 @@ export function mappingUser(user: any): userOutPutType { // todo поправи�
 }
 export const usersService = {
 
-    async createUser(bodyUser: bodyUserType): Promise<userOutPutType> {
+    async createUser(bodyUser: BodyUserType): Promise<UserOutPutType> {
 
         // const hasEmail = await usersCollection.findOne({email: bodyUser.email}); - проверка на наличие такого же емаила
         // const hasLogin = await usersCollection.findOne({login: bodyUser.login});
 
         const passHash = await this._generateHash(bodyUser.password);
 
-        const user: userType = {
+        const user: UserType = {
             login: bodyUser.login,
             email: bodyUser.email,
             createdAt: new Date().toISOString(),
@@ -41,7 +41,7 @@ export const usersService = {
         return await bcrypt.hash(password, 10)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<userType | false> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UserType | false> {
 
         const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
         if (!user) {

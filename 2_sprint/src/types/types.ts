@@ -1,10 +1,5 @@
 import {Request} from "express";
 
-export type errorsMessagesType = Array<{
-    "message": string
-    "field": string
-}>
-
 export type RequestWithQuery<Q> = Request<{},{},{},Q>;
 export type RequestWithBody<B> = Request<{},{},B>;
 export type RequestWithParams<P> = Request<P>;

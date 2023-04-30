@@ -1,24 +1,24 @@
-import {bodyPostType, postType} from "./types-posts-repositories";
+import {BodyPostType, PostType} from "./repositories-types/posts-types-repositories";
 import {commentsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {commentType} from "./types-comments-repositories";
+import {CommentType} from "./repositories-types/comments-types-repositories";
 
 
 export const postsRepositories = {
 
-    async createPost(post: postType): Promise<void> {
+    async createPost(post: PostType): Promise<void> {
 
         await postsCollection.insertOne(post);
         return;
     },
 
-    async createCommentByPostId(comment: commentType): Promise<void> {
+    async createCommentByPostId(comment: CommentType): Promise<void> {
 
         await commentsCollection.insertOne(comment);
         return;
     },
 
-    async updatePost(bodyPost: bodyPostType, id: string): Promise<boolean> {
+    async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {
 
         const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {

@@ -1,10 +1,10 @@
 import {usersCollection} from "../db";
-import {userType} from "./types-users-repositories";
+import {UserType} from "./repositories-types/users-types-repositories";
 import {ObjectId} from "mongodb";
 
 export const usersRepositories = {
 
-    async createUser(bodyUser: userType): Promise<void> {
+    async createUser(bodyUser: UserType): Promise<void> {
 
         await usersCollection.insertOne(bodyUser);
         return;

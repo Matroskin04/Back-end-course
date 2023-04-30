@@ -1,13 +1,13 @@
 import {usersCollection} from "../db";
-import {variablesForReturn} from "./blogs-query-repository";
 import {mappingUser} from "../domain/users-service";
-import {usersPaginationType} from "./types-users-query-repository";
-import {userType} from "../repositories/types-users-repositories";
-import {QueryUserModel} from "../models/UsersModels/UriUserModel";
+import {UsersPaginationType} from "./query-repository-types/users-types-query-repository";
+import {UserType} from "../repositories/repositories-types/users-types-repositories";
+import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
+import {variablesForReturn} from "./utils/variables-for-return";
 export const usersQueryRepository = {
 
-    async getAllUsers(query: QueryUserModel | null = null): Promise<usersPaginationType> {
+    async getAllUsers(query: QueryUserModel | null = null): Promise<UsersPaginationType> {
 
         const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
         const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
@@ -34,7 +34,7 @@ export const usersQueryRepository = {
         }
     },
 
-    async getUserByLoginOrEmail(logOrEmail: string): Promise<userType | null> {
+    async getUserByLoginOrEmail(logOrEmail: string): Promise<UserType | null> {
 
         const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
@@ -45,7 +45,7 @@ export const usersQueryRepository = {
         return null;
     },
 
-    async getUserByUserId(userId: ObjectId): Promise<userType | null> {
+    async getUserByUserId(userId: ObjectId): Promise<UserType | null> {
 
         const user = await usersCollection.findOne({_id: userId}); // todo делать проверку? По идее userId всегда есть
 

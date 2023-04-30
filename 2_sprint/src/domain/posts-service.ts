@@ -1,15 +1,15 @@
-import {bodyPostType, postType} from "../repositories/types-posts-repositories";
+import {BodyPostType, PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {postsRepositories} from "../repositories/posts-repositories";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
-import {commentOutputType, commentType} from "../repositories/types-comments-repositories";
+import {CommentOutputType, CommentType} from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {mappingComment} from "./comments-service";
 import {postsCollection} from "../db";
 
 export function renameMongoIdPost(post: any
-): postType {
+): PostType {
     post.id = post._id;
     delete post._id;
     return post;
@@ -17,11 +17,11 @@ export function renameMongoIdPost(post: any
 
 export const postsService = {
 
-    async createPost(body: bodyPostType): Promise<postType> {
+    async createPost(body: BodyPostType): Promise<PostType> {
 
         const blogName = await blogsQueryRepository.getSingleBlog(body.blogId);
 
-        const post: postType = {
+        const post: PostType = {
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
@@ -33,7 +33,7 @@ export const postsService = {
         return renameMongoIdPost(post)
     },
 
-    async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | commentOutputType> {
+    async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
 
         const user = await usersQueryRepository.getUserByUserId(userId)
         if (!user) { // todo Нужно ли делать проверку
@@ -45,7 +45,7 @@ export const postsService = {
             return null;
         }
 
-        const comment: commentType = {
+        const comment: CommentType = {
             content: body.content,
             commentatorInfo: {
                 userId: userId.toString(),
@@ -59,7 +59,7 @@ export const postsService = {
         return mappingComment(comment);
     },
 
-    async updatePost(body: bodyPostType, id: string): Promise<boolean> {
+    async updatePost(body: BodyPostType, id: string): Promise<boolean> {
 
         return await postsRepositories.updatePost(body, id);
     },

@@ -1,15 +1,15 @@
-import {commentOfPostPaginationType, postPaginationType} from "./types-posts-query-repository";
+import {CommentOfPostPaginationType, PostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {commentsCollection, postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
-import {postType} from "../repositories/types-posts-repositories";
+import {PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {variablesForReturn} from "./blogs-query-repository";
-import {QueryModel} from "../models/UriModels";
 import {mappingComment} from "../domain/comments-service";
+import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
+import {variablesForReturn} from "./utils/variables-for-return";
 
 export const postsQueryRepository = {
 
-    async getAllPosts(query: QueryModel | null = null): Promise<postPaginationType> {
+    async getAllPosts(query: QueryPostModel | null = null): Promise<PostPaginationType> {
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
@@ -33,7 +33,7 @@ export const postsQueryRepository = {
         }
     },
 
-    async getSinglePost(id: string): Promise<null | postType> {
+    async getSinglePost(id: string): Promise<null | PostType> {
 
         const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
 
@@ -43,7 +43,7 @@ export const postsQueryRepository = {
         return null;
     },
 
-    async getCommentOfPost(query: QueryModel | null = null, id: string): Promise<commentOfPostPaginationType | null> {
+    async getCommentOfPost(query: QueryPostModel | null = null, id: string): Promise<CommentOfPostPaginationType | null> {
 
         const post = await this.getSinglePost(id);
         if (!post) {

@@ -1,9 +1,9 @@
 import {MongoClient} from 'mongodb'
 import dotenv from 'dotenv'
-import {blogType} from "./repositories/types-blogs-repositories";
-import {postType} from "./repositories/types-posts-repositories";
-import {userType} from "./repositories/types-users-repositories";
-import {commentType} from "./repositories/types-comments-repositories";
+import {BlogType} from "./repositories/repositories-types/blogs-types-repositories";
+import {PostType} from "./repositories/repositories-types/posts-types-repositories";
+import {UserType} from "./repositories/repositories-types/users-types-repositories";
+import {CommentType} from "./repositories/repositories-types/comments-types-repositories";
 
 dotenv.config()
 
@@ -15,10 +15,10 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const db = client.db()
-export const blogsCollection = db.collection<blogType>('blogs'); // todo если поменять где будет ругаться
-export const postsCollection = db.collection<postType>('posts');
-export const usersCollection = db.collection<userType>('users');
-export const commentsCollection = db.collection<commentType>('comments');
+export const blogsCollection = db.collection<BlogType>('blogs'); // todo если поменять где будет ругаться
+export const postsCollection = db.collection<PostType>('posts');
+export const usersCollection = db.collection<UserType>('users');
+export const commentsCollection = db.collection<CommentType>('comments');
 
 export async function runDb() {
     try {

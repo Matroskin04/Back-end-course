@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 
-export type commentType = {
+export type CommentType = {
     id?: string
     _id?: ObjectId
     content: string
@@ -12,7 +12,7 @@ export type commentType = {
     postId: string
 }
 
-export type commentOutputType = {
+export type CommentOutputType = {
     id: string
     content: string
     commentatorInfo: {

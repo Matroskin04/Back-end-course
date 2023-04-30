@@ -1,4 +1,4 @@
-export type blogType = {
+export type BlogType = {
     id?: string
     name: string
     description: string
@@ -7,7 +7,7 @@ export type blogType = {
     isMembership: boolean
 }
 
-export type bodyBlogType = {
+export type BodyBlogType = {
     name: string
     description: string
     websiteUrl: string

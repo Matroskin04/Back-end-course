@@ -1,10 +1,10 @@
-import {commentOutputType} from "../repositories/types-comments-repositories";
+import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
 import {commentsRepositories} from "../repositories/comments-repositories";
 import {ObjectId} from "mongodb";
 import {commentsCollection} from "../db";
 
 export function mappingComment(comment: any
-): commentOutputType {
+): CommentOutputType {
     console.log(comment, comment.userLogin)
     return {
         id: comment._id,

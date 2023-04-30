@@ -1,20 +1,20 @@
-import {bodyBlogType, blogType} from "../repositories/types-blogs-repositories";
+import {BodyBlogType, BlogType} from "../repositories/repositories-types/blogs-types-repositories";
 import {blogsDbRepositories} from "../repositories/blogs-db-repositories";
-import {bodyPostByBlogIdType, postType} from "../repositories/types-posts-repositories";
+import {BodyPostByBlogIdType, PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
 export function renameMongoIdBlog(blog: any //Todo иммутабельность
-): blogType {
+): BlogType {
     blog.id = blog._id;
     delete blog._id;
     return blog;
 }
 export const blogsService = {
 
-    async createBlog(bodyBlog: bodyBlogType): Promise<blogType> {
+    async createBlog(bodyBlog: BodyBlogType): Promise<BlogType> {
 
-        const blog: blogType = {
+        const blog: BlogType = {
             ...bodyBlog,
             createdAt: new Date().toISOString(),
             isMembership: false
@@ -24,12 +24,12 @@ export const blogsService = {
         return renameMongoIdBlog(blog);
     },
 
-    async createPostByBlogId(blogId: string, body: bodyPostByBlogIdType): Promise<null | postType> {
+    async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostType> {
         //checking the existence of a blog
         const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
 
         if (hasCollectionBlogId) {
-            const post: postType = {
+            const post: PostType = {
                 title: body.title,
                 shortDescription: body.shortDescription,
                 content: body.content,
@@ -44,7 +44,7 @@ export const blogsService = {
         return null
     },
 
-    async updateBlog(bodyBlog: bodyBlogType, id: string): Promise<boolean> {
+    async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
         return await blogsDbRepositories.updateBlog(bodyBlog, id);
     },

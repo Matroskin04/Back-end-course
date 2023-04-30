@@ -1,5 +1,5 @@
 
-export type postType = {
+export type PostType = {
     id?:	string
     title:	string
     shortDescription:	string
@@ -10,14 +10,14 @@ export type postType = {
 
 }
 
-export type bodyPostType = {
+export type BodyPostType = {
     title:	string
     shortDescription:	string
     content:	string
     blogId:	string
 }
 
-export type bodyPostByBlogIdType = {
+export type BodyPostByBlogIdType = {
     title:	string
     shortDescription:	string
     content:	string

@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 
-export type userType = {
+export type UserType = {
     id?: string
     _id?: ObjectId
     login: string
@@ -9,23 +9,18 @@ export type userType = {
     passwordHash: string
 }
 
-export type userOutPutType = {
+export type UserOutPutType = {
     id?: string
     login: string
     email: string
     createdAt: string
 }
 
-export type bodyUserType = {
+export type BodyUserType = {
     login: string
     email: string
     password: string
 }
 
-export type userTypeWithoutPass = {
-    login: string
-    email: string
-    createdAt: string
-}
 
 
