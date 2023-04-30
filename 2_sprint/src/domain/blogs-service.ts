@@ -1,14 +1,23 @@
-import {BodyBlogType, BlogType} from "../repositories/repositories-types/blogs-types-repositories";
+import {
+    BodyBlogType,
+    BlogType,
+    BlogTypeWithId
+} from "../repositories/repositories-types/blogs-types-repositories";
 import {blogsDbRepositories} from "../repositories/blogs-db-repositories";
 import {BodyPostByBlogIdType, PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
 export function renameMongoIdBlog(blog: any //Todo иммутабельность
-): BlogType {
-    blog.id = blog._id;
-    delete blog._id;
-    return blog;
+): BlogTypeWithId {
+    return {
+        id: blog._id,
+        name: blog.name,
+        description: blog.description,
+        websiteUrl: blog.websiteUrl,
+        createdAt: blog.createdAt,
+        isMembership: blog.isMembership
+    }
 }
 export const blogsService = {
 

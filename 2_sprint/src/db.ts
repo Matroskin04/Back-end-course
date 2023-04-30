@@ -15,7 +15,7 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const db = client.db()
-export const blogsCollection = db.collection<BlogType>('blogs'); // todo если поменять где будет ругаться
+export const blogsCollection = db.collection<BlogType>('blogs'); // todo тип указывается "просто так"?
 export const postsCollection = db.collection<PostType>('posts');
 export const usersCollection = db.collection<UserType>('users');
 export const commentsCollection = db.collection<CommentType>('comments');
