@@ -1,5 +1,10 @@
 import {usersRepositories} from "../repositories/users-repositories";
-import {BodyUserType, UserOutPutType, UserType} from "../repositories/repositories-types/users-types-repositories";
+import {
+    BodyUserType,
+    UserOutPutType,
+    UserType,
+    UserTypeWith_Id
+} from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcrypt";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
@@ -41,7 +46,7 @@ export const usersService = {
         return await bcrypt.hash(password, 10)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<UserType | false> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UserTypeWith_Id | false> {
 
         const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
         if (!user) {

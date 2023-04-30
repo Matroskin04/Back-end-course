@@ -1,7 +1,7 @@
 import {usersCollection} from "../db";
 import {mappingUser} from "../domain/users-service";
 import {UsersPaginationType} from "./query-repository-types/users-types-query-repository";
-import {UserType} from "../repositories/repositories-types/users-types-repositories";
+import {UserTypeWith_Id} from "../repositories/repositories-types/users-types-repositories";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
@@ -34,7 +34,7 @@ export const usersQueryRepository = {
         }
     },
 
-    async getUserByLoginOrEmail(logOrEmail: string): Promise<UserType | null> {
+    async getUserByLoginOrEmail(logOrEmail: string): Promise<UserTypeWith_Id | null> {
 
         const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
@@ -45,7 +45,7 @@ export const usersQueryRepository = {
         return null;
     },
 
-    async getUserByUserId(userId: ObjectId): Promise<UserType | null> {
+    async getUserByUserId(userId: ObjectId): Promise<UserTypeWith_Id | null> {
 
         const user = await usersCollection.findOne({_id: userId}); // todo делать проверку? По идее userId всегда есть
 

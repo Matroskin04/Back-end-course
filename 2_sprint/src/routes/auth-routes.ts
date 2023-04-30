@@ -33,7 +33,7 @@ authRoutes.get('/login/me', checkToken, async (req: Request,
         res.status(200).send({
             email: user.email,
             login: user.login,
-            userId: user._id!.toString() // todo убрать !
+            userId: user._id.toString()
         })
      }
     res.sendStatus(404)

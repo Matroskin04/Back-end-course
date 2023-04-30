@@ -1,8 +1,14 @@
 import {ObjectId} from "mongodb";
 
 export type UserType = {
-    id?: string
-    _id?: ObjectId
+    login: string
+    email: string
+    createdAt: string
+    passwordHash: string
+}
+
+export type UserTypeWith_Id = {
+    _id: ObjectId
     login: string
     email: string
     createdAt: string
@@ -10,7 +16,7 @@ export type UserType = {
 }
 
 export type UserOutPutType = {
-    id?: string
+    id: string
     login: string
     email: string
     createdAt: string

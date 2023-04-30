@@ -1,9 +1,9 @@
 import {MongoClient} from 'mongodb'
 import dotenv from 'dotenv'
-import {BlogType} from "./repositories/repositories-types/blogs-types-repositories";
-import {PostType} from "./repositories/repositories-types/posts-types-repositories";
-import {UserType} from "./repositories/repositories-types/users-types-repositories";
-import {CommentType} from "./repositories/repositories-types/comments-types-repositories";
+import {BlogTypeWith_Id} from "./repositories/repositories-types/blogs-types-repositories";
+import {PostTypeWith_Id} from "./repositories/repositories-types/posts-types-repositories";
+import {UserTypeWith_Id} from "./repositories/repositories-types/users-types-repositories";
+import {CommentTypeWith_Id} from "./repositories/repositories-types/comments-types-repositories";
 
 dotenv.config()
 
@@ -15,10 +15,10 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const db = client.db()
-export const blogsCollection = db.collection<BlogType>('blogs'); // todo тип указывается "просто так"?
-export const postsCollection = db.collection<PostType>('posts');
-export const usersCollection = db.collection<UserType>('users');
-export const commentsCollection = db.collection<CommentType>('comments');
+export const blogsCollection = db.collection<BlogTypeWith_Id>('blogs'); // todo тип указывается "просто так"?
+export const postsCollection = db.collection<PostTypeWith_Id>('posts');
+export const usersCollection = db.collection<UserTypeWith_Id>('users');
+export const commentsCollection = db.collection<CommentTypeWith_Id>('comments');
 
 export async function runDb() {
     try {

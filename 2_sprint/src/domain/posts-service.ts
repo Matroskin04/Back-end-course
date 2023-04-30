@@ -1,4 +1,4 @@
-import {BodyPostType, PostType} from "../repositories/repositories-types/posts-types-repositories";
+import {BodyPostType, PostType, PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {postsRepositories} from "../repositories/posts-repositories";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
@@ -9,10 +9,16 @@ import {mappingComment} from "./comments-service";
 import {postsCollection} from "../db";
 
 export function renameMongoIdPost(post: any
-): PostType {
-    post.id = post._id;
-    delete post._id;
-    return post;
+): PostTypeWithId {
+    return {
+        id:	post._id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId:	post.id,
+        blogName: post.blogId,
+        createdAt: post.createdAt
+    }
 }
 
 export const postsService = {
