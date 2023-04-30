@@ -51,17 +51,17 @@ describe('auth All operation, chains: /auth', () => {
             .expect(401)
     })
 
-    it(`+ POST -> should login in system with 'login'; status: 204;
-              + POST -> should login in system with 'email'; status: 204`, async () => {
+    it(`+ POST -> should login in system with 'login'; status: 200;
+              + POST -> should login in system with 'email'; status: 200`, async () => {
 
         await request(app)
             .post(`/hometask-02/auth/login`)
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
-            .expect(204);
+            .expect(200);
 
         await request(app)
             .post(`/hometask-02/auth/login`)
             .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
-            .expect(204);
+            .expect(200);
     })
 })

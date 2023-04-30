@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import {blogsRoutes} from "./routes/blogs-routes";
 import {postsRoutes} from "./routes/posts-routes";
 import {usersRoutes} from "./routes/users-routes";
@@ -11,7 +10,10 @@ import {commentsRoutes} from "./routes/comments-service";
 export const privateKey = process.env.PRIVATE_KEY || 'testingKey123' // todo куда
 export const app = express()
 
-app.use(bodyParser({}))
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 
 app.use('/hometask-02/blogs', blogsRoutes)
 app.use('/hometask-02/posts', postsRoutes)
