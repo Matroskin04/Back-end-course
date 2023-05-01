@@ -1,5 +1,3 @@
-import {ObjectId} from "mongodb";
-
 export type BlogType = {
     name: string
     description: string
@@ -8,23 +6,7 @@ export type BlogType = {
     isMembership: boolean
 }
 
-export type BlogTypeWithId = {
-    id: string
-    name: string
-    description: string
-    websiteUrl: string
-    createdAt: string
-    isMembership: boolean
-}
-
-export type BlogTypeWith_Id = {
-    _id: ObjectId
-    name: string
-    description: string
-    websiteUrl: string
-    createdAt: string
-    isMembership: boolean
-}
+export type BlogTypeWithId = BlogType & {id: string}
 
 export type BodyBlogType = {
     name: string

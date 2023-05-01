@@ -7,7 +7,7 @@ export const checkErrorsAuth = [
     body('loginOrEmail')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -16,12 +16,12 @@ export const checkErrorsAuth = [
 
         .if(body('loginOrEmail').not().matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/))
         .isLength({max: 10, min: 3})
-        .withMessage('The length should be from 3 to 10'),
+        .withMessage('The length should be from 3 to 10 characters'),
 
     body('password')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .bail()

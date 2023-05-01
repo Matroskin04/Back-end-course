@@ -7,13 +7,7 @@ export type UserType = {
     passwordHash: string
 }
 
-export type UserTypeWith_Id = {
-    _id: ObjectId
-    login: string
-    email: string
-    createdAt: string
-    passwordHash: string
-}
+export type UserTypeWith_Id = UserType & {_id: ObjectId}
 
 export type UserOutPutType = {
     id: string

@@ -5,7 +5,7 @@ export const validateBodyOfComment = [
     body('content')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -14,8 +14,8 @@ export const validateBodyOfComment = [
 
         .notEmpty()
         .bail()
-        .withMessage('It should not be not empty')
+        .withMessage('The string should not be empty')
 
         .isLength({min: 20, max: 300})
-        .withMessage('The length must be between 20 and 300 characters'),
+        .withMessage('The length should be from 20 to 300 characters'),
 ]

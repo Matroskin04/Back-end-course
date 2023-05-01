@@ -39,8 +39,7 @@ export const usersQueryRepository = {
         const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
         if (user) {
-            // @ts-ignore
-            return user; // todo Ошибка вероятно из-за 'or' (2+ сущности) - ставить игнор нормально?
+            return user;
         }
         return null;
     },

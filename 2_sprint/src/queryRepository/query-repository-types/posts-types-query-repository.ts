@@ -1,4 +1,4 @@
-import {PostType} from "../../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
 import {CommentOutputType} from "../../repositories/repositories-types/comments-types-repositories";
 
 export type PostPaginationType = {
@@ -6,7 +6,7 @@ export type PostPaginationType = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<PostType>
+    items: Array<PostTypeWithId>
 }
 
 export type CommentOfPostPaginationType = {

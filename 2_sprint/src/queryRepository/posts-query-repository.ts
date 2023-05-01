@@ -1,7 +1,7 @@
 import {CommentOfPostPaginationType, PostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {commentsCollection, postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
-import {PostType} from "../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
 import {mappingComment} from "../domain/comments-service";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
@@ -33,7 +33,7 @@ export const postsQueryRepository = {
         }
     },
 
-    async getSinglePost(id: string): Promise<null | PostType> {
+    async getSinglePost(id: string): Promise<null | PostTypeWithId> {
 
         const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
 

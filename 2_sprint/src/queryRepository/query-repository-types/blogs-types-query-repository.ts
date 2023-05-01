@@ -1,5 +1,5 @@
 import {BlogTypeWithId} from "../../repositories/repositories-types/blogs-types-repositories";
-import {PostType} from "../../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
 
 export type BlogPaginationType = {
     pagesCount: number
@@ -14,5 +14,5 @@ export type PostsOfBlogPaginationType = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<PostType>
+    items: Array<PostTypeWithId>
 }

@@ -8,7 +8,7 @@ import {
 import bcrypt from "bcrypt";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
-export function mappingUser(user: any): UserOutPutType { // todo поправить тип с монгощной айди
+export function mappingUser(user: any): UserOutPutType {
     return {
         id: user._id,
         login: user.login,

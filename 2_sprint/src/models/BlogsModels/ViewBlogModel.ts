@@ -1,7 +1,7 @@
-import {BlogType, BlogTypeWithId} from "../../repositories/repositories-types/blogs-types-repositories";
-import {PostType} from "../../repositories/repositories-types/posts-types-repositories";
+import {BlogTypeWithId} from "../../repositories/repositories-types/blogs-types-repositories";
+import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
 
-export type ViewBlogModel = BlogType
+export type ViewBlogModel = BlogTypeWithId
 
 export type ViewAllBlogsModel = {
     pagesCount: number
@@ -16,5 +16,5 @@ export type ViewPostsOfBlogModel = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<PostType>
+    items: Array<PostTypeWithId>
 }

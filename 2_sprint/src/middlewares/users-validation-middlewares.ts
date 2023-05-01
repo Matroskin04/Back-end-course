@@ -5,7 +5,7 @@ export const validateBodyOfUser = [
     body('login')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -17,24 +17,24 @@ export const validateBodyOfUser = [
         .withMessage('Incorrect login')
 
         .isLength({max: 10, min: 3})
-        .withMessage('The title should be string and its length should be less then 31'),
+        .withMessage('The length should be from 3 to 10'),
 
     body('password')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .bail()
         .withMessage('It should be a string')
 
         .isLength({max: 20, min: 6})
-        .withMessage('The title should be string and its length should be less then 31'),
+        .withMessage('The length should be from 6 to 20'),
 
     body('email')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .bail()

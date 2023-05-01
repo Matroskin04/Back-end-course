@@ -2,7 +2,7 @@ import {blogsCollection, postsCollection} from "../db";
 import {renameMongoIdBlog} from "../domain/blogs-service";
 import {BlogPaginationType, PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 import {renameMongoIdPost} from "../domain/posts-service";
-import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
+import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
@@ -56,7 +56,7 @@ export const blogsQueryRepository = {
         }
     },
 
-    async getSingleBlog(id: string): Promise<null | BlogType> {
+    async getSingleBlog(id: string): Promise<null | BlogTypeWithId> {
 
         const singleBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
 

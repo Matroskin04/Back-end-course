@@ -1,11 +1,11 @@
-import {PostType} from "../../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
 
-export type ViewPostModel = PostType;
+export type ViewPostModel = PostTypeWithId;
 
 export type ViewAllPostsModel = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: Array<PostType>
+    items: Array<PostTypeWithId>
 }

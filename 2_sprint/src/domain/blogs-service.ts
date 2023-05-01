@@ -3,8 +3,12 @@ import {
     BlogType,
     BlogTypeWithId
 } from "../repositories/repositories-types/blogs-types-repositories";
-import {blogsDbRepositories} from "../repositories/blogs-db-repositories";
-import {BodyPostByBlogIdType, PostType} from "../repositories/repositories-types/posts-types-repositories";
+import {blogsRepositories} from "../repositories/blogs-repositories";
+import {
+    BodyPostByBlogIdType,
+    PostType,
+    PostTypeWithId
+} from "../repositories/repositories-types/posts-types-repositories";
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
@@ -21,7 +25,7 @@ export function renameMongoIdBlog(blog: any //Todo иммутабельност�
 }
 export const blogsService = {
 
-    async createBlog(bodyBlog: BodyBlogType): Promise<BlogType> {
+    async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
         const blog: BlogType = {
             ...bodyBlog,
@@ -29,11 +33,11 @@ export const blogsService = {
             isMembership: false
         }
 
-        await blogsDbRepositories.createBlog(blog);
+        await blogsRepositories.createBlog(blog);
         return renameMongoIdBlog(blog);
     },
 
-    async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostType> {
+    async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
         //checking the existence of a blog
         const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
 
@@ -46,7 +50,7 @@ export const blogsService = {
                 blogName: hasCollectionBlogId.name,
                 createdAt: new Date().toISOString()
             };
-            await blogsDbRepositories.createPostByBlogId(post);
+            await blogsRepositories.createPostByBlogId(post);
             return renameMongoIdPost(post)
         }
 
@@ -55,11 +59,11 @@ export const blogsService = {
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
-        return await blogsDbRepositories.updateBlog(bodyBlog, id);
+        return await blogsRepositories.updateBlog(bodyBlog, id);
     },
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
-        return await blogsDbRepositories.deleteSingleBlog(id);
+        return await blogsRepositories.deleteSingleBlog(id);
     }
 }

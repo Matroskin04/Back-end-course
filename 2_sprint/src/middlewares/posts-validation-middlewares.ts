@@ -7,47 +7,67 @@ export const validateBodyOfPost = [
     body('title')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('The string should not be empty')
+
         .isLength({max: 30})
-        .withMessage('The title should be string and its length should be less then 31'),
+        .withMessage('The length should be less than 31'),
 
     body('shortDescription')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('The string should not be empty')
+
         .isLength({max: 100})
-        .withMessage('The shortDescription should be string and its length should be less then 101'),
+        .withMessage('The length should be less than 101'),
 
     body('content')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
+
         .isString()
-        .bail()
         .trim()
-        .not()
-        .isEmpty()
+        .bail()
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('The string should not be empty')
+
         .isLength({max: 1000})
-        .withMessage('The content should be string and its length should be less then 1001'),
+        .withMessage('The length should be less than 1001'),
 
     body('blogId')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
+        .trim()
         .bail()
-        .withMessage('The title must be string')
+        .withMessage('It should be a string')
+
+        .notEmpty()
+        .bail()
+        .withMessage('The string should not be empty')
         .custom( async (value): Promise<boolean | void> => {
 
             const result = await blogsCollection.findOne({_id: new ObjectId(value)})
@@ -65,7 +85,7 @@ export const checkErrorsPostByBlogId = [
     body('title')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -74,15 +94,15 @@ export const checkErrorsPostByBlogId = [
 
         .notEmpty()
         .bail()
-        .withMessage('It should not be not empty')
+        .withMessage('The string should not be empty')
 
         .isLength({max: 30})
-        .withMessage('The title should be string and its length should be less then 31'),
+        .withMessage('The length should be less than 31'),
 
     body('shortDescription')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -91,15 +111,15 @@ export const checkErrorsPostByBlogId = [
 
         .notEmpty()
         .bail()
-        .withMessage('It should not be not empty')
+        .withMessage('The string should not be empty')
 
         .isLength({max: 100})
-        .withMessage('The shortDescription should be string and its length should be less then 101'),
+        .withMessage('The length should be less than 101'),
 
     body('content')
         .exists()
         .bail()
-        .withMessage('There isn\'t this meaning')
+        .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
@@ -108,8 +128,8 @@ export const checkErrorsPostByBlogId = [
 
         .notEmpty()
         .bail()
-        .withMessage('It should not be not empty')
+        .withMessage('The string should not be empty')
 
         .isLength({max: 1000})
-        .withMessage('The content should be string and its length should be less then 1001')
+        .withMessage('The length should be less than 1001')
 ]

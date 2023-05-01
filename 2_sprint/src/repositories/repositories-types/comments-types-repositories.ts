@@ -6,20 +6,11 @@ export type CommentType = {
         userId: string
         userLogin: string
     },
-    createdAt: string,
+    createdAt: string
     postId: string
 }
 
-export type CommentTypeWith_Id = {
-    _id: ObjectId
-    content: string
-    commentatorInfo: {
-        userId: string
-        userLogin: string
-    },
-    createdAt: string,
-    postId: string
-}
+export type CommentTypeWith_Id = CommentType & {_id: ObjectId}
 
 export type CommentOutputType = {
     id: string

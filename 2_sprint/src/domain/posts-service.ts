@@ -23,7 +23,7 @@ export function renameMongoIdPost(post: any
 
 export const postsService = {
 
-    async createPost(body: BodyPostType): Promise<PostType> {
+    async createPost(body: BodyPostType): Promise<PostTypeWithId> {
 
         const blogName = await blogsQueryRepository.getSingleBlog(body.blogId);
 
