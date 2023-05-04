@@ -9,12 +9,15 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
 export const authService = {
 
-    async registerUser(email: string, login: string, password: string): Promise<boolean> {
+    async registerUser(email: string, login: string, password: string): Promise<string | true> {
 
         const userByEmail = await usersQueryRepository.getUserByLoginOrEmail(email);
+        if (userByEmail) {
+            return "email"
+        }
         const userByLogin = await usersQueryRepository.getUserByLoginOrEmail(login);
-        if (userByEmail || userByLogin) {
-            return false;
+        if (userByLogin) {
+            return "login";
         }
 
         const passwordHash = await usersService._generateHash(password);
@@ -36,32 +39,42 @@ export const authService = {
             await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode)
             return true;
         } catch (err) {
-            console.log(err)
-            return false;
+            throw new Error(`Error: ${err}`)
         }
     },
 
-    async confirmEmail(code: string): Promise<boolean> {
+    async confirmEmail(code: string): Promise<true | string> {
 
         const user = await usersQueryRepository.getUserByCodeConfirmation(code);
-        if (!user) return false
-        if(user.emailConfirmation.expirationDate < new Date()) return false
+        if (!user) {
+            return 'Code is incorrect';
+        }
+        if(user.emailConfirmation.expirationDate < new Date()) {
+            return 'Code is already expired';
+        }
+        if(user.emailConfirmation.isConfirmed) {
+            return 'Code is already been applied';
+        }
 
-        return await usersRepositories.updateConfirmation(user._id);
+        await usersRepositories.updateConfirmation(user._id);
+        return true;
     },
 
-    async resendConfirmationEmailMessage(email: string): Promise<boolean> {
+    async resendConfirmationEmailMessage(email: string): Promise<true | string> {
 
         const userByEmail = await usersQueryRepository.getUserByLoginOrEmail(email);
-        if (!userByEmail) return false
-        if (userByEmail.emailConfirmation.isConfirmed) return false
+        if (!userByEmail) {
+            return 'This email has not been registered yet';
+        }
+        if (userByEmail.emailConfirmation.isConfirmed) {
+            return 'Email is already confirmed';
+        }
 
         try {
             await emailManager.sendEmailConfirmationMessage(email, userByEmail.emailConfirmation.confirmationCode)
             return true
         } catch (err) {
-            console.log(err);
-            return false;
+            throw new Error(`Error: ${err}`) // todo после ошибки не нужно return
         }
     }
 }
