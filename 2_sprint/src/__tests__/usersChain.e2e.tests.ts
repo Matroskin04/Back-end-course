@@ -1,6 +1,6 @@
 import {describe} from "node:test";
 import {client} from "../db";
-import request from "supertest"; // todo в чем проблема
+import request from "supertest";
 import {app} from "../setting";
 
 let idOfUser: string;
@@ -35,11 +35,11 @@ describe('users All operation, chains: /users', () => {
             .expect(400, {
                 errorsMessages: [
                     {
-                        message: 'The title should be string and its length should be less then 31',
+                        message: 'The length should be from 3 to 10',
                         field: "login"
                     },
                     {
-                        message: 'The title should be string and its length should be less then 31',
+                        message: 'The length should be from 6 to 20',
                         field: "password"
                     }
                 ]
@@ -75,9 +75,9 @@ describe('users All operation, chains: /users', () => {
            createdAt: expect.any(String),
            email: 'dim@mail.ru'})
 
-        const responseGet = await request(app)
-            .get(`/hometask-02/users`)
-            expect(200)
+        // const responseGet = await request(app)
+        //     .get(`/hometask-02/users`)
+        //     expect(200)
        /*expect(responseGet.body).toEqual({ // todo Как проверить содержимое
                 pagesCount: 0,
                 page: 1,

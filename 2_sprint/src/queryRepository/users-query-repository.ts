@@ -1,13 +1,13 @@
 import {usersCollection} from "../db";
 import {mappingUser} from "../domain/users-service";
 import {UsersPaginationType} from "./query-repository-types/users-types-query-repository";
-import {UserTypeWith_Id} from "../repositories/repositories-types/users-types-repositories";
+import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
 export const usersQueryRepository = {
 
-    async getAllUsers(query: QueryUserModel | null = null): Promise<UsersPaginationType> {
+    async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
 
         const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
         const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
@@ -15,7 +15,7 @@ export const usersQueryRepository = {
 
         const countAllUsersSort = await usersCollection
             .countDocuments({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
-                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]}); // todo КАК: при 1 параметре - пересечение. При двух - объединение
+                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]}); // todo через if проверить
 
 
         const allUsersOnPages = await usersCollection
@@ -34,7 +34,7 @@ export const usersQueryRepository = {
         }
     },
 
-    async getUserByLoginOrEmail(logOrEmail: string): Promise<UserTypeWith_Id | null> {
+    async getUserByLoginOrEmail(logOrEmail: string): Promise<UserDBType | null> {
 
         const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
@@ -44,13 +44,17 @@ export const usersQueryRepository = {
         return null;
     },
 
-    async getUserByUserId(userId: ObjectId): Promise<UserTypeWith_Id | null> {
+    async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
 
-        const user = await usersCollection.findOne({_id: userId}); // todo делать проверку? По идее userId всегда есть
+        const user = await usersCollection.findOne({_id: userId});
 
         if (user) {
             return user;
         }
-        return null;
+        return user;
+    },
+
+    async getUserByCodeConfirmation(code: string): Promise<UserDBType | null> {
+        return await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
     }
 }

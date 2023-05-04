@@ -8,7 +8,6 @@ import {
     RequestWithQuery
 } from "../types/types";
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
-import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {ViewPostModel, ViewAllPostsModel} from "../models/PostsModels/ViewPostModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
 import {getErrors} from "../middlewares/validation-middlewares";
@@ -47,7 +46,7 @@ postsRoutes.get('/:id/comments', async (req:RequestWithParamsAndQuery<UriIdModel
 })
 postsRoutes.post('/', authorization, validateBodyOfPost, getErrors,
     async (req: RequestWithBody<CreatePostModel>,
-           res: Response<ViewPostModel | ViewAllErrorsModels>) => {
+           res: Response<ViewPostModel>) => {
 
         const result = await postsService.createPost(req.body)
         res.status(201).send(result)
@@ -55,7 +54,7 @@ postsRoutes.post('/', authorization, validateBodyOfPost, getErrors,
 });
 postsRoutes.post('/:id/comments', checkToken, validateBodyOfComment, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
-           res: Response<ViewCommentOfPostModel | ViewAllErrorsModels>) => {
+           res: Response<ViewCommentOfPostModel>) => {
 
     const result = await postsService.createCommentByPostId(req.body, req.userId!, req.params.id);
     result ? res.status(201).send(result)
@@ -63,14 +62,14 @@ postsRoutes.post('/:id/comments', checkToken, validateBodyOfComment, getErrors,
 });
 postsRoutes.put('/:id', authorization, validateBodyOfPost, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
-           res: Response<ViewAllErrorsModels>) => {
+           res: Response<void>) => {
 
         const result = await postsService.updatePost(req.body, req.params.id);
         result ? res.sendStatus(204)
             : res.sendStatus(404);
 });
 postsRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>,
-                                                 res: Response) => {
+                                                 res: Response<void>) => {
 
     const result = await postsService.deleteSinglePost(req.params.id);
     result ? res.sendStatus(204)

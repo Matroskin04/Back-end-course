@@ -6,7 +6,6 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/types";
 import {UriIdModel} from "../models/UriModels";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";
-import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 import {validateBodyOfUser} from "../middlewares/users-validation-middlewares";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
@@ -20,12 +19,12 @@ usersRoutes.get('/', authorization, async (req: RequestWithQuery<QueryUserModel>
 })
 
 usersRoutes.post('/', authorization, validateBodyOfUser, getErrors, async (req: RequestWithBody<CreateUserModel>,
-                                                                           res: Response<ViewAllErrorsModels | ViewUserModel>) =>{
+                                                                           res: Response<ViewUserModel>) =>{
     const result = await usersService.createUser(req.body);
     res.status(201).send(result);
 })
 
-usersRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>, res: Response) => {
+usersRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>, res: Response<void>) => {
 
     const result = await usersService.deleteSingleUser(req.params.id);
     result ? res.sendStatus(204)

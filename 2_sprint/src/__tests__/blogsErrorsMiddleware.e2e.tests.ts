@@ -1,7 +1,7 @@
 import {describe} from "node:test";
 const request = require("supertest");
 import {blogsCollection, client} from "../db";
-import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
+import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {app} from "../setting";
 
 const generalBlogInputData = {
@@ -9,8 +9,8 @@ const generalBlogInputData = {
     description: "Fantastic description",
     websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
 };
-const arrayOfBlogs: Array<BlogType | null> = [];
-let id: string | undefined
+const arrayOfBlogs: Array<BlogTypeWithId | null> = [];
+// let id: string | undefined
 
 
 describe('POST: /blogs', () => {
@@ -136,7 +136,7 @@ describe('POST: /blogs', () => {
         expect(error).toEqual({
             "errorsMessages": [
                 {
-                    "message": "The name should be sting and its length must be less then 16",
+                    "message": "The length should be less than 16",
                     "field": "name"
                 }
             ]
@@ -166,7 +166,7 @@ describe('POST: /blogs', () => {
                     "field": "name"
                 },
                 {
-                    "message": "There isn\'t this meaning",
+                    "message": "There isn't such parameter",
                     "field": "description"
                 },
                 {
@@ -196,7 +196,7 @@ describe('POST: /blogs', () => {
         expect(error).toEqual({
             "errorsMessages": [
                 {
-                    "message": "There isn\'t this meaning",
+                    "message": "There isn't such parameter",
                     "field": "name"
                 },
                 {
@@ -230,11 +230,11 @@ describe('POST: /blogs', () => {
         expect(error).toEqual({
             "errorsMessages": [
                 {
-                    "message": "It should not be not empty",
+                    "message": "The string should not be empty",
                     "field": "name"
                 },
                 {
-                    "message": "It should not be not empty",
+                    "message": "The string should not be empty",
                     "field": "description"
                 },
                 {
@@ -263,11 +263,11 @@ describe('POST: /blogs', () => {
         expect(error).toEqual({
             "errorsMessages": [
                 {
-                    "message": "The description\'s length must be less then 501",
+                    "message": `The description's length should be less than 501`,
                     "field": "description"
                 },
                 {
-                    "message": "There isn't this meaning",
+                    "message": "There isn't such parameter",
                     "field": "websiteUrl"
                 }
             ]

@@ -1,13 +1,17 @@
 import {ObjectId} from "mongodb";
 
-export type UserType = {
+export type UserDBType = {
+    _id: ObjectId
     login: string
     email: string
     createdAt: string
     passwordHash: string
+    emailConfirmation: {
+        confirmationCode: string
+        expirationDate: Date
+        isConfirmed: boolean
+    }
 }
-
-export type UserTypeWith_Id = UserType & {_id: ObjectId}
 
 export type UserOutPutType = {
     id: string

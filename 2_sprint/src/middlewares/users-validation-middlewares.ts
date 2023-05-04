@@ -17,7 +17,7 @@ export const validateBodyOfUser = [
         .withMessage('Incorrect login')
 
         .isLength({max: 10, min: 3})
-        .withMessage('The length should be from 3 to 10'),
+        .withMessage('The length should be from 3 to 10 characters'),
 
     body('password')
         .exists()
@@ -29,7 +29,7 @@ export const validateBodyOfUser = [
         .withMessage('It should be a string')
 
         .isLength({max: 20, min: 6})
-        .withMessage('The length should be from 6 to 20'),
+        .withMessage('The length should be from 6 to 20 characters'),
 
     body('email')
         .exists()

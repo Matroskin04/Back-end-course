@@ -1,10 +1,10 @@
 import {usersCollection} from "../db";
-import {UserType} from "./repositories-types/users-types-repositories";
+import {UserDBType} from "./repositories-types/users-types-repositories";
 import {ObjectId} from "mongodb";
 
 export const usersRepositories = {
 
-    async createUser(bodyUser: UserType): Promise<void> {
+    async createUser(bodyUser: UserDBType): Promise<void> {
 
         await usersCollection.insertOne(bodyUser);
         return;
@@ -14,5 +14,10 @@ export const usersRepositories = {
 
         const result = await usersCollection.deleteOne({_id: new ObjectId(id)} );
         return result.deletedCount > 0;
+    },
+
+    async updateConfirmation(id: ObjectId): Promise<boolean> {
+        const result = await usersCollection.updateOne({_id: id}, {$set: {'emailConfirmation.isConfirmed': true}});
+        return result.modifiedCount > 0
     }
 }

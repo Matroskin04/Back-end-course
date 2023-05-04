@@ -39,10 +39,20 @@ export const postsService = {
         return renameMongoIdPost(post)
     },
 
+    async updatePost(body: BodyPostType, id: string): Promise<boolean> {
+
+        return await postsRepositories.updatePost(body, id);
+    },
+
+    async deleteSinglePost(id: string): Promise<boolean> {
+
+        return await postsRepositories.deleteSinglePost(id);
+    },
+
     async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
 
         const user = await usersQueryRepository.getUserByUserId(userId)
-        if (!user) { // todo Нужно ли делать проверку
+        if (!user) {
             return null;
         }
 
@@ -61,17 +71,7 @@ export const postsService = {
             postId: postId
         }
 
-        await postsRepositories.createCommentByPostId(comment); // todo создавать в post или коммент
+        await postsRepositories.createCommentByPostId(comment);
         return mappingComment(comment);
-    },
-
-    async updatePost(body: BodyPostType, id: string): Promise<boolean> {
-
-        return await postsRepositories.updatePost(body, id);
-    },
-
-    async deleteSinglePost(id: string): Promise<boolean> {
-
-        return await postsRepositories.deleteSinglePost(id);
     }
 }

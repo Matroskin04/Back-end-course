@@ -2,11 +2,12 @@ import {usersRepositories} from "../repositories/users-repositories";
 import {
     BodyUserType,
     UserOutPutType,
-    UserType,
-    UserTypeWith_Id
+    UserDBType
 } from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcrypt";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
+import {ObjectId} from "mongodb";
+import {v4 as uuidv4} from 'uuid'
 
 export function mappingUser(user: any): UserOutPutType {
     return {
@@ -20,16 +21,19 @@ export const usersService = {
 
     async createUser(bodyUser: BodyUserType): Promise<UserOutPutType> {
 
-        // const hasEmail = await usersCollection.findOne({email: bodyUser.email}); - проверка на наличие такого же емаила
-        // const hasLogin = await usersCollection.findOne({login: bodyUser.login});
-
         const passHash = await this._generateHash(bodyUser.password);
 
-        const user: UserType = {
+        const user: UserDBType = {
+            _id: new ObjectId(),
             login: bodyUser.login,
             email: bodyUser.email,
             createdAt: new Date().toISOString(),
-            passwordHash: passHash
+            passwordHash: passHash,
+            emailConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: new Date(), // todo здесь тоже такие свойства добавлять?
+                isConfirmed: true
+            }
         }
 
         await usersRepositories.createUser(user);
@@ -46,10 +50,10 @@ export const usersService = {
         return await bcrypt.hash(password, 10)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<UserTypeWith_Id | false> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | false> {
 
         const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
-        if (!user) {
+        if (!user || !user.emailConfirmation.isConfirmed) {
             return false
         }
 

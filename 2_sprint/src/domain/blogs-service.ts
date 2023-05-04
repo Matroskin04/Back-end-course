@@ -12,7 +12,7 @@ import {
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 
-export function renameMongoIdBlog(blog: any //Todo иммутабельность
+export function renameMongoIdBlog(blog: any
 ): BlogTypeWithId {
     return {
         id: blog._id,

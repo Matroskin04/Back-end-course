@@ -9,7 +9,7 @@ import {variablesForReturn} from "./utils/variables-for-return";
 
 export const postsQueryRepository = {
 
-    async getAllPosts(query: QueryPostModel | null = null): Promise<PostPaginationType> {
+    async getAllPosts(query: QueryPostModel): Promise<PostPaginationType> {
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
@@ -43,9 +43,9 @@ export const postsQueryRepository = {
         return null;
     },
 
-    async getCommentOfPost(query: QueryPostModel | null = null, id: string): Promise<CommentOfPostPaginationType | null> {
+    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
 
-        const post = await this.getSinglePost(id);
+        const post = await postsQueryRepository.getSinglePost(id);
         if (!post) {
             return null
         }
@@ -58,12 +58,12 @@ export const postsQueryRepository = {
 
         const allCommentOfPostsOnPages = await commentsCollection
             .find({postId: id})
-            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
+            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();
 
         return {
-            pagesCount:  Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),
+            pagesCount: Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllCommentsOfPost,

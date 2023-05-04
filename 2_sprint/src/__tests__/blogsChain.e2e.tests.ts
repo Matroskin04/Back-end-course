@@ -1,9 +1,12 @@
 import {describe} from "node:test";
-import {client} from "../db";
+import {blogsCollection, client} from "../db";
 import request from "supertest";
 import {app} from "../setting";
+import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 
 let idOfBlog: string;
+const arrayOfBlogs: Array<BlogTypeWithId | null> = [];
+
 describe('Blogs All operation, chains: /blogs', () => {
 
     beforeAll(async () => {
@@ -148,5 +151,92 @@ describe('Blogs All operation, chains: /blogs', () => {
                 websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
             })
             .expect(400)
+    })
+
+    describe(`QUERY-PAGINATION -> "/"`, () => {
+
+        it(`+DELETE ALL DATA,
+                 +POST: create 4 new blogs`, async() => {
+
+            await request(app)
+                .delete('/hometask-02/testing/all-data')
+                .expect(204)
+
+            //1 blog
+            const blogInputData1 = {
+                name: "Alex-blog",
+                description: "Alex-description",
+                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+            };
+
+            const response1 = await request(app)
+                .post('/hometask-02/blogs')
+                .auth('admin', 'qwerty')
+                .send(blogInputData1);
+
+            expect(response1.status).toBe(201);
+            arrayOfBlogs.push(response1.body);
+
+            //2 blog
+            const blogInputData2 = {
+                name: "Bob-blog",
+                description: "Bob-description",
+                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+            };
+
+            const response2 = await request(app)
+                .post('/hometask-02/blogs')
+                .auth('admin', 'qwerty')
+                .send(blogInputData2);
+
+            expect(response2.status).toBe(201);
+            arrayOfBlogs.push(response2.body);
+
+            //3 blog
+            const blogInputData3 = {
+                name: "Danil-blog",
+                description: "Danil-description",
+                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+            };
+
+            const response3 = await request(app)
+                .post('/hometask-02/blogs')
+                .auth('admin', 'qwerty')
+                .send(blogInputData3);
+
+            expect(response3.status).toBe(201);
+            arrayOfBlogs.push(response3.body);
+
+            //4 blog
+            const blogInputData4 = {
+                name: "Fiona-blog",
+                description: "Fiona-description",
+                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+            };
+
+            const response4 = await request(app)
+                .post('/hometask-02/blogs')
+                .auth('admin', 'qwerty')
+                .send(blogInputData4);
+
+            expect(response4.status).toBe(201);
+            arrayOfBlogs.push(response4.body);
+
+            const allBlogs = await blogsCollection.find().toArray()
+            expect(allBlogs.length).toBe(4)
+        })
+
+        it(`Pagination-GET: pageNumber=2 + pageSize=2`, async () => {
+
+            const result = await request(app)
+                .get(`/hometask-02/blogs`)
+                .query(`pageNumber=2&pageSize=2`)
+
+            expect(result.body.items).toEqual([arrayOfBlogs[1],arrayOfBlogs[0]]);
+            expect(result.body.pagesCount).toEqual(2);
+            expect(result.body.page).toEqual(2);
+            expect(result.body.pageSize).toEqual(2);
+            expect(result.body.totalCount).toEqual(4);
+        })
     })
 })

@@ -35,11 +35,11 @@ describe('auth All operation, chains: /auth', () => {
             .expect(400, {
                 errorsMessages: [
                     {
-                        message: 'The length should be from 3 to 10',
+                        message: 'The length should be from 3 to 10 characters',
                         field: "loginOrEmail"
                     },
                     {
-                        message: 'The length should be from 6 to 20',
+                        message: 'The length should be from 6 to 20 characters',
                         field: "password"
                     }
                 ]

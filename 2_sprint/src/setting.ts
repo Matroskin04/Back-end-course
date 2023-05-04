@@ -4,10 +4,10 @@ import {postsRoutes} from "./routes/posts-routes";
 import {usersRoutes} from "./routes/users-routes";
 import {authRoutes} from "./routes/auth-routes";
 import {testingRoutes} from "./routes/testing-routes";
-import {commentsRoutes} from "./routes/comments-service";
+import {commentsRoutes} from "./routes/comments-routes";
 
 
-export const privateKey = process.env.PRIVATE_KEY || 'testingKey123' // todo куда
+export const PRIVATE_KEY = process.env.PRIVATE_KEY || 'testingKey123'
 export const app = express()
 
 app.use(express.json());

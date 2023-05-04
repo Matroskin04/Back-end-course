@@ -5,7 +5,6 @@ import {commentsCollection} from "../db";
 
 export function mappingComment(comment: any
 ): CommentOutputType {
-    console.log(comment, comment.userLogin)
     return {
         id: comment._id,
         content: comment.content,

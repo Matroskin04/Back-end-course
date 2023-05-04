@@ -10,7 +10,8 @@ import {variablesForReturn} from "./utils/variables-for-return";
 
 export const blogsQueryRepository = {
 
-    async getAllBlogs(query: QueryBlogModel | null = null): Promise<BlogPaginationType> { // todo если query не отправляется, то его значение null?
+    async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> { //
+        console.log(query, typeof query)
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
@@ -34,7 +35,7 @@ export const blogsQueryRepository = {
         }
     },
 
-    async getPostsOfBlog(blogId: string, query: QueryBlogModel | null = null): Promise<null | PostsOfBlogPaginationType> {
+    async getPostsOfBlog(blogId: string, query: QueryBlogModel): Promise<null | PostsOfBlogPaginationType> {
 
         const paramsOfElems = await variablesForReturn(query);
         const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});

@@ -1,19 +1,19 @@
 import jwt from 'jsonwebtoken'
-import {UserTypeWith_Id} from "../repositories/repositories-types/users-types-repositories";
-import {privateKey} from "../setting";
+import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
+import {PRIVATE_KEY} from "../setting";
 import {ObjectId} from "mongodb";
 
 export const jwtService = {
 
-    async createJWT(user: UserTypeWith_Id): Promise<string>  { // todo async имеет смысл
+    createJWT(user: UserDBType): string  {
 
-        return jwt.sign({userId: user._id}, privateKey, {expiresIn: 10*60})
+        return jwt.sign({userId: user._id}, PRIVATE_KEY, {expiresIn: 10*60})
     },
 
     async getUserIdByToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode: any = jwt.verify(token, privateKey); // todo как избавиться от any
+            const decode: any = jwt.verify(token, PRIVATE_KEY);
             return new ObjectId(decode.userId)
 
         } catch (err) {
