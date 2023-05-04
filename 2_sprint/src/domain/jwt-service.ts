@@ -7,13 +7,13 @@ export const jwtService = {
 
     createJWT(user: UserDBType): string  {
 
-        return jwt.sign({userId: user._id}, PRIVATE_KEY, {expiresIn: 10*60})
+        return jwt.sign({userId: user._id}, PRIVATE_KEY, {expiresIn: '1h'})
     },
 
     async getUserIdByToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode: any = jwt.verify(token, PRIVATE_KEY);
+            const decode = jwt.verify(token, PRIVATE_KEY) as {userId: number};
             return new ObjectId(decode.userId)
 
         } catch (err) {
