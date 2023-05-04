@@ -22,9 +22,9 @@ export const usersRepositories = {
         return;
     },
 
-    async updateCodeConfirmation(_id: ObjectId, newCode: string): Promise<void> {
-
-        await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.confirmationCode': newCode}})
-        return;
-    }
+    // async updateCodeConfirmation(_id: ObjectId, newCode: string): Promise<void> {
+    //
+    //     await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.confirmationCode': newCode}})
+    //     return;
+    // }
 }

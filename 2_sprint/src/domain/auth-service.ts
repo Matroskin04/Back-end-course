@@ -6,7 +6,6 @@ import add from "date-fns/add";
 import {usersRepositories} from "../repositories/users-repositories";
 import {emailManager} from "../managers/email-manager";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {usersCollection} from "../db";
 
 export const authService = {
 
@@ -71,8 +70,8 @@ export const authService = {
             return 'Email is already confirmed';
         }
 
-        const newCode = uuidv4();
-        await usersRepositories.updateCodeConfirmation(userByEmail._id, newCode)
+        // const newCode = uuidv4();
+        // await usersRepositories.updateCodeConfirmation(userByEmail._id, newCode)
         try {
             await emailManager.sendEmailConfirmationMessage(email, userByEmail.emailConfirmation.confirmationCode)
             return true
