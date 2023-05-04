@@ -49,10 +49,10 @@ export const authService = {
         if (!user) {
             return 'Code is incorrect';
         }
-        if(user.emailConfirmation.expirationDate < new Date()) {
+        if (user.emailConfirmation.expirationDate < new Date()) {
             return 'Code is already expired';
         }
-        if(user.emailConfirmation.isConfirmed) {
+        if (user.emailConfirmation.isConfirmed) {
             return 'Code is already been applied';
         }
 
@@ -70,10 +70,10 @@ export const authService = {
             return 'Email is already confirmed';
         }
 
-        // const newCode = uuidv4();
-        // await usersRepositories.updateCodeConfirmation(userByEmail._id, newCode)
+        const newCode = uuidv4();
+        await usersRepositories.updateCodeConfirmation(userByEmail._id, newCode)
         try {
-            await emailManager.sendEmailConfirmationMessage(email, userByEmail.emailConfirmation.confirmationCode)
+            await emailManager.sendEmailConfirmationMessage(email, newCode)
             return true
         } catch (err) {
             throw new Error(`Error: ${err}`) // todo после ошибки не нужно return
