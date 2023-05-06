@@ -21,7 +21,7 @@ import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 
 export const authRoutes = Router();
 
-authRoutes.get('/login/me', checkToken, async (req: Request,
+authRoutes.get('/me', checkToken, async (req: Request,
                                                res: Response<ViewAuthModel>) => {
 
     const user = await usersQueryRepository.getUserByUserId(req.userId!);
@@ -31,8 +31,9 @@ authRoutes.get('/login/me', checkToken, async (req: Request,
             login: user.login,
             userId: user._id.toString()
         })
+    } else {
+        res.sendStatus(404)
     }
-    res.sendStatus(404)
 })
 authRoutes.post('/login', validateLoginDataAuth, getErrors, async (req: RequestWithBody<LoginAuthInputModel>,
                                                                    res: Response<ViewTokenModel>) => {

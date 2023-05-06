@@ -1,17 +1,22 @@
 import {describe} from "node:test";
 const request = require("supertest");
-import {blogsCollection, client} from "../db";
+import {blogsCollection, client, postsCollection} from "../db";
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {app} from "../setting";
+import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
+import {response} from "express";
+import {ObjectId} from "mongodb";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",
     description: "Fantastic description",
     websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
 };
-const arrayOfBlogs: Array<BlogTypeWithId | null> = [];
-// let id: string | undefined
+let idOfBlog: ObjectId | null = null;
+let idOfDeletedBlog: ObjectId | null= null;
 
+
+let idOfPost: ObjectId | null= null;
 
 describe('POST: /blogs', () => {
 
@@ -29,7 +34,7 @@ describe('POST: /blogs', () => {
         await client.close();
     })
 
-    it('+ should create 5 new blogs without errors', async () => {
+    it('+ should create 4 new blogs without errors', async () => {
         //1 blog
         const response1 = await request(app)
             .post('/hometask-02/blogs')
@@ -47,7 +52,6 @@ describe('POST: /blogs', () => {
             createdAt: expect.any(String),
             isMembership: false
         })
-        arrayOfBlogs.push(newBlog);
 
         //2 blog
         const blogInputData2 = {
@@ -62,7 +66,6 @@ describe('POST: /blogs', () => {
             .send(blogInputData2);
 
         expect(response2.status).toBe(201);
-        arrayOfBlogs.push(response2.body);
 
         //3 blog
         const blogInputData3 = {
@@ -77,7 +80,6 @@ describe('POST: /blogs', () => {
             .send(blogInputData3);
 
         expect(response3.status).toBe(201);
-        arrayOfBlogs.push(response3.body);
 
         //4 blog
         const blogInputData4 = {
@@ -92,10 +94,12 @@ describe('POST: /blogs', () => {
             .send(blogInputData4);
 
         expect(response4.status).toBe(201);
-        arrayOfBlogs.push(response4.body);
 
-        const allBlogs = await blogsCollection.find().toArray()
-        expect(allBlogs.length).toBe(4)
+        const allBlogs = await blogsCollection.find().toArray();
+        expect(allBlogs.length).toBe(4);
+
+        idOfBlog = response4.body.id;
+        idOfDeletedBlog = response3.body.id
     })
 
     it('- BAD AUTH TOKEN => should return status 401: unauthorized', async () => {
@@ -273,6 +277,179 @@ describe('POST: /blogs', () => {
             ]
         })
     })
+})
 
-    it
+describe('POST: /posts and /posts/{postId}/comments', () => {
+
+    it('+ should create 3 new posts without errors', async () => {
+
+        console.log(idOfBlog)
+        //1 post
+        const postInputData1 = {
+            title: "Post1",
+            shortDescription: "shortDescription",
+            content: "content",
+            blogId: idOfBlog
+        }
+        const response1 = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData1);
+
+        expect(response1.status).toBe(201)
+
+        const newPost = response1.body
+        expect(newPost).toEqual({
+            id: expect.any(String),
+            title: "Post1",
+            shortDescription: "shortDescription",
+            content: "content",
+            blogId: idOfBlog,
+            blogName: expect.any(String),
+            createdAt: expect.any(String)
+        })
+
+        //2 post
+        const postInputData2 = {
+            title: "Post2",
+            shortDescription: "shortDescription2",
+            content: "content2",
+            blogId: idOfBlog
+        };
+
+        const response2 = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData2);
+
+        expect(response2.status).toBe(201);
+
+        //3 post
+        const postInputData3 = {
+            title: "Post3",
+            shortDescription: "shortDescription3",
+            content: "content3",
+            blogId: idOfBlog
+        };
+
+        const response3 = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData3);
+
+        expect(response3.status).toBe(201);
+
+        const allPosts = await postsCollection.find().toArray()
+        expect(allPosts.length).toBe(3)
+
+        idOfPost = response3.body.id;
+    })
+
+    it(`- INVALID INPUT BODY DATA => should return status 400 with 3 errors:
+                    the large length of the title, shortDescription, content is not a string`, async () => {
+
+        const postInputData = {
+            title: "Too Large1234561234512345612345",
+            shortDescription: "Too Large12345612345123456123451234512345123451234512345123541253124512351523512341243512351532414341",
+            content: null,
+            blogId: idOfBlog
+        };
+
+        const response = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+            "errorsMessages": [
+                {
+                    "message": expect.any(String),
+                    "field": "title"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "shortDescription"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "content"
+                }
+            ]
+        })
+    })
+
+    it(`- INVALID INPUT BODY DATA => should return status 400 with 3 errors:
+                    title, shortDescription aren't a string, blogId doesn't exist`, async () => {
+
+        //delete blog
+        await request(app)
+            .delete(`/hometask-02/blogs/${idOfDeletedBlog}`)
+            .auth('admin', 'qwerty')
+            .expect(204)
+
+        const postInputData = {
+            title: null,
+            shortDescription: null,
+            content: 'Normal content',
+            blogId: idOfDeletedBlog
+        };
+
+        const response = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+            "errorsMessages": [
+                {
+                    "message": expect.any(String),
+                    "field": "title"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "shortDescription"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "blogId"
+                }
+            ]
+        })
+    })
+
+    it(`- INVALID INPUT BODY DATA => should return status 400 with 3 errors:
+                    title, shortDescription are empty, blogId is not a string`, async () => {
+
+        const postInputData = {
+            title: "                  ",
+            shortDescription: "           ",
+            content: 'content',
+            blogId: null
+        };
+
+        const response = await request(app)
+            .post('/hometask-02/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+            "errorsMessages": [
+                {
+                    "message": expect.any(String),
+                    "field": "title"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "shortDescription"
+                },
+                {
+                    "message": expect.any(String),
+                    "field": "blogId"
+                }
+            ]
+        })
+    })
 })

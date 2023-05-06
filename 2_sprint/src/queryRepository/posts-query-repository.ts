@@ -43,7 +43,7 @@ export const postsQueryRepository = {
         return null;
     },
 
-    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
+    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> { // todo posts query or comment query
 
         const post = await postsQueryRepository.getSinglePost(id);
         if (!post) {

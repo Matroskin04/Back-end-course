@@ -44,7 +44,7 @@ describe('Blogs All operation, chains: /blogs', () => {
     });
 
     it(`+ POST -> "/blogs/:blogId/posts": should create new post for specific blog; status 201;
-          POST -> /blogs, GET -> /posts/:id;`, async () => {
+              + POST -> /blogs, GET -> /posts/:id;`, async () => {
 
         const response = await request(app)
             .post(`/hometask-02/blogs/${idOfBlog}/posts`)
@@ -83,7 +83,7 @@ describe('Blogs All operation, chains: /blogs', () => {
     });
 
     it(`- DELETE -> "/blogs/:blogId" - should delete blog;
-                POST -> "/blogs/:blogId/posts": should NOT create new post; status 404`, async () => {
+              - POST -> "/blogs/:blogId/posts": should NOT create new post; status 404`, async () => {
 
         await request(app).delete(`/hometask-02/blogs/${idOfBlog}`).auth('admin', 'qwerty').expect(204)
         await request(app)
@@ -99,8 +99,8 @@ describe('Blogs All operation, chains: /blogs', () => {
     })
 
     it (`+ POST -> "/blogs" -  should create blog;
-                 PUT -> "/blogs/:id": should update blog by id; status 204;
-                 GET -> /blogs/:id`, async () => {
+               + PUT -> "/blogs/:id": should update blog by id; status 204;
+               + GET -> /blogs/:id`, async () => {
 
         const responsePost = await request(app)
             .post('/hometask-02/blogs')
@@ -152,91 +152,124 @@ describe('Blogs All operation, chains: /blogs', () => {
             })
             .expect(400)
     })
+})
 
-    describe(`QUERY-PAGINATION -> "/"`, () => {
+describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
 
-        it(`+DELETE ALL DATA,
-                 +POST: create 4 new blogs`, async() => {
+    it(`+DELETE ALL DATA,
+              +POST: create 4 new blogs`, async() => {
 
-            await request(app)
-                .delete('/hometask-02/testing/all-data')
-                .expect(204)
+        await request(app)
+            .delete('/hometask-02/testing/all-data')
+            .expect(204)
 
-            //1 blog
-            const blogInputData1 = {
-                name: "Alex-blog",
-                description: "Alex-description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            };
+        //1 blog
+        const blogInputData1 = {
+            name: "Alex-blog",
+            description: "Alex-description",
+            websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+        };
 
-            const response1 = await request(app)
-                .post('/hometask-02/blogs')
-                .auth('admin', 'qwerty')
-                .send(blogInputData1);
+        const response1 = await request(app)
+            .post('/hometask-02/blogs')
+            .auth('admin', 'qwerty')
+            .send(blogInputData1);
 
-            expect(response1.status).toBe(201);
-            arrayOfBlogs.push(response1.body);
+        expect(response1.status).toBe(201);
+        arrayOfBlogs.push(response1.body);
 
-            //2 blog
-            const blogInputData2 = {
-                name: "Bob-blog",
-                description: "Bob-description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            };
+        //2 blog
+        const blogInputData2 = {
+            name: "Bobi-blog",
+            description: "Bob-description",
+            websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+        };
 
-            const response2 = await request(app)
-                .post('/hometask-02/blogs')
-                .auth('admin', 'qwerty')
-                .send(blogInputData2);
+        const response2 = await request(app)
+            .post('/hometask-02/blogs')
+            .auth('admin', 'qwerty')
+            .send(blogInputData2);
 
-            expect(response2.status).toBe(201);
-            arrayOfBlogs.push(response2.body);
+        expect(response2.status).toBe(201);
+        arrayOfBlogs.push(response2.body);
 
-            //3 blog
-            const blogInputData3 = {
-                name: "Danil-blog",
-                description: "Danil-description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            };
+        //3 blog
+        const blogInputData3 = {
+            name: "Danil-blog",
+            description: "Danil-description",
+            websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+        };
 
-            const response3 = await request(app)
-                .post('/hometask-02/blogs')
-                .auth('admin', 'qwerty')
-                .send(blogInputData3);
+        const response3 = await request(app)
+            .post('/hometask-02/blogs')
+            .auth('admin', 'qwerty')
+            .send(blogInputData3);
 
-            expect(response3.status).toBe(201);
-            arrayOfBlogs.push(response3.body);
+        expect(response3.status).toBe(201);
+        arrayOfBlogs.push(response3.body);
 
-            //4 blog
-            const blogInputData4 = {
-                name: "Fiona-blog",
-                description: "Fiona-description",
-                websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-            };
+        //4 blog
+        const blogInputData4 = {
+            name: "Fiona-blog",
+            description: "Fiona-description",
+            websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+        };
 
-            const response4 = await request(app)
-                .post('/hometask-02/blogs')
-                .auth('admin', 'qwerty')
-                .send(blogInputData4);
+        const response4 = await request(app)
+            .post('/hometask-02/blogs')
+            .auth('admin', 'qwerty')
+            .send(blogInputData4);
 
-            expect(response4.status).toBe(201);
-            arrayOfBlogs.push(response4.body);
+        expect(response4.status).toBe(201);
+        arrayOfBlogs.push(response4.body);
 
-            const allBlogs = await blogsCollection.find().toArray()
-            expect(allBlogs.length).toBe(4)
-        })
+        const allBlogs = await blogsCollection.find().toArray()
+        expect(allBlogs.length).toBe(4)
+    })
 
-        it(`Pagination-GET: pageNumber=2 + pageSize=2`, async () => {
+    it(`Pagination-GET: pageNumber=2 + pageSize=2 (default: sortDirection=desc, sortBy=createdAt)`, async () => {
 
-            const result = await request(app)
-                .get(`/hometask-02/blogs`)
-                .query(`pageNumber=2&pageSize=2`)
+        const result = await request(app)
+            .get(`/hometask-02/blogs`)
+            .query(`pageNumber=2&pageSize=2`)
 
-            expect(result.body.items).toEqual([arrayOfBlogs[1],arrayOfBlogs[0]]);
-            expect(result.body.pagesCount).toEqual(2);
-            expect(result.body.page).toEqual(2);
-            expect(result.body.pageSize).toEqual(2);
-            expect(result.body.totalCount).toEqual(4);
-        })
+        expect(result.body).toEqual({
+            pagesCount: 2,
+            page: 2,
+            pageSize: 2,
+            totalCount: 4,
+            items: [arrayOfBlogs[1],arrayOfBlogs[0]]
+        });
+    })
+
+    it(`Pagination-GET: sortDirection=asc + sortBy=name + searchNameTerm=i
+    (default: pageNumber=10, pageNumber=1)`, async () => {
+
+        const result = await request(app)
+            .get(`/hometask-02/blogs`)
+            .query(`sortDirection=asc&sortBy=name&searchNameTerm=i`)
+
+        expect(result.body).toEqual({
+            pagesCount: 1,
+            page: 1,
+            pageSize: 10,
+            totalCount: 3,
+            items: [arrayOfBlogs[1],arrayOfBlogs[2],arrayOfBlogs[3]]
+        });
+    })
+
+    it(`Pagination-GET: sortDirection=asc + sortBy=description + pageNumber=2 + pageSize=3`, async () => {
+
+        const result = await request(app)
+            .get(`/hometask-02/blogs`)
+            .query(`sortDirection=asc&sortBy=description&pageNumber=2&pageSize=3`)
+
+        expect(result.body).toEqual({
+            pagesCount: 2,
+            page: 2,
+            pageSize: 3,
+            totalCount: 4,
+            items: [arrayOfBlogs[3]]
+        });
     })
 })
