@@ -9,7 +9,7 @@ export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
 
-        const paramsOfSearch = [] //todo типизация
+        const paramsOfSearch: any = []
         const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
         const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
@@ -18,13 +18,11 @@ export const usersQueryRepository = {
         if (searchLoginTerm) paramsOfSearch.push({login: {$regex: searchLoginTerm ?? '', $options: 'i'} });
 
         const countAllUsersSort = await usersCollection
-            .countDocuments({$and: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
-                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]});
+            .countDocuments({$or: paramsOfSearch});
 
 
         const allUsersOnPages = await usersCollection
-            .find({$and: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
-                               {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]})
+            .find({$or: paramsOfSearch})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();

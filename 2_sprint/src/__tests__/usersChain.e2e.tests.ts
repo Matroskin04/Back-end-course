@@ -102,14 +102,14 @@ describe('users All operation, chains: /users', () => {
            .get(`/hometask-02/users`)
            .expect(401)
 
-        const responseGet = await request(app)
+        await request(app)
             .get(`/hometask-02/users`)
             .auth('admin', 'qwerty')
             .expect(200, {
                 pagesCount: 1,
                 page: 1,
                 pageSize: 10,
-                totalCount: 1,
+                totalCount: 3,
                 items: [arrayOfUser[2],arrayOfUser[1],arrayOfUser[0]]
             })
 
@@ -117,55 +117,45 @@ describe('users All operation, chains: /users', () => {
     })
 
     it(`QUERY-PAGINATION:
-             + GET -> '/users': sortBy=login + sortDirection=asc, status 200
-             + GET -> should return all users, status 200`, async () => {
-
-        //1
-        const user1 = await request(app)
-            .post(`/hometask-02/users`)
-            .auth('admin', 'qwerty')
-            .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
-            .expect(201)
-        expect(user1.body).toEqual({
-            id: expect.any(String),
-            login: 'Dima123',
-            createdAt: expect.any(String),
-            email: 'dim@mail.ru'})
-        arrayOfUser.push(user1.body)
-
-        //2
-        const user2 = await request(app)
-            .post(`/hometask-02/users`)
-            .auth('admin', 'qwerty')
-            .send({login: 'Matvey123', password: '123qwe', email: 'matv@mail.ru'})
-            .expect(201)
-        arrayOfUser.push(user2.body)
-
-        //3
-        const user3 = await request(app)
-            .post(`/hometask-02/users`)
-            .auth('admin', 'qwerty')
-            .send({login: 'Egor123', password: '123qwe', email: 'egor@mail.ru'})
-            .expect(201)
-        arrayOfUser.push(user3.body)
-
+             + GET -> '/users': sortBy=login + sortDirection=asc + searchLoginTerm=ma, (default: pageSize=10, pageNumber=1), status 200
+             + GET -> '/users': pageSize=2 + searchEmailTerm=or, (default: sortDirection=desc, sortBy=createdAt), status 200;
+             + GET -> '/users': pageSize=2 + pageNumber=2 + sortBy=email + searchEmailTerm=@, (default: sortDirection=desc), status 200`, async () => {
 
         await request(app)
             .get(`/hometask-02/users`)
-            .expect(401)
-
-        const responseGet = await request(app)
-            .get(`/hometask-02/users`)
+            .query('sortBy=login&sortDirection=asc&searchLoginTerm=ma')
             .auth('admin', 'qwerty')
             .expect(200, {
                 pagesCount: 1,
                 page: 1,
                 pageSize: 10,
-                totalCount: 1,
-                items: [arrayOfUser[2],arrayOfUser[1],arrayOfUser[0]]
+                totalCount: 2,
+                items: [arrayOfUser[0],arrayOfUser[1]]
             })
 
-        idOfUser = user1.body.id
+        await request(app)
+            .get(`/hometask-02/users`)
+            .query('pageSize=1&pageNumber=1&searchEmailTerm=or')
+            .auth('admin', 'qwerty')
+            .expect(200, {
+                pagesCount: 1,
+                page: 1,
+                pageSize: 1,
+                totalCount: 1,
+                items: [arrayOfUser[2]]
+            })
+
+        await request(app)
+            .get(`/hometask-02/users`)
+            .query('pageSize=2&pageNumber=2&sortBy=email&searchEmailTerm=@')
+            .auth('admin', 'qwerty')
+            .expect(200, {
+                pagesCount: 2,
+                page: 2,
+                pageSize: 2,
+                totalCount: 3,
+                items: [arrayOfUser[0]]
+            })
     })
 
     it(`- DELETE -> Unauthorized, status: 401;
