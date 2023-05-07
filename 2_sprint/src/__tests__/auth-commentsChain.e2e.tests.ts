@@ -493,3 +493,75 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .expect(204);
     })
 })
+
+// describe(`comments All operation: /posts/{id}/comments + /comments`, () => {
+//
+//     it(`Addition: + POST -> '/blogs' should create new blog, status 201
+//                         + POST -> '/posts' should create new post, status 201`, async () => {
+//
+//         const responseBlog = await request(app)
+//             .post(`/hometask-02/blogs`)
+//             .auth('admin', 'qwerty')
+//             .send({
+//                 name: "Blog2-ITforYOU",
+//                 description: "some information",
+//                 websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
+//             }).expect(201);
+//
+//         const responsePost = await request(app)
+//             .post(`/hometask-02/posts`)
+//             .auth('admin', 'qwerty')
+//             .send({
+//                 title: "post 1",
+//                 shortDescription: "something interesting",
+//                 content: "content of the post",
+//                 blogId: responseBlog.body.id
+//             }).expect(201);
+//
+//         idOfPost = responsePost.body.id;
+//         console.log(idOfPost)
+//     })
+//
+//     it(`- POST -> '/posts/{id}/comments' Unauthorized; status: 401;
+//               - POST -> '/posts/{id}/comments' Incorrect Input body: small length of the content; status: 400
+//               - POST -> '/posts/{id}/comments' Incorrect Input body: there isn't such value; status: 400
+//               - POST -> '/posts/{id}/comments' Incorrect Input body: the content isn't a string; status: 400`, async () => {
+//
+//         await request(app)
+//             .post(`/posts/${idOfPost}/comments`)
+//             .expect(401);
+//
+//         const response1 = await request(app)
+//             .post(`/posts/${idOfPost}/comments`)
+//             .set('Authorization', `Bearer ${jwt}`)
+//             .send({content: 'small'})
+//             .expect(400);
+//         expect(response1.body).toEqual({
+//             "errorsMessages": [{
+//                     "message": expect.any(String),
+//                     "field": "content"
+//                 }]});
+//
+//         const response2 = await request(app)
+//             .post(`/posts/${idOfPost}/comments`)
+//             .set('Authorization', `Bearer ${jwt}`)
+//             .send({conten: 'normal 12341231241313'})
+//             .expect(400);
+//         expect(response2.body).toEqual({
+//             "errorsMessages": [{
+//                 "message": expect.any(String),
+//                 "field": "conten"
+//             }]})
+//
+//         const response3 = await request(app)
+//             .post(`/posts/${idOfPost}/comments`)
+//             .set('Authorization', `Bearer ${jwt}`)
+//             .send({content: null})
+//             .expect(400);
+//         expect(response3.body).toEqual({
+//             "errorsMessages": [{
+//                 "message": expect.any(String),
+//                 "field": "content"
+//             }]})
+//     })
+// })
