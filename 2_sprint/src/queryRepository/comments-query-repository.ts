@@ -8,7 +8,6 @@ export const commentsQueryRepository = {
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 
         const comment = await commentsCollection.findOne({_id: new ObjectId(id)});
-        console.log(comment)
         if (!comment) {
             return null
         }

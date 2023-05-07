@@ -9,17 +9,21 @@ export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
 
+        const paramsOfSearch = [] //todo типизация
         const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
         const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
 
+        if (searchEmailTerm) paramsOfSearch.push({login: {$regex: searchEmailTerm ?? '', $options: 'i'} });
+        if (searchLoginTerm) paramsOfSearch.push({login: {$regex: searchLoginTerm ?? '', $options: 'i'} });
+
         const countAllUsersSort = await usersCollection
-            .countDocuments({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
-                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]}); // todo через if проверить
+            .countDocuments({$and: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
+                                          {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]});
 
 
         const allUsersOnPages = await usersCollection
-            .find({$or: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
+            .find({$and: [ {login: {$regex: searchLoginTerm ?? '', $options: 'i'} },
                                {email: {$regex: searchEmailTerm ?? '', $options: 'i'} } ]})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
