@@ -167,7 +167,7 @@ describe('users All operation, chains: /users', () => {
                 page: 2,
                 pageSize: 2,
                 totalCount: 3,
-                items: [arrayOfUser[1],arrayOfUser[0]]
+                items: [arrayOfUser[0]]
             })
     })
 
