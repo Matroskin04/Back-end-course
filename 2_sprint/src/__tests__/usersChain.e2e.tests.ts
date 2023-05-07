@@ -117,10 +117,9 @@ describe('users All operation, chains: /users', () => {
     })
 
     it(`QUERY-PAGINATION:
-             + GET -> '/users': sortBy=login + sortDirection=asc + searchLoginTerm=ma, (default: pageSize=10, pageNumber=1), status 200;
+             + GET -> '/users': sortBy=login + sortDirection=asc + searchLoginTerm=ma, (default: pageSize=10, pageNumber=1), status 200
              + GET -> '/users': pageSize=2 + searchEmailTerm=or, (default: sortDirection=desc, sortBy=createdAt), status 200;
-             + GET -> '/users': pageSize=2 + pageNumber=2 + sortBy=email + searchEmailTerm=@, (default: sortDirection=desc), status 200;
-             + GET -> '/users': searchEmailTerm=dim + searchEmailTerm=mat, (default: sortDirection=desc, sortBy=createdAt), status 200;`, async () => {
+             + GET -> '/users': pageSize=2 + pageNumber=2 + sortBy=email + searchEmailTerm=@, (default: sortDirection=desc), status 200`, async () => {
 
         await request(app)
             .get(`/hometask-02/users`)
@@ -156,18 +155,6 @@ describe('users All operation, chains: /users', () => {
                 pageSize: 2,
                 totalCount: 3,
                 items: [arrayOfUser[0]]
-            })
-
-        await request(app)
-            .get(`/hometask-02/users`)
-            .query('pageSize=2&pageNumber=2&sortBy=email&searchEmailTerm=@')
-            .auth('admin', 'qwerty')
-            .expect(200, {
-                pagesCount: 2,
-                page: 2,
-                pageSize: 2,
-                totalCount: 3,
-                items: [arrayOfUser[1],arrayOfUser[0]]
             })
     })
 

@@ -26,7 +26,7 @@ authRoutes.get('/me', checkToken, async (req: Request,
 
     const user = await usersQueryRepository.getUserByUserId(req.userId!);
     if (user) {
-        res.status(204).send({
+        res.status(200).send({
             email: user.email,
             login: user.login,
             userId: user._id.toString()

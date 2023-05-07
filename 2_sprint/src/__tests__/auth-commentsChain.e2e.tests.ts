@@ -91,7 +91,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         await request(app)
             .get(`/hometask-02/auth/me`)
             .set('Authorization', `Bearer ${jwt}`)
-            .expect(204, {
+            .expect(200, {
                 email: "dim@mail.ru",
                 login: "Dima123",
                 userId: idOfUser
