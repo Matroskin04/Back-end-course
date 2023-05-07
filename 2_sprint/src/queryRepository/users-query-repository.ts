@@ -9,20 +9,22 @@ export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
 
-        const paramsOfSearch: any = []
+        const emailAndLoginTerm: any = [] // todo тип
+        let paramsOfSearch: Object = {}
         const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
         const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
 
-        if (searchEmailTerm) paramsOfSearch.push({login: {$regex: searchEmailTerm ?? '', $options: 'i'} });
-        if (searchLoginTerm) paramsOfSearch.push({login: {$regex: searchLoginTerm ?? '', $options: 'i'} });
+        if (searchEmailTerm) emailAndLoginTerm.push({email: {$regex: searchEmailTerm ?? '', $options: 'i'} });
+        if (searchLoginTerm) emailAndLoginTerm.push({login: {$regex: searchLoginTerm ?? '', $options: 'i'} });
+        if (emailAndLoginTerm.length) paramsOfSearch = {$or: emailAndLoginTerm};
 
         const countAllUsersSort = await usersCollection
-            .countDocuments({$or: paramsOfSearch});
+            .countDocuments(paramsOfSearch);
 
 
         const allUsersOnPages = await usersCollection
-            .find({$or: paramsOfSearch})
+            .find(paramsOfSearch)
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).toArray();
