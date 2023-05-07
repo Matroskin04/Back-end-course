@@ -70,12 +70,12 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         await request(app)
             .post(`/hometask-02/auth/login`)
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
-            .expect(204);
+            .expect(200);
 
         const response = await request(app)
             .post(`/hometask-02/auth/login`)
             .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
-            .expect(204);
+            .expect(200);
         expect(response.body).toEqual({accessToken: expect.any(String)})
 
         jwt = response.body.accessToken;

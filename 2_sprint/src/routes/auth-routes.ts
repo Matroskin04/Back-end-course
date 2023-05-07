@@ -42,7 +42,7 @@ authRoutes.post('/login', validateLoginDataAuth, getErrors, async (req: RequestW
 
     if (user) {
         const token = jwtService.createJWT(user);
-        res.status(204).send({accessToken: token});
+        res.status(200).send({accessToken: token});
 
     } else {
         res.sendStatus(401);
