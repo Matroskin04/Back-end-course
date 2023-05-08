@@ -4,16 +4,13 @@ export const validateBodyOfUser = [
 
     body('login')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .matches(/^[a-zA-Z0-9_-]*$/)
-        .bail()
         .withMessage('Incorrect login')
 
         .isLength({max: 10, min: 3})
@@ -21,11 +18,9 @@ export const validateBodyOfUser = [
 
     body('password')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
-        .bail()
         .withMessage('It should be a string')
 
         .isLength({max: 20, min: 6})
@@ -33,11 +28,9 @@ export const validateBodyOfUser = [
 
     body('email')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
-        .bail()
         .withMessage('It should be a string')
 
         .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)

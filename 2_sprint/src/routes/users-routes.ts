@@ -7,7 +7,7 @@ import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/typ
 import {UriIdModel} from "../models/UriModels";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
-import {validateBodyOfUser} from "../middlewares/users-validation-middlewares";
+import {validateBodyOfUser} from "../middlewares/validation-middlewares/users-validation-middlewares";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 
 export const usersRoutes = Router();

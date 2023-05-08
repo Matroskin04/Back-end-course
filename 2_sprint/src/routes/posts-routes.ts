@@ -1,6 +1,6 @@
 import {Router, Response} from "express";
 import {authorization} from "../middlewares/authorization-middelwares";
-import {validateBodyOfPost} from "../middlewares/posts-validation-middlewares";
+import {validateBodyOfPost} from "../middlewares/validation-middlewares/posts-validation-middlewares";
 import {
     RequestWithBody,
     RequestWithParams,
@@ -14,11 +14,11 @@ import {getErrors} from "../middlewares/validation-middlewares";
 import {postsService} from "../domain/posts-service";
 import {postsQueryRepository} from "../queryRepository/posts-query-repository";
 import {UriIdModel} from "../models/UriModels";
-import {checkToken} from "../middlewares/auth-validation-middlewares";
-import {validateBodyOfComment} from "../middlewares/comments-validation-middlewares";
+import {validateBodyOfComment} from "../middlewares/validation-middlewares/comments-validation-middlewares";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../models/PostsModels/ViewCommentsOfPostModel";
+import {checkToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 
 export const postsRoutes = Router();
 

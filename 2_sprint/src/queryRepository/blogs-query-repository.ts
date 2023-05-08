@@ -11,7 +11,6 @@ import {variablesForReturn} from "./utils/variables-for-return";
 export const blogsQueryRepository = {
 
     async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> { //
-        console.log(query, typeof query)
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);

@@ -5,16 +5,13 @@ export const validateBodyOfBlog = [
 
     body('name')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 15})
@@ -22,16 +19,13 @@ export const validateBodyOfBlog = [
 
     body('description')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 500})
@@ -39,16 +33,13 @@ export const validateBodyOfBlog = [
 
     body('websiteUrl')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
-        .bail()
         .withMessage('It should be valid URL')
 
         .isLength({max: 100})

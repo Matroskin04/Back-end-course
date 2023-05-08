@@ -27,12 +27,12 @@ export const getErrors = (req: RequestWithBody<getErrorsType>,
             }
         }
     });
-    const errors = myValidationResult(req);
+    const errors = myValidationResult(req).array({onlyFirstError: true});
 
-    if ( errors.array().length > 0 ) {
+    if ( errors.length > 0 ) {
 
         res.status(400).send({
-            errorsMessages: errors.array()
+            errorsMessages: errors
         })
 
     } else next()

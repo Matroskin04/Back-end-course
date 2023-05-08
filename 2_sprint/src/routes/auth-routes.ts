@@ -9,8 +9,8 @@ import {
     validateAuthConfirmationCode,
     validateLoginDataAuth,
     validateRegistrationDataAuth,
-    checkToken, validateAuthEmail
-} from "../middlewares/auth-validation-middlewares";
+    validateAuthEmail
+} from "../middlewares/validation-middlewares/auth-validation-middlewares";
 import {getErrors} from "../middlewares/validation-middlewares";
 import {jwtService} from "../domain/jwt-service";
 import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
@@ -18,6 +18,7 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {authService} from "../domain/auth-service";
 import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthModels";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
+import {checkToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 
 export const authRoutes = Router();
 
@@ -51,42 +52,18 @@ authRoutes.post('/login', validateLoginDataAuth, getErrors, async (req: RequestW
 authRoutes.post('/registration', validateRegistrationDataAuth, getErrors,
     async (req: RequestWithBody<RegistrationAuthModel>, res: Response<ViewAllErrorsModels | string>) => {
 
-        const result = await authService.registerUser(req.body.email, req.body.login, req.body.password);
-        result === true ? res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address')
-            : res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: `This ${result} is already exists, point out another`,
-                        field: result
-                    }
-                ]
-            })
+        await authService.registerUser(req.body.email, req.body.login, req.body.password);
+        res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address')
     })
 authRoutes.post('/registration-confirmation', validateAuthConfirmationCode, getErrors,
     async (req: RequestWithBody<RegisterConfirmAuthModel>, res: Response<ViewAllErrorsModels | string>) => { //todo типизировать респонс
 
-        const result = await authService.confirmEmail(req.body.code);
-        result === true ? res.status(204).send('Email was verified. Account was activated')
-            : res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: result,
-                        field: 'code'
-                    }
-                ]
-            })
+        await authService.confirmEmail(req.userId!);
+        res.status(204).send('Email was verified. Account was activated')
     })
 authRoutes.post('/registration-email-resending', validateAuthEmail, getErrors,
     async (req: RequestWithBody<RegisterResendConfirmAuthModel>, res: Response) => {
 
-        const result = await authService.resendConfirmationEmailMessage(req.body.email);
-        result === true ? res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
-            : res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: result,
-                        field: 'email'
-                    }
-                ]
-            })
+        await authService.resendConfirmationEmailMessage(req.userId!, req.body.email);
+        res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
     })

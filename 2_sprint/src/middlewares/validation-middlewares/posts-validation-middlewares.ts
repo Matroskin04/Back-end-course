@@ -1,21 +1,18 @@
 import {body} from "express-validator";
-import {blogsCollection} from "../db";
+import {blogsCollection} from "../../db";
 import {ObjectId} from "mongodb";
 
 export const validateBodyOfPost = [
 
     body('title')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 30})
@@ -23,16 +20,13 @@ export const validateBodyOfPost = [
 
     body('shortDescription')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 100})
@@ -40,16 +34,13 @@ export const validateBodyOfPost = [
 
     body('content')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 1000})
@@ -57,16 +48,13 @@ export const validateBodyOfPost = [
 
     body('blogId')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
         .custom( async (value): Promise<boolean | void> => {
 
@@ -84,16 +72,13 @@ export const checkErrorsPostByBlogId = [
 
     body('title')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 30})
@@ -101,16 +86,13 @@ export const checkErrorsPostByBlogId = [
 
     body('shortDescription')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 100})
@@ -118,16 +100,13 @@ export const checkErrorsPostByBlogId = [
 
     body('content')
         .exists()
-        .bail()
         .withMessage('There isn\'t such parameter')
 
         .isString()
         .trim()
-        .bail()
         .withMessage('It should be a string')
 
         .notEmpty()
-        .bail()
         .withMessage('The string should not be empty')
 
         .isLength({max: 1000})

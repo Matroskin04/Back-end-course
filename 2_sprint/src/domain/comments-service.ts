@@ -1,7 +1,5 @@
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
 import {commentsRepositories} from "../repositories/comments-repositories";
-import {ObjectId} from "mongodb";
-import {commentsCollection} from "../db";
 
 export function mappingComment(comment: any
 ): CommentOutputType {
@@ -17,31 +15,15 @@ export function mappingComment(comment: any
 }
 export const commentsService = {
 
-    async updateComment(id: string, idFromToken: string, content: string): Promise<number> {
-
-        const comment = await commentsCollection.findOne({_id: new ObjectId(id)});
-        if (!comment) {
-            return 404
-        }
-        if (comment.commentatorInfo.userId !== idFromToken) {
-            return 403;
-        }
+    async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
         await commentsRepositories.updateComment(id, idFromToken, content);
-        return 204;
+        return;
     },
 
-    async deleteOne(id: string, idFromToken: string): Promise<number> {
-
-        const comment = await commentsCollection.findOne({_id: new ObjectId(id)});
-        if (!comment) {
-            return 404
-        }
-        if (comment.commentatorInfo.userId !== idFromToken) {
-            return 403;
-        }
+    async deleteOne(id: string): Promise<void> {
 
         await commentsRepositories.deleteComment(id);
-        return 204;
+        return;
     }
 }
