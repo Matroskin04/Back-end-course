@@ -1,7 +1,7 @@
-import {BodyPostType, PostDBType} from "./repositories-types/posts-types-repositories";
+import {BodyPostType} from "./repositories-types/posts-types-repositories";
 import {commentsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {CommentDBType} from "./repositories-types/comments-types-repositories";
+import {CommentDBType, PostDBType} from "../types/types";
 
 
 export const postsRepositories = {

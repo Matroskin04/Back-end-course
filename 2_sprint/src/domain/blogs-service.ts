@@ -1,15 +1,16 @@
 import {
     BodyBlogType,
-    BlogTypeWithId, BlogDBType
+    BlogTypeWithId
 } from "../repositories/repositories-types/blogs-types-repositories";
 import {blogsRepositories} from "../repositories/blogs-repositories";
 import {
-    BodyPostByBlogIdType, PostDBType,
+    BodyPostByBlogIdType,
     PostTypeWithId
 } from "../repositories/repositories-types/posts-types-repositories";
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
+import {BlogDBType, PostDBType} from "../types/types";
 
 export function renameMongoIdBlog(blog: any
 ): BlogTypeWithId {

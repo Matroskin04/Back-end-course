@@ -1,7 +1,7 @@
-import {BlogDBType, BodyBlogType} from "./repositories-types/blogs-types-repositories";
+import {BodyBlogType} from "./repositories-types/blogs-types-repositories";
 import {blogsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {PostDBType} from "./repositories-types/posts-types-repositories";
+import {BlogDBType, PostDBType} from "../types/types";
 
 
 export const blogsRepositories = {

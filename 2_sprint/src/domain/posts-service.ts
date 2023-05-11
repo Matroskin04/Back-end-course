@@ -1,6 +1,5 @@
 import {
     BodyPostType,
-    PostDBType,
     PostTypeWithId
 } from "../repositories/repositories-types/posts-types-repositories";
 import {postsRepositories} from "../repositories/posts-repositories";
@@ -8,12 +7,12 @@ import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
 import {
-    CommentDBType,
     CommentOutputType,
 } from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {mappingComment} from "./comments-service";
 import {postsCollection} from "../db";
+import {CommentDBType, PostDBType} from "../types/types";
 
 export function renameMongoIdPost(post: any
 ): PostTypeWithId {

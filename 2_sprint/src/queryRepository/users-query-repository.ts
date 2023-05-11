@@ -1,10 +1,10 @@
 import {usersCollection} from "../db";
 import {mappingUser} from "../domain/users-service";
 import {UsersPaginationType} from "./query-repository-types/users-types-query-repository";
-import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
+import {UserDBType} from "../types/types";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
