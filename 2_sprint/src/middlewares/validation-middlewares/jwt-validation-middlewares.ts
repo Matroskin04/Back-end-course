@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {usersService} from "../../domain/users-service";
 import {usersQueryRepository} from "../../queryRepository/users-query-repository";
+import {authRepositories} from "../../repositories/auth-repositories";
 
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -25,6 +26,12 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     const cookieRefreshToken = req.cookies.cookie_name || null;
     if (!cookieRefreshToken) {
         res.status(401).send('JWT refreshToken inside cookie is missing');
+        return;
+    }
+
+    const isRefreshTokenActive = await authRepositories.isRefreshTokenActive(cookieRefreshToken)
+    if (!isRefreshTokenActive) {
+        res.status(401).send('JWT refreshToken inside cookie is expired');
         return;
     }
 
