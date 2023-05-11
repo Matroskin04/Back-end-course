@@ -1,6 +1,6 @@
 import {usersRepositories} from "../repositories/users-repositories";
 import {
-    BodyUserType, UserDBType,
+    BodyUserType,
     UserOutPutType,
 } from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcrypt";
@@ -9,6 +9,7 @@ import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
 import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
+import {UserDBType} from "../types/types";
 
 export function mappingUser(user: any): UserOutPutType {
     return {

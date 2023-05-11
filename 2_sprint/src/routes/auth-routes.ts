@@ -45,8 +45,8 @@ authRoutes.post('/login', validateLoginDataAuth, getErrors, async (req: RequestW
     const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
 
     if (user) {
-        const accessToken = jwtService.createAccessToken(user);
-        const refreshToken = jwtService.createRefreshToken(user);
+        const accessToken = jwtService.createAccessToken(user._id);
+        const refreshToken = jwtService.createRefreshToken(user._id);
         res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,}); // todo transport to service
         res.status(200).send({accessToken: accessToken});
 
@@ -75,13 +75,13 @@ authRoutes.post('/registration-email-resending', validateAuthEmail, getErrors,
 
 authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request
 
-    const tokens = await authService.changeTokensByRefreshToken(req.body.user);
+    const tokens = await authService.changeTokensByRefreshToken(req.body.userId, req.body.refreshToken);
     res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
     res.status(200).send({accessToken: tokens.accessToken});
 })
 
 authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<string | void>) => {
 
-    const cookie_name = req.cookies.cookie_name || null;
-    const isDeactivate =
+    await authService.deactivateRefreshToken(req.body.userId, req.body.refreshToken)
+    res.sendStatus(204)
 })

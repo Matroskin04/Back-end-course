@@ -1,16 +1,16 @@
 import jwt from 'jsonwebtoken'
 import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
-import {UserDBType} from "../types/types";
+import {ObjectId} from "mongodb";
 
 export const jwtService = {
 
-    createAccessToken(user: UserDBType): string  {
+    createAccessToken(userId: ObjectId): string  {
 
-        return jwt.sign({userId: user._id}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: 10})
+        return jwt.sign({userId: userId}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: 10})
     },
 
-    createRefreshToken(user: UserDBType): string  {
+    createRefreshToken(userId: ObjectId): string  {
 
-        return jwt.sign({userId: user._id}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: 20})
+        return jwt.sign({userId: userId}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: 20})
     }
 }

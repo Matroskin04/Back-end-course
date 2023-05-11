@@ -39,7 +39,10 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
         res.status(401).send('JWT refreshToken inside cookie is incorrect');
         return;
     }
-    req.body = user;
+    req.body = {
+        userId,
+        refreshToken: cookieRefreshToken
+    }; // todo используется в 1 из 2 (logout не исп.)
     next();
 }
 

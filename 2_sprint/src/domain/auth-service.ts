@@ -6,7 +6,7 @@ import {usersRepositories} from "../repositories/users-repositories";
 import {emailManager} from "../managers/email-manager";
 import {AccessRefreshTokens} from "./service-types/auth-types-service";
 import {jwtService} from "./jwt-service";
-import {refreshTokensDBType, UserDBType} from "../types/types";
+import {UserDBType} from "../types/types";
 import {authRepositories} from "../repositories/auth-repositories";
 
 export const authService = {
@@ -54,17 +54,17 @@ export const authService = {
         }
     },
 
-    async changeTokensByRefreshToken(user: UserDBType): Promise<AccessRefreshTokens> {
+    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
 
         try { // todo такое оформление ошибки верное? (валидация в миддлвеере, а здесь перестраховка)
+            const refreshObject = {
+                userId,
+                refreshToken: cookieRefreshToken
+            }
+            await authRepositories.deactivateRefreshToken(refreshObject);
 
-            const accessToken = jwtService.createAccessToken(user);
-            const refreshToken = jwtService.createRefreshToken(user);
-            const refreshObject: refreshTokensDBType = {
-                userId: user._id,
-                refreshToken
-            };
-            await authRepositories.deactivateRefreshToken(refreshObject); // todo проверка? gpt
+            const accessToken = jwtService.createAccessToken(userId);
+            const refreshToken = jwtService.createRefreshToken(userId);
 
             return {
                 accessToken,
@@ -77,8 +77,19 @@ export const authService = {
         }
     },
 
-    async deactivateRefreshToken(cookieRefreshToken: string | null): Promise<boolean> {
+    async deactivateRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<void> {
 
+        try {
+            const refreshObject = {
+                userId,
+                refreshToken: cookieRefreshToken
+            }
+            await authRepositories.deactivateRefreshToken(refreshObject);
+            return;
 
+        } catch (err) {
+            console.log(err);
+            throw new Error(`Error: ${err}`)
+        }
     }
 }
