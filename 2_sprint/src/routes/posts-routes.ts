@@ -18,7 +18,8 @@ import {validateBodyOfComment} from "../middlewares/validation-middlewares/comme
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../models/PostsModels/ViewCommentsOfPostModel";
-import {checkToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
+import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
+import {commentsQueryRepository} from "../queryRepository/comments-query-repository";
 
 export const postsRoutes = Router();
 
@@ -40,7 +41,7 @@ postsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
 postsRoutes.get('/:id/comments', async (req:RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
                                         res: Response<ViewAllCommentsOfPostModel>) => {
 
-    const result = await postsQueryRepository.getCommentOfPost(req.query, req.params.id);
+    const result = await commentsQueryRepository.getCommentOfPost(req.query, req.params.id);
     result ? res.status(200).send(result)
         : res.sendStatus(404)
 })
@@ -52,7 +53,7 @@ postsRoutes.post('/', authorization, validateBodyOfPost, getErrors,
         res.status(201).send(result)
 
 });
-postsRoutes.post('/:id/comments', checkToken, validateBodyOfComment, getErrors,
+postsRoutes.post('/:id/comments', validateAccessToken, validateBodyOfComment, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
            res: Response<ViewCommentOfPostModel>) => {
 

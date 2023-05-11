@@ -5,11 +5,14 @@ import {usersRoutes} from "./routes/users-routes";
 import {authRoutes} from "./routes/auth-routes";
 import {testingRoutes} from "./routes/testing-routes";
 import {commentsRoutes} from "./routes/comments-routes";
+import cookieParser from "cookie-parser";
 
 
-export const PRIVATE_KEY = process.env.PRIVATE_KEY || 'testingKey123'
+export const PRIVATE_KEY_ACCESS_TOKEN = process.env.PRIVATE_KEY || 'testingAccessKey123'
+export const PRIVATE_KEY_REFRESH_TOKEN = process.env.PRIVATE_KEY || 'testingRefreshKey123'
 export const app = express()
 
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true

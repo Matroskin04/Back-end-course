@@ -41,7 +41,7 @@ export const validateRegistrationDataAuth = [
 
         .isLength({max: 10, min: 3})
         .withMessage('The length should be from 3 to 10 characters')
-        .custom(async (login): Promise<boolean | void> => {
+        .custom(async (login: string): Promise<boolean | void> => {
             const userByLogin = await usersQueryRepository.getUserByLoginOrEmail(login);
             if (userByLogin) {
                 throw new Error(`This ${login} is already exists, point out another`);
@@ -59,7 +59,7 @@ export const validateRegistrationDataAuth = [
 
         .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
         .withMessage('Incorrect Email')
-        .custom(async (email): Promise<true | void> => {
+        .custom(async (email: string): Promise<true | void> => {
             const userByEmail = await usersQueryRepository.getUserByLoginOrEmail(email);
             if (userByEmail) {
                 throw new Error(`This ${email} is already exists, point out another`);
@@ -86,7 +86,7 @@ export const validateAuthConfirmationCode = [
         .isString()
         .trim()
         .withMessage('It should be a string')
-        .custom(async (code, {req}): Promise<true | void> => {
+        .custom(async (code: string, {req}): Promise<true | void> => {
             const user = await usersQueryRepository.getUserByCodeConfirmation(code);
             if (!user) {
                 throw new Error(`Code is incorrect`);
@@ -100,7 +100,7 @@ export const validateAuthConfirmationCode = [
             if (user._id) {
                 req.userId = user._id;
             }
-            return true
+            return true;
         })
 ]
 
@@ -115,7 +115,7 @@ export const validateAuthEmail = [
 
         .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
         .withMessage('Incorrect Email')
-        .custom(async (email, {req}): Promise<true | void> => { // todo req типизировать как-то?
+        .custom(async (email: string, {req}): Promise<true | void> => {
             const user = await usersQueryRepository.getUserByLoginOrEmail(email);
             if (!user) {
                 throw new Error('This email has not been registered yet');
@@ -126,6 +126,6 @@ export const validateAuthEmail = [
             if (user._id) {
                 req.userId = user._id;
             }
-            return true
+            return true;
         })
 ]

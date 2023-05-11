@@ -1,7 +1,4 @@
-import {ObjectId} from "mongodb";
-
-export type UserDBType = {
-    _id: ObjectId
+export type UserType = {
     login: string
     email: string
     createdAt: string
@@ -12,6 +9,7 @@ export type UserDBType = {
         isConfirmed: boolean
     }
 }
+
 
 export type UserOutPutType = {
     id: string

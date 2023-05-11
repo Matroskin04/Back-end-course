@@ -1,10 +1,13 @@
-import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
 import {usersService} from "./users-service";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {usersRepositories} from "../repositories/users-repositories";
 import {emailManager} from "../managers/email-manager";
+import {AccessRefreshTokens} from "./service-types/auth-types-service";
+import {jwtService} from "./jwt-service";
+import {refreshTokensDBType, UserDBType} from "../types/types";
+import {authRepositories} from "../repositories/auth-repositories";
 
 export const authService = {
 
@@ -47,7 +50,35 @@ export const authService = {
             await emailManager.sendEmailConfirmationMessage(email, newCode)
             return true
         } catch (err) {
-            throw new Error(`Error: ${err}`) // todo после ошибки не нужно return
+            throw new Error(`Error: ${err}`);
         }
+    },
+
+    async changeTokensByRefreshToken(user: UserDBType): Promise<AccessRefreshTokens> {
+
+        try { // todo такое оформление ошибки верное? (валидация в миддлвеере, а здесь перестраховка)
+
+            const accessToken = jwtService.createAccessToken(user);
+            const refreshToken = jwtService.createRefreshToken(user);
+            const refreshObject: refreshTokensDBType = {
+                userId: user._id,
+                refreshToken
+            };
+            await authRepositories.deactivateRefreshToken(refreshObject); // todo проверка? gpt
+
+            return {
+                accessToken,
+                refreshToken
+            }
+
+        } catch (err) {
+            console.log(err);
+            throw new Error(`Error: ${err}`)
+        }
+    },
+
+    async deactivateRefreshToken(cookieRefreshToken: string | null): Promise<boolean> {
+
+
     }
 }

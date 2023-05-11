@@ -1,23 +1,16 @@
 import jwt from 'jsonwebtoken'
-import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
-import {PRIVATE_KEY} from "../setting";
-import {ObjectId} from "mongodb";
+import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
+import {UserDBType} from "../types/types";
 
 export const jwtService = {
 
-    createJWT(user: UserDBType): string  {
+    createAccessToken(user: UserDBType): string  {
 
-        return jwt.sign({userId: user._id}, PRIVATE_KEY, {expiresIn: '1h'})
+        return jwt.sign({userId: user._id}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: 10})
     },
 
-    async getUserIdByToken(token: string): Promise<null | ObjectId> {
+    createRefreshToken(user: UserDBType): string  {
 
-        try {
-            const decode = jwt.verify(token, PRIVATE_KEY) as {userId: number};
-            return new ObjectId(decode.userId)
-
-        } catch (err) {
-            return null
-        }
+        return jwt.sign({userId: user._id}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: 20})
     }
 }

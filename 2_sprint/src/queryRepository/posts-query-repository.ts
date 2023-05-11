@@ -1,11 +1,12 @@
-import {CommentOfPostPaginationType, PostPaginationType} from "./query-repository-types/posts-types-query-repository";
-import {commentsCollection, postsCollection} from "../db";
+import {PostPaginationType} from "./query-repository-types/posts-types-query-repository";
+import {postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {mappingComment} from "../domain/comments-service";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {variablesForReturn} from "./utils/variables-for-return";
+import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
+import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 
 export const postsQueryRepository = {
 
@@ -33,6 +34,28 @@ export const postsQueryRepository = {
         }
     },
 
+    async getPostsOfBlog(blogId: string, query: QueryBlogModel): Promise<null | PostsOfBlogPaginationType> {
+
+        const paramsOfElems = await variablesForReturn(query);
+        const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});
+
+        const allPostsOnPages = await postsCollection
+            .find({blogId: blogId})
+            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
+            .limit(+paramsOfElems.pageSize)
+            .sort(paramsOfElems.paramSort).toArray();
+
+        if ( allPostsOnPages.length === 0 ) return null
+
+        return {
+            pagesCount:  Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
+            page: +paramsOfElems.pageNumber,
+            pageSize: +paramsOfElems.pageSize,
+            totalCount: countAllPostsSort,
+            items: allPostsOnPages.map(p => renameMongoIdPost(p))
+        }
+    },
+
     async getSinglePost(id: string): Promise<null | PostTypeWithId> {
 
         const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
@@ -41,33 +64,5 @@ export const postsQueryRepository = {
             return renameMongoIdPost(singlePost);
         }
         return null;
-    },
-
-    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> { // todo posts query or comment query
-
-        const post = await postsQueryRepository.getSinglePost(id);
-        if (!post) {
-            return null
-        }
-
-        const paramsOfElems = await variablesForReturn(query);
-
-        const countAllCommentsOfPost = await commentsCollection
-            .countDocuments({postId: id});
-
-
-        const allCommentOfPostsOnPages = await commentsCollection
-            .find({postId: id})
-            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
-            .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
-
-        return {
-            pagesCount: Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),
-            page: +paramsOfElems.pageNumber,
-            pageSize: +paramsOfElems.pageSize,
-            totalCount: countAllCommentsOfPost,
-            items: allCommentOfPostsOnPages.map(p => mappingComment(p))
-        }
     }
 }

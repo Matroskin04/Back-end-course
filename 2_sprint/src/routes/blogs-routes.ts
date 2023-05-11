@@ -19,6 +19,7 @@ import {checkErrorsPostByBlogId} from "../middlewares/validation-middlewares/pos
 import {authorization} from "../middlewares/authorization-middelwares";
 import {UriIdModel} from "../models/UriModels";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
+import {postsQueryRepository} from "../queryRepository/posts-query-repository";
 
 export const blogsRoutes = Router();
 
@@ -41,7 +42,7 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
 blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
                                          res: Response<ViewPostsOfBlogModel>) => {
 
-    const result = await blogsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
+    const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
     result ? res.status(200).send(result)
         : res.sendStatus(404);
 })

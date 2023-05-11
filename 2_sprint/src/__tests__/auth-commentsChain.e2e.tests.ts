@@ -2,7 +2,7 @@ import request from "supertest";
 import {app} from "../setting";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
-import {CommentType} from "../repositories/repositories-types/comments-types-repositories";
+import {CommentDBType} from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
 
@@ -11,7 +11,7 @@ let idOfUser: ObjectId | null = null;
 let idOfPost: ObjectId | null = null;
 let idOfComment: ObjectId | null = null;
 let confirmationCode: string | null = null;
-const arrayOfComments: Array<CommentType> = []
+const arrayOfComments: Array<CommentDBType> = []
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 

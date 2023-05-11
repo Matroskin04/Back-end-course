@@ -18,7 +18,7 @@ export const usersRepositories = {
 
     async updateConfirmation(id: ObjectId): Promise<void> {
 
-        await usersCollection.updateOne({_id: id}, {$set: {'emailConfirmation.isConfirmed': true}}); // todo Имеет ли смысл делать доп проверку (_id is checked)
+        await usersCollection.updateOne({_id: id}, {$set: {'emailConfirmation.isConfirmed': true}});
         return;
     },
 

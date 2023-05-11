@@ -1,9 +1,16 @@
-import {BodyPostType, PostType, PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
+import {
+    BodyPostType,
+    PostDBType,
+    PostTypeWithId
+} from "../repositories/repositories-types/posts-types-repositories";
 import {postsRepositories} from "../repositories/posts-repositories";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
-import {CommentOutputType, CommentType} from "../repositories/repositories-types/comments-types-repositories";
+import {
+    CommentDBType,
+    CommentOutputType,
+} from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {mappingComment} from "./comments-service";
 import {postsCollection} from "../db";
@@ -27,7 +34,8 @@ export const postsService = {
 
         const blogName = await blogsQueryRepository.getSingleBlog(body.blogId);
 
-        const post: PostType = {
+        const post: PostDBType = {
+            _id: new ObjectId(),
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
@@ -61,7 +69,8 @@ export const postsService = {
             return null;
         }
 
-        const comment: CommentType = {
+        const comment: CommentDBType = {
+            _id: new ObjectId(),
             content: body.content,
             commentatorInfo: {
                 userId: userId.toString(),

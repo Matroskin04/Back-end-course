@@ -1,7 +1,6 @@
-import {blogsCollection, postsCollection} from "../db";
+import {blogsCollection} from "../db";
 import {renameMongoIdBlog} from "../domain/blogs-service";
-import {BlogPaginationType, PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
-import {renameMongoIdPost} from "../domain/posts-service";
+import {BlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
@@ -31,28 +30,6 @@ export const blogsQueryRepository = {
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllBlogsSort,
             items: allBlogsOnPages.map(p => renameMongoIdBlog(p))
-        }
-    },
-
-    async getPostsOfBlog(blogId: string, query: QueryBlogModel): Promise<null | PostsOfBlogPaginationType> {
-
-        const paramsOfElems = await variablesForReturn(query);
-        const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});
-
-        const allPostsOnPages = await postsCollection
-            .find({blogId: blogId})
-            .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
-            .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
-
-        if ( allPostsOnPages.length === 0 ) return null
-
-        return {
-            pagesCount:  Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
-            page: +paramsOfElems.pageNumber,
-            pageSize: +paramsOfElems.pageSize,
-            totalCount: countAllPostsSort,
-            items: allPostsOnPages.map(p => renameMongoIdPost(p))
         }
     },
 

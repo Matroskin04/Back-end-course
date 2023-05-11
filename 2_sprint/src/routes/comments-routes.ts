@@ -10,7 +10,7 @@ import {
 import {getErrors} from "../middlewares/validation-middlewares";
 import {commentsService} from "../domain/comments-service";
 import {ViewCommentModel} from "../models/CommentsModels/ViewCommentModel";
-import {checkToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
+import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 
 export const commentsRoutes = Router();
 
@@ -22,14 +22,14 @@ commentsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
         : res.sendStatus(404)
 })
 
-commentsRoutes.put('/:id', checkToken, checkCommentByIdAndToken, validateBodyOfComment, getErrors,
+commentsRoutes.put('/:id', validateAccessToken, checkCommentByIdAndToken, validateBodyOfComment, getErrors,
     async (req:RequestWithParamsAndBody<UriIdModel, UpdateCommentModel>, res: Response<void>) => {
 
     await commentsService.updateComment(req.params.id, req.userId!.toString(), req.body.content);
     res.sendStatus(204);
 })
 
-commentsRoutes.delete('/:id', checkToken, checkCommentByIdAndToken, async (req: Request, res: Response<void>) => {
+commentsRoutes.delete('/:id', validateAccessToken, checkCommentByIdAndToken, async (req: Request, res: Response<void>) => {
 
     await commentsService.deleteOne(req.params.id);
     res.sendStatus(204);

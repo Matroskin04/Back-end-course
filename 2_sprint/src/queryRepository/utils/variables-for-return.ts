@@ -17,3 +17,4 @@ export async function variablesForReturn(query: QueryBlogModel): Promise<Variabl
         paramSort
     }
 }
+

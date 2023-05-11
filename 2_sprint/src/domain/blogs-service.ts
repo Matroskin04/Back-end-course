@@ -1,16 +1,15 @@
 import {
     BodyBlogType,
-    BlogType,
-    BlogTypeWithId
+    BlogTypeWithId, BlogDBType
 } from "../repositories/repositories-types/blogs-types-repositories";
 import {blogsRepositories} from "../repositories/blogs-repositories";
 import {
-    BodyPostByBlogIdType,
-    PostType,
+    BodyPostByBlogIdType, PostDBType,
     PostTypeWithId
 } from "../repositories/repositories-types/posts-types-repositories";
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
+import {ObjectId} from "mongodb";
 
 export function renameMongoIdBlog(blog: any
 ): BlogTypeWithId {
@@ -27,8 +26,9 @@ export const blogsService = {
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
-        const blog: BlogType = {
+        const blog: BlogDBType = {
             ...bodyBlog,
+            _id: new ObjectId(),
             createdAt: new Date().toISOString(),
             isMembership: false
         }
@@ -42,7 +42,8 @@ export const blogsService = {
         const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
 
         if (hasCollectionBlogId) {
-            const post: PostType = {
+            const post: PostDBType = {
+                _id: new ObjectId(),
                 title: body.title,
                 shortDescription: body.shortDescription,
                 content: body.content,

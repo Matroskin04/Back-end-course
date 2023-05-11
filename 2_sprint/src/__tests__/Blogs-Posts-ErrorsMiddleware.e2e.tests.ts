@@ -1,10 +1,7 @@
 import {describe} from "node:test";
 const request = require("supertest");
 import {blogsCollection, client, postsCollection} from "../db";
-import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {app} from "../setting";
-import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
-import {response} from "express";
 import {ObjectId} from "mongodb";
 
 const generalBlogInputData = {

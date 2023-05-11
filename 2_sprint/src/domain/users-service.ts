@@ -1,13 +1,14 @@
 import {usersRepositories} from "../repositories/users-repositories";
 import {
-    BodyUserType,
+    BodyUserType, UserDBType,
     UserOutPutType,
-    UserDBType
 } from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcrypt";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
+import jwt from "jsonwebtoken";
+import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
 
 export function mappingUser(user: any): UserOutPutType {
     return {
@@ -31,7 +32,7 @@ export const usersService = {
             passwordHash: passHash,
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                expirationDate: new Date(), // todo здесь тоже такие свойства добавлять?
+                expirationDate: new Date(),
                 isConfirmed: true
             }
         }
@@ -58,5 +59,27 @@ export const usersService = {
         }
 
         return await bcrypt.compare(password, user.passwordHash) ? user : false;
+    },
+
+    async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
+
+        try {
+            const decode = jwt.verify(token, PRIVATE_KEY_ACCESS_TOKEN) as {userId: number}; // todo objectId?
+            return new ObjectId(decode.userId)
+
+        } catch (err) {
+            return null
+        }
+    }, // todo transport
+
+    async getUserIdByRefreshToken(token: string): Promise<null | ObjectId> {
+
+        try {
+            const decode = jwt.verify(token, PRIVATE_KEY_REFRESH_TOKEN) as {userId: number}; // todo objectId?
+            return new ObjectId(decode.userId)
+
+        } catch (err) {
+            return null
+        }
     }
 }

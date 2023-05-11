@@ -1,9 +1,6 @@
 import {MongoClient} from 'mongodb'
 import dotenv from 'dotenv'
-import {BlogType} from "./repositories/repositories-types/blogs-types-repositories";
-import {PostType} from "./repositories/repositories-types/posts-types-repositories";
-import {UserDBType} from "./repositories/repositories-types/users-types-repositories";
-import {CommentType} from "./repositories/repositories-types/comments-types-repositories";
+import {BlogDBType, CommentDBType, PostDBType, refreshTokensDBType, UserDBType} from "./types/types";
 
 dotenv.config()
 
@@ -15,10 +12,11 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const db = client.db()
-export const blogsCollection = db.collection<BlogType>('blogs');
-export const postsCollection = db.collection<PostType>('posts');
+export const blogsCollection = db.collection<BlogDBType>('blogs');
+export const postsCollection = db.collection<PostDBType>('posts');
 export const usersCollection = db.collection<UserDBType>('users');
-export const commentsCollection = db.collection<CommentType>('comments');
+export const commentsCollection = db.collection<CommentDBType>('comments');
+export const refreshTokensCollection = db.collection<refreshTokensDBType>('refreshTokens');
 
 export async function runDb() {
     try {
