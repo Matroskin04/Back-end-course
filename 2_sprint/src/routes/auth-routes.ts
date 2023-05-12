@@ -76,7 +76,7 @@ authRoutes.post('/registration-email-resending', validateAuthEmail, getErrors,
 authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request
 
     const tokens = await authService.changeTokensByRefreshToken(req.body.userId, req.body.refreshToken);
-    res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
+    res.cookie(`cookie_name`, tokens.refreshToken, {httpOnly: true, secure: true,})
     res.status(200).send({accessToken: tokens.accessToken});
 })
 
