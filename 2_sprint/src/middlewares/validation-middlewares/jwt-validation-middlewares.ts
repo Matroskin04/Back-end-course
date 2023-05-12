@@ -23,19 +23,19 @@ export const validateAccessToken = async (req: Request, res: Response, next: Nex
 
 export const validateRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
 
-    const cookie_name = req.cookies.cookie_name || null;
-    if (!cookie_name) {
+    const refreshToken = req.cookies.cookie_name || null;
+    if (!refreshToken) {
         res.status(401).send('JWT refreshToken inside cookie is missing');
         return;
     }
 
-    const isRefreshTokenActive = await authRepositories.isRefreshTokenActive(cookie_name)
+    const isRefreshTokenActive = await authRepositories.isRefreshTokenActive(refreshToken)
     if (!isRefreshTokenActive) {
         res.status(401).send('JWT refreshToken inside cookie is invalid');
         return;
     }
 
-    const userId = await usersService.getUserIdByRefreshToken(cookie_name);
+    const userId = await usersService.getUserIdByRefreshToken(refreshToken);
     if (!userId) {
         res.status(401).send('JWT refreshToken inside cookie is expired');
         return;
@@ -49,7 +49,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
 
     req.body = {
         userId,
-        refreshToken: cookie_name
+        refreshToken: refreshToken
     }; // todo используется в 1 из 2 (logout не исп.)
     next();
 }
