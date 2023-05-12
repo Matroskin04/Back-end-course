@@ -31,13 +31,13 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
 
     const isRefreshTokenActive = await authRepositories.isRefreshTokenActive(cookieRefreshToken)
     if (!isRefreshTokenActive) {
-        res.status(401).send('JWT refreshToken inside cookie is expired');
+        res.status(401).send('JWT refreshToken inside cookie is invalid');
         return;
     }
 
     const userId = await usersService.getUserIdByRefreshToken(cookieRefreshToken);
     if (!userId) {
-        res.status(401).send('JWT refreshToken inside cookie is incorrect');
+        res.status(401).send('JWT refreshToken inside cookie is expired');
         return;
     }
 
@@ -46,6 +46,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
         res.status(401).send('JWT refreshToken inside cookie is incorrect');
         return;
     }
+
     req.body = {
         userId,
         refreshToken: cookieRefreshToken
