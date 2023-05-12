@@ -23,7 +23,7 @@ export const validateAccessToken = async (req: Request, res: Response, next: Nex
 
 export const validateRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
 
-    const cookieRefreshToken = req.cookies.cookie_name || null;
+    const cookieRefreshToken = req.cookies.cookieRefreshToken || null;
     if (!cookieRefreshToken) {
         res.status(401).send('JWT refreshToken inside cookie is missing');
         return;

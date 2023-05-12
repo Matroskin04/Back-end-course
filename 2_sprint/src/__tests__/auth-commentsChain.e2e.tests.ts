@@ -2,8 +2,8 @@ import request from "supertest";
 import {app} from "../setting";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
-import {CommentDBType} from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
+import {CommentDBType} from "../types/types";
 
 
 let jwt: string;

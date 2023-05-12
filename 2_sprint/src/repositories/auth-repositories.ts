@@ -11,7 +11,7 @@ export const authRepositories = {
 
     async isRefreshTokenActive(refreshToken: string): Promise<boolean> {
 
-        const token = await refreshTokensCollection.findOne({refreshToken});
-        return !!token
+        const token = await refreshTokensCollection.findOne({refreshToken: refreshToken});
+        return !token
     }
 }

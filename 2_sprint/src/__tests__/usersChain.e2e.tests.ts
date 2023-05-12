@@ -2,7 +2,7 @@ import {describe} from "node:test";
 import {client} from "../db";
 import request from "supertest";
 import {app} from "../setting";
-import {UserDBType} from "../repositories/repositories-types/users-types-repositories";
+import {UserDBType} from "../types/types";
 
 let idOfUser: string;
 const arrayOfUser: Array<UserDBType> = [];
