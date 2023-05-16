@@ -4,10 +4,10 @@ import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {usersRepositories} from "../repositories/users-repositories";
 import {emailManager} from "../managers/email-manager";
-import {AccessRefreshTokens} from "./service-types/auth-types-service";
-import {jwtService} from "./jwt-service";
 import {UserDBType} from "../types/types";
-import {authRepositories} from "../repositories/auth-repositories";
+import {jwtService} from "./jwt-service";
+import {AccessRefreshTokens, UserInformation} from "./service-types/auth-types-service";
+import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
 export const authService = {
 
@@ -54,42 +54,35 @@ export const authService = {
         }
     },
 
-    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
+    async loginUser(loginOrEmail: string, password: string): Promise<AccessRefreshTokens | null> {
 
-        try { // todo такое оформление ошибки верное? (валидация в миддлвеере, а здесь перестраховка)
-            const refreshObject = {
-                userId,
-                refreshToken: cookieRefreshToken
-            }
-            await authRepositories.deactivateRefreshToken(refreshObject);
+        const user = await usersService.checkCredentials(loginOrEmail, password);
 
-            const accessToken = jwtService.createAccessToken(userId);
-            const refreshToken = jwtService.createRefreshToken(userId);
+        if (user) {
+            const accessToken = jwtService.createAccessToken(user._id);
+            const refreshToken = jwtService.createRefreshToken(user._id);
 
             return {
                 accessToken,
                 refreshToken
             }
-
-        } catch (err) {
-            console.log(err);
-            throw new Error(`Error: ${err}`)
         }
+
+        return null;
     },
 
-    async deactivateRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<void> {
+    async getUserInformation(userId: ObjectId): Promise<UserInformation | null> {
 
-        try {
-            const refreshObject = {
-                userId,
-                refreshToken: cookieRefreshToken
+        const user = await usersQueryRepository.getUserByUserId(userId);
+        if (user) {
+            return {
+                email: user.email,
+                login: user.login,
+                userId: user._id.toString()
             }
-            await authRepositories.deactivateRefreshToken(refreshObject);
-            return;
 
-        } catch (err) {
-            console.log(err);
-            throw new Error(`Error: ${err}`)
+        } else {
+            return null;
         }
     }
 }

@@ -1,7 +1,7 @@
 import {describe} from "node:test";
 const request = require("supertest");
 import {blogsCollection, client, postsCollection} from "../db";
-import {app} from "../setting";
+import app from "../setting";
 import {ObjectId} from "mongodb";
 
 const generalBlogInputData = {

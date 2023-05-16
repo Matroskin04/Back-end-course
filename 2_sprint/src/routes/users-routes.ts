@@ -9,6 +9,7 @@ import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserM
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 import {validateBodyOfUser} from "../middlewares/validation-middlewares/users-validation-middlewares";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
+import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
 
 export const usersRoutes = Router();
 usersRoutes.get('/', authorization, async (req: RequestWithQuery<QueryUserModel>,
@@ -24,7 +25,7 @@ usersRoutes.post('/', authorization, validateBodyOfUser, getErrors, async (req: 
     res.status(201).send(result);
 })
 
-usersRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>, res: Response<void>) => {
+usersRoutes.delete('/:id', validateFormatOfUrlParams, authorization, async (req: RequestWithParams<UriIdModel>, res: Response<void>) => {
 
     const result = await usersService.deleteSingleUser(req.params.id);
     result ? res.sendStatus(204)

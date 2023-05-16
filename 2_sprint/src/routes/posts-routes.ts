@@ -20,6 +20,7 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../models/PostsModels/ViewCommentsOfPostModel";
 import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {commentsQueryRepository} from "../queryRepository/comments-query-repository";
+import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
 
 export const postsRoutes = Router();
 
@@ -30,7 +31,7 @@ postsRoutes.get('/', async (req: RequestWithQuery<QueryPostModel>,
     const result = await postsQueryRepository.getAllPosts(req.query);
     res.status(200).send(result);
 });
-postsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
+postsRoutes.get('/:id', validateFormatOfUrlParams, async (req: RequestWithParams<UriIdModel>,
                                res: Response<ViewPostModel>) => {
 
     const result = await postsQueryRepository.getSinglePost(req.params.id)
@@ -38,7 +39,7 @@ postsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
     result ? res.status(200).send(result)
         : res.sendStatus(404)
 });
-postsRoutes.get('/:id/comments', async (req:RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
+postsRoutes.get('/:id/comments', validateFormatOfUrlParams, async (req:RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
                                         res: Response<ViewAllCommentsOfPostModel>) => {
 
     const result = await commentsQueryRepository.getCommentOfPost(req.query, req.params.id);
@@ -53,7 +54,7 @@ postsRoutes.post('/', authorization, validateBodyOfPost, getErrors,
         res.status(201).send(result)
 
 });
-postsRoutes.post('/:id/comments', validateAccessToken, validateBodyOfComment, getErrors,
+postsRoutes.post('/:id/comments', validateFormatOfUrlParams, validateAccessToken, validateBodyOfComment, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
            res: Response<ViewCommentOfPostModel>) => {
 
@@ -61,7 +62,7 @@ postsRoutes.post('/:id/comments', validateAccessToken, validateBodyOfComment, ge
     result ? res.status(201).send(result)
         : res.sendStatus(404)
 });
-postsRoutes.put('/:id', authorization, validateBodyOfPost, getErrors,
+postsRoutes.put('/:id', validateFormatOfUrlParams, authorization, validateBodyOfPost, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
            res: Response<void>) => {
 
@@ -69,7 +70,7 @@ postsRoutes.put('/:id', authorization, validateBodyOfPost, getErrors,
         result ? res.sendStatus(204)
             : res.sendStatus(404);
 });
-postsRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>,
+postsRoutes.delete('/:id', validateFormatOfUrlParams, authorization, async (req: RequestWithParams<UriIdModel>,
                                                  res: Response<void>) => {
 
     const result = await postsService.deleteSinglePost(req.params.id);

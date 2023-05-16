@@ -1,19 +1,21 @@
 import request from "supertest";
-import {app} from "../setting";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CommentDBType} from "../types/types";
+import app from "../setting";
 
 
-let jwt: string;
+let accessToken: string;
 let idOfUser: ObjectId | null = null;
 let idOfPost: ObjectId | null = null;
 let idOfComment: ObjectId | null = null;
 let confirmationCode: string | null = null;
-const arrayOfComments: Array<CommentDBType> = []
+const arrayOfComments: Array<CommentDBType> = [];
+let refreshToken: string | null = null;
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
+
 
     beforeAll( async () => {
         await client.close();
@@ -78,7 +80,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .expect(200);
         expect(response.body).toEqual({accessToken: expect.any(String)})
 
-        jwt = response.body.accessToken;
+        accessToken = response.body.accessToken;
     })
 
     it(`- GET -> '/me' there isn't JWT token; status: 401;
@@ -90,7 +92,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .get(`/hometask-02/auth/me`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .expect(200, {
                 email: "dim@mail.ru",
                 login: "Dima123",
@@ -134,7 +136,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const response1 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'small'})
             .expect(400);
         expect(response1.body).toEqual({
@@ -145,7 +147,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const response2 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({conten: 'normal 12341231241313'})
             .expect(400);
         expect(response2.body).toEqual({
@@ -156,7 +158,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const response3 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: null})
             .expect(400);
         expect(response3.body).toEqual({
@@ -170,7 +172,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .post(`/hometask-02/posts/${new ObjectId()}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'normal content12341235123412351235'})
             .expect(404);
     })
@@ -181,7 +183,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const comment1 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'super normal content 12341235123412351235'})
             .expect(201);
         expect(comment1.body).toEqual({
@@ -197,14 +199,14 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const comment2 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'normal content 12341235123412351235'})
             .expect(201);
         arrayOfComments.push(comment2.body);
 
         const comment3 = await request(app)
             .post(`/hometask-02/posts/${idOfPost}/comments`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'genius content 12341235123412351235'})
             .expect(201);
         arrayOfComments.push(comment3.body);
@@ -274,7 +276,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .put(`/hometask-02/comments/${new ObjectId()}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit content 12341235123412351235'})
             .expect(404);
 
@@ -285,7 +287,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const response1 = await request(app)
             .put(`/hometask-02/comments/${idOfComment}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: null})
             .expect(400);
         expect(response1.body).toEqual({errorsMessages: [{
@@ -295,7 +297,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         const response2 = await request(app)
             .put(`/hometask-02/comments/${idOfComment}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit'})
             .expect(400);
         expect(response2.body).toEqual({errorsMessages: [{
@@ -305,7 +307,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .put(`/hometask-02/comments/${idOfComment}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit content 12341235123412351235'})
             .expect(204);
     })
@@ -316,7 +318,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .delete(`/hometask-02/comments/${new ObjectId()}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .expect(404);
 
         await request(app)
@@ -325,7 +327,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         await request(app)
             .delete(`/hometask-02/comments/${idOfComment}`)
-            .set('Authorization', `Bearer ${jwt}`)
+            .set('Authorization', `Bearer ${accessToken}`)
             .expect(204);
     })
 
@@ -371,6 +373,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: 'meschit9@gmail.com'
             })
             .expect(204)
+
 
         //Поиск confirmationCode
         const user = await usersQueryRepository.getUserByLoginOrEmail('Egor123');
@@ -492,6 +495,65 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             })
             .expect(204);
     })
+
+
+    it(`Addition + POST -> '/login' should login in system with 'login'; status: 200;
+              -POST -> '/auth/refresh-token': refreshToken inside cookie is missing; status: 401;
+              -POST -> '/auth/refresh-token': refreshToken inside cookie is incorrect; status: 401;
+              +POST -> '/auth/refresh-token': return new refresh and access tokens; status: 200`, async () => {
+
+        const loginResponse = await request(app)
+            .post(`/hometask-02/auth/login`)
+            .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
+            .expect(200);
+
+        refreshToken = loginResponse.headers["set-cookie"][0];
+        expect(refreshToken).not.toBeUndefined();
+        accessToken = loginResponse.body.accessToken;
+
+        //refreshToken is missing 401
+        await request(app)
+            .post("/hometask-02/auth/refresh-token")
+            .expect(401)
+
+        //refreshToken is incorrect 401
+        await request(app)
+            .post("/hometask-02/auth/refresh-token")
+            .set("Cookie", 'fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
+            .expect(401)
+
+        //success request 200
+        const refreshResponse = await request(app)
+            .post("/hometask-02/auth/refresh-token")
+            .set("Cookie", refreshToken as string)
+            .expect(200)
+        expect(refreshResponse.headers["set-cookie"]).not.toBe(refreshToken);
+        expect(refreshResponse.body.accessToken).not.toBe(accessToken);
+
+        refreshToken = refreshResponse.headers["set-cookie"][0];
+    })
+
+    it(`-POST -> '/auth/logout': the confirmation code is incorrect; status: 204; 
+              -POST -> '/auth/logout': refreshToken inside cookie is missing; status: 401;
+              +POST -> '/auth/logout': refreshToken inside cookie is incorrect; status: 401;`, async () => {
+
+        //refreshToken is missing 401
+        await request(app)
+            .post("/hometask-02/auth/logout")
+            .expect(401)
+
+        //refreshToken is incorrect 401
+        await request(app)
+            .post("/hometask-02/auth/logout")
+            .set("Cookie", 'fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
+            .expect(401)
+
+        //success request
+        await request(app)
+            .post(`/hometask-02/auth/logout`)
+            .set("Cookie", refreshToken as string)
+            .expect(204);
+    })
 })
 
 // describe(`comments All operation: /posts/{id}/comments + /comments`, () => {
@@ -520,48 +582,5 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 //
 //         idOfPost = responsePost.body.id;
 //         console.log(idOfPost)
-//     })
-//
-//     it(`- POST -> '/posts/{id}/comments' Unauthorized; status: 401;
-//               - POST -> '/posts/{id}/comments' Incorrect Input body: small length of the content; status: 400
-//               - POST -> '/posts/{id}/comments' Incorrect Input body: there isn't such value; status: 400
-//               - POST -> '/posts/{id}/comments' Incorrect Input body: the content isn't a string; status: 400`, async () => {
-//
-//         await request(app)
-//             .post(`/posts/${idOfPost}/comments`)
-//             .expect(401);
-//
-//         const response1 = await request(app)
-//             .post(`/posts/${idOfPost}/comments`)
-//             .set('Authorization', `Bearer ${jwt}`)
-//             .send({content: 'small'})
-//             .expect(400);
-//         expect(response1.body).toEqual({
-//             "errorsMessages": [{
-//                     "message": expect.any(String),
-//                     "field": "content"
-//                 }]});
-//
-//         const response2 = await request(app)
-//             .post(`/posts/${idOfPost}/comments`)
-//             .set('Authorization', `Bearer ${jwt}`)
-//             .send({conten: 'normal 12341231241313'})
-//             .expect(400);
-//         expect(response2.body).toEqual({
-//             "errorsMessages": [{
-//                 "message": expect.any(String),
-//                 "field": "conten"
-//             }]})
-//
-//         const response3 = await request(app)
-//             .post(`/posts/${idOfPost}/comments`)
-//             .set('Authorization', `Bearer ${jwt}`)
-//             .send({content: null})
-//             .expect(400);
-//         expect(response3.body).toEqual({
-//             "errorsMessages": [{
-//                 "message": expect.any(String),
-//                 "field": "content"
-//             }]})
 //     })
 // })

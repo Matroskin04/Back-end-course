@@ -65,18 +65,18 @@ export const usersService = {
     async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, PRIVATE_KEY_ACCESS_TOKEN) as {userId: number}; // todo objectId?
+            const decode = jwt.verify(token, PRIVATE_KEY_ACCESS_TOKEN) as {userId: string};
             return new ObjectId(decode.userId)
 
         } catch (err) {
             return null
         }
-    }, // todo transport
+    },
 
     async getUserIdByRefreshToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, PRIVATE_KEY_REFRESH_TOKEN) as {userId: number}; // todo objectId?
+            const decode = jwt.verify(token, PRIVATE_KEY_REFRESH_TOKEN) as {userId: string};
             return new ObjectId(decode.userId)
 
         } catch (err) {

@@ -20,6 +20,7 @@ import {authorization} from "../middlewares/authorization-middelwares";
 import {UriIdModel} from "../models/UriModels";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {postsQueryRepository} from "../queryRepository/posts-query-repository";
+import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
 
 export const blogsRoutes = Router();
 
@@ -31,7 +32,7 @@ blogsRoutes.get('/', async (req: RequestWithQuery<QueryBlogModel>,
     res.status(200).send(result);
 })
 
-blogsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
+blogsRoutes.get('/:id', validateFormatOfUrlParams, async (req: RequestWithParams<UriIdModel>,
                                res: Response<ViewBlogModel>) => {
 
     const result = await blogsQueryRepository.getSingleBlog(req.params.id);
@@ -39,7 +40,7 @@ blogsRoutes.get('/:id', async (req: RequestWithParams<UriIdModel>,
         : res.sendStatus(404);
 })
 
-blogsRoutes.get('/:blogId/posts', async (req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
+blogsRoutes.get('/:blogId/posts', validateFormatOfUrlParams, async (req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
                                          res: Response<ViewPostsOfBlogModel>) => {
 
     const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
@@ -54,7 +55,7 @@ blogsRoutes.post('/', authorization, validateBodyOfBlog, getErrors, async (req: 
     res.status(201).send(result);
 })
 
-blogsRoutes.post('/:blogId/posts', authorization, checkErrorsPostByBlogId, getErrors,
+blogsRoutes.post('/:blogId/posts', validateFormatOfUrlParams, authorization, checkErrorsPostByBlogId, getErrors,
     async (req: RequestWithParamsAndBody<UriBlogIdModel, CreatePostByBlogIdModel>,
            res: Response<PostTypeWithId>) => {
 
@@ -63,7 +64,7 @@ blogsRoutes.post('/:blogId/posts', authorization, checkErrorsPostByBlogId, getEr
         : res.sendStatus(404);
 })
 
-blogsRoutes.put('/:id', authorization, validateBodyOfBlog, getErrors,
+blogsRoutes.put('/:id', validateFormatOfUrlParams, authorization, validateBodyOfBlog, getErrors,
     async (req: RequestWithParamsAndBody<UriIdModel, UpdateBlogModel>,
            res: Response<void>) => {
 
@@ -72,7 +73,7 @@ blogsRoutes.put('/:id', authorization, validateBodyOfBlog, getErrors,
     result ? res.sendStatus(204)
             : res.sendStatus(404);
 })
-blogsRoutes.delete('/:id', authorization, async (req: RequestWithParams<UriIdModel>,
+blogsRoutes.delete('/:id', validateFormatOfUrlParams, authorization, async (req: RequestWithParams<UriIdModel>,
                                                  res: Response<void>) => {
 
     const result = await blogsService.deleteSingleBlog(req.params.id);

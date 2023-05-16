@@ -6,7 +6,7 @@ export const emailManager = {
 
         const message = `<h1>Thank you for registration!</h1>
 <p>Please, follow the link to finish your registration:<a href="https://www.youtube.com/?code=${code}">complete registration</a></p>`
-        await emailAdapter.sendEmailConfirmationMessage(email, `Confirmation Email`, message);
+        await emailAdapter.sendEmailConfirmation(email, `Confirmation Email`, message);
         return;
     }
 }

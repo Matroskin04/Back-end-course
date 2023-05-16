@@ -19,9 +19,9 @@ export const commentsCollection = db.collection<CommentDBType>('comments');
 export const refreshTokensCollection = db.collection<refreshTokensDBType>('refreshTokens');
 
 export async function runDb() {
+
     try {
         await client.connect();
-
         await client.db().command({ ping: 1});
         console.log("Connected successfully to mongo server");
 

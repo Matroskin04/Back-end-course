@@ -4,7 +4,6 @@ import {
     RegistrationAuthModel,
     RegisterConfirmAuthModel, RegisterResendConfirmAuthModel
 } from "../models/AuthModels/RegistrationAuthModel";
-import {usersService} from "../domain/users-service";
 import {
     validateAuthConfirmationCode,
     validateLoginDataAuth,
@@ -14,7 +13,6 @@ import {
 import {getErrors} from "../middlewares/validation-middlewares";
 import {jwtService} from "../domain/jwt-service";
 import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {authService} from "../domain/auth-service";
 import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthModels";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
@@ -28,13 +26,9 @@ export const authRoutes = Router();
 authRoutes.get('/me', validateAccessToken, async (req: Request,
                                                   res: Response<ViewAuthModel>) => {
 
-    const user = await usersQueryRepository.getUserByUserId(req.userId!);
-    if (user) {
-        res.status(200).send({
-            email: user.email,
-            login: user.login,
-            userId: user._id.toString()
-        })
+    const result = await authService.getUserInformation(req.userId!)
+    if (result) {
+        res.status(200).send(result)
     } else {
         res.sendStatus(404)
     }
@@ -42,13 +36,10 @@ authRoutes.get('/me', validateAccessToken, async (req: Request,
 authRoutes.post('/login', validateLoginDataAuth, getErrors, async (req: RequestWithBody<LoginAuthInputModel>,
                                                                    res: Response<ViewTokenModel>) => {
 
-    const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
-
-    if (user) {
-        const accessToken = jwtService.createAccessToken(user._id);
-        const refreshToken = jwtService.createRefreshToken(user._id);
-        res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,}); // todo transport to service
-        res.status(200).send({accessToken: accessToken});
+    const result = await authService.loginUser(req.body.loginOrEmail, req.body.password)
+    if (result) {
+        res.cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true,});
+        res.status(200).send({accessToken: result.accessToken});
 
     } else {
         res.sendStatus(401);
@@ -73,15 +64,15 @@ authRoutes.post('/registration-email-resending', validateAuthEmail, getErrors,
         res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
     })
 
-authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request
+authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request - (only cookie)
 
-    const tokens = await authService.changeTokensByRefreshToken(req.body.userId, req.body.refreshToken);
+    const tokens = await jwtService.changeTokensByRefreshToken(req.body.userId, req.body.refreshToken);
     res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
     res.status(200).send({accessToken: tokens.accessToken});
 })
 
 authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<string | void>) => {
 
-    await authService.deactivateRefreshToken(req.body.userId, req.body.refreshToken)
+    await jwtService.deactivateRefreshToken(req.body.userId, req.body.refreshToken)
     res.sendStatus(204)
 })

@@ -1,13 +1,14 @@
-import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../db";
+import {blogsCollection, commentsCollection, postsCollection, refreshTokensCollection, usersCollection} from "../db";
 
 export const testingRepositories = {
 
-    async deleteAllPosts(): Promise<void> {
+    async deleteAllData(): Promise<void> {
         try {
             await postsCollection.deleteMany({});
             await blogsCollection.deleteMany({});
             await usersCollection.deleteMany({});
             await commentsCollection.deleteMany({});
+            await refreshTokensCollection.deleteMany({});
 
             return;
         } catch (err) {

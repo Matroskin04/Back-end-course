@@ -5,6 +5,6 @@ export const testingRoutes = Router();
 
 testingRoutes.delete('/', async (req: Request, res: Response<void>) => {
 
-    await testingRepositories.deleteAllPosts();
+    await testingRepositories.deleteAllData();
     res.sendStatus(204);
 });

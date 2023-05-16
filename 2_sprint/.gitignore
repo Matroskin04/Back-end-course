@@ -3,5 +3,5 @@
 /.idea
 yarn-error.log
 .env
-testing.ts
+testing.mjs
 /coverage
