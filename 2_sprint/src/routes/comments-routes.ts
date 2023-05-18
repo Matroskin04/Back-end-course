@@ -7,7 +7,7 @@ import {
     checkCommentByIdAndToken,
     validateBodyOfComment
 } from "../middlewares/validation-middlewares/comments-validation-middlewares";
-import {getErrors} from "../middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
 import {commentsService} from "../domain/comments-service";
 import {ViewCommentModel} from "../models/CommentsModels/ViewCommentModel";
 import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";

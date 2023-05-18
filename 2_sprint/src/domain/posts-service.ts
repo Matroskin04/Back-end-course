@@ -2,7 +2,7 @@ import {
     BodyPostType,
     PostTypeWithId
 } from "../repositories/repositories-types/posts-types-repositories";
-import {postsRepositories} from "../repositories/posts-repositories";
+import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
@@ -42,18 +42,18 @@ export const postsService = {
             blogName: blogName!.name,
             createdAt: new Date().toISOString()
         };
-        await postsRepositories.createPost(post);
+        await postsRepository.createPost(post);
         return renameMongoIdPost(post)
     },
 
     async updatePost(body: BodyPostType, id: string): Promise<boolean> {
 
-        return await postsRepositories.updatePost(body, id);
+        return await postsRepository.updatePost(body, id);
     },
 
     async deleteSinglePost(id: string): Promise<boolean> {
 
-        return await postsRepositories.deleteSinglePost(id);
+        return await postsRepository.deleteSinglePost(id);
     },
 
     async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
@@ -79,7 +79,7 @@ export const postsService = {
             postId: postId
         }
 
-        await postsRepositories.createCommentByPostId(comment);
+        await postsRepository.createCommentByPostId(comment);
         return mappingComment(comment);
     }
 }

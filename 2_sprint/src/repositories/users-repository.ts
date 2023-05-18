@@ -2,7 +2,7 @@ import {usersCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {UserDBType} from "../types/types";
 
-export const usersRepositories = {
+export const usersRepository = {
 
     async createUser(bodyUser: UserDBType): Promise<void> {
 

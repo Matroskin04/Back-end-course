@@ -4,6 +4,7 @@ import {UserType} from "../repositories/repositories-types/users-types-repositor
 import {PostType} from "../repositories/repositories-types/posts-types-repositories";
 import {CommentType} from "../repositories/repositories-types/comments-types-repositories";
 import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
+import {InfoRequestType} from "../repositories/repositories-types/info-request-types-repository";
 
 export type RequestWithQuery<Q> = Request<{},{},{},Q>;
 export type RequestWithBody<B> = Request<{},{},B>;
@@ -24,5 +25,7 @@ export type PostDBType = PostType & {_id: ObjectId};
 export type CommentDBType = CommentType & {_id: ObjectId};
 
 export type BlogDBType = BlogType & {_id: ObjectId};
+
+export type InfoRequestDBType = InfoRequestType & {_id: ObjectId};
 
 

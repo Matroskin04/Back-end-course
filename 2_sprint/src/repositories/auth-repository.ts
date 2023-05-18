@@ -1,11 +1,11 @@
 import {refreshTokensCollection} from "../db";
 import {refreshTokensDBType} from "../types/types";
 
-export const authRepositories = {
+export const authRepository = {
 
-    async deactivateRefreshToken(refreshObject: refreshTokensDBType): Promise<void> { // todo нужно такую функцию заварачивать в try catch
+    async deactivateRefreshToken(refreshObject: refreshTokensDBType): Promise<void> {
 
-        await refreshTokensCollection.insertOne(refreshObject)
+        await refreshTokensCollection.insertOne(refreshObject);
         return;
     },
 

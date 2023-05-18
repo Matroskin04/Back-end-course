@@ -10,7 +10,7 @@ import {
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {ViewPostModel, ViewAllPostsModel} from "../models/PostsModels/ViewPostModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
-import {getErrors} from "../middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
 import {postsService} from "../domain/posts-service";
 import {postsQueryRepository} from "../queryRepository/posts-query-repository";
 import {UriIdModel} from "../models/UriModels";

@@ -1,7 +1,7 @@
 import {commentsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
-export const commentsRepositories = {
+export const commentsRepository = {
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 

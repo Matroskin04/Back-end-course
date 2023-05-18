@@ -1,5 +1,5 @@
 import {Router, Response} from "express";
-import {getErrors} from "../middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {usersService} from "../domain/users-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";

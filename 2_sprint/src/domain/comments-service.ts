@@ -1,5 +1,5 @@
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
-import {commentsRepositories} from "../repositories/comments-repositories";
+import {commentsRepository} from "../repositories/comments-repository";
 
 export function mappingComment(comment: any
 ): CommentOutputType {
@@ -17,13 +17,13 @@ export const commentsService = {
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
-        await commentsRepositories.updateComment(id, idFromToken, content);
+        await commentsRepository.updateComment(id, idFromToken, content);
         return;
     },
 
     async deleteOne(id: string): Promise<void> {
 
-        await commentsRepositories.deleteComment(id);
+        await commentsRepository.deleteComment(id);
         return;
     }
 }

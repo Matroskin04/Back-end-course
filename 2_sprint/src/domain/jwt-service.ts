@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
-import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
 import {ObjectId} from "mongodb";
 import {AccessRefreshTokens} from "./service-types/auth-types-service";
-import {authRepositories} from "../repositories/auth-repositories";
+import {authRepository} from "../repositories/auth-repository";
+import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../tokens";
 
 export const jwtService = {
 
@@ -18,12 +18,12 @@ export const jwtService = {
 
     async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
 
-        try { // todo такое оформление ошибки верное? (валидация в миддлвеере, а здесь перестраховка)
+        try {
             const refreshObject = {
                 userId,
                 refreshToken: cookieRefreshToken
             }
-            await authRepositories.deactivateRefreshToken(refreshObject);
+            await authRepository.deactivateRefreshToken(refreshObject);
 
             const accessToken = this.createAccessToken(userId);
             const refreshToken = this.createRefreshToken(userId);
@@ -46,7 +46,7 @@ export const jwtService = {
                 userId,
                 refreshToken: cookieRefreshToken
             }
-            await authRepositories.deactivateRefreshToken(refreshObject);
+            await authRepository.deactivateRefreshToken(refreshObject);
             return;
 
         } catch (err) {

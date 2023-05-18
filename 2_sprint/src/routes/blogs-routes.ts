@@ -10,7 +10,7 @@ import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {ViewBlogModel, ViewAllBlogsModel, ViewPostsOfBlogModel} from "../models/BlogsModels/ViewBlogModel";
 import {UriBlogIdModel} from "../models/BlogsModels/UriBlogModel";
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
-import {getErrors} from "../middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
 import {blogsService} from "../domain/blogs-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";

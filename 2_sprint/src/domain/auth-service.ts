@@ -2,7 +2,7 @@ import {usersService} from "./users-service";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {usersRepositories} from "../repositories/users-repositories";
+import {usersRepository} from "../repositories/users-repository";
 import {emailManager} from "../managers/email-manager";
 import {UserDBType} from "../types/types";
 import {jwtService} from "./jwt-service";
@@ -27,7 +27,7 @@ export const authService = {
             }
         }
 
-        await usersRepositories.createUser(user);
+        await usersRepository.createUser(user);
         try {
             await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode)
             return;
@@ -38,14 +38,14 @@ export const authService = {
 
     async confirmEmail(userId: ObjectId): Promise<void> {
 
-        await usersRepositories.updateConfirmation(userId);
+        await usersRepository.updateConfirmation(userId);
         return;
     },
 
     async resendConfirmationEmailMessage(userId: ObjectId, email: string): Promise<true | string> {
 
         const newCode = uuidv4();
-        await usersRepositories.updateCodeConfirmation(userId, newCode)
+        await usersRepository.updateCodeConfirmation(userId, newCode)
         try {
             await emailManager.sendEmailConfirmationMessage(email, newCode)
             return true

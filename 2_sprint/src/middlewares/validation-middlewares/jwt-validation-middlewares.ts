@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {usersService} from "../../domain/users-service";
 import {usersQueryRepository} from "../../queryRepository/users-query-repository";
-import {authRepositories} from "../../repositories/auth-repositories";
+import {authRepository} from "../../repositories/auth-repository";
 
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -29,7 +29,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
         return;
     }
 
-    const isRefreshTokenActive = await authRepositories.isRefreshTokenActive(refreshToken)
+    const isRefreshTokenActive = await authRepository.isRefreshTokenActive(refreshToken)
     if (!isRefreshTokenActive) {
         res.status(401).send('JWT refreshToken inside cookie is invalid');
         return;
@@ -50,7 +50,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     req.body = {
         userId,
         refreshToken: refreshToken
-    }; // todo используется в 1 из 2 (logout не исп.)
+    }; // todo исправить
     next();
 }
 

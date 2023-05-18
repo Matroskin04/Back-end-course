@@ -1,4 +1,4 @@
-import {usersRepositories} from "../repositories/users-repositories";
+import {usersRepository} from "../repositories/users-repository";
 import {
     BodyUserType,
     UserOutPutType,
@@ -8,8 +8,8 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
-import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../setting";
 import {UserDBType} from "../types/types";
+import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../tokens";
 
 export function mappingUser(user: any): UserOutPutType {
     return {
@@ -38,13 +38,13 @@ export const usersService = {
             }
         }
 
-        await usersRepositories.createUser(user);
+        await usersRepository.createUser(user);
         return mappingUser(user);
     },
 
     async deleteSingleUser(id: string): Promise<boolean> {
 
-        return await usersRepositories.deleteSingleUser(id);
+        return await usersRepository.deleteSingleUser(id);
     },
 
     async _generateHash(password: string): Promise<string> {

@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb'
 import dotenv from 'dotenv'
-import {BlogDBType, CommentDBType, PostDBType, refreshTokensDBType, UserDBType} from "./types/types";
+import {BlogDBType, CommentDBType, InfoRequestDBType, PostDBType, refreshTokensDBType, UserDBType} from "./types/types";
 
 dotenv.config()
 
@@ -17,6 +17,7 @@ export const postsCollection = db.collection<PostDBType>('posts');
 export const usersCollection = db.collection<UserDBType>('users');
 export const commentsCollection = db.collection<CommentDBType>('comments');
 export const refreshTokensCollection = db.collection<refreshTokensDBType>('refreshTokens');
+export const infoRequestCollection = db.collection<InfoRequestDBType>('infoRequest');
 
 export async function runDb() {
 

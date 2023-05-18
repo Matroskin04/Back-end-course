@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb";
 import {CommentDBType, PostDBType} from "../types/types";
 
 
-export const postsRepositories = {
+export const postsRepository = {
 
     async createPost(post: PostDBType): Promise<void> {
 

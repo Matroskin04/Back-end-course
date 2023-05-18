@@ -519,7 +519,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         //refreshToken is incorrect 401
         await request(app)
             .post("/hometask-02/auth/refresh-token")
-            .set("Cookie", 'fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
+            .set("Cookie", 'refreshToken=fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
             .expect(401)
 
         //success request 200

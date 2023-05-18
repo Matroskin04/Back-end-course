@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb";
 import {BlogDBType, PostDBType} from "../types/types";
 
 
-export const blogsRepositories = {
+export const blogsRepositoriy = {
 
 
     async createBlog(blog: BlogDBType): Promise<void> {
