@@ -13,7 +13,7 @@ export type RequestWithParamsAndBody<P, B> = Request<P,{},B>;
 export type RequestWithParamsAndQuery<P, Q> = Request<P,{},{},Q>;
 
 
-export type refreshTokensDBType = {
+export type refreshTokenDBType = {
     userId: ObjectId
     refreshToken: string
 };
@@ -27,5 +27,12 @@ export type CommentDBType = CommentType & {_id: ObjectId};
 export type BlogDBType = BlogType & {_id: ObjectId};
 
 export type InfoRequestDBType = InfoRequestType & {_id: ObjectId};
+export type DeviceDBType = {
+    _id: ObjectId
+    ip: string
+    title: string
+    lastActiveDate: string
+    deviceId: string
+}
 
 

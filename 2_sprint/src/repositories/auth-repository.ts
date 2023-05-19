@@ -1,9 +1,9 @@
 import {refreshTokensCollection} from "../db";
-import {refreshTokensDBType} from "../types/types";
+import {refreshTokenDBType} from "../types/types";
 
 export const authRepository = {
 
-    async deactivateRefreshToken(refreshObject: refreshTokensDBType): Promise<void> {
+    async deactivateRefreshToken(refreshObject: refreshTokenDBType): Promise<void> {
 
         await refreshTokensCollection.insertOne(refreshObject);
         return;
