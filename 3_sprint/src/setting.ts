@@ -18,12 +18,12 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-app.use('/hometask-02/blogs', blogsRoutes);
-app.use('/hometask-02/posts', postsRoutes);
-app.use('/hometask-02/users', usersRoutes);
-app.use('/hometask-02/auth', authRoutes);
-app.use('/hometask-02/comments', commentsRoutes);
-app.use('/hometask-02/devices', devicesRoutes);
-app.use('/hometask-02/testing/all-data', testingRoutes);
+app.use('/hometask-03/blogs', blogsRoutes);
+app.use('/hometask-03/posts', postsRoutes);
+app.use('/hometask-03/users', usersRoutes);
+app.use('/hometask-03/auth', authRoutes);
+app.use('/hometask-03/comments', commentsRoutes);
+app.use('/hometask-03/devices', devicesRoutes);
+app.use('/hometask-03/testing/all-data', testingRoutes);
 
 export default app
