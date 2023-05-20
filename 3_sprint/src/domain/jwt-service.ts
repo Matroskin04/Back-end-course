@@ -10,13 +10,13 @@ export const jwtService = {
 
     createAccessToken(userId: string): string  {
 
-        return jwt.sign({userId: userId}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '60s'})
+        return jwt.sign({userId: userId}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '10s'})
     },
 
     createRefreshToken(userId: string, existingDeviceId: string | null): string  {
 
         const deviceId = existingDeviceId ?? randomUUID();
-        return jwt.sign({userId, deviceId}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '120s'})
+        return jwt.sign({userId, deviceId}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '20s'})
     },
 
     async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens | false> {
