@@ -1,9 +1,8 @@
 import {
     blogsCollection,
-    commentsCollection,
+    commentsCollection, devicesCollection,
     infoRequestCollection,
     postsCollection,
-    refreshTokensCollection,
     usersCollection
 } from "../db";
 
@@ -15,8 +14,8 @@ export const testingRepository = {
             await blogsCollection.deleteMany({});
             await usersCollection.deleteMany({});
             await commentsCollection.deleteMany({});
-            await refreshTokensCollection.deleteMany({});
             await infoRequestCollection.deleteMany({});
+            await devicesCollection.deleteMany({});
 
             return;
         } catch (err) {

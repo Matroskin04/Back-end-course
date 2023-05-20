@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {usersService} from "../../domain/users-service";
-import {usersQueryRepository} from "../../queryRepository/users-query-repository";
-import {authRepository} from "../../repositories/auth-repository";
+import {jwtQueryRepository} from "../../queryRepository/jwt-query-repository";
+import {devicesQueryRepository} from "../../queryRepository/devices-query-repository";
 
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -29,29 +29,25 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
         return;
     }
 
-    const isRefreshTokenActive = await authRepository.isRefreshTokenActive(refreshToken)
-    if (!isRefreshTokenActive) {
-        res.status(401).send('JWT refreshToken inside cookie is invalid');
-        return;
-    }
-
-    const userId = await usersService.getUserIdByRefreshToken(refreshToken);
-    if (!userId) {
+    const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+    if (!payloadToken) {
         res.status(401).send('JWT refreshToken inside cookie is invalid or expired');
         return;
     }
 
-    const user = await usersQueryRepository.getUserByUserId(userId);
-    if (!user) {
+    const device = await devicesQueryRepository.getDeviceById(payloadToken.deviceId)
+    if (device?.userId !== payloadToken.userId
+        || device?.deviceId !== payloadToken.deviceId
+        || device?.lastActiveDate !== payloadToken.iat!.toString()) {
         res.status(401).send('JWT refreshToken inside cookie is invalid');
         return;
     }
 
-    req.body = {
-        userId,
-        refreshToken: refreshToken
-    }; // todo исправить
-    next();
+    if (payloadToken.userId) {
+        req.userId = payloadToken.userId;
+        req.refreshToken = refreshToken;
+        next();
+    }
 }
 
 

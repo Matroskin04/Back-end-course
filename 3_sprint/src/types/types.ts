@@ -5,6 +5,7 @@ import {PostType} from "../repositories/repositories-types/posts-types-repositor
 import {CommentType} from "../repositories/repositories-types/comments-types-repositories";
 import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
 import {InfoRequestType} from "../repositories/repositories-types/info-request-types-repository";
+import {DeviceType} from "../repositories/repositories-types/devices-types-repositories";
 
 export type RequestWithQuery<Q> = Request<{},{},{},Q>;
 export type RequestWithBody<B> = Request<{},{},B>;
@@ -27,12 +28,6 @@ export type CommentDBType = CommentType & {_id: ObjectId};
 export type BlogDBType = BlogType & {_id: ObjectId};
 
 export type InfoRequestDBType = InfoRequestType & {_id: ObjectId};
-export type DeviceDBType = {
-    _id: ObjectId
-    ip: string
-    title: string
-    lastActiveDate: string
-    deviceId: string
-}
+export type DeviceDBType = DeviceType & {_id: ObjectId}
 
 

@@ -6,7 +6,7 @@ import {usersRepository} from "../repositories/users-repository";
 import {emailManager} from "../managers/email-manager";
 import {UserDBType} from "../types/types";
 import {jwtService} from "./jwt-service";
-import {AccessRefreshTokens, UserInformation} from "./service-types/auth-types-service";
+import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 
 export const authService = {
@@ -46,25 +46,28 @@ export const authService = {
 
         const newCode = uuidv4();
         await usersRepository.updateCodeConfirmation(userId, newCode)
+
         try {
             await emailManager.sendEmailConfirmationMessage(email, newCode)
             return true
+
         } catch (err) {
             throw new Error(`Error: ${err}`);
         }
     },
 
-    async loginUser(loginOrEmail: string, password: string): Promise<AccessRefreshTokens | null> {
+    async loginUser(loginOrEmail: string, password: string): Promise<ARTokensAndUserId | null> {
 
         const user = await usersService.checkCredentials(loginOrEmail, password);
 
         if (user) {
-            const accessToken = jwtService.createAccessToken(user._id);
-            const refreshToken = jwtService.createRefreshToken(user._id);
+            const accessToken = jwtService.createAccessToken(user._id.toString());
+            const refreshToken = jwtService.createRefreshToken(user._id.toString(), null);
 
             return {
                 accessToken,
-                refreshToken
+                refreshToken,
+                userId: user._id
             }
         }
 

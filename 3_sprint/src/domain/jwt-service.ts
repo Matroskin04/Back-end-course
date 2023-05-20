@@ -1,32 +1,36 @@
 import jwt from 'jsonwebtoken'
 import {ObjectId} from "mongodb";
-import {AccessRefreshTokens} from "./service-types/auth-types-service";
-import {authRepository} from "../repositories/auth-repository";
 import {PRIVATE_KEY_ACCESS_TOKEN, PRIVATE_KEY_REFRESH_TOKEN} from "../tokens";
+import {randomUUID} from "crypto";
+import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
+import {devicesService} from "./devices-service";
+import {AccessRefreshTokens} from "./service-types/jwt-types-service";
 
 export const jwtService = {
 
-    createAccessToken(userId: ObjectId): string  {
+    createAccessToken(userId: string): string  {
 
-        return jwt.sign({userId: userId}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '10m'})
+        return jwt.sign({userId: userId}, PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '20s'})
     },
 
-    createRefreshToken(userId: ObjectId): string  {
+    createRefreshToken(userId: string, existingDeviceId: string | null): string  {
 
-        return jwt.sign({userId: userId}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '20m'})
+        const deviceId = existingDeviceId ?? randomUUID();
+        return jwt.sign({userId, deviceId}, PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '30s'})
     },
 
-    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
+    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens | false> {
 
         try {
-            const refreshObject = {
-                userId,
-                refreshToken: cookieRefreshToken
-            }
-            await authRepository.deactivateRefreshToken(refreshObject);
+            const payload = jwtQueryRepository.getPayloadToken(cookieRefreshToken);
 
-            const accessToken = this.createAccessToken(userId);
-            const refreshToken = this.createRefreshToken(userId);
+            const accessToken = this.createAccessToken(userId.toString());
+            const refreshToken = this.createRefreshToken(userId.toString(), payload!.deviceId); // todo обработать если null
+
+            const payloadNewRefresh = jwtQueryRepository.getPayloadToken(refreshToken);
+            const isModified = await devicesService.updateLastActiveDate(payload!.deviceId, payloadNewRefresh!.iat!.toString());
+
+            if (!isModified) return false;
 
             return {
                 accessToken,
@@ -39,19 +43,21 @@ export const jwtService = {
         }
     },
 
-    async deactivateRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<void> {
+    // Реализация рефреш с сохранением использованных токенов
+     // async deactivateRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<void> {
+    //
+    //     try {
+    //         const refreshObject = {
+    //             userId,
+    //             refreshToken: cookieRefreshToken
+    //         }
+    //         await jwtRepository.deactivateRefreshToken(refreshObject);
+    //         return;
+    //
+    //     } catch (err) {
+    //         console.log(err);
+    //         throw new Error(`Error: ${err}`)
+    //     }
+    // }
 
-        try {
-            const refreshObject = {
-                userId,
-                refreshToken: cookieRefreshToken
-            }
-            await authRepository.deactivateRefreshToken(refreshObject);
-            return;
-
-        } catch (err) {
-            console.log(err);
-            throw new Error(`Error: ${err}`)
-        }
-    }
 }

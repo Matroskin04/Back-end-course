@@ -6,7 +6,6 @@ import {
     DeviceDBType,
     InfoRequestDBType,
     PostDBType,
-    refreshTokenDBType,
     UserDBType
 } from "./types/types";
 
@@ -24,7 +23,6 @@ export const blogsCollection = db.collection<BlogDBType>('blogs');
 export const postsCollection = db.collection<PostDBType>('posts');
 export const usersCollection = db.collection<UserDBType>('users');
 export const commentsCollection = db.collection<CommentDBType>('comments');
-export const refreshTokensCollection = db.collection<refreshTokenDBType>('refreshTokens');
 export const infoRequestCollection = db.collection<InfoRequestDBType>('infoRequests');
 export const devicesCollection = db.collection<DeviceDBType>('devices');
 

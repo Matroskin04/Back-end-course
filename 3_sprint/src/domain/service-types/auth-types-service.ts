@@ -1,6 +1,9 @@
-export type AccessRefreshTokens = {
+import {ObjectId} from "mongodb";
+
+export type ARTokensAndUserId = {
     accessToken: string;
     refreshToken: string
+    userId: ObjectId
 }
 
 export type UserInformation = {

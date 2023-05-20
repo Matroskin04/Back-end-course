@@ -22,6 +22,7 @@ import {
 } from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateInfoRequest} from "../middlewares/info-request-middlewares/validate-info-request-middleware";
 import {saveInfoRequest} from "../middlewares/info-request-middlewares/save-info-request-middleware";
+import {devicesService} from "../domain/devices-service";
 
 export const authRoutes = Router();
 
@@ -38,8 +39,10 @@ authRoutes.get('/me', validateAccessToken, async (req: Request,
 authRoutes.post('/login', saveInfoRequest, validateInfoRequest, validateLoginDataAuth, getErrors, async (req: RequestWithBody<LoginAuthInputModel>,
                                                                    res: Response<ViewTokenModel>) => {
 
-    const result = await authService.loginUser(req.body.loginOrEmail, req.body.password)
+    const result = await authService.loginUser(req.body.loginOrEmail, req.body.password);
+
     if (result) {
+        await devicesService.createNewDevice(req.socket.remoteAddress || 'unknown', req.headers['user-agent'] || 'unknown', result.userId, result.refreshToken)
         res.cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true,});
         res.status(200).send({accessToken: result.accessToken});
 
@@ -68,13 +71,18 @@ authRoutes.post('/registration-email-resending', saveInfoRequest, validateInfoRe
 
 authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request - (only cookie)
 
-    const tokens = await jwtService.changeTokensByRefreshToken(req.body.userId, req.body.refreshToken);
+    const tokens = await jwtService.changeTokensByRefreshToken(req.userId!, req.refreshToken);
+    if (!tokens) {
+        res.status(400).send('Something was wrong');
+        return;
+    }
+
     res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
     res.status(200).send({accessToken: tokens.accessToken});
 })
 
-authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<string | void>) => {
+authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<string | void>) => { //todo типы
 
-    await jwtService.deactivateRefreshToken(req.body.userId, req.body.refreshToken)
+    await devicesService.deleteDeviceByRefreshToken(req.refreshToken)
     res.sendStatus(204)
 })
