@@ -39,7 +39,7 @@ enum HttpStatusCode {
 * The server is a transforming proxy that received a 200 OK from its origin,
 * but is returning a modified version of the origin's response.
 */
-NON_AUTHORITATIVE_INFORMATION = 203,
+// NON_AUTHORITATIVE_INFORMATION = 203,
 
     /**
      * The server successfully processed the request and is not returning any content.
