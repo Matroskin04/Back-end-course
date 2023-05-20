@@ -11,7 +11,7 @@ export const devicesRoutes = Router();
 
 devicesRoutes.get('/', validateRefreshToken, async (req: Request, res: Response<ViewDeviceModel>) => {
 
-    const result = await devicesQueryRepository.getAllDevices();
+    const result = await devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
     res.status(200).send(result);
 })
 

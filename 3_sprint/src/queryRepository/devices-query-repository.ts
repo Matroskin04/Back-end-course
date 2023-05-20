@@ -4,9 +4,9 @@ import {DeviceDBType} from "../types/types";
 
 export const devicesQueryRepository = {
 
-    async getAllDevices(): Promise<DeviceOutputType[]> {
+    async getAllDevicesByUserId(userId: string): Promise<DeviceOutputType[]> {
 
-        return await devicesCollection.find({}, {projection: [ {_id: 0}, {userId: 0} ]}).toArray();
+        return await devicesCollection.find({userId}, {projection: {_id: 0, userId: 0} }).toArray();
     },
 
     async getDeviceById(deviceId: string): Promise<DeviceDBType | null> {
