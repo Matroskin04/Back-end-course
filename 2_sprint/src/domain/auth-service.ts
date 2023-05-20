@@ -75,6 +75,7 @@ export const authService = {
 
         const user = await usersQueryRepository.getUserByUserId(userId);
         if (user) {
+
             return {
                 email: user.email,
                 login: user.login,
