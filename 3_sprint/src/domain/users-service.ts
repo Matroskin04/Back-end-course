@@ -3,7 +3,7 @@ import {
     BodyUserType,
     UserOutPutType,
 } from "../repositories/repositories-types/users-types-repositories";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
