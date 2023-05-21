@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import {NODE_ENVS_ENUM} from "../helpers/enums";
 
 const myPass = process.env.EMAILPASS
-const currentEnv = process.env.NODE_ENV
+const currentEnv = process.env.NODE_ENV || 'development'
 export const emailAdapter = {
 
     async sendEmail(email: string, subject: string, message: string): Promise<boolean> {
