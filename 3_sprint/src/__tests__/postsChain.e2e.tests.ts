@@ -1,7 +1,7 @@
 import {describe} from "node:test";
 import {client} from "../db";
 import request from "supertest";
-import app from "../setting";
+import {app} from "../setting";
 
 let idOfPost: string;
 let idOfBlog: string;
