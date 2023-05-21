@@ -14,11 +14,6 @@ export type RequestWithParamsAndBody<P, B> = Request<P,{},B>;
 export type RequestWithParamsAndQuery<P, Q> = Request<P,{},{},Q>;
 
 
-export type refreshTokenDBType = {
-    userId: ObjectId
-    refreshToken: string
-};
-
 export type UserDBType = UserType & {_id: ObjectId};
 
 export type PostDBType = PostType & {_id: ObjectId};

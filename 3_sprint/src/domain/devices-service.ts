@@ -13,7 +13,7 @@ export const devicesService = {
             _id: new ObjectId(),
             ip,
             title,
-            lastActiveDate: `${payloadToken!.iat}`,
+            lastActiveDate: new Date(payloadToken!.iat!).toISOString(),
             deviceId: payloadToken!.deviceId,
             userId: userId.toString()
         }

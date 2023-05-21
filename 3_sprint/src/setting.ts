@@ -25,5 +25,3 @@ app.use('/hometask-03/auth', authRoutes);
 app.use('/hometask-03/comments', commentsRoutes);
 app.use('/hometask-03/security/devices', devicesRoutes);
 app.use('/hometask-03/testing/all-data', testingRoutes);
-
-// export default app
