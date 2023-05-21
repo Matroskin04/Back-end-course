@@ -26,5 +26,4 @@ app.use('/hometask-03/comments', commentsRoutes);
 app.use('/hometask-03/devices', devicesRoutes);
 app.use('/hometask-03/testing/all-data', testingRoutes);
 
-
 export default app
