@@ -1,11 +1,9 @@
 import nodemailer from 'nodemailer'
-import {NODE_ENVS_ENUM} from "../helpers/enums";
 
 const myPass = process.env.EMAILPASS
-const currentEnv = process.env.NODE_ENV || 'development'
 export const emailAdapter = {
 
-    async sendEmail(email: string, subject: string, message: string): Promise<boolean> {
+    async sendEmailConfirmation(email: string, subject: string, message: string): Promise<boolean> {
         try {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -27,16 +25,5 @@ export const emailAdapter = {
             console.log('emailAdapter => sendEmailConfirmation => error:', e)
             return false
         }
-    },
-
-    async sendMock(){
-
-        return true
-    },
-
-    async sendEmailConfirmation(email: string, subject: string, message: string): Promise<boolean> { // todo mock так реализовывать?
-
-        if (currentEnv === NODE_ENVS_ENUM.TESTING) return this.sendMock()
-        return this.sendEmail(email, subject, message)
     }
 }
