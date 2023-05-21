@@ -8,7 +8,7 @@ import {commentsRoutes} from "./routes/comments-routes";
 import cookieParser from "cookie-parser";
 import {devicesRoutes} from "./routes/devices-routes";
 
-const app = express()
+export const app = express()
 
 app.set('trust proxy', true)
 
@@ -25,5 +25,3 @@ app.use('/hometask-03/auth', authRoutes);
 app.use('/hometask-03/comments', commentsRoutes);
 app.use('/hometask-03/devices', devicesRoutes);
 app.use('/hometask-03/testing/all-data', testingRoutes);
-
-export default app
