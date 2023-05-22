@@ -28,7 +28,7 @@ export const jwtService = {
             const refreshToken = this.createRefreshToken(userId.toString(), payload!.deviceId); // todo обработать если null
 
             const payloadNewRefresh = jwtQueryRepository.getPayloadToken(refreshToken);
-            const isModified = await devicesService.updateLastActiveDate(payload!.deviceId, payloadNewRefresh!.iat!.toString());
+            const isModified = await devicesService.updateLastActiveDate(payload!.deviceId, payloadNewRefresh!.iat!);
 
             if (!isModified) return false;
 

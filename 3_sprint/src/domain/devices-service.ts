@@ -46,8 +46,9 @@ export const devicesService = {
         return await deviceRepository.deleteDeviceById(payloadToken!.deviceId);
     },
 
-    async updateLastActiveDate(deviceId: string, newDate: string): Promise<boolean> {
+    async updateLastActiveDate(deviceId: string, newDateNum: number): Promise<boolean> {
 
-        return await deviceRepository.updateLastActiveDate(deviceId, newDate);
+        const newDateISOS = new Date(newDateNum).toISOString()
+        return await deviceRepository.updateLastActiveDate(deviceId, newDateISOS);
     }
 }
