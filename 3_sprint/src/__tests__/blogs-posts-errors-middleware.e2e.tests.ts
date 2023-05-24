@@ -23,7 +23,7 @@ describe('POST: /blogs', () => {
         await client.connect();
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
     });
 
@@ -34,7 +34,7 @@ describe('POST: /blogs', () => {
     it('+ should create 4 new blogs without errors', async () => {
         //1 blog
         const response1 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(generalBlogInputData);
 
@@ -58,7 +58,7 @@ describe('POST: /blogs', () => {
         };
 
         const response2 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData2);
 
@@ -72,7 +72,7 @@ describe('POST: /blogs', () => {
         };
 
         const response3 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData3);
 
@@ -86,7 +86,7 @@ describe('POST: /blogs', () => {
         };
 
         const response4 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData4);
 
@@ -102,7 +102,7 @@ describe('POST: /blogs', () => {
     it('- BAD AUTH TOKEN => should return status 401: unauthorized', async () => {
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'wrong_password')
             .send(generalBlogInputData);
 
@@ -112,7 +112,7 @@ describe('POST: /blogs', () => {
     it('- WITHOUT AUTH TOKEN => should return status 401: unauthorized', async () => {
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .send(generalBlogInputData);
 
         expect(response.status).toBe(401);
@@ -128,7 +128,7 @@ describe('POST: /blogs', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData);
 
@@ -154,7 +154,7 @@ describe('POST: /blogs', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData);
 
@@ -188,7 +188,7 @@ describe('POST: /blogs', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData);
 
@@ -222,7 +222,7 @@ describe('POST: /blogs', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData);
 
@@ -255,7 +255,7 @@ describe('POST: /blogs', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData);
 
@@ -289,7 +289,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
             blogId: idOfBlog
         }
         const response1 = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData1);
 
@@ -315,7 +315,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
         };
 
         const response2 = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData2);
 
@@ -330,7 +330,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
         };
 
         const response3 = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData3);
 
@@ -353,7 +353,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData);
 
@@ -381,7 +381,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
 
         //delete blog
         await request(app)
-            .delete(`/hometask-02/blogs/${idOfDeletedBlog}`)
+            .delete(`/hometask-03/blogs/${idOfDeletedBlog}`)
             .auth('admin', 'qwerty')
             .expect(204)
 
@@ -393,7 +393,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData);
 
@@ -427,7 +427,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
         };
 
         const response = await request(app)
-            .post('/hometask-02/posts')
+            .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
             .send(postInputData);
 

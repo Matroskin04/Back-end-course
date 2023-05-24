@@ -4,15 +4,19 @@ import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CommentDBType} from "../types/types";
 import {app} from "../setting";
+import {emailAdapter} from "../adapters/email-adapter";
 
 
 let accessToken: string;
-let idOfUser: ObjectId | null = null;
-let idOfPost: ObjectId | null = null;
-let idOfComment: ObjectId | null = null;
+let idOfUser: ObjectId;
+let idOfPost: ObjectId;
+let idOfComment: ObjectId;
 let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
-let refreshToken: string | null = null;
+let refreshToken: string;
+
+emailAdapter.sendEmailConfirmation = jest.fn();
+const sendEmailConfirmation = jest.spyOn(emailAdapter, 'sendEmailConfirmation');
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
@@ -22,7 +26,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         await client.connect();
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
     })
 
@@ -33,7 +37,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     it(`(Addition) + POST -> create new user; status 201`, async () => {
 
         const user = await request(app)
-            .post(`/hometask-02/users`)
+            .post(`/hometask-03/users`)
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
             .expect(201);
@@ -45,7 +49,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               - POST -> '/login' Incorrect: the password or login is wrong; status: 401;`, async () => {
 
         await request(app)
-            .post(`/hometask-02/auth/login`)
+            .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'Too large 123456789123', password: '1'})
             .expect(400, {
                 errorsMessages: [
@@ -61,7 +65,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             })
 
         await request(app)
-            .post(`/hometask-02/auth/login`)
+            .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'Someone', password: 'something'})
             .expect(401)
     })
@@ -70,12 +74,12 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + POST -> '/login' should login in system with 'email'; status: 200`, async () => {
 
         await request(app)
-            .post(`/hometask-02/auth/login`)
+            .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
             .expect(200);
 
         const response = await request(app)
-            .post(`/hometask-02/auth/login`)
+            .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
             .expect(200);
         expect(response.body).toEqual({accessToken: expect.any(String)})
@@ -87,11 +91,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + GET -> '/me' should `, async () => {
 
         await request(app)
-            .get(`/hometask-02/auth/me`)
+            .get(`/hometask-03/auth/me`)
             .expect(401);
 
         await request(app)
-            .get(`/hometask-02/auth/me`)
+            .get(`/hometask-03/auth/me`)
             .set('Authorization', `Bearer ${accessToken}`)
             .expect(200, {
                 email: "dim@mail.ru",
@@ -104,7 +108,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                         + POST -> '/posts' should create new post, status 201`, async () => {
 
         const responseBlog = await request(app)
-            .post(`/hometask-02/blogs`)
+            .post(`/hometask-03/blogs`)
             .auth('admin', 'qwerty')
             .send({
                 name: "Blog2-ITforYOU",
@@ -113,7 +117,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             }).expect(201);
 
         const responsePost = await request(app)
-            .post(`/hometask-02/posts`)
+            .post(`/hometask-03/posts`)
             .auth('admin', 'qwerty')
             .send({
                 title: "post 1",
@@ -131,11 +135,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               - POST -> '/posts/{id}/comments' Incorrect Input body: the content isn't a string; status: 400`, async () => {
 
         await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .expect(401);
 
         const response1 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'small'})
             .expect(400);
@@ -146,7 +150,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             }]});
 
         const response2 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({conten: 'normal 12341231241313'})
             .expect(400);
@@ -157,7 +161,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             }]})
 
         const response3 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: null})
             .expect(400);
@@ -171,7 +175,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     it(`Addition: - POST -> '/posts/{id}/comments' the post with such id doesnt exist; status: 404`, async () => {
 
         await request(app)
-            .post(`/hometask-02/posts/${new ObjectId()}/comments`)
+            .post(`/hometask-03/posts/${new ObjectId()}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'normal content12341235123412351235'})
             .expect(404);
@@ -182,7 +186,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + GET -> '/posts/{id}/comments' should return 3 comments, status 200`, async () => {
 
         const comment1 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'super normal content 12341235123412351235'})
             .expect(201);
@@ -198,14 +202,14 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         arrayOfComments.push(comment1.body);
 
         const comment2 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'normal content 12341235123412351235'})
             .expect(201);
         arrayOfComments.push(comment2.body);
 
         const comment3 = await request(app)
-            .post(`/hometask-02/posts/${idOfPost}/comments`)
+            .post(`/hometask-03/posts/${idOfPost}/comments`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'genius content 12341235123412351235'})
             .expect(201);
@@ -213,11 +217,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
 
         await request(app)
-            .get(`/hometask-02/posts/${new ObjectId()}/comments`)
+            .get(`/hometask-03/posts/${new ObjectId()}/comments`)
             .expect(404);
 
         await request(app)
-            .get(`/hometask-02/posts/${idOfPost}/comments`)
+            .get(`/hometask-03/posts/${idOfPost}/comments`)
             .expect(200, {
                 pagesCount: 1,
                 page: 1,
@@ -234,7 +238,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + GET -> '/posts/{id}/comments' sortBy=content + sortDirection=asc (default: pageNumber=1 + pageSize=10), status 200`, async () => {
 
         await request(app)
-            .get(`/hometask-02/posts/${idOfPost}/comments`)
+            .get(`/hometask-03/posts/${idOfPost}/comments`)
             .query('pageNumber=2&pageSize=2')
             .expect(200, {
                 pagesCount: 2,
@@ -245,7 +249,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             });
 
         await request(app)
-            .get(`/hometask-02/posts/${idOfPost}/comments`)
+            .get(`/hometask-03/posts/${idOfPost}/comments`)
             .query('sortBy=content&sortDirection=asc')
             .expect(200, {
                 pagesCount: 1,
@@ -260,33 +264,44 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + GET -> '/comments/{id}' should return the comment by id, status 200`, async () => {
 
         await request(app)
-            .get(`/hometask-02/comments/${new ObjectId()}`)
+            .get(`/hometask-03/comments/${new ObjectId()}`)
             .expect(404);
 
         await request(app)
-            .get(`/hometask-02/comments/${idOfComment}`)
+            .get(`/hometask-03/comments/${idOfComment}`)
             .expect(200, arrayOfComments[0])
     });
 
-    it(`- PUT -> '/comments/{id}' Not Found, status 404;
+
+    it(`Addition: + POST -> '/auth/login' success login; status: 200;
+              - PUT -> '/comments/{id}' Not Found, status 404;
               - PUT -> '/comments/{id}' Unauthorized, status 401;
               - PUT -> '/comments/{id}' the content is not a string, status 400;
               - PUT -> '/comments/{id}' small length of the content, status 400;
               + PUT -> '/comments/{id}' successfully updated, status 204;`, async () => {
 
+        //login
+        const response = await request(app)
+            .post(`/hometask-03/auth/login`)
+            .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
+            .expect(200);
+
+        accessToken = response.body.accessToken;
+
+
         await request(app)
-            .put(`/hometask-02/comments/${new ObjectId()}`)
+            .put(`/hometask-03/comments/${new ObjectId()}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit content 12341235123412351235'})
             .expect(404);
 
         await request(app)
-            .put(`/hometask-02/comments/${idOfComment}`)
+            .put(`/hometask-03/comments/${idOfComment}`)
             .send({content: 'edit content 12341235123412351235'})
             .expect(401);
 
         const response1 = await request(app)
-            .put(`/hometask-02/comments/${idOfComment}`)
+            .put(`/hometask-03/comments/${idOfComment}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: null})
             .expect(400);
@@ -296,7 +311,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         })
 
         const response2 = await request(app)
-            .put(`/hometask-02/comments/${idOfComment}`)
+            .put(`/hometask-03/comments/${idOfComment}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit'})
             .expect(400);
@@ -306,7 +321,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         })
 
         await request(app)
-            .put(`/hometask-02/comments/${idOfComment}`)
+            .put(`/hometask-03/comments/${idOfComment}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit content 12341235123412351235'})
             .expect(204);
@@ -317,16 +332,16 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               + DELETE -> '/comments/{id}' the content is not a string, status 204;`, async () => {
 
         await request(app)
-            .delete(`/hometask-02/comments/${new ObjectId()}`)
+            .delete(`/hometask-03/comments/${new ObjectId()}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .expect(404);
 
         await request(app)
-            .delete(`/hometask-02/comments/${idOfComment}`)
+            .delete(`/hometask-03/comments/${idOfComment}`)
             .expect(401);
 
         await request(app)
-            .delete(`/hometask-02/comments/${idOfComment}`)
+            .delete(`/hometask-03/comments/${idOfComment}`)
             .set('Authorization', `Bearer ${accessToken}`)
             .expect(204);
     })
@@ -338,7 +353,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               -POST -> '/auth/registration' user with the given login already exists; status: 400;`, async () => {
 
         const response1 = await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: "E4",
                 password: "123",
@@ -352,7 +367,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         })
 
         const response2 = await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: null,
                 password: null,
@@ -366,21 +381,22 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         })
 
         await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: 'Egor123',
                 password: '123qwe',
                 email: 'meschit9@gmail.com'
             })
             .expect(204)
-
+        expect(sendEmailConfirmation).toHaveBeenCalled()
+        expect(sendEmailConfirmation.mock.calls[0][0]).toBe('meschit9@gmail.com')
 
         //Поиск confirmationCode
         const user = await usersQueryRepository.getUserByLoginOrEmail('Egor123');
         confirmationCode = user ? user.emailConfirmation.confirmationCode : null;
 
         const response4 = await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: 'Egor123',
                 password: '123qwe',
@@ -390,7 +406,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
         expect(response4.body).toEqual({errorsMessages: [ {message: expect.any(String), field: "login" }  ] })
 
         const response5 = await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: 'AnotherLog',
                 password: '123qwe',
@@ -405,21 +421,21 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               -POST -> '/auth/registration-confirmation': the confirmation code is already been applied; status: 400;`, async () => {
 
         await request(app)
-            .post(`/hometask-02/auth/registration-confirmation`)
+            .post(`/hometask-03/auth/registration-confirmation`)
             .send({
                 code: confirmationCode
             })
             .expect(204);
 
         await request(app)
-            .post(`/hometask-02/auth/registration-confirmation`)
+            .post(`/hometask-03/auth/registration-confirmation`)
             .send({
                 code: confirmationCode + '1'
             })
             .expect(400);
 
         await request(app)
-            .post(`/hometask-02/auth/registration-confirmation`)
+            .post(`/hometask-03/auth/registration-confirmation`)
             .send({
                 code: confirmationCode
             })
@@ -435,7 +451,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               +POST -> '/auth/registration-confirmation': Email was verified; status: 204;`, async () => {
         //create new user
         await request(app)
-            .post(`/hometask-02/auth/registration`)
+            .post(`/hometask-03/auth/registration`)
             .send({
                 login: 'Matvey123',
                 password: '123qwe',
@@ -445,7 +461,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //email is already confirmed
         await request(app)
-            .post(`/hometask-02/auth/registration-email-resending`)
+            .post(`/hometask-03/auth/registration-email-resending`)
             .send({
                 email: 'meschit9@gmail.com'
             })
@@ -453,7 +469,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //incorrect email
         await request(app)
-            .post(`/hometask-02/auth/registration-email-resending`)
+            .post(`/hometask-03/auth/registration-email-resending`)
             .send({
                 email: 'incorrect.ru'
             })
@@ -461,7 +477,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //email is not a string
         await request(app)
-            .post(`/hometask-02/auth/registration-email-resending`)
+            .post(`/hometask-03/auth/registration-email-resending`)
             .send({
                 email: null
             })
@@ -469,7 +485,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //successful
         await request(app)
-            .post(`/hometask-02/auth/registration-email-resending`)
+            .post(`/hometask-03/auth/registration-email-resending`)
             .send({
                 email: 'meschit@gmail.com'
             })
@@ -477,7 +493,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //the confirmation code is incorrect (old code)
         await request(app)
-            .post(`/hometask-02/auth/registration-confirmation`)
+            .post(`/hometask-03/auth/registration-confirmation`)
             .send({
                 code: confirmationCode
             })
@@ -489,7 +505,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //Email was verified
         await request(app)
-            .post(`/hometask-02/auth/registration-confirmation`)
+            .post(`/hometask-03/auth/registration-confirmation`)
             .send({
                 code: confirmationCode
             })
@@ -503,7 +519,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               +POST -> '/auth/refresh-token': return new refresh and access tokens; status: 200`, async () => {
 
         const loginResponse = await request(app)
-            .post(`/hometask-02/auth/login`)
+            .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'dim@mail.ru', password: '123qwe'})
             .expect(200);
 
@@ -513,19 +529,19 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //refreshToken is missing 401
         await request(app)
-            .post("/hometask-02/auth/refresh-token")
+            .post("/hometask-03/auth/refresh-token")
             .expect(401)
 
         //refreshToken is incorrect 401
         await request(app)
-            .post("/hometask-02/auth/refresh-token")
+            .post("/hometask-03/auth/refresh-token")
             .set("Cookie", 'refreshToken=fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
             .expect(401)
 
         //success request 200
         const refreshResponse = await request(app)
-            .post("/hometask-02/auth/refresh-token")
-            .set("Cookie", refreshToken as string)
+            .post("/hometask-03/auth/refresh-token")
+            .set("Cookie", refreshToken)
             .expect(200)
         expect(refreshResponse.headers["set-cookie"]).not.toBe(refreshToken);
         expect(refreshResponse.body.accessToken).not.toBe(accessToken);
@@ -539,19 +555,19 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
         //refreshToken is missing 401
         await request(app)
-            .post("/hometask-02/auth/logout")
+            .post("/hometask-03/auth/logout")
             .expect(401)
 
         //refreshToken is incorrect 401
         await request(app)
-            .post("/hometask-02/auth/logout")
+            .post("/hometask-03/auth/logout")
             .set("Cookie", 'fwGF36eedFDD321w.1SF23gfsSD1er.edsf23oerSDG4ko1eoS32f')
             .expect(401)
 
         //success request
         await request(app)
-            .post(`/hometask-02/auth/logout`)
-            .set("Cookie", refreshToken as string)
+            .post(`/hometask-03/auth/logout`)
+            .set("Cookie", refreshToken)
             .expect(204);
     })
 })

@@ -4,6 +4,7 @@ export type DeviceType = { //todo _id join with deviceId
     lastActiveDate: string
     deviceId: string
     userId: string
+    expirationDate: number
 }
 
 export type DeviceOutputType = {

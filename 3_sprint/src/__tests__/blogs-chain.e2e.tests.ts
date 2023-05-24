@@ -14,7 +14,7 @@ describe('Blogs All operation, chains: /blogs', () => {
         await client.connect();
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
     });
 
@@ -26,7 +26,7 @@ describe('Blogs All operation, chains: /blogs', () => {
                 GET -> /blogs/:id;`, async () => {
 
         const response = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send({
                 name: "Blog12-Dim",
@@ -37,7 +37,7 @@ describe('Blogs All operation, chains: /blogs', () => {
         expect(response.status).toBe(201);
         expect(response.body.name).toEqual('Blog12-Dim');
         await request(app)
-            .get(`/hometask-02/blogs/${response.body.id}`)
+            .get(`/hometask-03/blogs/${response.body.id}`)
             .expect(200)
 
         idOfBlog = response.body.id;
@@ -47,7 +47,7 @@ describe('Blogs All operation, chains: /blogs', () => {
               + POST -> /blogs, GET -> /posts/:id;`, async () => {
 
         const response = await request(app)
-            .post(`/hometask-02/blogs/${idOfBlog}/posts`)
+            .post(`/hometask-03/blogs/${idOfBlog}/posts`)
             .auth('admin', 'qwerty')
             .send({
                 title: "postForBlog1",
@@ -71,7 +71,7 @@ describe('Blogs All operation, chains: /blogs', () => {
     it(`- POST -> "/blogs/:blogId/posts": should NOT create new post; status 400`, async () => {
 
         await request(app)
-            .post(`/hometask-02/blogs/${idOfBlog}/posts`)
+            .post(`/hometask-03/blogs/${idOfBlog}/posts`)
             .auth('admin', 'qwerty')
             .send({
                 title: "Too much symbols. 123456712345671234",
@@ -85,9 +85,9 @@ describe('Blogs All operation, chains: /blogs', () => {
     it(`- DELETE -> "/blogs/:blogId" - should delete blog;
               - POST -> "/blogs/:blogId/posts": should NOT create new post; status 404`, async () => {
 
-        await request(app).delete(`/hometask-02/blogs/${idOfBlog}`).auth('admin', 'qwerty').expect(204)
+        await request(app).delete(`/hometask-03/blogs/${idOfBlog}`).auth('admin', 'qwerty').expect(204)
         await request(app)
-            .post(`/hometask-02/blogs/${idOfBlog}/posts`)
+            .post(`/hometask-03/blogs/${idOfBlog}/posts`)
             .auth('admin', 'qwerty')
             .send({
                 title: "postForBlog1",
@@ -103,7 +103,7 @@ describe('Blogs All operation, chains: /blogs', () => {
                + GET -> /blogs/:id`, async () => {
 
         const responsePost = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send({
             name: "Blog2-ITforYOU",
@@ -113,7 +113,7 @@ describe('Blogs All operation, chains: /blogs', () => {
             .expect(201)
 
         await request(app)
-            .put(`/hometask-02/blogs/${responsePost.body.id}`)
+            .put(`/hometask-03/blogs/${responsePost.body.id}`)
             .auth('admin', 'qwerty')
             .send({
                 name: "ChangedName",
@@ -121,7 +121,7 @@ describe('Blogs All operation, chains: /blogs', () => {
                 websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
             })
 
-        const responseGet = await request(app).get(`/hometask-02/blogs/${responsePost.body.id}`).expect(200)
+        const responseGet = await request(app).get(`/hometask-03/blogs/${responsePost.body.id}`).expect(200)
 
         expect(responseGet.body.name).toEqual('ChangedName')
         expect(responseGet.body.id).toEqual(responsePost.body.id)
@@ -131,7 +131,7 @@ describe('Blogs All operation, chains: /blogs', () => {
     it (`- PUT -> "/blogs/:id": Unauthorized; status 401`, async () => {
 
         await request(app)
-            .put(`/hometask-02/blogs/${idOfBlog}`)
+            .put(`/hometask-03/blogs/${idOfBlog}`)
             .send({
                 name: "ChangedName",
                 description: "ChangedDescription",
@@ -143,7 +143,7 @@ describe('Blogs All operation, chains: /blogs', () => {
     it(`- PUT -> "/blogs/:id": inputModel has incorrect values; status 400`, async () => {
 
         await request(app)
-            .put(`/hometask-02/blogs/${idOfBlog}`)
+            .put(`/hometask-03/blogs/${idOfBlog}`)
             .auth('admin', 'qwerty')
             .send({
                 name: "The name is too long: 123456123456",
@@ -160,7 +160,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
               +POST: create 4 new blogs`, async() => {
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
 
         //1 blog
@@ -171,7 +171,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
         };
 
         const response1 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData1);
 
@@ -186,7 +186,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
         };
 
         const response2 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData2);
 
@@ -201,7 +201,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
         };
 
         const response3 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData3);
 
@@ -216,7 +216,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
         };
 
         const response4 = await request(app)
-            .post('/hometask-02/blogs')
+            .post('/hometask-03/blogs')
             .auth('admin', 'qwerty')
             .send(blogInputData4);
 
@@ -230,7 +230,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
     it(`Pagination-GET: pageNumber=2 + pageSize=2 (default: sortDirection=desc, sortBy=createdAt)`, async () => {
 
         const result = await request(app)
-            .get(`/hometask-02/blogs`)
+            .get(`/hometask-03/blogs`)
             .query(`pageNumber=2&pageSize=2`)
 
         expect(result.body).toEqual({
@@ -246,7 +246,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
     (default: pageNumber=10, pageNumber=1)`, async () => {
 
         const result = await request(app)
-            .get(`/hometask-02/blogs`)
+            .get(`/hometask-03/blogs`)
             .query(`sortDirection=asc&sortBy=name&searchNameTerm=i`)
 
         expect(result.body).toEqual({
@@ -261,7 +261,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
     it(`Pagination-GET: sortDirection=asc + sortBy=description + pageNumber=2 + pageSize=3`, async () => {
 
         const result = await request(app)
-            .get(`/hometask-02/blogs`)
+            .get(`/hometask-03/blogs`)
             .query(`sortDirection=asc&sortBy=description&pageNumber=2&pageSize=3`)
 
         expect(result.body).toEqual({

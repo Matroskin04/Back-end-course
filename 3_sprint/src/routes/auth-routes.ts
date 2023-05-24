@@ -81,8 +81,8 @@ authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res
     res.status(200).send({accessToken: tokens.accessToken});
 })
 
-authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<string | void>) => { //todo типы
+authRoutes.post('/logout', validateRefreshToken, async (req: Request, res: Response<void>) => {
 
-    await devicesService.deleteDeviceByRefreshToken(req.refreshToken)
-    res.sendStatus(204)
+    await devicesService.deleteDeviceByRefreshToken(req.refreshToken);
+    res.sendStatus(204);
 })

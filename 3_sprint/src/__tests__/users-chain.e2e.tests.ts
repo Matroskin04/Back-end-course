@@ -14,7 +14,7 @@ describe('users All operation, chains: /users', () => {
         await client.connect();
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
     });
 
@@ -27,12 +27,12 @@ describe('users All operation, chains: /users', () => {
               - POST -> incorrect email; status: 40`, async () => {
 
         await request(app)
-            .post(`/hometask-02/users`)
+            .post(`/hometask-03/users`)
             .send({login: 'Dima', password: '123qwe', email: 'dim@mail.ru'})
             .expect(401)
 
         await request(app)
-            .post(`/hometask-02/users`)
+            .post(`/hometask-03/users`)
             .auth('admin', 'qwerty')
             .send({login: 'D', password: '1', email: 'dim@mail.ru'})
             .expect(400, {
@@ -49,7 +49,7 @@ describe('users All operation, chains: /users', () => {
             })
 
         const response = await request(app)
-            .post(`/hometask-02/users`)
+            .post(`/hometask-03/users`)
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail'})
             .expect(400)
@@ -70,7 +70,7 @@ describe('users All operation, chains: /users', () => {
 
        //1
         const user1 = await request(app)
-            .post(`/hometask-02/users`)
+            .post(`/hometask-03/users`)
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
             .expect(201)
@@ -83,7 +83,7 @@ describe('users All operation, chains: /users', () => {
 
        //2
        const user2 = await request(app)
-           .post(`/hometask-02/users`)
+           .post(`/hometask-03/users`)
            .auth('admin', 'qwerty')
            .send({login: 'Matvey123', password: '123qwe', email: 'matv@mail.ru'})
            .expect(201)
@@ -91,7 +91,7 @@ describe('users All operation, chains: /users', () => {
 
        //3
        const user3 = await request(app)
-           .post(`/hometask-02/users`)
+           .post(`/hometask-03/users`)
            .auth('admin', 'qwerty')
            .send({login: 'Egor123', password: '123qwe', email: 'egor@mail.ru'})
            .expect(201)
@@ -99,11 +99,11 @@ describe('users All operation, chains: /users', () => {
 
 
        await request(app)
-           .get(`/hometask-02/users`)
+           .get(`/hometask-03/users`)
            .expect(401)
 
         await request(app)
-            .get(`/hometask-02/users`)
+            .get(`/hometask-03/users`)
             .auth('admin', 'qwerty')
             .expect(200, {
                 pagesCount: 1,
@@ -122,7 +122,7 @@ describe('users All operation, chains: /users', () => {
              + GET -> '/users': pageSize=2 + pageNumber=2 + sortBy=email + searchEmailTerm=@, (default: sortDirection=desc), status 200`, async () => {
 
         await request(app)
-            .get(`/hometask-02/users`)
+            .get(`/hometask-03/users`)
             .query('sortBy=login&sortDirection=asc&searchLoginTerm=ma')
             .auth('admin', 'qwerty')
             .expect(200, {
@@ -134,7 +134,7 @@ describe('users All operation, chains: /users', () => {
             })
 
         await request(app)
-            .get(`/hometask-02/users`)
+            .get(`/hometask-03/users`)
             .query('pageSize=1&pageNumber=1&searchEmailTerm=or')
             .auth('admin', 'qwerty')
             .expect(200, {
@@ -146,7 +146,7 @@ describe('users All operation, chains: /users', () => {
             })
 
         await request(app)
-            .get(`/hometask-02/users`)
+            .get(`/hometask-03/users`)
             .query('pageSize=2&pageNumber=2&sortBy=email&searchEmailTerm=@')
             .auth('admin', 'qwerty')
             .expect(200, {
@@ -163,16 +163,16 @@ describe('users All operation, chains: /users', () => {
               - DELETE -> should NOT find the user, status 404`, async () => {
 
         await request(app)
-            .delete(`/hometask-02/users/${idOfUser}`)
+            .delete(`/hometask-03/users/${idOfUser}`)
             .expect(401)
 
         await request(app)
-            .delete(`/hometask-02/users/${idOfUser}`)
+            .delete(`/hometask-03/users/${idOfUser}`)
             .auth('admin', 'qwerty')
             .expect(204)
 
         await request(app)
-            .delete(`/hometask-02/users/${idOfUser}`)
+            .delete(`/hometask-03/users/${idOfUser}`)
             .auth('admin', 'qwerty')
             .expect(404)
     })

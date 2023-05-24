@@ -13,19 +13,23 @@ export const devicesService = {
             _id: new ObjectId(),
             ip,
             title,
-            lastActiveDate: new Date(payloadToken!.iat!).toISOString(),
+            lastActiveDate: new Date(payloadToken!.iat!).toISOString(), //todo воскл знак
             deviceId: payloadToken!.deviceId,
-            userId: userId.toString()
+            userId: userId.toString(),
+            expirationDate: payloadToken!.exp! - payloadToken!.iat!
         }
 
         await deviceRepository.createNewDevice(infoDevice);
         return;
     },
 
-    async deleteDevicesExcludeCurrent(refreshToken: string): Promise<void> {
+    async deleteDevicesExcludeCurrent(refreshToken: string): Promise<void | false> {
 
         const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
-        await deviceRepository.deleteDevicesExcludeCurrent(payloadToken!.deviceId);
+        if (!payloadToken) {
+            throw new Error('Refresh is invalid');
+        }
+        await deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
         return;
     },
 
@@ -42,8 +46,11 @@ export const devicesService = {
 
     async deleteDeviceByRefreshToken(refreshToken: string): Promise<boolean> {
 
-        const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken); // todo обработать если null (все в этом документе)
-        return await deviceRepository.deleteDeviceById(payloadToken!.deviceId);
+        const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+        if (!payloadToken) {
+            throw new Error('Refresh is invalid');
+        }
+        return await deviceRepository.deleteDeviceById(payloadToken.deviceId);
     },
 
     async updateLastActiveDate(deviceId: string, newDateNum: number): Promise<boolean> {

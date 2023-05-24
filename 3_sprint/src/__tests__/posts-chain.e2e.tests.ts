@@ -12,7 +12,7 @@ describe('Posts All operation, chains: /posts', () => {
         await client.connect();
 
         await request(app)
-            .delete('/hometask-02/testing/all-data')
+            .delete('/hometask-03/testing/all-data')
             .expect(204)
     });
 
@@ -26,7 +26,7 @@ describe('Posts All operation, chains: /posts', () => {
                 GET -> /posts/:id;`, async () => {
 
         await request(app)
-            .get(`/hometask-02/posts`)
+            .get(`/hometask-03/posts`)
             .expect({
                 "pagesCount": 0,
                 "page": 1,
@@ -36,7 +36,7 @@ describe('Posts All operation, chains: /posts', () => {
             })
 
         const responseBlog = await request(app)
-            .post(`/hometask-02/blogs`)
+            .post(`/hometask-03/blogs`)
             .auth('admin', 'qwerty')
             .send({
                 name: "Blog2-ITforYOU",
@@ -45,7 +45,7 @@ describe('Posts All operation, chains: /posts', () => {
             }).expect(201);
 
         const responsePost = await request(app)
-            .post(`/hometask-02/posts`)
+            .post(`/hometask-03/posts`)
             .auth('admin', 'qwerty')
             .send({
                 title: "post 1",
@@ -64,7 +64,7 @@ describe('Posts All operation, chains: /posts', () => {
         })
 
         const responseGet = await request(app)
-            .get(`/hometask-02/posts/${responsePost.body.id}`)
+            .get(`/hometask-03/posts/${responsePost.body.id}`)
             .expect(200)
         expect(responseGet.body).toEqual(responsePost.body)
 
@@ -76,7 +76,7 @@ describe('Posts All operation, chains: /posts', () => {
              - POST -> '/posts/:id': incorrect blogId, st: 400`, async () => {
 
         await request(app)
-            .post(`/hometask-02/posts`)
+            .post(`/hometask-03/posts`)
             .send({
                 title: "postForBlog1",
                 shortDescription: "something",
@@ -85,7 +85,7 @@ describe('Posts All operation, chains: /posts', () => {
             }).expect(401)
 
        await request(app)
-           .post(`/hometask-02/posts`)
+           .post(`/hometask-03/posts`)
            .auth('admin', 'qwerty')
            .send({
                 title: "postForBlog1",
@@ -99,7 +99,7 @@ describe('Posts All operation, chains: /posts', () => {
               + GET -> "/posts/:id": should return the post, status 200`, async () => {
 
         await request(app)
-            .put(`/hometask-02/posts/${idOfPost}`)
+            .put(`/hometask-03/posts/${idOfPost}`)
             .auth('admin', 'qwerty')
             .send({
                 title: "Update post",
@@ -109,7 +109,7 @@ describe('Posts All operation, chains: /posts', () => {
             })
             .expect(204)
 
-        const responseGet = await request(app).get(`/hometask-02/posts/${idOfPost}`).expect(200)
+        const responseGet = await request(app).get(`/hometask-03/posts/${idOfPost}`).expect(200)
         expect(responseGet.body.title).toEqual("Update post")
     });
 
@@ -117,7 +117,7 @@ describe('Posts All operation, chains: /posts', () => {
              - PUT -> "/posts/:id": The title is too long, status 400`, async () => {
 
         await request(app)
-            .put(`/hometask-02/posts/${idOfPost}`)
+            .put(`/hometask-03/posts/${idOfPost}`)
             .send({
                 title: "Update post",
                 shortDescription: "something",
@@ -127,7 +127,7 @@ describe('Posts All operation, chains: /posts', () => {
             .expect(401)
 
         await request(app)
-            .put(`/hometask-02/posts/${idOfPost}`)
+            .put(`/hometask-03/posts/${idOfPost}`)
             .auth('admin', 'qwerty')
             .send({
                 title: "Too long title 123456789123456789",
@@ -143,7 +143,7 @@ describe('Posts All operation, chains: /posts', () => {
               - GET -> "/posts/:id": should NOT find the post; status 404;
               - DELETE -> "/posts/:id": should NOT delete the post; status 404`, async () => {
 
-        await request(app).delete(`/hometask-02/posts/${idOfPost}`).auth('admin', 'qwerty').expect(204);
+        await request(app).delete(`/hometask-03/posts/${idOfPost}`).auth('admin', 'qwerty').expect(204);
         await request(app).get(`/posts/${idOfPost}`).expect(404);
         await request(app).delete(`/posts/${idOfPost}`).auth('admin', 'qwerty').expect(404);
 
