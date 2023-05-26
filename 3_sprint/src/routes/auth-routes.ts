@@ -69,7 +69,7 @@ authRoutes.post('/registration-email-resending', saveInfoRequest, validateInfoRe
         res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
     })
 
-authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => { //todo типизация request - (only cookie)
+authRoutes.post('/refresh-token', validateRefreshToken, async (req: Request, res: Response<string | ViewTokenModel>) => {
 
     const tokens = await jwtService.changeTokensByRefreshToken(req.userId!, req.refreshToken);
     if (!tokens) {

@@ -9,7 +9,7 @@ import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
 import {UserDBType} from "../types/types";
-import {PRIVATE_KEY_ACCESS_TOKEN} from "../tokens";
+import {env} from "../config";
 
 export function mappingUser(user: any): UserOutPutType {
     return {
@@ -65,7 +65,7 @@ export const usersService = {
     async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, PRIVATE_KEY_ACCESS_TOKEN) as {userId: string};
+            const decode = jwt.verify(token, env.PRIVATE_KEY_ACCESS_TOKEN) as {userId: string};
             return new ObjectId(decode.userId)
 
         } catch (err) {

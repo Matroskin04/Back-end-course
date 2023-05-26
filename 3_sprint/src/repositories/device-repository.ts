@@ -6,7 +6,7 @@ export const deviceRepository = {
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 
         // await devicesCollection.dropIndex('lastActiveDate_1');
-        // await devicesCollection.createIndex( { lastActiveDate: 1 }, { expireAfterSeconds: infoDevice.expirationDate } ); // todo чистка девайсов через индексы?
+        // await devicesCollection.createIndex( { lastActiveDate: 1 }, { expireAfterSeconds: infoDevice.expirationDate } ); // todo чистка девайсов через индексы? Сделать
         await devicesCollection.insertOne(infoDevice);
         return;
     },

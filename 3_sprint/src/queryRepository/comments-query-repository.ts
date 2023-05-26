@@ -18,7 +18,7 @@ export const commentsQueryRepository = {
         return mappingComment(comment)
     },
 
-    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> { // todo перенести и в жроугиъ месьаъ тоже
+    async getCommentOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
 
         const post = await postsQueryRepository.getSinglePost(id);
         if (!post) {

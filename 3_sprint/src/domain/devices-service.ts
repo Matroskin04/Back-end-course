@@ -13,7 +13,7 @@ export const devicesService = {
             _id: new ObjectId(),
             ip,
             title,
-            lastActiveDate: new Date(payloadToken!.iat!).toISOString(), //todo воскл знак
+            lastActiveDate: new Date(payloadToken!.iat!).toISOString(), //todo правильный рефакторинг
             deviceId: payloadToken!.deviceId,
             userId: userId.toString(),
             expirationDate: payloadToken!.exp! - payloadToken!.iat!

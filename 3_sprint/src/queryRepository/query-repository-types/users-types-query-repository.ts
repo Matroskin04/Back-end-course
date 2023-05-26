@@ -7,3 +7,8 @@ export type UsersPaginationType = {
     totalCount: number
     items: Array<UserOutPutType>
 }
+
+export type EmailAndLoginTerm = Array<{
+    email?: {$regex: string, $options: string},
+    login?: {$regex: string, $options: string},
+}>
