@@ -16,8 +16,8 @@ export const testingRepository = {
             await commentsCollection.deleteMany({});
             await infoRequestCollection.deleteMany({});
             await devicesCollection.deleteMany({});
-
             return;
+
         } catch (err) {
             throw new Error(`Error: ${err}`)
         }
