@@ -449,6 +449,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               +POST -> '/auth/registration-email-resending': successful; status: 204;
               -POST -> '/auth/registration-confirmation': the confirmation code is incorrect (old code); status: 400;
               +POST -> '/auth/registration-confirmation': Email was verified; status: 204;`, async () => {
+
+        await new Promise( (resolve) => setTimeout(resolve, 8000))
         //create new user
         await request(app)
             .post(`/hometask-03/auth/registration`)
