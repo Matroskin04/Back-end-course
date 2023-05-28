@@ -39,19 +39,22 @@ export const authController = {
         }
     },
 
-    async registerUser(req: RequestWithBody<RegistrationAuthModel>, res: Response<ViewAllErrorsModels | string>) {
+    async registerUser(req: RequestWithBody<RegistrationAuthModel>,
+                       res: Response<ViewAllErrorsModels | string>) {
 
         await authService.registerUser(req.body.email, req.body.login, req.body.password);
         res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address')
     },
 
-    async confirmEmail(req: RequestWithBody<RegisterConfirmAuthModel>, res: Response<ViewAllErrorsModels | string>) {
+    async confirmEmail(req: RequestWithBody<RegisterConfirmAuthModel>,
+                       res: Response<ViewAllErrorsModels | string>) {
 
         await authService.confirmEmail(req.userId!);
         res.status(204).send('Email was verified. Account was activated')
     },
 
-    async resendEmailConfirmation(req: RequestWithBody<RegisterResendConfirmAuthModel>, res: Response<string>) {
+    async resendEmailConfirmation(req: RequestWithBody<RegisterResendConfirmAuthModel>,
+                                  res: Response<string>) {
 
         await authService.resendConfirmationEmailMessage(req.userId!, req.body.email);
         res.status(204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')

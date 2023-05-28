@@ -210,7 +210,8 @@ describe('devices: /security/devices', () => {
               + POST -> '/auth/login' - one more login after 10 seconds; status 200;`, async () => {
 
         authService.loginUser = jest.fn();
-        const loginUser = jest.spyOn(authService, 'loginUser').mockReturnValue(Promise.resolve({accessToken:'1',refreshToken:'2',userId: new ObjectId()}))
+        const loginUser = jest.spyOn(authService, 'loginUser');
+        loginUser.mockReturnValue(Promise.resolve({accessToken:'1',refreshToken:'2',userId: new ObjectId()}));
 
 
         devicesService.createNewDevice = jest.fn();
@@ -224,7 +225,6 @@ describe('devices: /security/devices', () => {
         expect(loginUser).toHaveBeenCalled()
         expect(createNewDevice).toHaveBeenCalled()
         expect(loginUser.mock.calls[0][0]).toBe('Dima123')
-        console.log(createNewDevice.mock.calls[0][0], createNewDevice.mock.calls[0], createNewDevice.mock.calls)
         //2
         await request(app)
             .post(`/hometask-03/auth/login`)

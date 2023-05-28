@@ -1,28 +1,18 @@
-import {Router, Response, Request} from "express";
+import {Router} from "express";
 import {validateRefreshToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
-import {devicesQueryRepository} from "../queryRepository/devices-query-repository";
-import {ViewDeviceModel} from "../models/DevicesModels/ViewDeviceModel";
-import {devicesService} from "../domain/devices-service";
-import {RequestWithParams} from "../types/types";
-import {UriIdModel} from "../models/UriModels";
+import {devicesController} from "../controllers/devices-controller";
 
 export const devicesRoutes = Router();
 
 
-devicesRoutes.get('/', validateRefreshToken, async (req: Request, res: Response<ViewDeviceModel>) => {
+devicesRoutes.get('/',
+    validateRefreshToken,
+    devicesController.getAllDevices)
 
-    const result = await devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
-    res.status(200).send(result);
-})
+devicesRoutes.delete('/',
+    validateRefreshToken,
+    devicesController.deleteDevicesExcludeCurrent)
 
-devicesRoutes.delete('/', validateRefreshToken, async (req: Request, res: Response) => {
-
-    await devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
-    res.sendStatus(204);
-})
-
-devicesRoutes.delete('/:id', validateRefreshToken, async (req: RequestWithParams<UriIdModel>, res: Response) => {
-
-    const result = await devicesService.deleteDeviceById(req.params.id, req.userId!.toString());
-    res.sendStatus(result);
-})
+devicesRoutes.delete('/:id',
+    validateRefreshToken,
+    devicesController.deleteDeviceById)

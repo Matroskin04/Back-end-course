@@ -36,7 +36,7 @@ export const blogsController = {
     },
 
     async getAllPostsOfBlog(req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
-           res: Response<ViewPostsOfBlogModel>) {
+                            res: Response<ViewPostsOfBlogModel>) {
 
     const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
     result ? res.status(200).send(result)
@@ -44,14 +44,14 @@ export const blogsController = {
 },
 
     async createBlog(req: RequestWithBody<CreateBlogModel>,
-           res: Response<ViewBlogModel>) {
+                     res: Response<ViewBlogModel>) {
 
     const result = await blogsService.createBlog(req.body);
     res.status(201).send(result);
 },
 
     async createPostByBlogId(req: RequestWithParamsAndBody<UriBlogIdModel, CreatePostByBlogIdModel>,
-           res: Response<PostTypeWithId>) {
+                             res: Response<PostTypeWithId>) {
 
     const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
     result ? res.status(201).send(result)
@@ -59,7 +59,7 @@ export const blogsController = {
 },
 
     async updateBlog(req: RequestWithParamsAndBody<UriIdModel, UpdateBlogModel>,
-           res: Response<void>) {
+                     res: Response<void>) {
 
     const result = await blogsService.updateBlog(req.body, req.params.id);
 
@@ -67,8 +67,7 @@ export const blogsController = {
         : res.sendStatus(404);
 },
 
-    async deleteBlog(req: RequestWithParams<UriIdModel>,
-           res: Response<void>) {
+    async deleteBlog(req: RequestWithParams<UriIdModel>, res: Response<void>) {
 
     const result = await blogsService.deleteSingleBlog(req.params.id);
     if (result) {
