@@ -145,7 +145,7 @@ export const validateAuthEmailForPassRecovery = [
 
 export const validateAuthNewPassword = [
 
-    body('password')
+    body('newPassword')
         .exists()
         .withMessage('There isn\'t such parameter')
 

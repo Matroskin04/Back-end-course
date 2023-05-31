@@ -94,7 +94,7 @@ export const authService = {
         }
     },
 
-    async passwordRecovery(email: string): Promise<true> {
+    async sendEmailPasswordRecovery(email: string): Promise<true> {
 
         try {
             const user: UserDBType | null = await usersQueryRepository.getUserByLoginOrEmail(email);
@@ -115,7 +115,9 @@ export const authService = {
     async saveNewPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
 
         const user = await usersQueryRepository.getUserByRecoveryCode(recoveryCode);
+        console.log(recoveryCode, user?.passwordRecovery.confirmationCode)
         if (!user) return false;
+        console.log(1)
         if (user.passwordRecovery.expirationDate < new Date()) return false //todo сообщения добавить
 
         const passwordHash = await usersService._generateHash(newPassword);

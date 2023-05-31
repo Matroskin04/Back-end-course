@@ -26,7 +26,7 @@ export const usersRepository = {
 
         const result = await UserModel.updateOne(
             {_id},
-            {$set: [{'emailConfirmation.confirmationCode': newCode}, {'emailConfirmation.expirationDate': newDate}] })
+            {$set: {'emailConfirmation.confirmationCode': newCode, 'emailConfirmation.expirationDate': newDate} })
         return result.modifiedCount > 0;
     },
 
@@ -34,7 +34,8 @@ export const usersRepository = {
 
         const result = await UserModel.updateOne(
             {_id},
-            {$set: [{'passwordRecovery.confirmationCode': newCode}, {'passwordRecovery.expirationDate': newDate}]})
+            {$set: {'passwordRecovery.confirmationCode': newCode, 'passwordRecovery.expirationDate': newDate}})
+
         return result.modifiedCount > 0;
     },
 

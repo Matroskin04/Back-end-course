@@ -81,7 +81,7 @@ export const authController = {
 
     async passwordRecovery(req: RequestWithBody<PasswordRecoveryAuthModel>, res: Response<string>) {
 
-        await authService.passwordRecovery(req.body.email);
+        await authService.sendEmailPasswordRecovery(req.body.email);
         res.status(204).send('Email with instruction will be send to passed email address (if a user with such email exists)');
     },
     

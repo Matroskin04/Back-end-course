@@ -26,3 +26,5 @@ export type InfoRequestDBType = InfoRequestType & {_id: ObjectId};
 export type DeviceDBType = DeviceType & {_id: ObjectId}
 
 
+
+
