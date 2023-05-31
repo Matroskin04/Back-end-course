@@ -88,7 +88,6 @@ export const authController = {
     async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string>) {
 
         const result = await authService.saveNewPassword(req.body.newPassword, req.body.recoveryCode);
-
         result ? res.status(204).send('New password is saved')
             : res.status(400).send('RecoveryCode is incorrect or expired')
     }
