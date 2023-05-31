@@ -8,13 +8,17 @@ import {CreateUserModel} from "../../models/UsersModels/CreateUserModel";
 import {
     RegisterConfirmAuthModel, RegisterResendConfirmAuthModel,
     RegistrationAuthModel
-} from "../../models/AuthModels/RegistrationAuthModel";
+} from "../../models/AuthModels/registration-auth-model";
 import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateCommentModel";
-import {LoginAuthInputModel} from "../../models/AuthModels/LoginAuthModels";
+import {LoginAuthInputModel} from "../../models/AuthModels/login-auth-models";
+import {
+    NewPasswordAuthModel,
+    PasswordRecoveryAuthModel
+} from "../../models/AuthModels/password-recovery-flow-auth-model";
 
 type getErrorsType = CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel
                     | CreateUserModel | LoginAuthInputModel | CreateCommentByPostIdModel | RegistrationAuthModel
-                    | RegisterConfirmAuthModel | RegisterResendConfirmAuthModel
+                    | RegisterConfirmAuthModel | RegisterResendConfirmAuthModel | NewPasswordAuthModel | PasswordRecoveryAuthModel
 export const getErrors = (req: RequestWithBody<getErrorsType>,
                           res: Response<ViewAllErrorsModels>, next: NextFunction) => {
 

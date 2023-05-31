@@ -1,5 +1,5 @@
-import {devicesCollection} from "../db";
 import {DeviceDBType} from "../types/types";
+import {DeviceModel} from "../shemasModelsMongoose/devices-shema-model";
 
 export const deviceRepository = {
 
@@ -7,25 +7,25 @@ export const deviceRepository = {
 
         // await devicesCollection.dropIndex('lastActiveDate_1');
         // await devicesCollection.createIndex( { lastActiveDate: 1 }, { expireAfterSeconds: infoDevice.expirationDate } ); // todo чистка девайсов через индексы? Сделать
-        await devicesCollection.insertOne(infoDevice);
+        await DeviceModel.create(infoDevice);
         return;
     },
 
     async deleteDevicesExcludeCurrent(deviceId: string): Promise<void> {
 
-        await devicesCollection.deleteMany({deviceId: {$ne: deviceId}});
+        await DeviceModel.deleteMany({deviceId: {$ne: deviceId}});
         return;
     },
 
     async deleteDeviceById(deviceId: string): Promise<boolean> {
 
-        const result = await devicesCollection.deleteOne({deviceId});
+        const result = await DeviceModel.deleteOne({deviceId});
         return result.deletedCount > 0;
     },
 
     async updateLastActiveDate(deviceId: string, newDate: string): Promise<boolean> {
 
-        const result = await devicesCollection.updateOne({deviceId}, {$set: {lastActiveDate: newDate} });
+        const result = await DeviceModel.updateOne({deviceId}, {$set: {lastActiveDate: newDate} });
         return result.modifiedCount > 0;
     }
 }

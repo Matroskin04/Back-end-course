@@ -1,9 +1,10 @@
-import {client} from "../db";
-import request from "supertest";
+import {mongoURL} from "../db";
+const request = require("supertest");
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
 import {authService} from "../domain/auth-service";
 import {devicesService} from "../domain/devices-service";
+import mongoose from "mongoose";
 
 let refreshToken1: string;
 let refreshToken2: string;
@@ -12,8 +13,8 @@ let deviceId: string;
 describe('devices: /security/devices', () => {
 
     beforeAll( async () => {
-        await client.close();
-        await client.connect();
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
@@ -21,7 +22,7 @@ describe('devices: /security/devices', () => {
     })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it(`(Addition) + POST -> '/users' - create 2 new users; status 201;

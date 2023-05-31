@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {commentsCollection} from "../../db";
 import {ObjectId} from "mongodb";
+import {CommentModel} from "../../shemasModelsMongoose/comments-shema-model";
 
 export const validateBodyOfComment = [
 
@@ -22,7 +22,7 @@ export const validateBodyOfComment = [
 
 export const checkCommentByIdAndToken = async (req: Request, res: Response, next: NextFunction) => {
 
-    const comment = await commentsCollection.findOne({_id: new ObjectId(req.params.id)});
+    const comment = await CommentModel.findOne({_id: new ObjectId(req.params.id)});
     if (!comment) {
         res.sendStatus(404);
         return;

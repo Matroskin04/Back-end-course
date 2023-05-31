@@ -1,4 +1,3 @@
-import {commentsCollection} from "../db";
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
 import {mappingComment} from "../domain/comments-service";
 import {ObjectId} from "mongodb";
@@ -6,12 +5,13 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {postsQueryRepository} from "./posts-query-repository";
+import {CommentModel} from "../shemasModelsMongoose/comments-shema-model";
 
 export const commentsQueryRepository = {
 
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 
-        const comment = await commentsCollection.findOne({_id: new ObjectId(id)});
+        const comment = await CommentModel.findOne({_id: new ObjectId(id)});
         if (!comment) {
             return null
         }
@@ -27,15 +27,15 @@ export const commentsQueryRepository = {
 
         const paramsOfElems = await variablesForReturn(query);
 
-        const countAllCommentsOfPost = await commentsCollection
+        const countAllCommentsOfPost = await CommentModel
             .countDocuments({postId: id});
 
 
-        const allCommentOfPostsOnPages = await commentsCollection
+        const allCommentOfPostsOnPages = await CommentModel
             .find({postId: id})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
             .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
+            .sort(paramsOfElems.paramSort).lean();
 
         return {
             pagesCount: Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),

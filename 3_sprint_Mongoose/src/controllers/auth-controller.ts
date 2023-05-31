@@ -1,16 +1,17 @@
 import {Request, Response} from "express";
-import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
+import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/view-auth-models";
 import {authService} from "../domain/auth-service";
 import {RequestWithBody} from "../types/types";
-import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthModels";
+import {LoginAuthInputModel} from "../models/AuthModels/login-auth-models";
 import {devicesService} from "../domain/devices-service";
 import {
     RegisterConfirmAuthModel,
     RegisterResendConfirmAuthModel,
     RegistrationAuthModel
-} from "../models/AuthModels/RegistrationAuthModel";
+} from "../models/AuthModels/registration-auth-model";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {jwtService} from "../domain/jwt-service";
+import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../models/AuthModels/password-recovery-flow-auth-model";
 
 export const authController = {
 
@@ -76,6 +77,19 @@ export const authController = {
 
         await devicesService.deleteDeviceByRefreshToken(req.refreshToken);
         res.sendStatus(204);
-    }
+    },
 
+    async passwordRecovery(req: RequestWithBody<PasswordRecoveryAuthModel>, res: Response<string>) {
+
+        await authService.passwordRecovery(req.body.email);
+        res.status(204).send('Email with instruction will be send to passed email address (if a user with such email exists)');
+    },
+    
+    async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string>) {
+
+        const result = await authService.saveNewPassword(req.body.newPassword, req.body.recoveryCode);
+
+        result ? res.status(204).send('New password is saved')
+            : res.status(400).send('RecoveryCode is incorrect or expired')
+    }
 }

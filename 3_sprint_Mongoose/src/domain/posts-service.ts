@@ -11,8 +11,9 @@ import {
 } from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {mappingComment} from "./comments-service";
-import {postsCollection} from "../db";
 import {CommentDBType, PostDBType} from "../types/types";
+import {PostModel} from "../shemasModelsMongoose/posts-shema-model";
+import {commentsRepository} from "../repositories/comments-repository";
 
 export function renameMongoIdPost(post: any
 ): PostTypeWithId {
@@ -63,7 +64,7 @@ export const postsService = {
             return null;
         }
 
-        const post = await postsCollection.findOne({_id: new ObjectId(postId)})
+        const post = await PostModel.findOne({_id: new ObjectId(postId)})
         if (!post) {
             return null;
         }
@@ -79,7 +80,7 @@ export const postsService = {
             postId: postId
         }
 
-        await postsRepository.createCommentByPostId(comment);
+        await commentsRepository.createCommentByPostId(comment);
         return mappingComment(comment);
     }
 }

@@ -3,7 +3,7 @@ import {
     validateAuthConfirmationCode,
     validateLoginDataAuth,
     validateRegistrationDataAuth,
-    validateAuthEmail
+    validateAuthEmail, validateAuthEmailForPassRecovery, validateAuthNewPassword
 } from "../middlewares/validation-middlewares/auth-validation-middlewares";
 import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
 import {
@@ -18,35 +18,35 @@ export const authRoutes = Router();
 
 authRoutes.get('/me',
     validateAccessToken,
-    authController.getUserInformation)
+    authController.getUserInformation);
 
 authRoutes.post('/login',
     saveInfoRequest,
     validateInfoRequest,
     validateLoginDataAuth,
     getErrors,
-    authController.loginUser)
+    authController.loginUser);
 
 authRoutes.post('/registration',
     saveInfoRequest,
     validateInfoRequest,
     validateRegistrationDataAuth,
     getErrors,
-    authController.registerUser)
+    authController.registerUser);
 
 authRoutes.post('/registration-confirmation',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthConfirmationCode,
     getErrors,
-    authController.confirmEmail)
+    authController.confirmEmail);
 
 authRoutes.post('/registration-email-resending',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthEmail,
     getErrors,
-    authController.resendEmailConfirmation)
+    authController.resendEmailConfirmation);
 
 authRoutes.post('/refresh-token',
     validateRefreshToken,
@@ -54,4 +54,18 @@ authRoutes.post('/refresh-token',
 
 authRoutes.post('/logout',
     validateRefreshToken,
-    authController.logoutUser)
+    authController.logoutUser);
+
+authRoutes.post('/password-recovery',
+    saveInfoRequest,
+    validateInfoRequest,
+    validateAuthEmailForPassRecovery,
+    getErrors,
+    authController.passwordRecovery);
+
+authRoutes.post('/new-password',
+    saveInfoRequest,
+    validateInfoRequest,
+    validateAuthNewPassword,
+    getErrors,
+    authController.saveNewPassword)

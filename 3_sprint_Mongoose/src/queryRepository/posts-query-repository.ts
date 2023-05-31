@@ -1,5 +1,4 @@
 import {PostPaginationType} from "./query-repository-types/posts-types-query-repository";
-import {postsCollection} from "../db";
 import {renameMongoIdPost} from "../domain/posts-service";
 import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
@@ -7,6 +6,7 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
+import {PostModel} from "../shemasModelsMongoose/posts-shema-model";
 
 export const postsQueryRepository = {
 
@@ -15,15 +15,15 @@ export const postsQueryRepository = {
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
 
-        const countAllPostsSort = await postsCollection
+        const countAllPostsSort = await PostModel
             .countDocuments({title: {$regex: searchNameTerm ?? '', $options: 'i'} });
 
 
-        const allPostsOnPages = await postsCollection
+        const allPostsOnPages = await PostModel
             .find({title: {$regex: searchNameTerm ?? '', $options: 'i'} })
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
+            .sort(paramsOfElems.paramSort).lean();
 
         return {
             pagesCount:  Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
@@ -37,13 +37,13 @@ export const postsQueryRepository = {
     async getPostsOfBlog(blogId: string, query: QueryBlogModel): Promise<null | PostsOfBlogPaginationType> {
 
         const paramsOfElems = await variablesForReturn(query);
-        const countAllPostsSort = await postsCollection.countDocuments({blogId: blogId});
+        const countAllPostsSort = await PostModel.countDocuments({blogId: blogId});
 
-        const allPostsOnPages = await postsCollection
+        const allPostsOnPages = await PostModel
             .find({blogId: blogId})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
+            .sort(paramsOfElems.paramSort).lean();
 
         if ( allPostsOnPages.length === 0 ) return null
 
@@ -58,7 +58,7 @@ export const postsQueryRepository = {
 
     async getSinglePost(id: string): Promise<null | PostTypeWithId> {
 
-        const singlePost = await postsCollection.findOne({_id: new ObjectId(id)});
+        const singlePost = await PostModel.findOne({_id: new ObjectId(id)});
 
         if (singlePost) {
             return renameMongoIdPost(singlePost);

@@ -1,25 +1,26 @@
 import {describe} from "node:test";
-import {client} from "../db";
-import request from "supertest";
+import {mongoURL} from "../db";
+const request = require("supertest");
 import {app} from "../setting";
 import {UserDBType} from "../types/types";
+import mongoose from "mongoose";
 
 let idOfUser: string;
 const arrayOfUser: Array<UserDBType> = [];
 
 describe('users All operation, chains: /users', () => {
 
-    beforeAll(async () => {
-        await client.close();
-        await client.connect();
+    beforeAll( async () => {
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
             .expect(204)
-    });
+    })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it(`- POST -> Unauthorized, status: 401;

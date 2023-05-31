@@ -22,8 +22,12 @@ export const authService = {
             createdAt: new Date().toISOString(),
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {hours: 5, seconds: 20}),
+                expirationDate: add(new Date(), {hours: 5, seconds: 20 }),
                 isConfirmed: false
+            },
+            passwordRecovery: {
+                confirmationCode: uuidv4(),
+                expirationDate: new Date() //todo immediately created an object during registration - ok?
             }
         }
 
@@ -44,11 +48,12 @@ export const authService = {
 
     async resendConfirmationEmailMessage(userId: ObjectId, email: string): Promise<true | string> {
 
-        const newCode = uuidv4();
-        await usersRepository.updateCodeConfirmation(userId, newCode)
-
         try {
-            await emailManager.sendEmailConfirmationMessage(email, newCode)
+            const newCode = uuidv4();
+            const newDate = add(new Date(), {hours: 5, seconds: 20 })
+            await usersRepository.updateCodeConfirmation(userId, newCode, newDate);
+
+            await emailManager.sendEmailConfirmationMessage(email, newCode);
             return true
 
         } catch (err) {
@@ -87,5 +92,34 @@ export const authService = {
         } else {
             return null;
         }
+    },
+
+    async passwordRecovery(email: string): Promise<true> {
+
+        try {
+            const user: UserDBType | null = await usersQueryRepository.getUserByLoginOrEmail(email);
+            if (!user) return true;
+
+            const newCode = uuidv4();
+            const newDate = add(new Date(), {hours: 1})
+            await usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
+
+            await emailManager.sendEmailPasswordRecovery(email, newCode);
+            return true
+
+        } catch (err) {
+            throw new Error(`Error: ${err}`);
+        }
+    },
+
+    async saveNewPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
+
+        const user = await usersQueryRepository.getUserByRecoveryCode(recoveryCode);
+        if (!user) return false;
+        if (user.passwordRecovery.expirationDate < new Date()) return false //todo сообщения добавить
+
+        const passwordHash = await usersService._generateHash(newPassword);
+        await usersRepository.updatePassword(passwordHash, user._id);
+        return true
     }
 }

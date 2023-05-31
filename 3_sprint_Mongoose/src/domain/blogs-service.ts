@@ -2,7 +2,7 @@ import {
     BodyBlogType,
     BlogTypeWithId
 } from "../repositories/repositories-types/blogs-types-repositories";
-import {blogsRepositoriy} from "../repositories/blogs-repositoriy";
+import {blogsRepository} from "../repositories/blogs-repository";
 import {
     BodyPostByBlogIdType,
     PostTypeWithId
@@ -34,7 +34,7 @@ export const blogsService = {
             isMembership: false
         }
 
-        await blogsRepositoriy.createBlog(blog);
+        await blogsRepository.createBlog(blog);
         return renameMongoIdBlog(blog);
     },
 
@@ -52,7 +52,7 @@ export const blogsService = {
                 blogName: hasCollectionBlogId.name,
                 createdAt: new Date().toISOString()
             };
-            await blogsRepositoriy.createPostByBlogId(post);
+            await blogsRepository.createPostByBlogId(post);
             return renameMongoIdPost(post)
         }
 
@@ -61,11 +61,11 @@ export const blogsService = {
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
-        return await blogsRepositoriy.updateBlog(bodyBlog, id);
+        return await blogsRepository.updateBlog(bodyBlog, id);
     },
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
-        return await blogsRepositoriy.deleteSingleBlog(id);
+        return await blogsRepository.deleteSingleBlog(id);
     }
 }

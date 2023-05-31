@@ -1,23 +1,24 @@
 import {describe} from "node:test";
-import {client} from "../db";
-import request from "supertest";
+import {mongoURL} from "../db";
+const request = require("supertest");
 import {app} from "../setting";
+import mongoose from "mongoose";
 
 let idOfPost: string;
 let idOfBlog: string;
 describe('Posts All operation, chains: /posts', () => {
 
-    beforeAll(async () => {
-        await client.close();
-        await client.connect();
+    beforeAll( async () => {
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
             .expect(204)
-    });
+    })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it(`+ GET -> '/posts/:id': should return empty array;

@@ -1,10 +1,10 @@
-import {usersCollection} from "../db";
 import {mappingUser} from "../domain/users-service";
 import {EmailAndLoginTerm, UsersPaginationType} from "./query-repository-types/users-types-query-repository";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {UserDBType} from "../types/types";
+import {UserModel} from "../shemasModelsMongoose/users-shema-model";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
@@ -19,15 +19,15 @@ export const usersQueryRepository = {
         if (searchLoginTerm) emailAndLoginTerm.push({login: {$regex: searchLoginTerm ?? '', $options: 'i'} });
         if (emailAndLoginTerm.length) paramsOfSearch = {$or: emailAndLoginTerm};
 
-        const countAllUsersSort = await usersCollection
+        const countAllUsersSort = await UserModel
             .countDocuments(paramsOfSearch);
 
 
-        const allUsersOnPages = await usersCollection
+        const allUsersOnPages = await UserModel
             .find(paramsOfSearch)
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).toArray();
+            .sort(paramsOfElems.paramSort).lean();
 
         return {
             pagesCount: Math.ceil(countAllUsersSort / +paramsOfElems.pageSize),
@@ -40,7 +40,7 @@ export const usersQueryRepository = {
 
     async getUserByLoginOrEmail(logOrEmail: string): Promise<UserDBType | null> {
 
-        const user = await usersCollection.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
+        const user = await UserModel.findOne({$or: [ {login: logOrEmail}, {email: logOrEmail} ] });
 
         if (user) {
             return user;
@@ -50,7 +50,7 @@ export const usersQueryRepository = {
 
     async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
 
-        const user = await usersCollection.findOne({_id: userId});
+        const user = await UserModel.findOne({_id: userId});
 
         if (user) {
             return user;
@@ -59,6 +59,12 @@ export const usersQueryRepository = {
     },
 
     async getUserByCodeConfirmation(code: string): Promise<UserDBType | null> {
-        return await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
+
+        return UserModel.findOne({'emailConfirmation.confirmationCode': code});
+    },
+
+    async getUserByRecoveryCode(recoveryCode: string): Promise<UserDBType | null> {
+
+        return UserModel.findOne({'passwordRecovery.confirmationCode': recoveryCode})
     }
 }

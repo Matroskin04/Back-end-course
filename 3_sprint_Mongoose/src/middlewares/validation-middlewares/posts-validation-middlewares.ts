@@ -1,6 +1,6 @@
 import {body} from "express-validator";
-import {blogsCollection} from "../../db";
 import {ObjectId} from "mongodb";
+import {BlogModel} from "../../shemasModelsMongoose/blogs-shema-model";
 
 export const validateBodyOfPost = [
 
@@ -58,7 +58,7 @@ export const validateBodyOfPost = [
         .withMessage('The string should not be empty')
         .custom( async (value): Promise<boolean | void> => {
 
-            const result = await blogsCollection.findOne({_id: new ObjectId(value)})
+            const result = await BlogModel.findOne({_id: new ObjectId(value)})
 
             if (result) {
                 return true;

@@ -8,6 +8,10 @@ export type UserType = {
         expirationDate: Date
         isConfirmed: boolean
     }
+    passwordRecovery: {
+        confirmationCode: string
+        expirationDate: Date
+    }
 }
 
 

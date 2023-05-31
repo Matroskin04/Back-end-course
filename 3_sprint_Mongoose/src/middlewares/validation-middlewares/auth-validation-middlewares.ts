@@ -78,7 +78,7 @@ export const validateRegistrationDataAuth = [
         .withMessage('The length should be from 6 to 20 characters')
 ]
 
-export const validateAuthConfirmationCode = [
+export const validateAuthConfirmationCode = [ //todo лучше перенести в бизнес слой?
     body('code')
         .exists()
         .withMessage('There isn\'t such parameter')
@@ -128,4 +128,37 @@ export const validateAuthEmail = [
             }
             return true;
         })
+]
+
+export const validateAuthEmailForPassRecovery = [
+    body('email')
+        .exists()
+        .withMessage('There isn\'t such parameter')
+
+        .isString()
+        .trim()
+        .withMessage('It should be a string')
+
+        .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
+        .withMessage('Incorrect Email')
+]
+
+export const validateAuthNewPassword = [
+
+    body('password')
+        .exists()
+        .withMessage('There isn\'t such parameter')
+
+        .isString()
+        .withMessage('It should be a string')
+
+        .isLength({max: 20, min: 6})
+        .withMessage('The length should be from 6 to 20 characters'),
+
+    body('recoveryCode')
+        .exists()
+        .withMessage('There isn\'t such parameter')
+
+        .isString()
+        .withMessage('It should be a string')
 ]

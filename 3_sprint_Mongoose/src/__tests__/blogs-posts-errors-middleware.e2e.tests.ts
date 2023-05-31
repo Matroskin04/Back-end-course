@@ -1,8 +1,11 @@
 import {describe} from "node:test";
 const request = require("supertest");
-import {blogsCollection, client, postsCollection} from "../db";
+import {mongoURL} from "../db";
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
+import mongoose from "mongoose";
+import {BlogModel} from "../shemasModelsMongoose/blogs-shema-model";
+import {PostModel} from "../shemasModelsMongoose/posts-shema-model";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",
@@ -18,17 +21,17 @@ let idOfPost: ObjectId | null= null;
 describe('POST: /blogs', () => {
 
 
-    beforeAll(async () => {
-        await client.close();
-        await client.connect();
+    beforeAll( async () => {
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
             .expect(204)
-    });
+    })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it('+ should create 4 new blogs without errors', async () => {
@@ -92,7 +95,7 @@ describe('POST: /blogs', () => {
 
         expect(response4.status).toBe(201);
 
-        const allBlogs = await blogsCollection.find().toArray();
+        const allBlogs = await BlogModel.find().lean();
         expect(allBlogs.length).toBe(4);
 
         idOfBlog = response4.body.id;
@@ -336,7 +339,7 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
 
         expect(response3.status).toBe(201);
 
-        const allPosts = await postsCollection.find().toArray()
+        const allPosts = await PostModel.find().lean()
         expect(allPosts.length).toBe(3)
 
         idOfPost = response3.body.id;

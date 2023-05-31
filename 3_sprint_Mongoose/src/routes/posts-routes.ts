@@ -40,6 +40,7 @@ postsRoutes.put('/:id',
     validateBodyOfPost,
     getErrors,
     postsController.updatePost);
+
 postsRoutes.delete('/:id',
     validateFormatOfUrlParams,
     authorization,

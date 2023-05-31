@@ -1,10 +1,11 @@
-import request from "supertest";
-import {client} from "../db";
+import mongoose from "mongoose";
+const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CommentDBType} from "../types/types";
 import {app} from "../setting";
 import {emailAdapter} from "../adapters/email-adapter";
+import {mongoURL} from "../db";
 
 
 let accessToken: string;
@@ -15,15 +16,15 @@ let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string;
 
-emailAdapter.sendEmailConfirmation = jest.fn();
-const sendEmailConfirmation = jest.spyOn(emailAdapter, 'sendEmailConfirmation');
+emailAdapter.sendEmailConfirmationMessage = jest.fn();
+const sendEmailConfirmation = jest.spyOn(emailAdapter, 'sendEmailConfirmationMessage');
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
 
     beforeAll( async () => {
-        await client.close();
-        await client.connect();
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
@@ -31,7 +32,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it(`(Addition) + POST -> create new user; status 201`, async () => {

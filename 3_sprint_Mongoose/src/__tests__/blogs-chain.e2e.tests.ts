@@ -1,25 +1,27 @@
 import {describe} from "node:test";
-import {blogsCollection, client} from "../db";
-import request from "supertest";
+import {mongoURL} from "../db";
 import {app} from "../setting";
+const request = require("supertest");
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
+import mongoose from "mongoose";
+import {BlogModel} from "../shemasModelsMongoose/blogs-shema-model";
 
 let idOfBlog: string;
 const arrayOfBlogs: Array<BlogTypeWithId | null> = [];
 
 describe('Blogs All operation, chains: /blogs', () => {
 
-    beforeAll(async () => {
-        await client.close();
-        await client.connect();
+    beforeAll( async () => {
+        await mongoose.connection.close();
+        await mongoose.connect(mongoURL);
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
             .expect(204)
-    });
+    })
 
     afterAll(async () => {
-        await client.close();
+        await mongoose.connection.close();
     })
 
     it(`+ POST -> "/blogs": should create new blog; status 201;
@@ -223,7 +225,7 @@ describe(`QUERY-PAGINATION Blogs-> "/"`, () => {
         expect(response4.status).toBe(201);
         arrayOfBlogs.push(response4.body);
 
-        const allBlogs = await blogsCollection.find().toArray()
+        const allBlogs = await BlogModel.find().lean()
         expect(allBlogs.length).toBe(4)
     })
 
