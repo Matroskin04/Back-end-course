@@ -8,6 +8,7 @@ import {UserDBType} from "../types/types";
 import {jwtService} from "./jwt-service";
 import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
+import {ErrorsTypeService} from "./service-types/errors-type-service";
 
 export const authService = {
 
@@ -112,13 +113,16 @@ export const authService = {
         }
     },
 
-    async saveNewPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
+    async saveNewPassword(newPassword: string, recoveryCode: string): Promise<true | ErrorsTypeService> {
 
         const user = await usersQueryRepository.getUserByRecoveryCode(recoveryCode);
-        console.log(recoveryCode, user?.passwordRecovery.confirmationCode)
-        if (!user) return false;
-        console.log(1)
-        if (user.passwordRecovery.expirationDate < new Date()) return false //todo сообщения добавить
+        if (!user) {
+            return { errorsMessages: [{ message: 'RecoveryCode is incorrect or expired', field: "recoveryCode" }] }
+        }
+
+        if (user.passwordRecovery.expirationDate < new Date()) {
+            return { errorsMessages: [{ message: 'RecoveryCode is incorrect or expired', field: "recoveryCode" }] }
+        }
 
         const passwordHash = await usersService._generateHash(newPassword);
         await usersRepository.updatePassword(passwordHash, user._id);

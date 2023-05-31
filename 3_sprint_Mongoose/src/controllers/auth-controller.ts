@@ -85,10 +85,10 @@ export const authController = {
         res.status(204).send('Email with instruction will be send to passed email address (if a user with such email exists)');
     },
     
-    async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string>) {
+    async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string | ViewAllErrorsModels>) {
 
         const result = await authService.saveNewPassword(req.body.newPassword, req.body.recoveryCode);
-        result ? res.status(204).send('New password is saved')
-            : res.status(400).send('RecoveryCode is incorrect or expired')
+        result === true ? res.status(204).send('New password is saved')
+            : res.status(400).send(result)
     }
 }
