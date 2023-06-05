@@ -78,7 +78,7 @@ export const validateRegistrationDataAuth = [
         .withMessage('The length should be from 6 to 20 characters')
 ]
 
-export const validateAuthConfirmationCode = [ //todo лучше перенести в бизнес слой?
+export const validateAuthConfirmationCode = [ //todo перенести в бизнес слой
     body('code')
         .exists()
         .withMessage('There isn\'t such parameter')
