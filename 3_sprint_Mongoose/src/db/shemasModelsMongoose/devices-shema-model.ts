@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
-import {DeviceType} from "../repositories/repositories-types/devices-types-repositories";
+import {DeviceType} from "../../repositories/repositories-types/devices-types-repositories";
 
 export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
     ip: {type: String, required: true},

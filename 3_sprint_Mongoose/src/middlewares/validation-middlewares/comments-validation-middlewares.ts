@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../../shemasModelsMongoose/comments-shema-model";
+import {CommentModel} from "../../db/shemasModelsMongoose/comments-shema-model";
 
 export const validateBodyOfComment = [
 

@@ -1,4 +1,4 @@
-import {mongoURL} from "../db";
+import {mongoURL} from "../db/db";
 const request = require("supertest");
 import {app} from "../setting";
 import {ObjectId} from "mongodb";

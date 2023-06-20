@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
-import {UserType} from "../repositories/repositories-types/users-types-repositories";
+import {UserType} from "../../repositories/repositories-types/users-types-repositories";
 
 export const UserSchema = new mongoose.Schema<WithId<UserType>>({
     login: {type: String, required: true},

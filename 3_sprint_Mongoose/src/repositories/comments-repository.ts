@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../shemasModelsMongoose/comments-shema-model";
+import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {CommentDBType} from "../types/types";
 
 export const commentsRepository = {

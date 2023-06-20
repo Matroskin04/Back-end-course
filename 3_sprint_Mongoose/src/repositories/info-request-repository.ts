@@ -1,5 +1,5 @@
 import {InfoRequestDBType} from "../types/types";
-import {InfoRequestModel} from "../shemasModelsMongoose/info-requests-shema-model";
+import {InfoRequestModel} from "../db/shemasModelsMongoose/info-requests-shema-model";
 
 export const infoRequestRepository = {
 

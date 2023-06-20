@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
-import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
+import {BlogType} from "../../repositories/repositories-types/blogs-types-repositories";
 
 export const BlogSchema = new mongoose.Schema<WithId<BlogType>>({
     name: {type: String, required: true},

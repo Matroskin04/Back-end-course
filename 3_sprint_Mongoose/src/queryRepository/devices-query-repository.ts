@@ -1,6 +1,6 @@
 import {DeviceOutputType} from "../repositories/repositories-types/devices-types-repositories";
 import {DeviceDBType} from "../types/types";
-import {DeviceModel} from "../shemasModelsMongoose/devices-shema-model";
+import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 
 export const devicesQueryRepository = {
 

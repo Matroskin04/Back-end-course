@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 import {ObjectId} from "mongodb";
-import {BlogModel} from "../../shemasModelsMongoose/blogs-shema-model";
+import {BlogModel} from "../../db/shemasModelsMongoose/blogs-shema-model";
 
 export const validateBodyOfPost = [
 

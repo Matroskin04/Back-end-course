@@ -4,7 +4,7 @@ import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {UserDBType} from "../types/types";
-import {UserModel} from "../shemasModelsMongoose/users-shema-model";
+import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {

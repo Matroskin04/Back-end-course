@@ -6,7 +6,7 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
-import {PostModel} from "../shemasModelsMongoose/posts-shema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 
 export const postsQueryRepository = {
 

@@ -5,7 +5,7 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {postsQueryRepository} from "./posts-query-repository";
-import {CommentModel} from "../shemasModelsMongoose/comments-shema-model";
+import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 
 export const commentsQueryRepository = {
 

@@ -1,4 +1,4 @@
-import {runDb} from "./db";
+import {runDb} from "./db/db";
 import {app} from "./setting";
 
 const port = process.env.PORT || 5000

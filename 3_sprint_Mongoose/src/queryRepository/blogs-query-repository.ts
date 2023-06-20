@@ -4,7 +4,7 @@ import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-rep
 import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
-import {BlogModel} from "../shemasModelsMongoose/blogs-shema-model";
+import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 
 
 export const blogsQueryRepository = {

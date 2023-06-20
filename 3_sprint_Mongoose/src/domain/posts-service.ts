@@ -12,7 +12,7 @@ import {
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {mappingComment} from "./comments-service";
 import {CommentDBType, PostDBType} from "../types/types";
-import {PostModel} from "../shemasModelsMongoose/posts-shema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {commentsRepository} from "../repositories/comments-repository";
 
 export function renameMongoIdPost(post: any

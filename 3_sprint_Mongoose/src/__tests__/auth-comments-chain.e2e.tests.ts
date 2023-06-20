@@ -5,7 +5,7 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CommentDBType} from "../types/types";
 import {app} from "../setting";
 import {emailAdapter} from "../adapters/email-adapter";
-import {mongoURL} from "../db";
+import {mongoURL} from "../db/db";
 
 
 let accessToken: string;

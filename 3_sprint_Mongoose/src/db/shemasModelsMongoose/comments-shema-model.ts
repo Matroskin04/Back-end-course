@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
-import {CommentType} from "../repositories/repositories-types/comments-types-repositories";
+import {CommentType} from "../../repositories/repositories-types/comments-types-repositories";
 
 export const CommentSchema = new mongoose.Schema<WithId<CommentType>>({
     content: {type: String, required: true},

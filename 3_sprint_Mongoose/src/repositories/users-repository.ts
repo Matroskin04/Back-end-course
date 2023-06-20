@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {UserDBType} from "../types/types";
-import {UserModel} from "../shemasModelsMongoose/users-shema-model";
+import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 
 export const usersRepository = {
 

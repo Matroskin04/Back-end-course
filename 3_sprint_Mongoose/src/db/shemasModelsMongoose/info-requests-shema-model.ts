@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
-import {InfoRequestType} from "../repositories/repositories-types/info-request-types-repository";
+import {InfoRequestType} from "../../repositories/repositories-types/info-request-types-repository";
 
 export const InfoRequestSchema = new mongoose.Schema<WithId<InfoRequestType>>({
     IP: String,
