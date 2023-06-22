@@ -17,6 +17,7 @@ import {blogsService} from "../domain/blogs-service";
 import {CreatePostByBlogIdModel} from "../models/PostsModels/CreatePostModel";
 import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
+import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
 export const blogsController = {
 
@@ -24,38 +25,38 @@ export const blogsController = {
                       res: Response<ViewAllBlogsModel>) {
 
         const result = await blogsQueryRepository.getAllBlogs(req.query);
-        res.status(200).send(result);
+        res.status(HTTP_STATUS_CODE.OK_200).send(result);
     },
 
     async getBlogById(req: RequestWithParams<UriIdModel>,
                       res: Response<ViewBlogModel>) {
 
         const result = await blogsQueryRepository.getSingleBlog(req.params.id);
-        result ? res.status(200).send(result)
-            : res.sendStatus(404);
+        result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     },
 
     async getAllPostsOfBlog(req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
                             res: Response<ViewPostsOfBlogModel>) {
 
     const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
-    result ? res.status(200).send(result)
-        : res.sendStatus(404);
+    result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 },
 
     async createBlog(req: RequestWithBody<CreateBlogModel>,
                      res: Response<ViewBlogModel>) {
 
     const result = await blogsService.createBlog(req.body);
-    res.status(201).send(result);
+    res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
 },
 
     async createPostByBlogId(req: RequestWithParamsAndBody<UriBlogIdModel, CreatePostByBlogIdModel>,
                              res: Response<PostTypeWithId>) {
 
     const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
-    result ? res.status(201).send(result)
-        : res.sendStatus(404);
+    result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 },
 
     async updateBlog(req: RequestWithParamsAndBody<UriIdModel, UpdateBlogModel>,
@@ -63,18 +64,18 @@ export const blogsController = {
 
     const result = await blogsService.updateBlog(req.body, req.params.id);
 
-    result ? res.sendStatus(204)
-        : res.sendStatus(404);
+    result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 },
 
     async deleteBlog(req: RequestWithParams<UriIdModel>, res: Response<void>) {
 
     const result = await blogsService.deleteSingleBlog(req.params.id);
     if (result) {
-        return res.sendStatus(204);
+        return res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
 
     } else {
-        return res.sendStatus(404);
+        return res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     }
 }
 }

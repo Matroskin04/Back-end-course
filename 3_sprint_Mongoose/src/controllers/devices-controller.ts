@@ -4,19 +4,20 @@ import {devicesQueryRepository} from "../queryRepository/devices-query-repositor
 import {devicesService} from "../domain/devices-service";
 import {RequestWithParams} from "../types/types";
 import {UriIdModel} from "../models/UriModels";
+import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
 export const devicesController = {
 
     async getAllDevices(req: Request, res: Response<ViewDeviceModel>) {
 
     const result = await devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
-    res.status(200).send(result);
+    res.status(HTTP_STATUS_CODE.OK_200).send(result);
 },
 
     async deleteDevicesExcludeCurrent(req: Request, res: Response<void>)  {
 
     await devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
-    res.sendStatus(204);
+    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
 },
 
     async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<void>) {
