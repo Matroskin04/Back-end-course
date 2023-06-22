@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {validateBodyOfBlog} from "../middlewares/validation-middlewares/blogs-validation-middlewares";
-import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/catch-errors-middlewares";
 import {checkErrorsPostByBlogId} from "../middlewares/validation-middlewares/posts-validation-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";

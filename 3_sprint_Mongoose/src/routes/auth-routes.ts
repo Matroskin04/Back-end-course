@@ -5,7 +5,7 @@ import {
     validateRegistrationDataAuth,
     validateAuthEmail, validateAuthEmailForPassRecovery, validateAuthNewPassword
 } from "../middlewares/validation-middlewares/auth-validation-middlewares";
-import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/catch-errors-middlewares";
 import {
     validateAccessToken,
     validateRefreshToken

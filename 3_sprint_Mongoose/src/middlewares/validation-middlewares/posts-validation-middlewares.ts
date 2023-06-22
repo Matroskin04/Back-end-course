@@ -2,6 +2,7 @@ import {body} from "express-validator";
 import {ObjectId} from "mongodb";
 import {BlogModel} from "../../db/shemasModelsMongoose/blogs-shema-model";
 
+
 export const validateBodyOfPost = [
 
     body('title')
@@ -112,3 +113,5 @@ export const checkErrorsPostByBlogId = [
         .isLength({max: 1000})
         .withMessage('The length should be less than 1001')
 ]
+
+

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {getErrors} from "../middlewares/validation-middlewares/validation-middlewares";
+import {getErrors} from "../middlewares/validation-middlewares/catch-errors-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {validateBodyOfUser} from "../middlewares/validation-middlewares/users-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";

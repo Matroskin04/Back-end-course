@@ -8,13 +8,13 @@ import {CreateUserModel} from "../../models/UsersModels/CreateUserModel";
 import {
     RegisterConfirmAuthModel, RegisterResendConfirmAuthModel,
     RegistrationAuthModel
-} from "../../models/AuthModels/registration-auth-model";
+} from "../../models/AuthModels/RegistrationAuthModel";
 import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateCommentModel";
-import {LoginAuthInputModel} from "../../models/AuthModels/login-auth-models";
+import {LoginAuthInputModel} from "../../models/AuthModels/LoginAuthModels";
 import {
     NewPasswordAuthModel,
     PasswordRecoveryAuthModel
-} from "../../models/AuthModels/password-recovery-flow-auth-model";
+} from "../../models/AuthModels/PasswordRecoveryFlowAuthModel";
 
 type getErrorsType = CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel
                     | CreateUserModel | LoginAuthInputModel | CreateCommentByPostIdModel | RegistrationAuthModel

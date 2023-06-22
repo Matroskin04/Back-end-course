@@ -1,17 +1,17 @@
 import {Request, Response} from "express";
-import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/view-auth-models";
+import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
 import {authService} from "../domain/auth-service";
 import {RequestWithBody} from "../types/types";
-import {LoginAuthInputModel} from "../models/AuthModels/login-auth-models";
+import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthModels";
 import {devicesService} from "../domain/devices-service";
 import {
     RegisterConfirmAuthModel,
     RegisterResendConfirmAuthModel,
     RegistrationAuthModel
-} from "../models/AuthModels/registration-auth-model";
+} from "../models/AuthModels/RegistrationAuthModel";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {jwtService} from "../domain/jwt-service";
-import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../models/AuthModels/password-recovery-flow-auth-model";
+import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../models/AuthModels/PasswordRecoveryFlowAuthModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
 export const authController = {
