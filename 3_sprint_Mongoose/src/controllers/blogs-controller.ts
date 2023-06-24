@@ -24,60 +24,93 @@ export const blogsController = {
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
                       res: Response<ViewAllBlogsModel>) {
 
-        {
+        try {
             const result = await blogsQueryRepository.getAllBlogs(req.query);
             res.status(HTTP_STATUS_CODE.OK_200).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
         }
     },
 
     async getBlogById(req: RequestWithParams<UriIdModel>,
                       res: Response<ViewBlogModel>) {
 
-        const result = await blogsQueryRepository.getSingleBlog(req.params.id);
-        result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+        try {
+            const result = await blogsQueryRepository.getSingleBlog(req.params.id);
+            result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async getAllPostsOfBlog(req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
                             res: Response<ViewPostsOfBlogModel>) {
 
-    const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
-    result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-},
+        try {
+            const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
+            result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
     async createBlog(req: RequestWithBody<CreateBlogModel>,
                      res: Response<ViewBlogModel>) {
 
-    const result = await blogsService.createBlog(req.body);
-    res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
-},
+        try {
+            const result = await blogsService.createBlog(req.body);
+            res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
     async createPostByBlogId(req: RequestWithParamsAndBody<UriBlogIdModel, CreatePostByBlogIdModel>,
                              res: Response<PostTypeWithId>) {
 
-    const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
-    result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-},
+        try {
+            const result = await blogsService.createPostByBlogId(req.params.blogId, req.body);
+            result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
     async updateBlog(req: RequestWithParamsAndBody<UriIdModel, UpdateBlogModel>,
                      res: Response<void>) {
 
-    const result = await blogsService.updateBlog(req.body, req.params.id);
+        try {
+            const result = await blogsService.updateBlog(req.body, req.params.id);
 
-    result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-},
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
     async deleteBlog(req: RequestWithParams<UriIdModel>, res: Response<void>) {
 
-    const result = await blogsService.deleteSingleBlog(req.params.id);
-    if (result) {
-        return res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+        try {
+            const result = await blogsService.deleteSingleBlog(req.params.id);
+            if (result) {
+                return res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
 
-    } else {
-        return res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+            } else {
+                return res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+            }
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     }
-}
 }

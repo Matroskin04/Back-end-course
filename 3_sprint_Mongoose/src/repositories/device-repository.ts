@@ -20,12 +20,12 @@ export const deviceRepository = {
     async deleteDeviceById(deviceId: string): Promise<boolean> {
 
         const result = await DeviceModel.deleteOne({deviceId});
-        return result.deletedCount > 0;
+        return result.deletedCount === 1;
     },
 
     async updateLastActiveDate(deviceId: string, newDate: string): Promise<boolean> {
 
         const result = await DeviceModel.updateOne({deviceId}, {$set: {lastActiveDate: newDate} });
-        return result.modifiedCount > 0;
+        return result.modifiedCount === 1;
     }
 }

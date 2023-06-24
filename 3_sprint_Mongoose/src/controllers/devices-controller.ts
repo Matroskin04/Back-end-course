@@ -10,19 +10,34 @@ export const devicesController = {
 
     async getAllDevices(req: Request, res: Response<ViewDeviceModel>) {
 
-    const result = await devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
-    res.status(HTTP_STATUS_CODE.OK_200).send(result);
-},
+        try {
+            const result = await devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
+            res.status(HTTP_STATUS_CODE.OK_200).send(result);
 
-    async deleteDevicesExcludeCurrent(req: Request, res: Response<void>)  {
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
-    await devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
-    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-},
+    async deleteDevicesExcludeCurrent(req: Request, res: Response<void>) {
+
+        try {
+            await devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
+            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    },
 
     async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<void>) {
 
-    const result = await devicesService.deleteDeviceById(req.params.id, req.userId!.toString());
-    res.sendStatus(result);
-}
+        try {
+            const result = await devicesService.deleteDeviceById(req.params.id, req.userId!.toString());
+            res.sendStatus(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    }
 }

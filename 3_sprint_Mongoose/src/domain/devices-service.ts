@@ -9,6 +9,10 @@ export const devicesService = {
     async createNewDevice(ip: string, title: string, userId: ObjectId, refreshToken: string): Promise<void> {
 
         const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+        if(!payloadToken) {
+            throw new Error('Refresh token is invalid.')
+        }
+
         const infoDevice: DeviceDBType = {
             _id: new ObjectId(),
             ip,
@@ -50,6 +54,7 @@ export const devicesService = {
         if (!payloadToken) {
             throw new Error('Refresh is invalid');
         }
+
         return await deviceRepository.deleteDeviceById(payloadToken.deviceId);
     },
 

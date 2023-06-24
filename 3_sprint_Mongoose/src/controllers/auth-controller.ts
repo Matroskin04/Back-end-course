@@ -18,78 +18,130 @@ export const authController = {
 
     async getUserInformation(req: Request, res: Response<ViewAuthModel>) {
 
-        const result = await authService.getUserInformation(req.userId!)
-        if (result) {
-            res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        } else {
-            res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404)
+        try {
+            const result = await authService.getUserInformation(req.userId!);
+
+            if (result) {
+                res.status(HTTP_STATUS_CODE.OK_200).send(result);
+
+            } else {
+                res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+            }
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
         }
     },
 
     async loginUser(req: RequestWithBody<LoginAuthInputModel>,
                     res: Response<ViewTokenModel>) {
 
-        const result = await authService.loginUser(req.body.loginOrEmail, req.body.password);
+        try {
+            const result = await authService.loginUser(req.body.loginOrEmail, req.body.password);
 
-        if (result) {
-            await devicesService.createNewDevice(req.socket.remoteAddress || 'unknown', req.headers['user-agent'] || 'unknown', result.userId, result.refreshToken)
-            res.cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true,});
-            res.status(HTTP_STATUS_CODE.OK_200).send({accessToken: result.accessToken});
+            if (result) {
+                await devicesService.createNewDevice(
+                    req.socket.remoteAddress || 'unknown',
+                    req.headers['user-agent'] || 'unknown',
+                    result.userId, result.refreshToken);
 
-        } else {
-            res.sendStatus(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+                res.cookie('refreshToken', result.refreshToken, {httpOnly: true, secure: true,});
+                res.status(HTTP_STATUS_CODE.OK_200).send({accessToken: result.accessToken});
+
+            } else {
+                res.sendStatus(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+            }
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
         }
     },
 
     async registerUser(req: RequestWithBody<RegistrationAuthModel>,
                        res: Response<ViewAllErrorsModels | string>) {
 
-        await authService.registerUser(req.body.email, req.body.login, req.body.password);
-        res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Input data is accepted. Email with confirmation code will be send to passed email address')
+        try {
+            await authService.registerUser(req.body.email, req.body.login, req.body.password);
+            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Input data is accepted. Email with confirmation code will be send to passed email address')
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async confirmEmail(req: RequestWithBody<RegisterConfirmAuthModel>,
                        res: Response<ViewAllErrorsModels | string>) {
 
-        await authService.confirmEmail(req.userId!);
-        res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Email was verified. Account was activated')
+        try {
+            await authService.confirmEmail(req.userId!);
+            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Email was verified. Account was activated')
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async resendEmailConfirmation(req: RequestWithBody<RegisterResendConfirmAuthModel>,
                                   res: Response<string>) {
 
-        await authService.resendConfirmationEmailMessage(req.userId!, req.body.email);
-        res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
+        try {
+            await authService.resendConfirmationEmailMessage(req.userId!, req.body.email);
+            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Input data is accepted. Email with confirmation code will be send to passed email address.')
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async newRefreshToken(req: Request, res: Response<string | ViewTokenModel>) {
 
-        const tokens = await jwtService.changeTokensByRefreshToken(req.userId!, req.refreshToken);
-        if (!tokens) {
-            res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send('Something was wrong');
-            return;
-        }
+        try {
+            const tokens = await jwtService.changeTokensByRefreshToken(req.userId!, req.refreshToken);
+            if (!tokens) {
+                res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send('Something was wrong');
+                return;
+            }
 
-        res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
-        res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send({accessToken: tokens.accessToken});
+            res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
+            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send({accessToken: tokens.accessToken});
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async logoutUser(req: Request, res: Response<void>) {
 
-        await devicesService.deleteDeviceByRefreshToken(req.refreshToken);
-        res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+        try {
+            await devicesService.deleteDeviceByRefreshToken(req.refreshToken);
+            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async passwordRecovery(req: RequestWithBody<PasswordRecoveryAuthModel>, res: Response<string>) {
 
-        await authService.sendEmailPasswordRecovery(req.body.email);
-        res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Email with instruction will be send to passed email address (if a user with such email exists)');
+        try {
+            await authService.sendEmailPasswordRecovery(req.body.email);
+            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('Email with instruction will be send to passed email address (if a user with such email exists)');
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
     
     async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string | ViewAllErrorsModels>) {
 
-        const result = await authService.saveNewPassword(req.body.newPassword, req.body.recoveryCode);
-        result === true ? res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('New password is saved')
-            : res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send(result)
+        try {
+            const result = await authService.saveNewPassword(req.body.newPassword, req.body.recoveryCode);
+
+            result === true ? res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('New password is saved')
+                : res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     }
 }

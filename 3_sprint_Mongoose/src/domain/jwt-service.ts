@@ -8,40 +8,40 @@ import {env} from "../config";
 
 export const jwtService = {
 
-    createAccessToken(userId: string): string  {
+    createAccessToken(userId: string): string {
 
         return jwt.sign({userId: userId}, env.PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '10s'})
     },
 
-    createRefreshToken(userId: string, existingDeviceId: string | null): string  {
+    createRefreshToken(userId: string, existingDeviceId: string | null): string {
 
         const deviceId = existingDeviceId ?? randomUUID();
         return jwt.sign({userId, deviceId}, env.PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '20s'})
     },
 
-    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens | false> {
+    async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
 
-        try {
-            const payload = jwtQueryRepository.getPayloadToken(cookieRefreshToken);
+        const payloadToken = jwtQueryRepository.getPayloadToken(cookieRefreshToken);
+        if (!payloadToken) {
+            throw new Error('Refresh token is invalid.');
+        }
 
-            if (!payload) return false
-            const accessToken = this.createAccessToken(userId.toString());
-            const refreshToken = this.createRefreshToken(userId.toString(), payload.deviceId);
+        const accessToken = this.createAccessToken(userId.toString());
+        const refreshToken = this.createRefreshToken(userId.toString(), payloadToken.deviceId);
 
-            const payloadNewRefresh = jwtQueryRepository.getPayloadToken(refreshToken);
-            if (!payloadNewRefresh?.iat) return false
-            const isModified = await devicesService.updateLastActiveDate(payload.deviceId, payloadNewRefresh.iat);
+        const payloadNewRefresh = jwtQueryRepository.getPayloadToken(refreshToken);
+        if (!payloadNewRefresh?.iat) {
+            throw new Error('Refresh token is invalid.');
+        }
 
-            if (!isModified) return false;
+        const isModified = await devicesService.updateLastActiveDate(payloadToken.deviceId, payloadNewRefresh.iat);
+        if (!isModified) {
+            throw new Error('Last active date is not updated.');
+        }
 
-            return {
-                accessToken,
-                refreshToken
-            }
-
-        } catch (err) {
-            console.log(err);
-            throw new Error(`Error: ${err}`)
+        return {
+            accessToken,
+            refreshToken
         }
     }
 }

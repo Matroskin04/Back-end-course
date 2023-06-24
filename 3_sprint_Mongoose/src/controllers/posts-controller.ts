@@ -23,55 +23,89 @@ export const postsController = {
     async getAllPosts(req: RequestWithQuery<QueryPostModel>,
                       res: Response<ViewAllPostsModel>) {
 
-        const result = await postsQueryRepository.getAllPosts(req.query);
-        res.status(HTTP_STATUS_CODE.OK_200).send(result);
-    },
+        try {
+            const result = await postsQueryRepository.getAllPosts(req.query);
+            res.status(HTTP_STATUS_CODE.OK_200).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }    },
 
     async getPostById(req: RequestWithParams<UriIdModel>,
                       res: Response<ViewPostModel>) {
 
-        const result = await postsQueryRepository.getSinglePost(req.params.id)
+        try {
+            const result = await postsQueryRepository.getSinglePost(req.params.id)
 
-        result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404)
+            result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async getAllCommentsOfPost(req: RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
                                res: Response<ViewAllCommentsOfPostModel>) {
 
-        const result = await commentsQueryRepository.getCommentsOfPost(req.query, req.params.id);
-        result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404)
+        try {
+            const result = await commentsQueryRepository.getCommentsOfPost(req.query, req.params.id);
+            result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async createPost(req: RequestWithBody<CreatePostModel>,
                      res: Response<ViewPostModel>) {
 
-        const result = await postsService.createPost(req.body)
-        res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+        try {
+            const result = await postsService.createPost(req.body);
+            res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async createCommentByPostId(req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
                                 res: Response<ViewCommentOfPostModel>) {
 
-        const result = await postsService.createCommentByPostId(req.body, req.userId!, req.params.id);
-        result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404)
+        try {
+            const result = await postsService.createCommentByPostId(req.body, req.userId!, req.params.id);
+            result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async updatePost(req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
                      res: Response<void>) {
 
-        const result = await postsService.updatePost(req.body, req.params.id);
-        result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+        try {
+            const result = await postsService.updatePost(req.body, req.params.id);
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async deletePost(req: RequestWithParams<UriIdModel>,
                      res: Response<void>) {
 
-        const result = await postsService.deleteSinglePost(req.params.id);
-        result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+        try {
+            const result = await postsService.deleteSinglePost(req.params.id);
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     }
 }

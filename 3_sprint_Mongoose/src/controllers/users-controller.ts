@@ -13,22 +13,37 @@ export const usersController = {
     async getAllUsers(req: RequestWithQuery<QueryUserModel>,
                       res: Response<ViewAllUsersModels>) {
 
-        const result = await usersQueryRepository.getAllUsers(req.query);
-        res.status(HTTP_STATUS_CODE.OK_200).send(result);
+        try {
+            const result = await usersQueryRepository.getAllUsers(req.query);
+            res.status(HTTP_STATUS_CODE.OK_200).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async createUser(req: RequestWithBody<CreateUserModel>,
                      res: Response<ViewUserModel>) {
 
-        const result = await usersService.createUser(req.body);
-        res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
+        try {
+            const result = await usersService.createUser(req.body);
+            res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async deleteUser(req: RequestWithParams<UriIdModel>,
                      res: Response<void>) {
 
-        const result = await usersService.deleteSingleUser(req.params.id);
-        result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+        try {
+            const result = await usersService.deleteSingleUser(req.params.id);
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     }
 }

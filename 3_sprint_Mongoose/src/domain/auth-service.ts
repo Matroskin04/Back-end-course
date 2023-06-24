@@ -23,7 +23,7 @@ export const authService = {
             createdAt: new Date().toISOString(),
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {hours: 5, seconds: 20 }),
+                expirationDate: add(new Date(), {hours: 5, seconds: 20}),
                 isConfirmed: false
             },
             passwordRecovery: {
@@ -33,99 +33,96 @@ export const authService = {
         }
 
         await usersRepository.createUser(user);
-        try {
-            await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode)
-            return;
-        } catch (err) {
-            throw new Error(`Error: ${err}`)
-        }
+        await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
+
+        return;
+
     },
 
     async confirmEmail(userId: ObjectId): Promise<void> {
 
-        await usersRepository.updateConfirmation(userId);
+        const result = await usersRepository.updateConfirmation(userId);
+        if (!result) {
+            throw new Error('Email confirmation failed.')
+        }
+
         return;
     },
 
-    async resendConfirmationEmailMessage(userId: ObjectId, email: string): Promise<true | string> {
+    async resendConfirmationEmailMessage(userId: ObjectId, email: string): Promise<void> {
 
-        try {
-            const newCode = uuidv4();
-            const newDate = add(new Date(), {hours: 5, seconds: 20 })
-            await usersRepository.updateCodeConfirmation(userId, newCode, newDate);
+        const newCode = uuidv4();
+        const newDate = add(new Date(), {hours: 5, seconds: 20});
 
-            await emailManager.sendEmailConfirmationMessage(email, newCode);
-            return true
-
-        } catch (err) {
-            throw new Error(`Error: ${err}`);
+        const result = await usersRepository.updateCodeConfirmation(userId, newCode, newDate);
+        if (!result) {
+            throw new Error('Resending confirmation email message failed.');
         }
+
+        await emailManager.sendEmailConfirmationMessage(email, newCode);
+        return;
     },
 
     async loginUser(loginOrEmail: string, password: string): Promise<ARTokensAndUserId | null> {
 
         const user = await usersService.checkCredentials(loginOrEmail, password);
-
-        if (user) {
-            const accessToken = jwtService.createAccessToken(user._id.toString());
-            const refreshToken = jwtService.createRefreshToken(user._id.toString(), null);
-
-            return {
-                accessToken,
-                refreshToken,
-                userId: user._id
-            }
+        if (!user) {
+            return null
         }
 
-        return null;
+        const accessToken = jwtService.createAccessToken(user._id.toString());
+        const refreshToken = jwtService.createRefreshToken(user._id.toString(), null);
+
+        return {
+            accessToken,
+            refreshToken,
+            userId: user._id
+        }
     },
 
     async getUserInformation(userId: ObjectId): Promise<UserInformation | null> {
 
         const user = await usersQueryRepository.getUserByUserId(userId);
-        if (user) {
-            return {
-                email: user.email,
-                login: user.login,
-                userId: user._id.toString()
-            }
 
-        } else {
+        if (!user) {
             return null;
+        }
+
+        return {
+            email: user.email,
+            login: user.login,
+            userId: user._id.toString()
         }
     },
 
-    async sendEmailPasswordRecovery(email: string): Promise<true> {
+    async sendEmailPasswordRecovery(email: string): Promise<void> {
 
-        try {
-            const user: UserDBType | null = await usersQueryRepository.getUserByLoginOrEmail(email);
-            if (!user) return true;
+        const user: UserDBType | null = await usersQueryRepository.getUserByLoginOrEmail(email);
+        if (!user) return;
 
-            const newCode = uuidv4();
-            const newDate = add(new Date(), {hours: 1})
-            await usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
+        const newCode = uuidv4();
+        const newDate = add(new Date(), {hours: 1});
 
-            await emailManager.sendEmailPasswordRecovery(email, newCode);
-            return true
+        await usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
+        await emailManager.sendEmailPasswordRecovery(email, newCode);
 
-        } catch (err) {
-            throw new Error(`Error: ${err}`);
-        }
+        return;
     },
 
     async saveNewPassword(newPassword: string, recoveryCode: string): Promise<true | ErrorsTypeService> {
 
         const user = await usersQueryRepository.getUserByRecoveryCode(recoveryCode);
         if (!user) {
-            return { errorsMessages: [{ message: 'RecoveryCode is incorrect or expired', field: "recoveryCode" }] }
+            return {errorsMessages: [{message: 'RecoveryCode is incorrect or expired', field: "recoveryCode"}]}
         }
 
         if (user.passwordRecovery.expirationDate < new Date()) {
-            return { errorsMessages: [{ message: 'RecoveryCode is incorrect or expired', field: "recoveryCode" }] }
+            return {errorsMessages: [{message: 'RecoveryCode is incorrect or expired', field: "recoveryCode"}]}
         }
 
         const passwordHash = await usersService._generateHash(newPassword);
         await usersRepository.updatePassword(passwordHash, user._id);
-        return true
+
+        return true;
     }
 }

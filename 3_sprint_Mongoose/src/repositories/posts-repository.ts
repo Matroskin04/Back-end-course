@@ -22,13 +22,13 @@ export const postsRepository = {
             }
         });
 
-        return result.modifiedCount > 0;
+        return result.modifiedCount === 1;
     },
 
     async deleteSinglePost(id: string): Promise<boolean> {
 
         const result = await PostModel.deleteOne({_id: new ObjectId(id)})
 
-        return result.deletedCount > 0;
+        return result.deletedCount === 1;
     }
 }

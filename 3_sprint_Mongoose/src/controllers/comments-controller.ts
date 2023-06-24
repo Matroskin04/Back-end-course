@@ -12,21 +12,36 @@ export const commentsController = {
     async getCommentById(req: RequestWithParams<UriIdModel>,
                          res: Response<ViewCommentModel>) {
 
-        const result = await commentsQueryRepository.getCommentById(req.params.id);
-        result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-            : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404)
+        try {
+            const result = await commentsQueryRepository.getCommentById(req.params.id);
+            result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async updateComment(req: RequestWithParamsAndBody<UriIdModel, UpdateCommentModel>,
                         res: Response<void>) {
 
-        await commentsService.updateComment(req.params.id, req.userId!.toString(), req.body.content);
-        res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+        try {
+            await commentsService.updateComment(req.params.id, req.userId!.toString(), req.body.content);
+            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     },
 
     async deleteComment(req: Request, res: Response<void>) {
 
-        await commentsService.deleteOne(req.params.id);
-        res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+        try {
+            await commentsService.deleteOne(req.params.id);
+            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
     }
 }

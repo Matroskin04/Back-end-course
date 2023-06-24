@@ -30,12 +30,12 @@ export const blogsRepository = {
             }
         })
 
-        return result.modifiedCount > 0;
+        return result.modifiedCount === 1;
     },
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
         const result = await BlogModel.deleteOne({_id: new ObjectId(id)});
-        return result.deletedCount > 0;
+        return result.deletedCount === 1;
     }
 }
