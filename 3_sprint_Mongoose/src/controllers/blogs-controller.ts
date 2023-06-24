@@ -24,8 +24,10 @@ export const blogsController = {
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
                       res: Response<ViewAllBlogsModel>) {
 
-        const result = await blogsQueryRepository.getAllBlogs(req.query);
-        res.status(HTTP_STATUS_CODE.OK_200).send(result);
+        {
+            const result = await blogsQueryRepository.getAllBlogs(req.query);
+            res.status(HTTP_STATUS_CODE.OK_200).send(result);
+        }
     },
 
     async getBlogById(req: RequestWithParams<UriIdModel>,
