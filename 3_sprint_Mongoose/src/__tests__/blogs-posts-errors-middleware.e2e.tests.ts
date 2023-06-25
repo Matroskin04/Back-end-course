@@ -388,20 +388,20 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
             .auth('admin', 'qwerty')
             .expect(204)
 
-        const postInputData = {
+        const postInputData1 = {
             title: null,
             shortDescription: null,
             content: 'Normal content',
             blogId: idOfDeletedBlog
         };
 
-        const response = await request(app)
+        const response1 = await request(app)
             .post('/hometask-03/posts')
             .auth('admin', 'qwerty')
-            .send(postInputData);
+            .send(postInputData1);
 
-        expect(response.status).toBe(400);
-        expect(response.body).toEqual({
+        expect(response1.status).toBe(400);
+        expect(response1.body).toEqual({
             "errorsMessages": [
                 {
                     "message": expect.any(String),
@@ -410,7 +410,25 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
                 {
                     "message": expect.any(String),
                     "field": "shortDescription"
-                },
+                }
+            ]
+        })
+
+        const postInputData2 = {
+            title: 'title',
+            shortDescription: 'Normal shortDescription',
+            content: 'Normal content',
+            blogId: idOfDeletedBlog
+        };
+
+        const response2 = await request(app)
+            .post('/hometask-03/posts')
+            .auth('admin', 'qwerty')
+            .send(postInputData2);
+
+        expect(response2.status).toBe(400);
+        expect(response2.body).toEqual({
+            "errorsMessages": [
                 {
                     "message": expect.any(String),
                     "field": "blogId"
