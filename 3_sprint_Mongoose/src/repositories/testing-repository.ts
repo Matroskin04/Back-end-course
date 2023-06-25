@@ -9,18 +9,25 @@ export const testingRepository = {
 
     async deleteAllData(): Promise<void> {
 
-        return Promise.all([
-            PostModel.deleteMany({}),
-            BlogModel.deleteMany({}),
-            UserModel.deleteMany({}),
-            CommentModel.deleteMany({}),
-            InfoRequestModel.deleteMany({}),
-            DeviceModel.deleteMany({})])
-            .then(value => {
-                console.log('OK');
-
-                }, reason => {
-                console.log(reason)
-        });
+        // return Promise.all([
+        //     PostModel.deleteMany({}),
+        //     BlogModel.deleteMany({}),
+        //     UserModel.deleteMany({}),
+        //     CommentModel.deleteMany({}),
+        //     InfoRequestModel.deleteMany({}),
+        //     DeviceModel.deleteMany({})])
+        //     .then(value => {
+        //         console.log('OK');
+        //
+        //         }, reason => {
+        //         console.log(reason)
+        // });
+        await PostModel.deleteMany({})
+        await BlogModel.deleteMany({})
+        await UserModel.deleteMany({})
+        await CommentModel.deleteMany({})
+        await InfoRequestModel.deleteMany({})
+        await DeviceModel.deleteMany({})
+        return;
     }
 }
