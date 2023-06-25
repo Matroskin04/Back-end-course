@@ -17,6 +17,7 @@ import {postsService} from "../domain/posts-service";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {commentsService} from "../domain/comments-service";
 
 export const postsController = {
 
@@ -59,11 +60,13 @@ export const postsController = {
     },
 
     async createPost(req: RequestWithBody<CreatePostModel>,
-                     res: Response<ViewPostModel>) {
+                     res: Response<ViewPostModel | string>) {
 
         try {
             const result = await postsService.createPost(req.body);
-            res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
+
+            result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result) :
+                res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send('Such blogId is not found');
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
@@ -74,7 +77,8 @@ export const postsController = {
                                 res: Response<ViewCommentOfPostModel>) {
 
         try {
-            const result = await postsService.createCommentByPostId(req.body, req.userId!, req.params.id);
+            const result = await commentsService.createCommentByPostId(req.body, req.userId!, req.params.id);
+
             result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 
@@ -88,6 +92,7 @@ export const postsController = {
 
         try {
             const result = await postsService.updatePost(req.body, req.params.id);
+
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 
@@ -101,6 +106,7 @@ export const postsController = {
 
         try {
             const result = await postsService.deleteSinglePost(req.params.id);
+
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 

@@ -3,3 +3,8 @@ export type ErrorsTypeService = {
         message: 'RecoveryCode is incorrect or expired',
         field: "recoveryCode" }>
 }
+
+export type ResponseTypeService = {
+    status: number
+    message: string
+}

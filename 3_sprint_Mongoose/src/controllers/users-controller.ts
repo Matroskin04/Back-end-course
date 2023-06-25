@@ -39,6 +39,7 @@ export const usersController = {
 
         try {
             const result = await usersService.deleteSingleUser(req.params.id);
+
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 

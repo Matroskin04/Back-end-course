@@ -4,16 +4,8 @@ import {
 } from "../repositories/repositories-types/posts-types-repositories";
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
-import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
-import {
-    CommentOutputType,
-} from "../repositories/repositories-types/comments-types-repositories";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {mappingComment} from "./comments-service";
-import {CommentDBType, PostDBType} from "../types/types";
-import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
-import {commentsRepository} from "../repositories/comments-repository";
+import {PostDBType} from "../types/types";
 
 export function renameMongoIdPost(post: any
 ): PostTypeWithId {
@@ -30,9 +22,12 @@ export function renameMongoIdPost(post: any
 
 export const postsService = {
 
-    async createPost(body: BodyPostType): Promise<PostTypeWithId> {
+    async createPost(body: BodyPostType): Promise<PostTypeWithId | null> {
 
-        const blogName = await blogsQueryRepository.getSingleBlog(body.blogId);
+        const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
+        if (!blog) {
+            return null
+        }
 
         const post: PostDBType = {
             _id: new ObjectId(),
@@ -40,14 +35,20 @@ export const postsService = {
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
-            blogName: blogName!.name,
+            blogName: blog!.name,
             createdAt: new Date().toISOString()
         };
+
         await postsRepository.createPost(post);
         return renameMongoIdPost(post)
     },
 
     async updatePost(body: BodyPostType, id: string): Promise<boolean> {
+
+        const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
+        if (!blog) {
+            return false
+        }
 
         return await postsRepository.updatePost(body, id);
     },
@@ -55,32 +56,5 @@ export const postsService = {
     async deleteSinglePost(id: string): Promise<boolean> {
 
         return await postsRepository.deleteSinglePost(id);
-    },
-
-    async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
-
-        const user = await usersQueryRepository.getUserByUserId(userId)
-        if (!user) {
-            return null;
-        }
-
-        const post = await PostModel.findOne({_id: new ObjectId(postId)})
-        if (!post) {
-            return null;
-        }
-
-        const comment: CommentDBType = {
-            _id: new ObjectId(),
-            content: body.content,
-            commentatorInfo: {
-                userId: userId.toString(),
-                userLogin: user.login
-            },
-            createdAt: new Date().toISOString(),
-            postId: postId
-        }
-
-        await commentsRepository.createCommentByPostId(comment);
-        return mappingComment(comment);
     }
 }

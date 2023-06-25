@@ -38,7 +38,7 @@ export const usersService = {
             },
             passwordRecovery: {
                 confirmationCode: uuidv4(),
-                expirationDate: new Date() //todo 2 immediately created an object during registration
+                expirationDate: new Date()
             }
         }
 

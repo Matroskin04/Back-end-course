@@ -1,11 +1,11 @@
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
-import {mappingComment} from "../domain/comments-service";
 import {ObjectId} from "mongodb";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {postsQueryRepository} from "./posts-query-repository";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
+import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 
 export const commentsQueryRepository = {
 
@@ -15,6 +15,7 @@ export const commentsQueryRepository = {
         if (!comment) {
             return null
         }
+
         return mappingComment(comment)
     },
 

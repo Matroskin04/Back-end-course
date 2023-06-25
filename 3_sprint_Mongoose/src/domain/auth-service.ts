@@ -8,7 +8,7 @@ import {UserDBType} from "../types/types";
 import {jwtService} from "./jwt-service";
 import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {ErrorsTypeService} from "./service-types/errors-type-service";
+import {ErrorsTypeService} from "./service-types/responses-types-service";
 
 export const authService = {
 
@@ -28,7 +28,7 @@ export const authService = {
             },
             passwordRecovery: {
                 confirmationCode: uuidv4(),
-                expirationDate: new Date() //todo immediately created an object during registration - ok?
+                expirationDate: new Date()
             }
         }
 

@@ -23,6 +23,7 @@ export function renameMongoIdBlog(blog: any
         isMembership: blog.isMembership
     }
 }
+
 export const blogsService = {
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
@@ -41,22 +42,22 @@ export const blogsService = {
     async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
         //checking the existence of a blog
         const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
-
-        if (hasCollectionBlogId) {
-            const post: PostDBType = {
-                _id: new ObjectId(),
-                title: body.title,
-                shortDescription: body.shortDescription,
-                content: body.content,
-                blogId: blogId,
-                blogName: hasCollectionBlogId.name,
-                createdAt: new Date().toISOString()
-            };
-            await blogsRepository.createPostByBlogId(post);
-            return renameMongoIdPost(post)
+        if (!hasCollectionBlogId) {
+            return null
         }
 
-        return null
+        const post: PostDBType = {
+            _id: new ObjectId(),
+            title: body.title,
+            shortDescription: body.shortDescription,
+            content: body.content,
+            blogId: blogId,
+            blogName: hasCollectionBlogId.name,
+            createdAt: new Date().toISOString()
+        }
+
+        await blogsRepository.createPostByBlogId(post);
+        return renameMongoIdPost(post)
     },
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {

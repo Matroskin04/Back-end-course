@@ -60,9 +60,9 @@ export const postsQueryRepository = {
 
         const singlePost = await PostModel.findOne({_id: new ObjectId(id)});
 
-        if (singlePost) {
-            return renameMongoIdPost(singlePost);
+        if (!singlePost) {
+            return null;
         }
-        return null;
+        return renameMongoIdPost(singlePost);
     }
 }

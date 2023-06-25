@@ -102,12 +102,9 @@ export const blogsController = {
 
         try {
             const result = await blogsService.deleteSingleBlog(req.params.id);
-            if (result) {
-                return res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
 
-            } else {
-                return res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-            }
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

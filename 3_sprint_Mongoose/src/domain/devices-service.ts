@@ -3,6 +3,8 @@ import {DeviceDBType} from "../types/types";
 import {ObjectId} from "mongodb";
 import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
 import {devicesQueryRepository} from "../queryRepository/devices-query-repository";
+import {ResponseTypeService} from "./service-types/responses-types-service";
+import {createResponseService} from "./service-utils/functions/create-response-service";
 
 export const devicesService = {
 
@@ -33,19 +35,28 @@ export const devicesService = {
         if (!payloadToken) {
             throw new Error('Refresh is invalid');
         }
-        await deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
+
+        const result = await deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
+        if (!result) {
+            throw new Error('Deletion failed')
+        }
+
         return;
     },
 
-    async deleteDeviceById(deviceId: string, userId: string): Promise<number> {
+    async deleteDeviceById(deviceId: string, userId: string): Promise<ResponseTypeService> {
 
         const device = await devicesQueryRepository.getDeviceById(deviceId);
 
-        if (!device) return 404;
-        if (device.userId !== userId) return 403;
+        if (!device) return createResponseService(404, 'The device is not found');
+        if (device.userId !== userId) return createResponseService(403, 'You can\'t delete not your own device');
 
-        await deviceRepository.deleteDeviceById(deviceId);
-        return 204;
+        const result = await deviceRepository.deleteDeviceById(deviceId);
+        if (!result) {
+            throw new Error('The device is not found')
+        }
+
+        return createResponseService(204, 'Successfully deleted');
     },
 
     async deleteDeviceByRefreshToken(refreshToken: string): Promise<boolean> {

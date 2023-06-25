@@ -19,7 +19,7 @@ export const devicesController = {
         }
     },
 
-    async deleteDevicesExcludeCurrent(req: Request, res: Response<void>) {
+    async deleteDevicesExcludeCurrent(req: Request, res: Response<string>) {
 
         try {
             await devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
@@ -30,11 +30,11 @@ export const devicesController = {
         }
     },
 
-    async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<void>) {
+    async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<string>) {
 
         try {
             const result = await devicesService.deleteDeviceById(req.params.id, req.userId!.toString());
-            res.sendStatus(result);
+            res.status(result.status).send(result.message);
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

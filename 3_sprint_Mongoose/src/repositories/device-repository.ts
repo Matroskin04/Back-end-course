@@ -11,10 +11,10 @@ export const deviceRepository = {
         return;
     },
 
-    async deleteDevicesExcludeCurrent(deviceId: string): Promise<void> {
+    async deleteDevicesExcludeCurrent(deviceId: string): Promise<boolean> {
 
-        await DeviceModel.deleteMany({deviceId: {$ne: deviceId}});
-        return;
+        const result = await DeviceModel.deleteMany({deviceId: {$ne: deviceId}});
+        return result.deletedCount > 0;
     },
 
     async deleteDeviceById(deviceId: string): Promise<boolean> {

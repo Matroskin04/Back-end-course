@@ -14,6 +14,7 @@ export const commentsController = {
 
         try {
             const result = await commentsQueryRepository.getCommentById(req.params.id);
+
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 
