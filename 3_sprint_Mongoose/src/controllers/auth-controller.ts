@@ -103,7 +103,7 @@ export const authController = {
             }
 
             res.cookie(`refreshToken`, tokens.refreshToken, {httpOnly: true, secure: true,})
-            res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send({accessToken: tokens.accessToken});
+            res.status(HTTP_STATUS_CODE.OK_200).send({accessToken: tokens.accessToken});
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

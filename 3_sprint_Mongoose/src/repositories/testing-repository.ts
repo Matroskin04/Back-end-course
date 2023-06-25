@@ -17,7 +17,7 @@ export const testingRepository = {
             InfoRequestModel.deleteMany({}),
             DeviceModel.deleteMany({})])
             .then(value => {
-                console.log(value);
+                console.log('OK');
 
                 }, reason => {
                 console.log(reason)

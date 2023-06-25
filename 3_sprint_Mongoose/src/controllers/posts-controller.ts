@@ -18,6 +18,7 @@ import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateComment
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 import {commentsService} from "../domain/comments-service";
+import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 
 export const postsController = {
 
@@ -60,13 +61,13 @@ export const postsController = {
     },
 
     async createPost(req: RequestWithBody<CreatePostModel>,
-                     res: Response<ViewPostModel | string>) {
+                     res: Response<ViewPostModel | ViewAllErrorsModels>) {
 
         try {
             const result = await postsService.createPost(req.body);
 
-            result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result) :
-                res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send('Such blogId is not found');
+            result.status === 201 ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result.message) :
+                res.status(result.status).json(result.message);
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
@@ -88,13 +89,13 @@ export const postsController = {
     },
 
     async updatePost(req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
-                     res: Response<void>) {
+                     res: Response<string | ViewAllErrorsModels>) {
 
         try {
             const result = await postsService.updatePost(req.body, req.params.id);
 
-            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-                : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+            result.status === 204 ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.status(result.status).send(result.message);
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

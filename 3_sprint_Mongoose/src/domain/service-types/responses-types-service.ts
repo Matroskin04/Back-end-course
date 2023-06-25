@@ -1,10 +1,10 @@
 export type ErrorsTypeService = {
     errorsMessages: Array<{
-        message: 'RecoveryCode is incorrect or expired',
-        field: "recoveryCode" }>
+        message: string,
+        field: string }>
 }
 
 export type ResponseTypeService = {
     status: number
-    message: string
+    message: any
 }

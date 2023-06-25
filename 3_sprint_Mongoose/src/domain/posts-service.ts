@@ -6,6 +6,8 @@ import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {PostDBType} from "../types/types";
+import {ResponseTypeService} from "./service-types/responses-types-service";
+import {createResponseService} from "./service-utils/functions/create-response-service";
 
 export function renameMongoIdPost(post: any
 ): PostTypeWithId {
@@ -22,11 +24,13 @@ export function renameMongoIdPost(post: any
 
 export const postsService = {
 
-    async createPost(body: BodyPostType): Promise<PostTypeWithId | null> {
+    async createPost(body: BodyPostType): Promise<ResponseTypeService> {
 
         const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
         if (!blog) {
-            return null
+            return createResponseService(400, {errorsMessages: [{
+                    message: "Such blogId is not found",
+                    field: "blogId" }] })
         }
 
         const post: PostDBType = {
@@ -40,17 +44,25 @@ export const postsService = {
         };
 
         await postsRepository.createPost(post);
-        return renameMongoIdPost(post)
+        const postMapped = renameMongoIdPost(post);
+
+        return createResponseService(201, postMapped)
     },
 
-    async updatePost(body: BodyPostType, id: string): Promise<boolean> {
+    async updatePost(body: BodyPostType, id: string): Promise<ResponseTypeService> {
 
         const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
         if (!blog) {
-            return false
+            return createResponseService(400, {errorsMessages: [{
+                    message: "Such blogId is not found",
+                    field: "blogId" }] })
         }
 
-        return await postsRepository.updatePost(body, id);
+        const result = await postsRepository.updatePost(body, id);
+        if (!result) {
+            return createResponseService(404, 'Not found');
+        }
+        return createResponseService(204, 'No content');
     },
 
     async deleteSinglePost(id: string): Promise<boolean> {
