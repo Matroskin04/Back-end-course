@@ -9,7 +9,7 @@ export const testingRepository = {
 
     async deleteAllData(): Promise<void> {
 
-        Promise.all([
+        return Promise.all([
             PostModel.deleteMany({}),
             BlogModel.deleteMany({}),
             UserModel.deleteMany({}),
@@ -22,7 +22,5 @@ export const testingRepository = {
                 }, reason => {
                 console.log(reason)
         });
-
-        return;
     }
 }
