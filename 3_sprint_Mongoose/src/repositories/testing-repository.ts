@@ -2,7 +2,6 @@ import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
-import {InfoRequestModel} from "../db/shemasModelsMongoose/info-requests-shema-model";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 
 export const testingRepository = {
@@ -14,7 +13,6 @@ export const testingRepository = {
             BlogModel.deleteMany({}),
             UserModel.deleteMany({}),
             CommentModel.deleteMany({}),
-            InfoRequestModel.deleteMany({}),
             DeviceModel.deleteMany({})])
             .then(value => {
                 console.log('OK');

@@ -1,17 +1,16 @@
 import {NextFunction,Response, Request} from "express";
-import {infoRequestService} from "../../domain/info-request-service";
-import {ObjectId} from "mongodb";
-import {InfoRequestDBType} from "../../types/db-types";
+import {InfoRequestType} from "../../repositories/repositories-types/info-request-types-repository";
+import {infoRequestsArr} from "./validate-info-request-middleware";
 
 export const saveInfoRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     const ip = req.socket.remoteAddress;
-    const infoRequest: InfoRequestDBType = {
-        _id: new ObjectId,
+    const infoRequest: InfoRequestType = {
         IP: ip,
         URL: req.originalUrl,
-        date: new Date()
+        date: Date.now()
     }
-    await infoRequestService.saveInfoRequest(infoRequest);
+
+    infoRequestsArr.push(infoRequest)
     next();
 }
