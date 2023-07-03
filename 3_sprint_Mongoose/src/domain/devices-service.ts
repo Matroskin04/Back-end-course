@@ -37,7 +37,7 @@ export const devicesService = {
 
         const result = await deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
         if (!result) {
-            throw new Error('Deletion failed')
+            throw new Error('Deletion failed');
         }
 
         return;
