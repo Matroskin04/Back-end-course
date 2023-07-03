@@ -10,7 +10,7 @@ import {
 import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
-import {BlogDBType, PostDBType} from "../types/types";
+import {BlogDBType, PostDBType} from "../types/db-types";
 
 export function renameMongoIdBlog(blog: any
 ): BlogTypeWithId {

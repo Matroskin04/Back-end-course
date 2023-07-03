@@ -1,4 +1,4 @@
-import {RequestWithParams, RequestWithParamsAndBody} from "../types/types";
+import {RequestWithParams, RequestWithParamsAndBody} from "../types/requests-types";
 import {UriIdModel} from "../models/UriModels";
 import {Request, Response} from "express";
 import {ViewCommentModel} from "../models/CommentsModels/ViewCommentModel";

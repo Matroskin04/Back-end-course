@@ -4,8 +4,8 @@ import {ObjectId} from "mongodb";
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
-import {CommentDBType} from "../types/types";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
+import {CommentDBType} from "../types/db-types";
 
 export const commentsService = {
 

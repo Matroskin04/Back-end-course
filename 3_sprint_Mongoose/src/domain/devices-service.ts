@@ -1,10 +1,10 @@
 import {deviceRepository} from "../repositories/device-repository";
-import {DeviceDBType} from "../types/types";
 import {ObjectId} from "mongodb";
 import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
 import {devicesQueryRepository} from "../queryRepository/devices-query-repository";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
+import {DeviceDBType} from "../types/db-types";
 
 export const devicesService = {
 
@@ -16,13 +16,12 @@ export const devicesService = {
         }
 
         const infoDevice: DeviceDBType = {
-            _id: new ObjectId(),
+            _id: payloadToken.deviceId,
             ip,
             title,
-            lastActiveDate: new Date(payloadToken!.iat!).toISOString(), //todo правильный рефакторинг
-            deviceId: payloadToken!.deviceId,
+            lastActiveDate: new Date(payloadToken.iat!).toISOString(),
             userId: userId.toString(),
-            expirationDate: payloadToken!.exp! - payloadToken!.iat!
+            expirationDate: payloadToken.exp! - payloadToken.iat!
         }
 
         await deviceRepository.createNewDevice(infoDevice);

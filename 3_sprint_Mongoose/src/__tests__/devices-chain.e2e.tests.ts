@@ -6,6 +6,8 @@ import {authService} from "../domain/auth-service";
 import {devicesService} from "../domain/devices-service";
 import mongoose from "mongoose";
 
+
+//refresh 30 sec, access - 20 sec
 let refreshToken1: string;
 let refreshToken2: string;
 let deviceId: string;
@@ -81,7 +83,7 @@ describe('devices: /security/devices', () => {
             .set('Cookie', refreshToken1)
             .send({loginOrEmail: 'Sasha123', password: '123qwe'})
             .expect(200);
-        deviceId = responseDevices.body[0].deviceId;
+        deviceId = responseDevices.body[0]._id;
 
         refreshToken1 = response1.headers['set-cookie'][0];
         expect(refreshToken1).not.toBeUndefined();
@@ -146,7 +148,7 @@ describe('devices: /security/devices', () => {
         expect(responseDevices.body).toHaveLength(4);
         expect(responseDevices.body[0].lastActiveDate).not.toBe(lastActiveDate);
 
-        deviceId = responseDevices.body[1].deviceId;
+        deviceId = responseDevices.body[1]._id;
     })
 
     it(`+ DELETE -> '/devices/:id' - should delete device by id; status 204;
@@ -197,8 +199,8 @@ describe('devices: /security/devices', () => {
             .expect(200);
         expect(response3.body).toHaveLength(1);
 
-        //задержка 20 сек, чтобы проверить expired token
-        await new Promise((resolve) => setTimeout(resolve, 20000))
+        //задержка 30 сек, чтобы проверить expired token
+        await new Promise((resolve) => setTimeout(resolve, 30000))
         //refresh token is expired
         await request(app)
             .delete(`/hometask-03/security/devices/${deviceId}`)

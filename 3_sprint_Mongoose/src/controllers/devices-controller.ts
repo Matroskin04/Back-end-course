@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {ViewDeviceModel} from "../models/DevicesModels/ViewDeviceModel";
 import {devicesQueryRepository} from "../queryRepository/devices-query-repository";
 import {devicesService} from "../domain/devices-service";
-import {RequestWithParams} from "../types/types";
+import {RequestWithParams} from "../types/requests-types";
 import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 

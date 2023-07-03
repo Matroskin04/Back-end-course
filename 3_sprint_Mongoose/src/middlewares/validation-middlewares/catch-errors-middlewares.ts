@@ -1,4 +1,4 @@
-import {RequestWithBody} from "../../types/types";
+import {RequestWithBody} from "../../types/requests-types";
 import {CreateBlogModel} from "../../models/BlogsModels/CreateBlogModel";
 import {CreatePostByBlogIdModel, CreatePostModel} from "../../models/PostsModels/CreatePostModel";
 import {validationResult} from "express-validator";

@@ -4,11 +4,11 @@ import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {usersRepository} from "../repositories/users-repository";
 import {emailManager} from "../managers/email-manager";
-import {UserDBType} from "../types/types";
 import {jwtService} from "./jwt-service";
 import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ErrorsTypeService} from "./service-types/responses-types-service";
+import {UserDBType} from "../types/db-types";
 
 export const authService = {
 

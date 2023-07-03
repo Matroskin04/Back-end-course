@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {ViewAuthModel, ViewTokenModel} from "../models/AuthModels/ViewAuthModels";
 import {authService} from "../domain/auth-service";
-import {RequestWithBody} from "../types/types";
+import {RequestWithBody} from "../types/requests-types";
 import {LoginAuthInputModel} from "../models/AuthModels/LoginAuthModels";
 import {devicesService} from "../domain/devices-service";
 import {

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {CommentDBType} from "../types/types";
+import {CommentDBType} from "../types/requests-types";
 import {app} from "../setting";
 import {emailAdapter} from "../adapters/email-adapter";
 import {mongoURL} from "../db/db";
