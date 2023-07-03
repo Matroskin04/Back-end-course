@@ -20,7 +20,7 @@ export const devicesService = {
             ip,
             title,
             deviceId: payloadToken.deviceId,
-            lastActiveDate: new Date(payloadToken.iat!).toISOString(),
+            lastActiveDate: new Date(payloadToken.iat! * 1000).toISOString(),
             userId: userId.toString(),
             expirationDate: payloadToken.exp! - payloadToken.iat!
         }

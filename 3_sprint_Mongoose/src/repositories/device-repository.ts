@@ -1,11 +1,10 @@
-import {DeviceModel, DeviceSchema} from "../db/shemasModelsMongoose/devices-shema-model";
+import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 import {DeviceDBType} from "../types/db-types";
 
 export const deviceRepository = {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 
-        // await DeviceSchema.index( { lastActiveDate: 1 }, { expireAfterSeconds: infoDevice.expirationDate } ); // todo чистка девайсов через индексы? Сделать
         await DeviceModel.create(infoDevice);
         return;
     },
