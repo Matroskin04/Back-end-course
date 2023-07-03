@@ -2,7 +2,7 @@ import {describe} from "node:test";
 import {mongoURL} from "../db/db";
 const request = require("supertest");
 import {app} from "../setting";
-import {UserDBType} from "../types/types";
+import {UserDBType} from "../types/requests-types";
 import mongoose from "mongoose";
 
 let idOfUser: string;

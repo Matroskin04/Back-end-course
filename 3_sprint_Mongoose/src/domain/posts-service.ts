@@ -5,9 +5,9 @@ import {
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
-import {PostDBType} from "../types/types";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
+import {PostDBType} from "../types/db-types";
 
 export function renameMongoIdPost(post: any
 ): PostTypeWithId {

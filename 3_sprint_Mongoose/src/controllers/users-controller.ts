@@ -1,4 +1,4 @@
-import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/types";
+import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/requests-types";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {Response} from "express";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";

@@ -8,8 +8,8 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
-import {UserDBType} from "../types/types";
 import {env} from "../config";
+import {UserDBType} from "../types/db-types";
 
 export function mappingUser(user: any): UserOutPutType {
     return {

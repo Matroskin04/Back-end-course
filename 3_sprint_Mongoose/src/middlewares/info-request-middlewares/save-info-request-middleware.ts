@@ -1,7 +1,7 @@
 import {NextFunction,Response, Request} from "express";
 import {infoRequestService} from "../../domain/info-request-service";
 import {ObjectId} from "mongodb";
-import {InfoRequestDBType} from "../../types/types";
+import {InfoRequestDBType} from "../../types/db-types";
 
 export const saveInfoRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 

@@ -1,8 +1,7 @@
-export type DeviceType = { //todo _id join with deviceId
+export type DeviceType = {
     ip: string
     title: string
     lastActiveDate: string
-    deviceId: string
     userId: string
     expirationDate: number
 }

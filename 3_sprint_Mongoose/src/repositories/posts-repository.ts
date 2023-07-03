@@ -1,7 +1,7 @@
 import {BodyPostType} from "./repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {PostDBType} from "../types/types";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
+import {PostDBType} from "../types/db-types";
 
 
 export const postsRepository = {

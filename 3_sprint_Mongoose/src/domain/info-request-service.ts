@@ -1,5 +1,5 @@
-import {InfoRequestDBType} from "../types/types";
 import {infoRequestRepository} from "../repositories/info-request-repository";
+import {InfoRequestDBType} from "../types/db-types";
 
 export const infoRequestService = {
 

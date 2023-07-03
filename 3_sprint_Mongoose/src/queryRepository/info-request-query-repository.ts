@@ -1,6 +1,6 @@
-import {InfoRequestDBType} from "../types/types";
 import {InfoRequestFilterType} from "./query-repository-types/info-request-types-query-repository";
 import {InfoRequestModel} from "../db/shemasModelsMongoose/info-requests-shema-model";
+import {InfoRequestDBType} from "../types/db-types";
 
 export const infoRequestQueryRepository = {
 

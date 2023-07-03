@@ -4,7 +4,7 @@ import {
     RequestWithParamsAndBody,
     RequestWithParamsAndQuery,
     RequestWithQuery
-} from "../types/types";
+} from "../types/requests-types";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {Response} from "express";
 import {ViewAllPostsModel, ViewPostModel} from "../models/PostsModels/ViewPostModel";
