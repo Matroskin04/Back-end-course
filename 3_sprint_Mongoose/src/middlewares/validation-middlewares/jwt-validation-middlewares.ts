@@ -37,7 +37,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
 
     const device = await devicesQueryRepository.getDeviceById(payloadToken.deviceId)
     if (device?.userId !== payloadToken.userId
-        || device?._id !== payloadToken.deviceId
+        || device?.deviceId !== payloadToken.deviceId
         || device?.lastActiveDate !== new Date(payloadToken.iat!).toISOString()) {
         res.status(401).send('JWT refreshToken inside cookie is invalid');
         return;

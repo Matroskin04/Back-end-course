@@ -16,9 +16,10 @@ export const devicesService = {
         }
 
         const infoDevice: DeviceDBType = {
-            _id: payloadToken.deviceId,
+            _id: new ObjectId(),
             ip,
             title,
+            deviceId: payloadToken.deviceId,
             lastActiveDate: new Date(payloadToken.iat!).toISOString(),
             userId: userId.toString(),
             expirationDate: payloadToken.exp! - payloadToken.iat!
