@@ -5,6 +5,7 @@ export type DeviceType = {
     deviceId: string
     userId: string
     expirationDate: number
+    expireAt?: Date
 }
 
 export type DeviceOutputType = {

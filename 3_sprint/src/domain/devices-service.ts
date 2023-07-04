@@ -16,7 +16,7 @@ export const devicesService = {
             lastActiveDate: new Date(payloadToken!.iat!).toISOString(), //todo правильный рефакторинг
             deviceId: payloadToken!.deviceId,
             userId: userId.toString(),
-            expirationDate: payloadToken!.exp! - payloadToken!.iat!
+            expirationDate: payloadToken!.exp! - payloadToken!.iat!,
         }
 
         await deviceRepository.createNewDevice(infoDevice);
