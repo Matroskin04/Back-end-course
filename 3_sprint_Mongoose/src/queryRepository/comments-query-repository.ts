@@ -7,7 +7,8 @@ import {postsQueryRepository} from "./posts-query-repository";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 
-export const commentsQueryRepository = {
+
+class CommentsQueryRepository  {
 
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 
@@ -17,7 +18,7 @@ export const commentsQueryRepository = {
         }
 
         return mappingComment(comment)
-    },
+    }
 
     async getCommentsOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
 
@@ -47,3 +48,4 @@ export const commentsQueryRepository = {
         }
     }
 }
+export const commentsQueryRepository = new CommentsQueryRepository();

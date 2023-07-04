@@ -8,7 +8,8 @@ import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-qu
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
 
-export const postsQueryRepository = {
+
+class PostsQueryRepository {
 
     async getAllPosts(query: QueryPostModel): Promise<PostPaginationType> {
 
@@ -32,7 +33,7 @@ export const postsQueryRepository = {
             totalCount: countAllPostsSort,
             items: allPostsOnPages.map(p => renameMongoIdPost(p))
         }
-    },
+    }
 
     async getPostsOfBlog(blogId: string, query: QueryBlogModel): Promise<null | PostsOfBlogPaginationType> {
 
@@ -54,7 +55,7 @@ export const postsQueryRepository = {
             totalCount: countAllPostsSort,
             items: allPostsOnPages.map(p => renameMongoIdPost(p))
         }
-    },
+    }
 
     async getSinglePost(id: string): Promise<null | PostTypeWithId> {
 
@@ -66,3 +67,4 @@ export const postsQueryRepository = {
         return renameMongoIdPost(singlePost);
     }
 }
+export const postsQueryRepository = new PostsQueryRepository();

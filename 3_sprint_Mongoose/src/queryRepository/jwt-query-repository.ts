@@ -1,7 +1,8 @@
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {env} from "../config";
 
-export const jwtQueryRepository = {
+
+class JwtQueryRepository {
 
     getPayloadToken(refreshToken: string): JwtPayload | null {
 
@@ -13,3 +14,4 @@ export const jwtQueryRepository = {
         }
     }
 }
+export const jwtQueryRepository = new JwtQueryRepository();

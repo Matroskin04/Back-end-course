@@ -7,7 +7,7 @@ import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
 
 
-export const blogsQueryRepository = {
+class BlogsQueryRepository {
 
     async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> { //
 
@@ -31,7 +31,7 @@ export const blogsQueryRepository = {
             totalCount: countAllBlogsSort,
             items: allBlogsOnPages.map(p => renameMongoIdBlog(p))
         }
-    },
+    }
 
     async getSingleBlog(id: string): Promise<null | BlogTypeWithId> {
 
@@ -43,3 +43,4 @@ export const blogsQueryRepository = {
         return null;
     }
 }
+export const blogsQueryRepository = new BlogsQueryRepository();
