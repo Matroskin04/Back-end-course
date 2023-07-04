@@ -16,6 +16,14 @@ export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
     }
 });
 console.log(DeviceSchema.indexes())
+// DeviceSchema.pre("save", async function(next) {
+//     const id = setTimeout(function() {
+//         const document = await Model.findOne(/* use some unique value with this */);
+//         await document.remove()
+//     }, 3600000);
+//     this.timerId = id;
+//     next();
+// })
 export const DeviceModel = mongoose.model<WithId<DeviceType>>('devices', DeviceSchema);
 //indexes:
 // DeviceSchema.index( { la: 1 }, { expires: '20s' } );
