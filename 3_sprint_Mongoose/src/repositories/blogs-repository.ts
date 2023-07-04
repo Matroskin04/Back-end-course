@@ -4,21 +4,18 @@ import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {BlogDBType, PostDBType} from "../types/db-types";
 
-
-export const blogsRepository = {
-
-
+class BlogsRepository {
     async createBlog(blog: BlogDBType): Promise<void> {
 
         await BlogModel.create(blog);
         return;
-    },
+    }
 
     async createPostByBlogId(post: PostDBType): Promise<void> {
 
         await PostModel.create(post);
         return;
-    },
+    }
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
@@ -31,11 +28,14 @@ export const blogsRepository = {
         })
 
         return result.modifiedCount === 1;
-    },
+    }
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
         const result = await BlogModel.deleteOne({_id: new ObjectId(id)});
         return result.deletedCount === 1;
     }
+
 }
+
+export const blogsRepository = new BlogsRepository();

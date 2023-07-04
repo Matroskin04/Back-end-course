@@ -8,7 +8,8 @@ import {usersService} from "../domain/users-service";
 import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
-export const usersController = {
+
+class UsersController {
 
     async getAllUsers(req: RequestWithQuery<QueryUserModel>,
                       res: Response<ViewAllUsersModels>) {
@@ -20,7 +21,7 @@ export const usersController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async createUser(req: RequestWithBody<CreateUserModel>,
                      res: Response<ViewUserModel>) {
@@ -32,7 +33,7 @@ export const usersController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deleteUser(req: RequestWithParams<UriIdModel>,
                      res: Response<void>) {
@@ -48,3 +49,4 @@ export const usersController = {
         }
     }
 }
+export const usersController = new UsersController();

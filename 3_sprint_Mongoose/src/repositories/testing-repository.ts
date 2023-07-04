@@ -4,7 +4,8 @@ import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 
-export const testingRepository = {
+
+class TestingRepository {
 
     async deleteAllData(): Promise<void> {
 
@@ -17,8 +18,9 @@ export const testingRepository = {
             .then(value => {
                 console.log('OK');
 
-                }, reason => {
+            }, reason => {
                 console.log(reason)
-        });
+            });
     }
 }
+export const testingRepository = new TestingRepository();

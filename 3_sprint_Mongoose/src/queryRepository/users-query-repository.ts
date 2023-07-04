@@ -1,10 +1,10 @@
-import {mappingUser} from "../domain/users-service";
 import {EmailAndLoginTerm, UsersPaginationType} from "./query-repository-types/users-types-query-repository";
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 import {UserDBType} from "../types/db-types";
+import {mappingUser} from "../helpers/functions/users-functions-helpers";
 export const usersQueryRepository = {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {

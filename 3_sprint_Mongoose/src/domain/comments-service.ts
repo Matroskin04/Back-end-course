@@ -7,19 +7,20 @@ import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 import {CommentDBType} from "../types/db-types";
 
-export const commentsService = {
+
+class CommentsService {
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
         await commentsRepository.updateComment(id, idFromToken, content);
         return;
-    },
+    }
 
     async deleteOne(id: string): Promise<void> {
 
         await commentsRepository.deleteComment(id);
         return;
-    },
+    }
 
     async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
 
@@ -48,3 +49,4 @@ export const commentsService = {
         return mappingComment(comment);
     }
 }
+export const commentsService = new CommentsService();

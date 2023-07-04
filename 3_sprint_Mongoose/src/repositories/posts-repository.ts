@@ -4,13 +4,13 @@ import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {PostDBType} from "../types/db-types";
 
 
-export const postsRepository = {
+class PostsRepository {
 
     async createPost(post: PostDBType): Promise<void> {
 
         await PostModel.create(post);
         return;
-    },
+    }
 
     async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {
 
@@ -23,7 +23,7 @@ export const postsRepository = {
         });
 
         return result.modifiedCount === 1;
-    },
+    }
 
     async deleteSinglePost(id: string): Promise<boolean> {
 
@@ -32,3 +32,4 @@ export const postsRepository = {
         return result.deletedCount === 1;
     }
 }
+export const postsRepository = new PostsRepository();

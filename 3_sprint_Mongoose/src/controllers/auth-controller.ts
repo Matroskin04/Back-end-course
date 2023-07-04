@@ -14,7 +14,8 @@ import {jwtService} from "../domain/jwt-service";
 import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../models/AuthModels/PasswordRecoveryFlowAuthModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
-export const authController = {
+
+class AuthController {
 
     async getUserInformation(req: Request, res: Response<ViewAuthModel>) {
 
@@ -31,7 +32,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async loginUser(req: RequestWithBody<LoginAuthInputModel>,
                     res: Response<ViewTokenModel>) {
@@ -55,7 +56,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async registerUser(req: RequestWithBody<RegistrationAuthModel>,
                        res: Response<ViewAllErrorsModels | string>) {
@@ -67,7 +68,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async confirmEmail(req: RequestWithBody<RegisterConfirmAuthModel>,
                        res: Response<ViewAllErrorsModels | string>) {
@@ -79,7 +80,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async resendEmailConfirmation(req: RequestWithBody<RegisterResendConfirmAuthModel>,
                                   res: Response<string>) {
@@ -91,7 +92,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async newRefreshToken(req: Request, res: Response<string | ViewTokenModel>) {
 
@@ -108,7 +109,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async logoutUser(req: Request, res: Response<void>) {
 
@@ -119,7 +120,7 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async passwordRecovery(req: RequestWithBody<PasswordRecoveryAuthModel>, res: Response<string>) {
 
@@ -130,8 +131,8 @@ export const authController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
-    
+    }
+
     async saveNewPassword(req: RequestWithBody<NewPasswordAuthModel>, res: Response<string | ViewAllErrorsModels>) {
 
         try {
@@ -145,3 +146,4 @@ export const authController = {
         }
     }
 }
+export const authController = new AuthController();

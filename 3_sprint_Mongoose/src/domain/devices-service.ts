@@ -6,7 +6,8 @@ import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {DeviceDBType} from "../types/db-types";
 
-export const devicesService = {
+
+class DevicesService {
 
     async createNewDevice(ip: string, title: string, userId: ObjectId, refreshToken: string): Promise<void> {
 
@@ -27,7 +28,7 @@ export const devicesService = {
 
         await deviceRepository.createNewDevice(infoDevice);
         return;
-    },
+    }
 
     async deleteDevicesExcludeCurrent(refreshToken: string): Promise<void | false> {
 
@@ -42,7 +43,7 @@ export const devicesService = {
         }
 
         return;
-    },
+    }
 
     async deleteDeviceById(deviceId: string, userId: string): Promise<ResponseTypeService> {
 
@@ -57,7 +58,7 @@ export const devicesService = {
         }
 
         return createResponseService(204, 'Successfully deleted');
-    },
+    }
 
     async deleteDeviceByRefreshToken(refreshToken: string): Promise<boolean> {
 
@@ -67,7 +68,7 @@ export const devicesService = {
         }
 
         return await deviceRepository.deleteDeviceById(payloadToken.deviceId);
-    },
+    }
 
     async updateLastActiveDate(deviceId: string, newDateNum: number): Promise<boolean> {
 
@@ -75,3 +76,4 @@ export const devicesService = {
         return await deviceRepository.updateLastActiveDate(deviceId, newDateISOS);
     }
 }
+export const devicesService = new DevicesService();

@@ -1,25 +1,26 @@
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 import {DeviceDBType} from "../types/db-types";
 
-export const deviceRepository = {
+
+class DeviceRepository {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 
         await DeviceModel.create(infoDevice);
         return;
-    },
+    }
 
     async deleteDevicesExcludeCurrent(deviceId: string): Promise<boolean> {
 
         const result = await DeviceModel.deleteMany({deviceId: {$ne: deviceId}});
         return result.deletedCount > 0;
-    },
+    }
 
     async deleteDeviceById(deviceId: string): Promise<boolean> {
 
         const result = await DeviceModel.deleteOne({deviceId});
         return result.deletedCount === 1;
-    },
+    }
 
     async updateLastActiveDate(deviceId: string, newDate: string): Promise<boolean> {
 
@@ -27,3 +28,4 @@ export const deviceRepository = {
         return result.modifiedCount === 1;
     }
 }
+export const deviceRepository = new DeviceRepository();

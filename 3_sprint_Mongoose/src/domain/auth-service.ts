@@ -10,7 +10,8 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ErrorsTypeService} from "./service-types/responses-types-service";
 import {UserDBType} from "../types/db-types";
 
-export const authService = {
+
+class AuthService {
 
     async registerUser(email: string, login: string, password: string): Promise<void> {
 
@@ -37,7 +38,7 @@ export const authService = {
 
         return;
 
-    },
+    }
 
     async confirmEmail(userId: ObjectId): Promise<void> {
 
@@ -47,7 +48,7 @@ export const authService = {
         }
 
         return;
-    },
+    }
 
     async resendConfirmationEmailMessage(userId: ObjectId, email: string): Promise<void> {
 
@@ -61,7 +62,7 @@ export const authService = {
 
         await emailManager.sendEmailConfirmationMessage(email, newCode);
         return;
-    },
+    }
 
     async loginUser(loginOrEmail: string, password: string): Promise<ARTokensAndUserId | null> {
 
@@ -78,7 +79,7 @@ export const authService = {
             refreshToken,
             userId: user._id
         }
-    },
+    }
 
     async getUserInformation(userId: ObjectId): Promise<UserInformation | null> {
 
@@ -93,7 +94,7 @@ export const authService = {
             login: user.login,
             userId: user._id.toString()
         }
-    },
+    }
 
     async sendEmailPasswordRecovery(email: string): Promise<void> {
 
@@ -107,7 +108,7 @@ export const authService = {
         await emailManager.sendEmailPasswordRecovery(email, newCode);
 
         return;
-    },
+    }
 
     async saveNewPassword(newPassword: string, recoveryCode: string): Promise<true | ErrorsTypeService> {
 
@@ -126,3 +127,4 @@ export const authService = {
         return true;
     }
 }
+export const authService = new AuthService();

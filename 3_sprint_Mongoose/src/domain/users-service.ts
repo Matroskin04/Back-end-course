@@ -10,16 +10,10 @@ import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
 import {env} from "../config";
 import {UserDBType} from "../types/db-types";
+import {mappingUser} from "../helpers/functions/users-functions-helpers";
 
-export function mappingUser(user: any): UserOutPutType {
-    return {
-        id: user._id,
-        login: user.login,
-        email: user.email,
-        createdAt: user.createdAt
-    }
-}
-export const usersService = {
+
+class UsersService {
 
     async createUser(bodyUser: BodyUserType): Promise<UserOutPutType> {
 
@@ -44,17 +38,17 @@ export const usersService = {
 
         await usersRepository.createUser(user);
         return mappingUser(user);
-    },
+    }
 
     async deleteSingleUser(id: string): Promise<boolean> {
 
         return await usersRepository.deleteSingleUser(id);
-    },
+    }
 
     async _generateHash(password: string): Promise<string> {
 
         return await bcrypt.hash(password, 10)
-    },
+    }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | false> {
 
@@ -64,7 +58,7 @@ export const usersService = {
         }
 
         return await bcrypt.compare(password, user.passwordHash) ? user : false;
-    },
+    }
 
     async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
 
@@ -77,3 +71,4 @@ export const usersService = {
         }
     }
 }
+export const usersService = new UsersService();

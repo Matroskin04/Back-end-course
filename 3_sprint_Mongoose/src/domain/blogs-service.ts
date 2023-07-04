@@ -7,24 +7,14 @@ import {
     BodyPostByBlogIdType,
     PostTypeWithId
 } from "../repositories/repositories-types/posts-types-repositories";
-import {renameMongoIdPost} from "./posts-service";
 import {blogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {BlogDBType, PostDBType} from "../types/db-types";
+import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
+import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
 
-export function renameMongoIdBlog(blog: any
-): BlogTypeWithId {
-    return {
-        id: blog._id,
-        name: blog.name,
-        description: blog.description,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership
-    }
-}
 
-export const blogsService = {
+class BlogsService {
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
@@ -37,7 +27,7 @@ export const blogsService = {
 
         await blogsRepository.createBlog(blog);
         return renameMongoIdBlog(blog);
-    },
+    }
 
     async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
         //checking the existence of a blog
@@ -58,15 +48,16 @@ export const blogsService = {
 
         await blogsRepository.createPostByBlogId(post);
         return renameMongoIdPost(post)
-    },
+    }
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
         return await blogsRepository.updateBlog(bodyBlog, id);
-    },
+    }
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
         return await blogsRepository.deleteSingleBlog(id);
     }
 }
+export const blogsService = new BlogsService();

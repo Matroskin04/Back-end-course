@@ -20,7 +20,8 @@ import {HTTP_STATUS_CODE} from "../helpers/http-status";
 import {commentsService} from "../domain/comments-service";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 
-export const postsController = {
+
+class PostsController {
 
     async getAllPosts(req: RequestWithQuery<QueryPostModel>,
                       res: Response<ViewAllPostsModel>) {
@@ -31,7 +32,8 @@ export const postsController = {
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
-        }    },
+        }
+    }
 
     async getPostById(req: RequestWithParams<UriIdModel>,
                       res: Response<ViewPostModel>) {
@@ -45,7 +47,7 @@ export const postsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async getAllCommentsOfPost(req: RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
                                res: Response<ViewAllCommentsOfPostModel>) {
@@ -58,7 +60,7 @@ export const postsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async createPost(req: RequestWithBody<CreatePostModel>,
                      res: Response<ViewPostModel | ViewAllErrorsModels>) {
@@ -72,7 +74,7 @@ export const postsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async createCommentByPostId(req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
                                 res: Response<ViewCommentOfPostModel>) {
@@ -86,7 +88,7 @@ export const postsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async updatePost(req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
                      res: Response<string | ViewAllErrorsModels>) {
@@ -100,7 +102,7 @@ export const postsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deletePost(req: RequestWithParams<UriIdModel>,
                      res: Response<void>) {
@@ -116,3 +118,5 @@ export const postsController = {
         }
     }
 }
+
+export const postsController = new PostsController();

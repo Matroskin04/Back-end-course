@@ -6,7 +6,8 @@ import {RequestWithParams} from "../types/requests-types";
 import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
-export const devicesController = {
+
+class DevicesController {
 
     async getAllDevices(req: Request, res: Response<ViewDeviceModel>) {
 
@@ -17,7 +18,7 @@ export const devicesController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deleteDevicesExcludeCurrent(req: Request, res: Response<string>) {
 
@@ -28,7 +29,7 @@ export const devicesController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<string>) {
 
@@ -41,3 +42,4 @@ export const devicesController = {
         }
     }
 }
+export const devicesController = new DevicesController();

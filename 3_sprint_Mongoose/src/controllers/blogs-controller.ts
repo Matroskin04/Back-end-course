@@ -19,7 +19,8 @@ import {PostTypeWithId} from "../repositories/repositories-types/posts-types-rep
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
-export const blogsController = {
+
+class BlogsController {
 
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
                       res: Response<ViewAllBlogsModel>) {
@@ -31,7 +32,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async getBlogById(req: RequestWithParams<UriIdModel>,
                       res: Response<ViewBlogModel>) {
@@ -44,7 +45,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async getAllPostsOfBlog(req: RequestWithParamsAndQuery<UriBlogIdModel, QueryBlogModel>,
                             res: Response<ViewPostsOfBlogModel>) {
@@ -57,7 +58,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async createBlog(req: RequestWithBody<CreateBlogModel>,
                      res: Response<ViewBlogModel>) {
@@ -69,7 +70,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async createPostByBlogId(req: RequestWithParamsAndBody<UriBlogIdModel, CreatePostByBlogIdModel>,
                              res: Response<PostTypeWithId>) {
@@ -82,7 +83,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async updateBlog(req: RequestWithParamsAndBody<UriIdModel, UpdateBlogModel>,
                      res: Response<void>) {
@@ -96,7 +97,7 @@ export const blogsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deleteBlog(req: RequestWithParams<UriIdModel>, res: Response<void>) {
 
@@ -111,3 +112,4 @@ export const blogsController = {
         }
     }
 }
+export const blogsController = new BlogsController();

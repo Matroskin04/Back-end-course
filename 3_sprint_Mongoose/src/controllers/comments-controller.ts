@@ -7,7 +7,8 @@ import {UpdateCommentModel} from "../models/CommentsModels/UpdateCommentModel";
 import {commentsService} from "../domain/comments-service";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 
-export const commentsController = {
+
+class CommentsController {
 
     async getCommentById(req: RequestWithParams<UriIdModel>,
                          res: Response<ViewCommentModel>) {
@@ -21,7 +22,7 @@ export const commentsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async updateComment(req: RequestWithParamsAndBody<UriIdModel, UpdateCommentModel>,
                         res: Response<void>) {
@@ -33,7 +34,7 @@ export const commentsController = {
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
         }
-    },
+    }
 
     async deleteComment(req: Request, res: Response<void>) {
 
@@ -46,3 +47,4 @@ export const commentsController = {
         }
     }
 }
+export const commentsController = new CommentsController();

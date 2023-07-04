@@ -1,10 +1,10 @@
-import {renameMongoIdBlog} from "../domain/blogs-service";
 import {BlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
+import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
 
 
 export const blogsQueryRepository = {
