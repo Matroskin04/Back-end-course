@@ -18,6 +18,16 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+// app.use(async (req, res, next: NextFunction) => { //todo АВТОУДАЛЕНИЕ
+//        setInterval(async function () {
+//             const a = await DeviceModel.deleteMany({expireAt: {$lte: Date.now() - 10000}});
+//             console.log(a.deletedCount)
+//         }, 20000)
+//     next()
+//     }
+// )
+
+
 app.use('/hometask-03/blogs', blogsRoutes);
 app.use('/hometask-03/posts', postsRoutes);
 app.use('/hometask-03/users', usersRoutes);

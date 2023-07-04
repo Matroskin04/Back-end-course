@@ -5,25 +5,20 @@ import {DeviceType} from "../../repositories/repositories-types/devices-types-re
 export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
     ip: {type: String, required: true},
     title: {type: String, required: true},
-    lastActiveDate: {type: String, required: true}, // todo чистка девайсов? Сделать
+    lastActiveDate: {type: String, required: true},
     deviceId: {type: String, required: true},
     userId: {type: String, required: true},
     expirationDate: {type: Number, required: true},
-    expireAt: {
-        type: Date,
-        default: Date.now,
-        index: { expires: '1m' },
-    }
+    expireAt: {type: Number, default: Date.now, required: true} //number or date
 });
-console.log(DeviceSchema.indexes())
+export const DeviceModel = mongoose.model<WithId<DeviceType>>('devices', DeviceSchema);
+
 // DeviceSchema.pre("save", async function(next) {
-//     const id = setTimeout(function() {
-//         const document = await Model.findOne(/* use some unique value with this */);
-//         await document.remove()
-//     }, 3600000);
-//     this.timerId = id;
+//
+//     setTimeout(async function() {
+//         const a = await DeviceModel.deleteMany({ expireAt: {$lte: Date.now()} });
+//         console.log(a.deletedCount)
+//     }, 10000);
+//
 //     next();
 // })
-export const DeviceModel = mongoose.model<WithId<DeviceType>>('devices', DeviceSchema);
-//indexes:
-// DeviceSchema.index( { la: 1 }, { expires: '20s' } );
