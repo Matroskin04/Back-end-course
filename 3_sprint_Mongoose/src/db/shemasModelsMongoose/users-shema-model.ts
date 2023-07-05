@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import {WithId} from "mongodb";
-import {UserType} from "../../repositories/repositories-types/users-types-repositories";
+import {UserDBType} from "../../types/db-types";
 
-export const UserSchema = new mongoose.Schema<WithId<UserType>>({
+export const UserSchema = new mongoose.Schema<UserDBType>({
     login: {type: String, required: true},
     email: {type: String, required: true},
     createdAt: {type: String, required: true},
@@ -17,4 +16,4 @@ export const UserSchema = new mongoose.Schema<WithId<UserType>>({
         expirationDate: {type: Date, required: true},
     }
 });
-export const UserModel = mongoose.model<WithId<UserType>>('users', UserSchema);
+export const UserModel = mongoose.model<UserDBType>('users', UserSchema);

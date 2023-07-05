@@ -9,7 +9,7 @@ export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
     deviceId: {type: String, required: true},
     userId: {type: String, required: true},
     expirationDate: {type: Number, required: true},
-    expireAt: {type: Number, default: Date.now, required: true} //number or date
+    // expireAt: {type: Number, default: Date.now, required: true} //number or date
 });
 export const DeviceModel = mongoose.model<WithId<DeviceType>>('devices', DeviceSchema);
 

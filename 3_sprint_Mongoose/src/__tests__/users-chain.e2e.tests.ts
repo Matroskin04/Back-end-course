@@ -2,8 +2,8 @@ import {describe} from "node:test";
 import {mongoURL} from "../db/db";
 const request = require("supertest");
 import {app} from "../setting";
-import {UserDBType} from "../types/requests-types";
 import mongoose from "mongoose";
+import {UserDBType} from "../types/db-types";
 
 let idOfUser: string;
 const arrayOfUser: Array<UserDBType> = [];

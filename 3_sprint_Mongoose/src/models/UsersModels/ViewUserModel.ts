@@ -1,11 +1,11 @@
-import {UserOutPutType} from "../../repositories/repositories-types/users-types-repositories";
+import {UserOutputType} from "../../repositories/repositories-types/users-types-repositories";
 
-export type ViewUserModel = UserOutPutType
+export type ViewUserModel = UserOutputType
 
 export type ViewAllUsersModels = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: Array<UserOutPutType>
+    items: Array<UserOutputType>
 }

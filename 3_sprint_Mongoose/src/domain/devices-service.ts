@@ -72,7 +72,7 @@ class DevicesService {
 
     async updateLastActiveDate(deviceId: string, newDateNum: number): Promise<boolean> {
 
-        const newDateISOS = new Date(newDateNum).toISOString()
+        const newDateISOS = new Date(newDateNum * 1000).toISOString()
         return await deviceRepository.updateLastActiveDate(deviceId, newDateISOS);
     }
 }

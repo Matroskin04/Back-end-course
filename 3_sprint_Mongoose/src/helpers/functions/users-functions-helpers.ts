@@ -1,6 +1,6 @@
-import {UserOutPutType} from "../../repositories/repositories-types/users-types-repositories";
+import {UserOutputType} from "../../repositories/repositories-types/users-types-repositories";
 
-export function mappingUser(user: any): UserOutPutType {
+export function mappingUser(user: any): UserOutputType {
     return {
         id: user._id,
         login: user.login,

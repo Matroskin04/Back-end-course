@@ -83,7 +83,7 @@ describe('devices: /security/devices', () => {
             .set('Cookie', refreshToken1)
             .send({loginOrEmail: 'Sasha123', password: '123qwe'})
             .expect(200);
-        deviceId = responseDevices.body[0]._id;
+        deviceId = responseDevices.body[0].deviceId;
 
         refreshToken1 = response1.headers['set-cookie'][0];
         expect(refreshToken1).not.toBeUndefined();
@@ -148,7 +148,7 @@ describe('devices: /security/devices', () => {
         expect(responseDevices.body).toHaveLength(4);
         expect(responseDevices.body[0].lastActiveDate).not.toBe(lastActiveDate);
 
-        deviceId = responseDevices.body[1]._id;
+        deviceId = responseDevices.body[1].deviceId;
     })
 
     it(`+ DELETE -> '/devices/:id' - should delete device by id; status 204;
@@ -255,7 +255,7 @@ describe('devices: /security/devices', () => {
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
             .expect(429);
 
-        await new Promise( (resolve) => setTimeout( resolve, 8000));
+        await new Promise( (resolve) => setTimeout( resolve, 10000));
         //+7
         await request(app)
             .post(`/hometask-03/auth/login`)

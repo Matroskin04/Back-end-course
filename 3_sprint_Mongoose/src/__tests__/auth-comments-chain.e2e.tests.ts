@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {CommentDBType} from "../types/requests-types";
 import {app} from "../setting";
 import {emailAdapter} from "../adapters/email-adapter";
 import {mongoURL} from "../db/db";
+import {CommentDBType} from "../types/db-types";
 
 
 let accessToken: string;
@@ -548,7 +548,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .expect(200)
         expect(refreshResponse.headers["set-cookie"]).not.toBe(refreshToken);
         expect(refreshResponse.body.accessToken).not.toBe(accessToken);
-
+        console.log(refreshResponse.headers["set-cookie"] === refreshToken)
         refreshToken = refreshResponse.headers["set-cookie"][0];
     })
 
@@ -574,32 +574,3 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .expect(204);
     })
 })
-
-// describe(`comments All operation: /posts/{id}/comments + /comments`, () => {
-//
-//     it(`Addition: + POST -> '/blogs' should create new blog, status 201
-//                         + POST -> '/posts' should create new post, status 201`, async () => {
-//
-//         const responseBlog = await request(app)
-//             .post(`/hometask-02/blogs`)
-//             .auth('admin', 'qwerty')
-//             .send({
-//                 name: "Blog2-ITforYOU",
-//                 description: "some information",
-//                 websiteUrl: "https://X_KNUz73OyaQyC5mFWT3tOVUms1bLawUwAXd2Utcv.c8NL3uQvj28pqV5f2iG.0KYjO0bYH6EvRIMcomgzMCgHFyXedF"
-//             }).expect(201);
-//
-//         const responsePost = await request(app)
-//             .post(`/hometask-02/posts`)
-//             .auth('admin', 'qwerty')
-//             .send({
-//                 title: "post 1",
-//                 shortDescription: "something interesting",
-//                 content: "content of the post",
-//                 blogId: responseBlog.body.id
-//             }).expect(201);
-//
-//         idOfPost = responsePost.body.id;
-//         console.log(idOfPost)
-//     })
-// })

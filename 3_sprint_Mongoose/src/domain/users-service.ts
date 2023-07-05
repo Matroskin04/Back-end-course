@@ -1,7 +1,7 @@
 import {usersRepository} from "../repositories/users-repository";
 import {
     BodyUserType,
-    UserOutPutType,
+    UserOutputType,
 } from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcryptjs";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
@@ -15,7 +15,7 @@ import {mappingUser} from "../helpers/functions/users-functions-helpers";
 
 class UsersService {
 
-    async createUser(bodyUser: BodyUserType): Promise<UserOutPutType> {
+    async createUser(bodyUser: BodyUserType): Promise<UserOutputType> {
 
         const passHash = await this._generateHash(bodyUser.password);
 
