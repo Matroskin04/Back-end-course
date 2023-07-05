@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import {WithId} from "mongodb";
-import {CommentType} from "../../repositories/repositories-types/comments-types-repositories";
+import {CommentDBType} from "../../types/db-types";
 
-export const CommentSchema = new mongoose.Schema<WithId<CommentType>>({
+export const CommentSchema = new mongoose.Schema<CommentDBType>({
     content: {type: String, required: true},
     commentatorInfo: {
         userId: {type: String, required: true},
@@ -11,4 +10,4 @@ export const CommentSchema = new mongoose.Schema<WithId<CommentType>>({
     createdAt: {type: String, required: true},
     postId: {type: String, required: true},
 });
-export const CommentModel = mongoose.model<WithId<CommentType>>('comments', CommentSchema);
+export const CommentModel = mongoose.model<CommentDBType>('comments', CommentSchema);

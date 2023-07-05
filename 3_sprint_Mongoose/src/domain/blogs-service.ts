@@ -18,12 +18,14 @@ class BlogsService {
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
-        const blog: BlogDBType = {
-            ...bodyBlog,
-            _id: new ObjectId(),
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        }
+        const blog = new BlogDBType(
+            new ObjectId(),
+            bodyBlog.name,
+            bodyBlog.description,
+            bodyBlog.websiteUrl,
+            new Date().toISOString(),
+            false
+        )
 
         await blogsRepository.createBlog(blog);
         return renameMongoIdBlog(blog);
@@ -31,20 +33,20 @@ class BlogsService {
 
     async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
         //checking the existence of a blog
-        const hasCollectionBlogId = await blogsQueryRepository.getSingleBlog(blogId);
-        if (!hasCollectionBlogId) {
+        const blog = await blogsQueryRepository.getSingleBlog(blogId);
+        if (!blog) {
             return null
         }
 
-        const post: PostDBType = {
-            _id: new ObjectId(),
-            title: body.title,
-            shortDescription: body.shortDescription,
-            content: body.content,
-            blogId: blogId,
-            blogName: hasCollectionBlogId.name,
-            createdAt: new Date().toISOString()
-        }
+        const post = new PostDBType(
+            new ObjectId(),
+            body.title,
+            body.shortDescription,
+            body.content,
+            blogId,
+            blog.name,
+            new Date().toISOString()
+        )
 
         await blogsRepository.createPostByBlogId(post);
         return renameMongoIdPost(post)
@@ -60,4 +62,5 @@ class BlogsService {
         return await blogsRepository.deleteSingleBlog(id);
     }
 }
+
 export const blogsService = new BlogsService();

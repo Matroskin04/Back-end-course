@@ -34,19 +34,20 @@ class CommentsService {
             return null;
         }
 
-        const comment: CommentDBType = {
-            _id: new ObjectId(),
-            content: body.content,
-            commentatorInfo: {
+        const comment = new CommentDBType(
+            new ObjectId(),
+            body.content,
+            {
                 userId: userId.toString(),
                 userLogin: user.login
             },
-            createdAt: new Date().toISOString(),
-            postId: postId
-        }
+            new Date().toISOString(),
+            postId
+        )
 
         await commentsRepository.createCommentByPostId(comment);
         return mappingComment(comment);
     }
 }
+
 export const commentsService = new CommentsService();

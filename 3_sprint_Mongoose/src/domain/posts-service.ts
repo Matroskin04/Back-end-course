@@ -16,20 +16,23 @@ class PostsService {
 
         const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
         if (!blog) {
-            return createResponseService(400, {errorsMessages: [{
+            return createResponseService(400, {
+                errorsMessages: [{
                     message: "Such blogId is not found",
-                    field: "blogId" }] })
+                    field: "blogId"
+                }]
+            })
         }
 
-        const post: PostDBType = {
-            _id: new ObjectId(),
-            title: body.title,
-            shortDescription: body.shortDescription,
-            content: body.content,
-            blogId: body.blogId,
-            blogName: blog!.name,
-            createdAt: new Date().toISOString()
-        };
+        const post = new PostDBType(
+            new ObjectId(),
+            body.title,
+            body.shortDescription,
+            body.content,
+            body.blogId,
+            blog.name,
+            new Date().toISOString()
+        )
 
         await postsRepository.createPost(post);
         const postMapped = renameMongoIdPost(post);
@@ -41,9 +44,12 @@ class PostsService {
 
         const blog = await blogsQueryRepository.getSingleBlog(body.blogId);
         if (!blog) {
-            return createResponseService(400, {errorsMessages: [{
+            return createResponseService(400, {
+                errorsMessages: [{
                     message: "Such blogId is not found",
-                    field: "blogId" }] })
+                    field: "blogId"
+                }]
+            })
         }
 
         const result = await postsRepository.updatePost(body, id);
@@ -58,4 +64,5 @@ class PostsService {
         return await postsRepository.deleteSinglePost(id);
     }
 }
+
 export const postsService = new PostsService();

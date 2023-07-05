@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import {WithId} from "mongodb";
-import {PostType} from "../../repositories/repositories-types/posts-types-repositories";
+import {PostDBType} from "../../types/db-types";
 
-export const PostSchema = new mongoose.Schema<WithId<PostType>>({
+export const PostSchema = new mongoose.Schema<PostDBType>({
     title: {type: String, required: true},
     shortDescription: {type: String, required: true},
     content: {type: String, required: true},
@@ -10,4 +9,4 @@ export const PostSchema = new mongoose.Schema<WithId<PostType>>({
     blogName: {type: String, required: true},
     createdAt: {type: String, required: true}
 });
-export const PostModel = mongoose.model<WithId<PostType>>('posts', PostSchema);
+export const PostModel = mongoose.model<PostDBType>('posts', PostSchema);

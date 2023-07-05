@@ -1,7 +1,4 @@
 import {ObjectId} from "mongodb";
-import {PostType} from "../repositories/repositories-types/posts-types-repositories";
-import {CommentType} from "../repositories/repositories-types/comments-types-repositories";
-import {BlogType} from "../repositories/repositories-types/blogs-types-repositories";
 import {DeviceType} from "../repositories/repositories-types/devices-types-repositories";
 
 export class UserDBType {
@@ -22,11 +19,44 @@ export class UserDBType {
     }
 }
 
-export type PostDBType = PostType & { _id: ObjectId };
+export class PostDBType {
+    constructor(public _id: ObjectId,
+                public title: string,
+                public shortDescription: string,
+                public content: string,
+                public blogId: string,
+                public blogName: string,
+                public createdAt: string
+    ) {
+    }
+}
 
-export type CommentDBType = CommentType & { _id: ObjectId };
+export class CommentDBType {
+    constructor(
+        public _id: ObjectId,
+        public content: string,
+        public commentatorInfo: {
+            userId: string
+            userLogin: string
+        },
+        public createdAt: string,
+        public postId: string
+    ) {
+    }
+}
 
-export type BlogDBType = BlogType & { _id: ObjectId };
+
+export class BlogDBType {
+    constructor(
+        public _id: ObjectId,
+        public name: string,
+        public description: string,
+        public websiteUrl: string,
+        public createdAt: string,
+        public isMembership: boolean
+    ) {}
+}
+
 
 export type DeviceDBType = DeviceType & { _id: ObjectId }
 

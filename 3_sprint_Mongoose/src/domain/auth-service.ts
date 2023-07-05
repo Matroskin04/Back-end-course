@@ -16,22 +16,21 @@ class AuthService {
     async registerUser(email: string, login: string, password: string): Promise<void> {
 
         const passwordHash = await usersService._generateHash(password);
-        const user: UserDBType = {
-            _id: new ObjectId(),
+        const user = new UserDBType(
+            new ObjectId(),
             login,
             email,
             passwordHash,
-            createdAt: new Date().toISOString(),
-            emailConfirmation: {
+            new Date().toISOString(),
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 5, seconds: 20}),
                 isConfirmed: false
             },
-            passwordRecovery: {
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: new Date()
-            }
-        }
+            })
 
         await usersRepository.createUser(user);
         await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
@@ -127,4 +126,5 @@ class AuthService {
         return true;
     }
 }
+
 export const authService = new AuthService();
