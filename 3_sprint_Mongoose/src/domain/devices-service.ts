@@ -16,15 +16,15 @@ class DevicesService {
             throw new Error('Refresh token is invalid.')
         }
 
-        const infoDevice: DeviceDBType = {
-            _id: new ObjectId(),
+        const infoDevice = new DeviceDBType(
+            new ObjectId(),
             ip,
             title,
-            deviceId: payloadToken.deviceId,
-            lastActiveDate: new Date(payloadToken.iat! * 1000).toISOString(),
-            userId: userId.toString(),
-            expirationDate: payloadToken.exp! - payloadToken.iat!
-        }
+            new Date(payloadToken.iat! * 1000).toISOString(),
+            payloadToken.deviceId,
+            userId.toString(),
+            payloadToken.exp! - payloadToken.iat!
+        )
 
         await deviceRepository.createNewDevice(infoDevice);
         return;

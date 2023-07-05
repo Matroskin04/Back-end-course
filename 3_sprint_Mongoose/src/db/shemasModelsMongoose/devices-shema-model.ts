@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import {WithId} from "mongodb";
-import {DeviceType} from "../../repositories/repositories-types/devices-types-repositories";
+import {DeviceDBType} from "../../types/db-types";
 
-export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
+export const DeviceSchema = new mongoose.Schema<DeviceDBType>({
     ip: {type: String, required: true},
     title: {type: String, required: true},
     lastActiveDate: {type: String, required: true},
@@ -11,7 +10,7 @@ export const DeviceSchema = new mongoose.Schema<WithId<DeviceType>>({
     expirationDate: {type: Number, required: true},
     // expireAt: {type: Number, default: Date.now, required: true} //number or date
 });
-export const DeviceModel = mongoose.model<WithId<DeviceType>>('devices', DeviceSchema);
+export const DeviceModel = mongoose.model<DeviceDBType>('devices', DeviceSchema);
 
 // DeviceSchema.pre("save", async function(next) {
 //

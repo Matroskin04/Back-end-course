@@ -1,5 +1,4 @@
 import {ObjectId} from "mongodb";
-import {DeviceType} from "../repositories/repositories-types/devices-types-repositories";
 
 export class UserDBType {
     constructor(public _id: ObjectId,
@@ -54,9 +53,20 @@ export class BlogDBType {
         public websiteUrl: string,
         public createdAt: string,
         public isMembership: boolean
-    ) {}
+    ) {
+    }
 }
 
 
-export type DeviceDBType = DeviceType & { _id: ObjectId }
+export class DeviceDBType {
+    constructor(
+        public _id: ObjectId,
+        public ip: string,
+        public title: string,
+        public lastActiveDate: string,
+        public deviceId: string,
+        public userId: string,
+        public expirationDate: number
+    ) {}
+}
 
