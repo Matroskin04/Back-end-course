@@ -10,37 +10,37 @@ export const blogsRoutes = Router();
 
 
 blogsRoutes.get('/',
-    blogsController.getAllBlogs)
+    blogsController.getAllBlogs.bind(blogsController))
 
 blogsRoutes.get('/:id',
     validateFormatOfUrlParams,
-    blogsController.getBlogById)
+    blogsController.getBlogById.bind(blogsController))
 
 blogsRoutes.get('/:blogId/posts',
     validateFormatOfUrlParams,
-    blogsController.getAllPostsOfBlog)
+    blogsController.getAllPostsOfBlog.bind(blogsController))
 
 blogsRoutes.post('/',
     authorization,
     validateBodyOfBlog,
     getErrors,
-    blogsController.createBlog)
+    blogsController.createBlog.bind(blogsController))
 
 blogsRoutes.post('/:blogId/posts',
     validateFormatOfUrlParams,
     authorization,
     checkErrorsPostByBlogId,
     getErrors,
-    blogsController.createPostByBlogId)
+    blogsController.createPostByBlogId.bind(blogsController))
 
 blogsRoutes.put('/:id',
     validateFormatOfUrlParams,
     authorization,
     validateBodyOfBlog,
     getErrors,
-    blogsController.updateBlog)
+    blogsController.updateBlog.bind(blogsController))
 
 blogsRoutes.delete('/:id',
     validateFormatOfUrlParams,
     authorization,
-    blogsController.deleteBlog)
+    blogsController.deleteBlog.bind(blogsController))

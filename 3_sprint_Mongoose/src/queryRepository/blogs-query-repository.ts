@@ -7,7 +7,7 @@ import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
 
 
-class BlogsQueryRepository {
+export class BlogsQueryRepository {
 
     async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> { //
 
@@ -43,4 +43,3 @@ class BlogsQueryRepository {
         return null;
     }
 }
-export const blogsQueryRepository = new BlogsQueryRepository();

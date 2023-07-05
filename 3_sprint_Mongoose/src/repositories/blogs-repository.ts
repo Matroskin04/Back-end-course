@@ -4,7 +4,7 @@ import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {BlogDBType, PostDBType} from "../types/db-types";
 
-class BlogsRepository {
+export class BlogsRepository {
     async createBlog(blog: BlogDBType): Promise<void> {
 
         await BlogModel.create(blog);
@@ -37,5 +37,3 @@ class BlogsRepository {
     }
 
 }
-
-export const blogsRepository = new BlogsRepository();
