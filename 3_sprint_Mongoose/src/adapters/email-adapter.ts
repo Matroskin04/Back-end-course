@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 const myPass = process.env.EMAILPASS
-export const emailAdapter = {
+export class EmailAdapter {
 
     async sendEmailConfirmationMessage(email: string, subject: string, message: string): Promise<boolean> {
         try {
@@ -25,7 +25,7 @@ export const emailAdapter = {
             console.log('emailAdapter => sendEmailConfirmation => error:', e)
             return false
         }
-    },
+    }
 
     async sendEmailPasswordRecovery(email: string, subject: string, message: string): Promise<boolean> {
 

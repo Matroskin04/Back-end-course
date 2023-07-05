@@ -1,24 +1,26 @@
 import {DeviceRepository} from "../repositories/device-repository";
 import {ObjectId} from "mongodb";
-import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {DeviceDBType} from "../types/db-types";
 import {DevicesQueryRepository} from "../queryRepository/devices-query-repository";
+import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
 
 
 export class DevicesService {
 
-    devicesQueryRepository: DevicesQueryRepository
-    deviceRepository: DeviceRepository
+    jwtQueryRepository: JwtQueryRepository;
+    devicesQueryRepository: DevicesQueryRepository;
+    deviceRepository: DeviceRepository;
     constructor() {
-        this.devicesQueryRepository = new DevicesQueryRepository()
-        this.deviceRepository = new DeviceRepository()
+        this.jwtQueryRepository = new JwtQueryRepository();
+        this.devicesQueryRepository = new DevicesQueryRepository();
+        this.deviceRepository = new DeviceRepository();
     }
 
     async createNewDevice(ip: string, title: string, userId: ObjectId, refreshToken: string): Promise<void> {
 
-        const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+        const payloadToken = this.jwtQueryRepository.getPayloadToken(refreshToken);
         if(!payloadToken) {
             throw new Error('Refresh token is invalid.')
         }
@@ -39,7 +41,7 @@ export class DevicesService {
 
     async deleteDevicesExcludeCurrent(refreshToken: string): Promise<void | false> {
 
-        const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+        const payloadToken = this.jwtQueryRepository.getPayloadToken(refreshToken);
         if (!payloadToken) {
             throw new Error('Refresh is invalid');
         }
@@ -69,7 +71,7 @@ export class DevicesService {
 
     async deleteDeviceByRefreshToken(refreshToken: string): Promise<boolean> {
 
-        const payloadToken = jwtQueryRepository.getPayloadToken(refreshToken);
+        const payloadToken = this.jwtQueryRepository.getPayloadToken(refreshToken);
         if (!payloadToken) {
             throw new Error('Refresh is invalid');
         }

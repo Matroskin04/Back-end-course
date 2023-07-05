@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {emailManager} from "../managers/email-manager";
 import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
 import {ErrorsTypeService} from "./service-types/responses-types-service";
 import {UserDBType} from "../types/db-types";
@@ -9,19 +8,22 @@ import {UsersService} from "./users-service";
 import {UsersRepository} from "../repositories/users-repository";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {JwtService} from "./jwt-service";
+import {EmailManager} from "../managers/email-manager";
 
 
 export class AuthService {
 
-    jwtService: JwtService
-    usersService: UsersService
-    usersRepository: UsersRepository
-    usersQueryRepository: UsersQueryRepository
+    emailManager: EmailManager;
+    jwtService: JwtService;
+    usersService: UsersService;
+    usersRepository: UsersRepository;
+    usersQueryRepository: UsersQueryRepository;
     constructor() {
-        this.jwtService = new JwtService()
-        this.usersService = new UsersService()
-        this.usersRepository = new UsersRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
+        this.emailManager = new EmailManager();
+        this.jwtService = new JwtService();
+        this.usersService = new UsersService();
+        this.usersRepository = new UsersRepository();
+        this.usersQueryRepository = new UsersQueryRepository();
     }
 
     async registerUser(email: string, login: string, password: string): Promise<void> {
@@ -44,7 +46,7 @@ export class AuthService {
             })
 
         await this.usersRepository.createUser(user);
-        await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
+        await this.emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
 
         return;
 
@@ -70,7 +72,7 @@ export class AuthService {
             throw new Error('Resending confirmation email message failed.');
         }
 
-        await emailManager.sendEmailConfirmationMessage(email, newCode);
+        await this.emailManager.sendEmailConfirmationMessage(email, newCode);
         return;
     }
 
@@ -115,7 +117,7 @@ export class AuthService {
         const newDate = add(new Date(), {hours: 1});
 
         await this.usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
-        await emailManager.sendEmailPasswordRecovery(email, newCode);
+        await this.emailManager.sendEmailPasswordRecovery(email, newCode);
 
         return;
     }

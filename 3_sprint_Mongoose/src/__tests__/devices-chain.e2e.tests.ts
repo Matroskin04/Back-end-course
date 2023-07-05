@@ -2,8 +2,8 @@ import {mongoURL} from "../db/db";
 const request = require("supertest");
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
-import {authService} from "../domain/auth-service";
-import {devicesService} from "../domain/devices-service";
+import {AuthService} from "../domain/auth-service";
+import {DevicesService} from "../domain/devices-service";
 import mongoose from "mongoose";
 
 
@@ -11,6 +11,8 @@ import mongoose from "mongoose";
 let refreshToken1: string;
 let refreshToken2: string;
 let deviceId: string;
+const authService = new AuthService();
+const devicesService = new DevicesService()
 
 describe('devices: /security/devices', () => {
 

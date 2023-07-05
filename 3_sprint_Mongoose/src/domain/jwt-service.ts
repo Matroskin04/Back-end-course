@@ -1,17 +1,19 @@
 import jwt from 'jsonwebtoken'
 import {ObjectId} from "mongodb";
 import {randomUUID} from "crypto";
-import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
 import {AccessRefreshTokens} from "./service-types/jwt-types-service";
 import {env} from "../config";
 import {DevicesService} from "./devices-service";
+import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
 
 
 export class JwtService {
 
-    devicesService: DevicesService
+    jwtQueryRepository: JwtQueryRepository;
+    devicesService: DevicesService;
     constructor() {
-        this.devicesService = new DevicesService()
+        this.devicesService = new DevicesService();
+        this.jwtQueryRepository = new JwtQueryRepository();
     }
 
     createAccessToken(userId: string): string {
@@ -27,7 +29,7 @@ export class JwtService {
 
     async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {
 
-        const payloadToken = jwtQueryRepository.getPayloadToken(cookieRefreshToken);
+        const payloadToken = this.jwtQueryRepository.getPayloadToken(cookieRefreshToken);
         if (!payloadToken) {
             throw new Error('Refresh token is invalid.');
         }
@@ -35,7 +37,7 @@ export class JwtService {
         const accessToken = this.createAccessToken(userId.toString());
         const refreshToken = this.createRefreshToken(userId.toString(), payloadToken.deviceId);
 
-        const payloadNewRefresh = jwtQueryRepository.getPayloadToken(refreshToken);
+        const payloadNewRefresh = this.jwtQueryRepository.getPayloadToken(refreshToken);
         if (!payloadNewRefresh?.iat) {
             throw new Error('Refresh token is invalid.');
         }

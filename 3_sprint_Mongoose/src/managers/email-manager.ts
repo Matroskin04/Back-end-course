@@ -1,14 +1,19 @@
-import {emailAdapter} from "../adapters/email-adapter";
+import {EmailAdapter} from "../adapters/email-adapter";
 
-export const emailManager = {
+export class EmailManager {
+
+    emailAdapter: EmailAdapter;
+    constructor() {
+        this.emailAdapter = new EmailAdapter();
+    }
 
     async sendEmailConfirmationMessage(email: string, code: string): Promise<void> {
 
         const message = `<h1>Thank you for registration!</h1>
 <p>Please, follow the link to finish your registration:<a href='https://www.youtube.com/?code=${code}'>complete registration</a></p>`
-        await emailAdapter.sendEmailConfirmationMessage(email, `Confirmation Email`, message);
+        await this.emailAdapter.sendEmailConfirmationMessage(email, `Confirmation Email`, message);
         return;
-    },
+    }
 
     async sendEmailPasswordRecovery(email: string, code: string): Promise<void> {
 
@@ -17,7 +22,7 @@ export const emailManager = {
           <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
       </p>`;
 
-        await emailAdapter.sendEmailPasswordRecovery(email, `Password recovery`, message);
+        await this.emailAdapter.sendEmailPasswordRecovery(email, `Password recovery`, message);
         return;
     }
 }

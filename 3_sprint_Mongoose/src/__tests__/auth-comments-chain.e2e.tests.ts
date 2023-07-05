@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 const request = require("supertest");
 import {ObjectId} from "mongodb";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
+import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {app} from "../setting";
-import {emailAdapter} from "../adapters/email-adapter";
+import {EmailAdapter} from "../adapters/email-adapter";
 import {mongoURL} from "../db/db";
 import {CommentDBType} from "../types/db-types";
 
@@ -15,6 +15,8 @@ let idOfComment: ObjectId;
 let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string;
+const usersQueryRepository = new UsersQueryRepository();
+const emailAdapter = new EmailAdapter()
 
 emailAdapter.sendEmailConfirmationMessage = jest.fn();
 const sendEmailConfirmation = jest.spyOn(emailAdapter, 'sendEmailConfirmationMessage');
