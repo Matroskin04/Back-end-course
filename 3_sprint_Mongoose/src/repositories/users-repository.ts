@@ -3,7 +3,7 @@ import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
 import {UserDBType} from "../types/db-types";
 
 
-class UsersRepository  {
+export class UsersRepository  {
 
     async createUser(bodyUser: UserDBType): Promise<void> {
 
@@ -49,4 +49,3 @@ class UsersRepository  {
         return result.modifiedCount === 1;
     }
 }
-export const usersRepository = new UsersRepository();

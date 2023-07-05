@@ -7,7 +7,7 @@ import {UserDBType} from "../types/db-types";
 import {mappingUser} from "../helpers/functions/users-functions-helpers";
 
 
-class UsersQueryRepository {
+export class UsersQueryRepository {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {
 
@@ -71,4 +71,3 @@ class UsersQueryRepository {
     }
 }
 
-export const usersQueryRepository = new UsersQueryRepository();

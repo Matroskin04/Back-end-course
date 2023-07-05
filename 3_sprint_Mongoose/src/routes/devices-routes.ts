@@ -7,12 +7,12 @@ export const devicesRoutes = Router();
 
 devicesRoutes.get('/',
     validateRefreshToken,
-    devicesController.getAllDevices)
+    devicesController.getAllDevices.bind(devicesController))
 
 devicesRoutes.delete('/',
     validateRefreshToken,
-    devicesController.deleteDevicesExcludeCurrent)
+    devicesController.deleteDevicesExcludeCurrent.bind(devicesController))
 
 devicesRoutes.delete('/:id',
     validateRefreshToken,
-    devicesController.deleteDeviceById)
+    devicesController.deleteDeviceById.bind(devicesController))

@@ -3,12 +3,16 @@ import {ObjectId} from "mongodb";
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
-import {postsQueryRepository} from "./posts-query-repository";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
+import {PostsQueryRepository} from "./posts-query-repository";
 
 
 export class CommentsQueryRepository  {
+    postsQueryRepository: PostsQueryRepository
+    constructor() {
+        this.postsQueryRepository = new PostsQueryRepository()
+    }
 
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 
@@ -22,7 +26,7 @@ export class CommentsQueryRepository  {
 
     async getCommentsOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
 
-        const post = await postsQueryRepository.getSinglePost(id);
+        const post = await  this.postsQueryRepository.getSinglePost(id);
         if (!post) {
             return null
         }

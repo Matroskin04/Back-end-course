@@ -1,18 +1,20 @@
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 import {CommentDBType} from "../types/db-types";
 import {CommentsRepository} from "../repositories/comments-repository";
+import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 
 
 export class CommentsService {
 
     commentsRepository: CommentsRepository
+    usersQueryRepository: UsersQueryRepository
     constructor() {
         this.commentsRepository = new CommentsRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
     }
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
@@ -29,7 +31,7 @@ export class CommentsService {
 
     async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
 
-        const user = await usersQueryRepository.getUserByUserId(userId)
+        const user = await this.usersQueryRepository.getUserByUserId(userId)
         if (!user) {
             return null;
         }

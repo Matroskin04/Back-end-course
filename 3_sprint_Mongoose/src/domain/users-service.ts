@@ -1,19 +1,26 @@
-import {usersRepository} from "../repositories/users-repository";
 import {
     BodyUserType,
     UserOutputType,
 } from "../repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcryptjs";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
 import {env} from "../config";
 import {UserDBType} from "../types/db-types";
 import {mappingUser} from "../helpers/functions/users-functions-helpers";
+import {UsersRepository} from "../repositories/users-repository";
+import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 
 
-class UsersService {
+export class UsersService {
+
+    usersRepository: UsersRepository
+    usersQueryRepository: UsersQueryRepository
+    constructor() {
+        this.usersRepository = new UsersRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
+    }
 
     async createUser(bodyUser: BodyUserType): Promise<UserOutputType> {
 
@@ -36,13 +43,13 @@ class UsersService {
             }
         }
 
-        await usersRepository.createUser(user);
+        await this.usersRepository.createUser(user);
         return mappingUser(user);
     }
 
     async deleteSingleUser(id: string): Promise<boolean> {
 
-        return await usersRepository.deleteSingleUser(id);
+        return await this.usersRepository.deleteSingleUser(id);
     }
 
     async _generateHash(password: string): Promise<string> {
@@ -52,7 +59,7 @@ class UsersService {
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | false> {
 
-        const user = await usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
+        const user = await this.usersQueryRepository.getUserByLoginOrEmail(loginOrEmail);
         if (!user || !user.emailConfirmation.isConfirmed) {
             return false
         }
@@ -71,4 +78,3 @@ class UsersService {
         }
     }
 }
-export const usersService = new UsersService();

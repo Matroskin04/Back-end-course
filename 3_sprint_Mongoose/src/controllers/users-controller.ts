@@ -2,20 +2,27 @@ import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/req
 import {QueryUserModel} from "../models/UsersModels/QueryUserModel";
 import {Response} from "express";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
-import {usersService} from "../domain/users-service";
 import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import {UsersService} from "../domain/users-service";
 
 
 class UsersController {
+
+    usersQueryRepository: UsersQueryRepository
+    usersService: UsersService
+    constructor() {
+        this.usersQueryRepository = new UsersQueryRepository()
+        this.usersService = new UsersService()
+    }
 
     async getAllUsers(req: RequestWithQuery<QueryUserModel>,
                       res: Response<ViewAllUsersModels>) {
 
         try {
-            const result = await usersQueryRepository.getAllUsers(req.query);
+            const result = await this.usersQueryRepository.getAllUsers(req.query);
             res.status(HTTP_STATUS_CODE.OK_200).send(result);
 
         } catch (err) {
@@ -27,7 +34,7 @@ class UsersController {
                      res: Response<ViewUserModel>) {
 
         try {
-            const result = await usersService.createUser(req.body);
+            const result = await this.usersService.createUser(req.body);
             res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
 
         } catch (err) {
@@ -39,7 +46,7 @@ class UsersController {
                      res: Response<void>) {
 
         try {
-            const result = await usersService.deleteSingleUser(req.params.id);
+            const result = await this.usersService.deleteSingleUser(req.params.id);
 
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);

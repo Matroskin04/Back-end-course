@@ -9,15 +9,15 @@ export const usersRoutes = Router();
 
 usersRoutes.get('/',
     authorization,
-    usersController.getAllUsers)
+    usersController.getAllUsers.bind(usersController))
 
 usersRoutes.post('/',
     authorization,
     validateBodyOfUser,
     getErrors,
-    usersController.createUser)
+    usersController.createUser.bind(usersController))
 
 usersRoutes.delete('/:id',
     validateFormatOfUrlParams,
     authorization,
-    usersController.deleteUser)
+    usersController.deleteUser.bind(usersController))

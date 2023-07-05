@@ -5,7 +5,7 @@ import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 
 
-class TestingRepository {
+export class TestingRepository {
 
     async deleteAllData(): Promise<void> {
 
@@ -23,4 +23,3 @@ class TestingRepository {
             });
     }
 }
-export const testingRepository = new TestingRepository();

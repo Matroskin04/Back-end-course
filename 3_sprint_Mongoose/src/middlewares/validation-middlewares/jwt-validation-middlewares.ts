@@ -1,7 +1,10 @@
 import {NextFunction, Request, Response} from "express";
-import {usersService} from "../../domain/users-service";
 import {jwtQueryRepository} from "../../queryRepository/jwt-query-repository";
-import {devicesQueryRepository} from "../../queryRepository/devices-query-repository";
+import {DevicesQueryRepository} from "../../queryRepository/devices-query-repository";
+import {UsersService} from "../../domain/users-service";
+
+const devicesQueryRepository = new DevicesQueryRepository(); //todo таким образом в миддлвеерах?
+const usersService = new UsersService();
 
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 

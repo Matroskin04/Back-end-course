@@ -3,7 +3,7 @@ import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 import {DeviceDBType} from "../types/db-types";
 
 
-class DevicesQueryRepository {
+export class DevicesQueryRepository {
 
     async getAllDevicesByUserId(userId: string): Promise<DeviceOutputType[]> {
 
@@ -15,4 +15,3 @@ class DevicesQueryRepository {
         return DeviceModel.findOne({deviceId});
     }
 }
-export const devicesQueryRepository = new DevicesQueryRepository();

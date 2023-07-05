@@ -18,54 +18,54 @@ export const authRoutes = Router();
 
 authRoutes.get('/me',
     validateAccessToken,
-    authController.getUserInformation);
+    authController.getUserInformation.bind(authController));
 
 authRoutes.post('/login',
     saveInfoRequest,
     validateInfoRequest,
     validateLoginDataAuth,
     getErrors,
-    authController.loginUser);
+    authController.loginUser.bind(authController));
 
 authRoutes.post('/registration',
     saveInfoRequest,
     validateInfoRequest,
     validateRegistrationDataAuth,
     getErrors,
-    authController.registerUser);
+    authController.registerUser.bind(authController));
 
 authRoutes.post('/registration-confirmation',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthConfirmationCode,
     getErrors,
-    authController.confirmEmail);
+    authController.confirmEmail.bind(authController));
 
 authRoutes.post('/registration-email-resending',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthEmail,
     getErrors,
-    authController.resendEmailConfirmation);
+    authController.resendEmailConfirmation.bind(authController));
 
 authRoutes.post('/refresh-token',
     validateRefreshToken,
-    authController.newRefreshToken)
+    authController.newRefreshToken.bind(authController))
 
 authRoutes.post('/logout',
     validateRefreshToken,
-    authController.logoutUser);
+    authController.logoutUser.bind(authController));
 
 authRoutes.post('/password-recovery',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthEmailForPassRecovery,
     getErrors,
-    authController.passwordRecovery);
+    authController.passwordRecovery.bind(authController));
 
 authRoutes.post('/new-password',
     saveInfoRequest,
     validateInfoRequest,
     validateAuthNewPassword,
     getErrors,
-    authController.saveNewPassword)
+    authController.saveNewPassword.bind(authController))

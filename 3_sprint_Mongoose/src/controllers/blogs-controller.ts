@@ -10,7 +10,6 @@ import {Response} from "express";
 import {ViewAllBlogsModel, ViewBlogModel, ViewPostsOfBlogModel} from "../models/BlogsModels/ViewBlogModel";
 import {UriIdModel} from "../models/UriModels";
 import {UriBlogIdModel} from "../models/BlogsModels/UriBlogModel";
-import {postsQueryRepository} from "../queryRepository/posts-query-repository";
 import {CreateBlogModel} from "../models/BlogsModels/CreateBlogModel";
 import {BlogsService} from "../domain/blogs-service";
 import {CreatePostByBlogIdModel} from "../models/PostsModels/CreatePostModel";
@@ -18,16 +17,19 @@ import {PostTypeWithId} from "../repositories/repositories-types/posts-types-rep
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
 import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
+import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
 
 
 class BlogsController {
 
     blogsService: BlogsService
     blogsQueryRepository: BlogsQueryRepository
+    postsQueryRepository: PostsQueryRepository
 
     constructor() {
         this.blogsService = new BlogsService()
         this.blogsQueryRepository = new BlogsQueryRepository()
+        this.postsQueryRepository = new PostsQueryRepository()
     }
 
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
@@ -59,7 +61,7 @@ class BlogsController {
                             res: Response<ViewPostsOfBlogModel>) {
 
         try {
-            const result = await postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
+            const result = await this.postsQueryRepository.getPostsOfBlog(req.params.blogId, req.query)
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 

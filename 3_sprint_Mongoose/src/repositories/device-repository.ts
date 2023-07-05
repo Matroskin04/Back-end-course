@@ -2,7 +2,7 @@ import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 import {DeviceDBType} from "../types/db-types";
 
 
-class DeviceRepository {
+export class DeviceRepository {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 
@@ -28,4 +28,3 @@ class DeviceRepository {
         return result.modifiedCount === 1;
     }
 }
-export const deviceRepository = new DeviceRepository();

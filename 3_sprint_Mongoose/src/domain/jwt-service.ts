@@ -2,12 +2,17 @@ import jwt from 'jsonwebtoken'
 import {ObjectId} from "mongodb";
 import {randomUUID} from "crypto";
 import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
-import {devicesService} from "./devices-service";
 import {AccessRefreshTokens} from "./service-types/jwt-types-service";
 import {env} from "../config";
+import {DevicesService} from "./devices-service";
 
 
-class JwtService {
+export class JwtService {
+
+    devicesService: DevicesService
+    constructor() {
+        this.devicesService = new DevicesService()
+    }
 
     createAccessToken(userId: string): string {
 
@@ -35,7 +40,7 @@ class JwtService {
             throw new Error('Refresh token is invalid.');
         }
 
-        const isModified = await devicesService.updateLastActiveDate(payloadToken.deviceId, payloadNewRefresh.iat);
+        const isModified = await this.devicesService.updateLastActiveDate(payloadToken.deviceId, payloadNewRefresh.iat);
         if (!isModified) {
             throw new Error('Last active date is not updated.');
         }
@@ -47,4 +52,3 @@ class JwtService {
     }
 }
 
-export const jwtService = new JwtService();

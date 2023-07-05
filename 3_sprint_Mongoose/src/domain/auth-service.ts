@@ -1,21 +1,32 @@
-import {usersService} from "./users-service";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {usersRepository} from "../repositories/users-repository";
 import {emailManager} from "../managers/email-manager";
-import {jwtService} from "./jwt-service";
 import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-service";
-import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {ErrorsTypeService} from "./service-types/responses-types-service";
 import {UserDBType} from "../types/db-types";
+import {UsersService} from "./users-service";
+import {UsersRepository} from "../repositories/users-repository";
+import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import {JwtService} from "./jwt-service";
 
 
-class AuthService {
+export class AuthService {
+
+    jwtService: JwtService
+    usersService: UsersService
+    usersRepository: UsersRepository
+    usersQueryRepository: UsersQueryRepository
+    constructor() {
+        this.jwtService = new JwtService()
+        this.usersService = new UsersService()
+        this.usersRepository = new UsersRepository()
+        this.usersQueryRepository = new UsersQueryRepository()
+    }
 
     async registerUser(email: string, login: string, password: string): Promise<void> {
 
-        const passwordHash = await usersService._generateHash(password);
+        const passwordHash = await this.usersService._generateHash(password);
         const user = new UserDBType(
             new ObjectId(),
             login,
@@ -32,7 +43,7 @@ class AuthService {
                 expirationDate: new Date()
             })
 
-        await usersRepository.createUser(user);
+        await this.usersRepository.createUser(user);
         await emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
 
         return;
@@ -41,7 +52,7 @@ class AuthService {
 
     async confirmEmail(userId: ObjectId): Promise<void> {
 
-        const result = await usersRepository.updateConfirmation(userId);
+        const result = await this.usersRepository.updateConfirmation(userId);
         if (!result) {
             throw new Error('Email confirmation failed.')
         }
@@ -54,7 +65,7 @@ class AuthService {
         const newCode = uuidv4();
         const newDate = add(new Date(), {hours: 5, seconds: 20});
 
-        const result = await usersRepository.updateCodeConfirmation(userId, newCode, newDate);
+        const result = await this.usersRepository.updateCodeConfirmation(userId, newCode, newDate);
         if (!result) {
             throw new Error('Resending confirmation email message failed.');
         }
@@ -65,13 +76,13 @@ class AuthService {
 
     async loginUser(loginOrEmail: string, password: string): Promise<ARTokensAndUserId | null> {
 
-        const user = await usersService.checkCredentials(loginOrEmail, password);
+        const user = await this.usersService.checkCredentials(loginOrEmail, password);
         if (!user) {
             return null
         }
 
-        const accessToken = jwtService.createAccessToken(user._id.toString());
-        const refreshToken = jwtService.createRefreshToken(user._id.toString(), null);
+        const accessToken = this.jwtService.createAccessToken(user._id.toString());
+        const refreshToken = this.jwtService.createRefreshToken(user._id.toString(), null);
 
         return {
             accessToken,
@@ -82,7 +93,7 @@ class AuthService {
 
     async getUserInformation(userId: ObjectId): Promise<UserInformation | null> {
 
-        const user = await usersQueryRepository.getUserByUserId(userId);
+        const user = await this.usersQueryRepository.getUserByUserId(userId);
 
         if (!user) {
             return null;
@@ -97,13 +108,13 @@ class AuthService {
 
     async sendEmailPasswordRecovery(email: string): Promise<void> {
 
-        const user: UserDBType | null = await usersQueryRepository.getUserByLoginOrEmail(email);
+        const user: UserDBType | null = await this.usersQueryRepository.getUserByLoginOrEmail(email);
         if (!user) return;
 
         const newCode = uuidv4();
         const newDate = add(new Date(), {hours: 1});
 
-        await usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
+        await this.usersRepository.updateCodePasswordRecovery(user._id, newCode, newDate);
         await emailManager.sendEmailPasswordRecovery(email, newCode);
 
         return;
@@ -111,7 +122,7 @@ class AuthService {
 
     async saveNewPassword(newPassword: string, recoveryCode: string): Promise<true | ErrorsTypeService> {
 
-        const user = await usersQueryRepository.getUserByRecoveryCode(recoveryCode);
+        const user = await this.usersQueryRepository.getUserByRecoveryCode(recoveryCode);
         if (!user) {
             return {errorsMessages: [{message: 'RecoveryCode is incorrect or expired', field: "recoveryCode"}]}
         }
@@ -120,11 +131,9 @@ class AuthService {
             return {errorsMessages: [{message: 'RecoveryCode is incorrect or expired', field: "recoveryCode"}]}
         }
 
-        const passwordHash = await usersService._generateHash(newPassword);
-        await usersRepository.updatePassword(passwordHash, user._id);
+        const passwordHash = await this.usersService._generateHash(newPassword);
+        await this.usersRepository.updatePassword(passwordHash, user._id);
 
         return true;
     }
 }
-
-export const authService = new AuthService();

@@ -1,13 +1,20 @@
-import {deviceRepository} from "../repositories/device-repository";
+import {DeviceRepository} from "../repositories/device-repository";
 import {ObjectId} from "mongodb";
 import {jwtQueryRepository} from "../queryRepository/jwt-query-repository";
-import {devicesQueryRepository} from "../queryRepository/devices-query-repository";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {DeviceDBType} from "../types/db-types";
+import {DevicesQueryRepository} from "../queryRepository/devices-query-repository";
 
 
-class DevicesService {
+export class DevicesService {
+
+    devicesQueryRepository: DevicesQueryRepository
+    deviceRepository: DeviceRepository
+    constructor() {
+        this.devicesQueryRepository = new DevicesQueryRepository()
+        this.deviceRepository = new DeviceRepository()
+    }
 
     async createNewDevice(ip: string, title: string, userId: ObjectId, refreshToken: string): Promise<void> {
 
@@ -26,7 +33,7 @@ class DevicesService {
             payloadToken.exp! - payloadToken.iat!
         )
 
-        await deviceRepository.createNewDevice(infoDevice);
+        await this.deviceRepository.createNewDevice(infoDevice);
         return;
     }
 
@@ -37,7 +44,7 @@ class DevicesService {
             throw new Error('Refresh is invalid');
         }
 
-        const result = await deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
+        const result = await this.deviceRepository.deleteDevicesExcludeCurrent(payloadToken.deviceId);
         if (!result) {
             throw new Error('Deletion failed');
         }
@@ -47,12 +54,12 @@ class DevicesService {
 
     async deleteDeviceById(deviceId: string, userId: string): Promise<ResponseTypeService> {
 
-        const device = await devicesQueryRepository.getDeviceById(deviceId);
+        const device = await this.devicesQueryRepository.getDeviceById(deviceId);
 
         if (!device) return createResponseService(404, 'The device is not found');
         if (device.userId !== userId) return createResponseService(403, 'You can\'t delete not your own device');
 
-        const result = await deviceRepository.deleteDeviceById(deviceId);
+        const result = await this.deviceRepository.deleteDeviceById(deviceId);
         if (!result) {
             throw new Error('The device is not found')
         }
@@ -67,13 +74,12 @@ class DevicesService {
             throw new Error('Refresh is invalid');
         }
 
-        return await deviceRepository.deleteDeviceById(payloadToken.deviceId);
+        return await this.deviceRepository.deleteDeviceById(payloadToken.deviceId);
     }
 
     async updateLastActiveDate(deviceId: string, newDateNum: number): Promise<boolean> {
 
         const newDateISOS = new Date(newDateNum * 1000).toISOString()
-        return await deviceRepository.updateLastActiveDate(deviceId, newDateISOS);
+        return await this.deviceRepository.updateLastActiveDate(deviceId, newDateISOS);
     }
 }
-export const devicesService = new DevicesService();
