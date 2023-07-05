@@ -8,26 +8,37 @@ import {
 import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {Response} from "express";
 import {ViewAllPostsModel, ViewPostModel} from "../models/PostsModels/ViewPostModel";
-import {postsQueryRepository} from "../queryRepository/posts-query-repository";
+import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
 import {UriIdModel} from "../models/UriModels";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../models/PostsModels/ViewCommentsOfPostModel";
-import {commentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
-import {postsService} from "../domain/posts-service";
+import {PostsService} from "../domain/posts-service";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
 import {HTTP_STATUS_CODE} from "../helpers/http-status";
-import {commentsService} from "../domain/comments-service";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
+import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
+import {CommentsService} from "../domain/comments-service";
 
 
 class PostsController {
+
+    postsQueryRepository: PostsQueryRepository
+    postsService: PostsService
+    commentsQueryRepository: CommentsQueryRepository
+    commentsService: CommentsService
+    constructor() {
+        this.postsQueryRepository = new PostsQueryRepository()
+        this.postsService = new PostsService()
+        this.commentsQueryRepository = new CommentsQueryRepository()
+        this.commentsService = new CommentsService()
+    }
 
     async getAllPosts(req: RequestWithQuery<QueryPostModel>,
                       res: Response<ViewAllPostsModel>) {
 
         try {
-            const result = await postsQueryRepository.getAllPosts(req.query);
+            const result = await this.postsQueryRepository.getAllPosts(req.query);
             res.status(HTTP_STATUS_CODE.OK_200).send(result);
 
         } catch (err) {
@@ -39,7 +50,7 @@ class PostsController {
                       res: Response<ViewPostModel>) {
 
         try {
-            const result = await postsQueryRepository.getSinglePost(req.params.id)
+            const result = await this.postsQueryRepository.getSinglePost(req.params.id)
 
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
@@ -53,7 +64,7 @@ class PostsController {
                                res: Response<ViewAllCommentsOfPostModel>) {
 
         try {
-            const result = await commentsQueryRepository.getCommentsOfPost(req.query, req.params.id);
+            const result = await this.commentsQueryRepository.getCommentsOfPost(req.query, req.params.id);
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 
@@ -66,7 +77,7 @@ class PostsController {
                      res: Response<ViewPostModel | ViewAllErrorsModels>) {
 
         try {
-            const result = await postsService.createPost(req.body);
+            const result = await this.postsService.createPost(req.body);
 
             result.status === 201 ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result.message) :
                 res.status(result.status).json(result.message);
@@ -80,7 +91,7 @@ class PostsController {
                                 res: Response<ViewCommentOfPostModel>) {
 
         try {
-            const result = await commentsService.createCommentByPostId(req.body, req.userId!, req.params.id);
+            const result = await this.commentsService.createCommentByPostId(req.body, req.userId!, req.params.id);
 
             result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
@@ -94,7 +105,7 @@ class PostsController {
                      res: Response<string | ViewAllErrorsModels>) {
 
         try {
-            const result = await postsService.updatePost(req.body, req.params.id);
+            const result = await this.postsService.updatePost(req.body, req.params.id);
 
             result.status === 204 ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.status(result.status).send(result.message);
@@ -108,7 +119,7 @@ class PostsController {
                      res: Response<void>) {
 
         try {
-            const result = await postsService.deleteSinglePost(req.params.id);
+            const result = await this.postsService.deleteSinglePost(req.params.id);
 
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);

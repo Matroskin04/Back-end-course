@@ -1,4 +1,3 @@
-import {commentsRepository} from "../repositories/comments-repository";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
@@ -6,19 +5,25 @@ import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 import {CommentDBType} from "../types/db-types";
+import {CommentsRepository} from "../repositories/comments-repository";
 
 
-class CommentsService {
+export class CommentsService {
+
+    commentsRepository: CommentsRepository
+    constructor() {
+        this.commentsRepository = new CommentsRepository()
+    }
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
-        await commentsRepository.updateComment(id, idFromToken, content);
+        await  this.commentsRepository.updateComment(id, idFromToken, content);
         return;
     }
 
     async deleteOne(id: string): Promise<void> {
 
-        await commentsRepository.deleteComment(id);
+        await  this.commentsRepository.deleteComment(id);
         return;
     }
 
@@ -45,9 +50,8 @@ class CommentsService {
             postId
         )
 
-        await commentsRepository.createCommentByPostId(comment);
+        await  this.commentsRepository.createCommentByPostId(comment);
         return mappingComment(comment);
     }
 }
 
-export const commentsService = new CommentsService();

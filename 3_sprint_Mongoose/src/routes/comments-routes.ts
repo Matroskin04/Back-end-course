@@ -12,7 +12,7 @@ export const commentsRoutes = Router();
 
 commentsRoutes.get('/:id',
     validateFormatOfUrlParams,
-    commentsController.getCommentById)
+    commentsController.getCommentById.bind(commentsController))
 
 commentsRoutes.put('/:id',
     validateFormatOfUrlParams,
@@ -20,10 +20,10 @@ commentsRoutes.put('/:id',
     checkCommentByIdAndToken,
     validateBodyOfComment,
     getErrors,
-    commentsController.updateComment)
+    commentsController.updateComment.bind(commentsController))
 
 commentsRoutes.delete('/:id',
     validateFormatOfUrlParams,
     validateAccessToken,
     checkCommentByIdAndToken,
-    commentsController.deleteComment)
+    commentsController.deleteComment.bind(commentsController))

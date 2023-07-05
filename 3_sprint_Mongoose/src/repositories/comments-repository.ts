@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {CommentDBType} from "../types/db-types";
 
-class CommentsRepository {
+export class CommentsRepository {
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
@@ -22,4 +22,3 @@ class CommentsRepository {
         return;
     }
 }
-export const commentsRepository = new CommentsRepository();

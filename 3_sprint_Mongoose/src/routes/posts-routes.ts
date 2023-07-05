@@ -11,40 +11,40 @@ export const postsRoutes = Router();
 
 
 postsRoutes.get('/',
-    postsController.getAllPosts);
+    postsController.getAllPosts.bind(postsController));
 
 postsRoutes.get('/:id',
     validateFormatOfUrlParams,
-    postsController.getPostById);
+    postsController.getPostById.bind(postsController));
 
 postsRoutes.get('/:id/comments',
     validateFormatOfUrlParams,
-    postsController.getAllCommentsOfPost);
+    postsController.getAllCommentsOfPost.bind(postsController));
 
 postsRoutes.post('/',
     authorization,
     validateBodyOfPost,
     getErrors,
-    postsController.createPost);
+    postsController.createPost.bind(postsController));
 
 postsRoutes.post('/:id/comments',
     validateFormatOfUrlParams,
     validateAccessToken,
     validateBodyOfComment,
     getErrors,
-    postsController.createCommentByPostId);
+    postsController.createCommentByPostId.bind(postsController));
 
 postsRoutes.put('/:id',
     validateFormatOfUrlParams,
     authorization,
     validateBodyOfPost,
     getErrors,
-    postsController.updatePost);
+    postsController.updatePost.bind(postsController));
 
 postsRoutes.delete('/:id',
     validateFormatOfUrlParams,
     authorization,
-    postsController.deletePost);
+    postsController.deletePost.bind(postsController));
 
 
 

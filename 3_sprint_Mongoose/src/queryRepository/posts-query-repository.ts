@@ -9,7 +9,7 @@ import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
 
 
-class PostsQueryRepository {
+export class PostsQueryRepository {
 
     async getAllPosts(query: QueryPostModel): Promise<PostPaginationType> {
 
@@ -67,4 +67,3 @@ class PostsQueryRepository {
         return renameMongoIdPost(singlePost);
     }
 }
-export const postsQueryRepository = new PostsQueryRepository();

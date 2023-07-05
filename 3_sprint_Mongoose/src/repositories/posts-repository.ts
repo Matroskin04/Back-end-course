@@ -4,7 +4,7 @@ import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
 import {PostDBType} from "../types/db-types";
 
 
-class PostsRepository {
+export class PostsRepository {
 
     async createPost(post: PostDBType): Promise<void> {
 
@@ -32,4 +32,3 @@ class PostsRepository {
         return result.deletedCount === 1;
     }
 }
-export const postsRepository = new PostsRepository();

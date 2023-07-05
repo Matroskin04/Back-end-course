@@ -8,7 +8,7 @@ import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 
 
-class CommentsQueryRepository  {
+export class CommentsQueryRepository  {
 
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 
@@ -48,4 +48,3 @@ class CommentsQueryRepository  {
         }
     }
 }
-export const commentsQueryRepository = new CommentsQueryRepository();
