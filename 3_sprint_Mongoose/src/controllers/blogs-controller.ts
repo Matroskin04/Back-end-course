@@ -20,16 +20,11 @@ import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
 
 
-class BlogsController {
+export class BlogsController {
 
-    blogsService: BlogsService
-    blogsQueryRepository: BlogsQueryRepository
-    postsQueryRepository: PostsQueryRepository
-
-    constructor() {
-        this.blogsService = new BlogsService()
-        this.blogsQueryRepository = new BlogsQueryRepository()
-        this.postsQueryRepository = new PostsQueryRepository()
+    constructor(protected blogsService: BlogsService,
+                protected blogsQueryRepository: BlogsQueryRepository,
+                protected postsQueryRepository: PostsQueryRepository) {
     }
 
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
@@ -122,4 +117,4 @@ class BlogsController {
         }
     }
 }
-export const blogsController = new BlogsController();
+

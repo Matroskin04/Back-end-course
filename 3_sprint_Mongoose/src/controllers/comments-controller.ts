@@ -8,15 +8,11 @@ import {CommentsQueryRepository} from "../queryRepository/comments-query-reposit
 import {CommentsService} from "../domain/comments-service";
 
 
-class CommentsController {
+export class CommentsController {
 
-    commentsQueryRepository: CommentsQueryRepository
-    commentsService: CommentsService
 
-    constructor() {
-        this.commentsService = new CommentsService()
-        this.commentsQueryRepository = new CommentsQueryRepository()
-    }
+    constructor(protected commentsQueryRepository: CommentsQueryRepository,
+                protected commentsService: CommentsService) {}
 
 
     async getCommentById(req: RequestWithParams<UriIdModel>,
@@ -57,4 +53,3 @@ class CommentsController {
     }
 }
 
-export const commentsController = new CommentsController()

@@ -6,13 +6,12 @@ import {
 import {getErrors} from "../middlewares/validation-middlewares/catch-errors-middlewares";
 import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {commentsController} from "../controllers/comments-controller";
+import {commentsController} from "../composition-root";
 
 export const commentsRoutes = Router();
 
 commentsRoutes.get('/:id',
     validateFormatOfUrlParams,
-    commentsController.getCommentById.bind(commentsController))
 
 commentsRoutes.put('/:id',
     validateFormatOfUrlParams,

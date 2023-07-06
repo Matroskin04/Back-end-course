@@ -9,10 +9,7 @@ import {PostsQueryRepository} from "./posts-query-repository";
 
 
 export class CommentsQueryRepository  {
-    postsQueryRepository: PostsQueryRepository
-    constructor() {
-        this.postsQueryRepository = new PostsQueryRepository()
-    }
+    constructor(protected postsQueryRepository: PostsQueryRepository) {}
 
     async getCommentById(id: string): Promise<CommentOutputType | null> {
 

@@ -16,12 +16,8 @@ import {BlogsRepository} from "../repositories/blogs-repository";
 
 export class BlogsService {
 
-    blogsRepository: BlogsRepository
-    blogsQueryRepository: BlogsQueryRepository
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
-        this.blogsQueryRepository = new BlogsQueryRepository()
-    }
+    constructor(protected blogsRepository: BlogsRepository,
+                protected blogsQueryRepository: BlogsQueryRepository) {}
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 

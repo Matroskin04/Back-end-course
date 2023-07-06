@@ -10,12 +10,8 @@ import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 
 export class CommentsService {
 
-    commentsRepository: CommentsRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor() {
-        this.commentsRepository = new CommentsRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
-    }
+    constructor(protected commentsRepository: CommentsRepository,
+                protected usersQueryRepository: UsersQueryRepository) {}
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 

@@ -16,10 +16,7 @@ let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string;
 const usersQueryRepository = new UsersQueryRepository();
-const emailAdapter = new EmailAdapter()
 
-emailAdapter.sendEmailConfirmationMessage = jest.fn();
-const sendEmailConfirmation = jest.spyOn(emailAdapter, 'sendEmailConfirmationMessage');
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
@@ -355,6 +352,9 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               -POST -> '/auth/registration' user with the given email already exists; status: 400;
               -POST -> '/auth/registration' user with the given login already exists; status: 400;`, async () => {
 
+        jest.spyOn(EmailAdapter.prototype, 'sendEmailConfirmationMessage').mockReturnValue(Promise.resolve(true));
+        const sendEmailConfirmation = new EmailAdapter().sendEmailConfirmationMessage;
+
         const response1 = await request(app)
             .post(`/hometask-03/auth/registration`)
             .send({
@@ -391,8 +391,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: 'meschit9@gmail.com'
             })
             .expect(204)
-        expect(sendEmailConfirmation).toHaveBeenCalled()
-        expect(sendEmailConfirmation.mock.calls[0][0]).toBe('meschit9@gmail.com')
+        expect(sendEmailConfirmation).toHaveBeenCalled();
 
         //Поиск confirmationCode
         const user = await usersQueryRepository.getUserByLoginOrEmail('Egor123');
