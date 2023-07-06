@@ -15,15 +15,11 @@ import {AuthService} from "../domain/auth-service";
 import {JwtService} from "../domain/jwt-service";
 
 
-class AuthController {
+export class AuthController {
 
-    jwtService: JwtService
-    devicesService: DevicesService
-    authService: AuthService
-    constructor() {
-        this.devicesService = new DevicesService()
-        this.authService = new AuthService()
-        this.jwtService = new JwtService()
+    constructor(protected jwtService: JwtService,
+                protected devicesService: DevicesService,
+                protected authService: AuthService) {
     }
 
     async getUserInformation(req: Request, res: Response<ViewAuthModel>) {
@@ -155,4 +151,4 @@ class AuthController {
         }
     }
 }
-export const authController = new AuthController();
+

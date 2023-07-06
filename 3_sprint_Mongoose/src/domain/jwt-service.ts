@@ -9,12 +9,8 @@ import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
 
 export class JwtService {
 
-    jwtQueryRepository: JwtQueryRepository;
-    devicesService: DevicesService;
-    constructor() {
-        this.devicesService = new DevicesService();
-        this.jwtQueryRepository = new JwtQueryRepository();
-    }
+    constructor(protected jwtQueryRepository: JwtQueryRepository,
+                protected devicesService: DevicesService) {}
 
     createAccessToken(userId: string): string {
 

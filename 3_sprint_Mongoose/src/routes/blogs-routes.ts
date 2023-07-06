@@ -4,7 +4,7 @@ import {getErrors} from "../middlewares/validation-middlewares/catch-errors-midd
 import {checkErrorsPostByBlogId} from "../middlewares/validation-middlewares/posts-validation-middlewares";
 import {authorization} from "../middlewares/authorization-middelwares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {blogsController} from "../composition-root";
+import {blogsController} from "../composition-root/blogs-composition-root";
 
 export const blogsRoutes = Router();
 

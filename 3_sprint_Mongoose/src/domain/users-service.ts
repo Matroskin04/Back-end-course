@@ -15,11 +15,8 @@ import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 
 export class UsersService {
 
-    usersRepository: UsersRepository
-    usersQueryRepository: UsersQueryRepository
-    constructor() {
-        this.usersRepository = new UsersRepository()
-        this.usersQueryRepository = new UsersQueryRepository()
+    constructor(protected usersRepository: UsersRepository,
+                protected usersQueryRepository: UsersQueryRepository) {
     }
 
     async createUser(bodyUser: BodyUserType): Promise<UserOutputType> {

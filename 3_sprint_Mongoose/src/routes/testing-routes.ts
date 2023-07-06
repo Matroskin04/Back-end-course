@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {testingController} from "../controllers/testing-controller";
+import {testingController} from "../composition-root/testing-composition-root";
 
 export const testingRoutes = Router();
 

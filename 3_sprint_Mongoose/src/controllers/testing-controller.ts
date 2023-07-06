@@ -3,10 +3,7 @@ import {TestingRepository} from "../repositories/testing-repository";
 
 export class TestingController {
 
-    testingRepository: TestingRepository
-    constructor() {
-        this.testingRepository = new TestingRepository()
-    }
+    constructor(protected testingRepository: TestingRepository) {}
 
     async deleteAllData(req: Request, res: Response<void>) {
 
@@ -15,4 +12,3 @@ export class TestingController {
     }
 }
 
-export const testingController = new TestingController()

@@ -9,13 +9,10 @@ import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {UsersService} from "../domain/users-service";
 
 
-class UsersController {
+export class UsersController {
 
-    usersQueryRepository: UsersQueryRepository
-    usersService: UsersService
-    constructor() {
-        this.usersQueryRepository = new UsersQueryRepository()
-        this.usersService = new UsersService()
+    constructor(protected usersQueryRepository: UsersQueryRepository,
+                protected usersService: UsersService) {
     }
 
     async getAllUsers(req: RequestWithQuery<QueryUserModel>,
@@ -56,4 +53,3 @@ class UsersController {
         }
     }
 }
-export const usersController = new UsersController();

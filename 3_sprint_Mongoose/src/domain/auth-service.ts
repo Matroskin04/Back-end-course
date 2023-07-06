@@ -13,17 +13,11 @@ import {EmailManager} from "../managers/email-manager";
 
 export class AuthService {
 
-    emailManager: EmailManager;
-    jwtService: JwtService;
-    usersService: UsersService;
-    usersRepository: UsersRepository;
-    usersQueryRepository: UsersQueryRepository;
-    constructor() {
-        this.emailManager = new EmailManager();
-        this.jwtService = new JwtService();
-        this.usersService = new UsersService();
-        this.usersRepository = new UsersRepository();
-        this.usersQueryRepository = new UsersQueryRepository();
+    constructor(protected emailManager: EmailManager,
+                protected jwtService: JwtService,
+                protected usersService: UsersService,
+                protected usersRepository: UsersRepository,
+                protected usersQueryRepository: UsersQueryRepository) {
     }
 
     async registerUser(email: string, login: string, password: string): Promise<void> {

@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {validateRefreshToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
-import {devicesController} from "../composition-root";
+import {devicesController} from "../composition-root/devices-composition-root";
 
 export const devicesRoutes = Router();
 

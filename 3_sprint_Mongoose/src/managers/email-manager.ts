@@ -2,10 +2,7 @@ import {EmailAdapter} from "../adapters/email-adapter";
 
 export class EmailManager {
 
-    emailAdapter: EmailAdapter;
-    constructor() {
-        this.emailAdapter = new EmailAdapter();
-    }
+    constructor(protected emailAdapter: EmailAdapter) {}
 
     async sendEmailConfirmationMessage(email: string, code: string): Promise<void> {
 
