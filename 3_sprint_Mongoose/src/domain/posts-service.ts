@@ -12,11 +12,8 @@ import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
 
 export class PostsService {
 
-    postsRepository: PostsRepository
-    blogsQueryRepository: BlogsQueryRepository
-    constructor() {
-        this.postsRepository = new PostsRepository()
-        this.blogsQueryRepository = new BlogsQueryRepository()
+    constructor(protected postsRepository: PostsRepository,
+                protected blogsQueryRepository: BlogsQueryRepository) {
     }
 
     async createPost(body: BodyPostType): Promise<ResponseTypeService> {

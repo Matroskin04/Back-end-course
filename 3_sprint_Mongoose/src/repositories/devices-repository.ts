@@ -2,7 +2,7 @@ import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
 import {DeviceDBType} from "../types/db-types";
 
 
-export class DeviceRepository {
+export class DevicesRepository {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 

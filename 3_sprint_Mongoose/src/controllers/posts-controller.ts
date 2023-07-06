@@ -21,17 +21,12 @@ import {CommentsQueryRepository} from "../queryRepository/comments-query-reposit
 import {CommentsService} from "../domain/comments-service";
 
 
-class PostsController {
+export class PostsController {
 
-    postsQueryRepository: PostsQueryRepository
-    postsService: PostsService
-    commentsQueryRepository: CommentsQueryRepository
-    commentsService: CommentsService
-    constructor() {
-        this.postsQueryRepository = new PostsQueryRepository()
-        this.postsService = new PostsService()
-        this.commentsQueryRepository = new CommentsQueryRepository()
-        this.commentsService = new CommentsService()
+    constructor(protected postsQueryRepository: PostsQueryRepository,
+                protected postsService: PostsService,
+                protected commentsQueryRepository: CommentsQueryRepository,
+                protected commentsService: CommentsService) {
     }
 
     async getAllPosts(req: RequestWithQuery<QueryPostModel>,
@@ -130,4 +125,3 @@ class PostsController {
     }
 }
 
-export const postsController = new PostsController();

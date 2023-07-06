@@ -5,7 +5,7 @@ import {getErrors} from "../middlewares/validation-middlewares/catch-errors-midd
 import {validateBodyOfComment} from "../middlewares/validation-middlewares/comments-validation-middlewares";
 import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {postsController} from "../controllers/posts-controller";
+import {postsController} from "../composition-root";
 
 export const postsRoutes = Router();
 

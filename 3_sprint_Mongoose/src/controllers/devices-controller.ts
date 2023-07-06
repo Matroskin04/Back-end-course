@@ -7,13 +7,10 @@ import {DevicesQueryRepository} from "../queryRepository/devices-query-repositor
 import {DevicesService} from "../domain/devices-service";
 
 
-class DevicesController {
+export class DevicesController {
 
-    devicesQueryRepository: DevicesQueryRepository
-    devicesService: DevicesService
-    constructor() {
-        this.devicesQueryRepository = new DevicesQueryRepository()
-        this.devicesService = new DevicesService()
+    constructor(protected devicesQueryRepository: DevicesQueryRepository,
+                protected devicesService: DevicesService) {
     }
 
     async getAllDevices(req: Request, res: Response<ViewDeviceModel>) {
@@ -49,4 +46,3 @@ class DevicesController {
         }
     }
 }
-export const devicesController = new DevicesController();

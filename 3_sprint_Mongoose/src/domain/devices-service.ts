@@ -1,4 +1,4 @@
-import {DeviceRepository} from "../repositories/device-repository";
+import {DevicesRepository} from "../repositories/devices-repository";
 import {ObjectId} from "mongodb";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
@@ -9,13 +9,9 @@ import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
 
 export class DevicesService {
 
-    jwtQueryRepository: JwtQueryRepository;
-    devicesQueryRepository: DevicesQueryRepository;
-    deviceRepository: DeviceRepository;
-    constructor() {
-        this.jwtQueryRepository = new JwtQueryRepository();
-        this.devicesQueryRepository = new DevicesQueryRepository();
-        this.deviceRepository = new DeviceRepository();
+    constructor(protected jwtQueryRepository: JwtQueryRepository,
+                protected devicesQueryRepository: DevicesQueryRepository,
+                protected deviceRepository: DevicesRepository) {
     }
 
     async createNewDevice(ip: string, title: string, userId: ObjectId, refreshToken: string): Promise<void> {

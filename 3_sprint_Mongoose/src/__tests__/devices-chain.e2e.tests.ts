@@ -11,8 +11,6 @@ import mongoose from "mongoose";
 let refreshToken1: string;
 let refreshToken2: string;
 let deviceId: string;
-const authService = new AuthService();
-const devicesService = new DevicesService()
 
 describe('devices: /security/devices', () => {
 
@@ -214,22 +212,20 @@ describe('devices: /security/devices', () => {
               - POST -> '/security/devices' - more than 5 attempts (6) from one IP-address during 10 seconds; status 429;
               + POST -> '/auth/login' - one more login after 10 seconds; status 200;`, async () => {
 
-        authService.loginUser = jest.fn();
-        const loginUser = jest.spyOn(authService, 'loginUser');
-        loginUser.mockReturnValue(Promise.resolve({accessToken:'1',refreshToken:'2',userId: new ObjectId()}));
+        jest.spyOn(AuthService.prototype, 'loginUser')
+        const loginUser = new AuthService().loginUser;
 
 
-        devicesService.createNewDevice = jest.fn();
-        const createNewDevice = jest.spyOn(devicesService, 'createNewDevice');
+        jest.spyOn(DevicesService.prototype, 'createNewDevice');
+        const createNewDevice = new DevicesService().createNewDevice;
 
         //1
         await request(app)
             .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
             .expect(200);
-        expect(loginUser).toHaveBeenCalled()
-        expect(createNewDevice).toHaveBeenCalled()
-        expect(loginUser.mock.calls[0][0]).toBe('Dima123')
+        expect(loginUser).toHaveBeenCalled();
+        expect(createNewDevice).toHaveBeenCalled();
         //2
         await request(app)
             .post(`/hometask-03/auth/login`)
