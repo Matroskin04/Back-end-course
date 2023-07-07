@@ -74,3 +74,14 @@ export class DeviceDBType {
     }
 }
 
+export class LikesInfoDBType {
+    constructor(
+        public commentId: ObjectId,
+        public usersStatusLike: {
+            userId: ObjectId,
+            statusLike: 'Like' | 'Dislike'
+        }[]
+    ) {
+    }
+}
+
