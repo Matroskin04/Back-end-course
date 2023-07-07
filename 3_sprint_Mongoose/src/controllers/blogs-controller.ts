@@ -15,7 +15,7 @@ import {BlogsService} from "../domain/blogs-service";
 import {CreatePostByBlogIdModel} from "../models/PostsModels/CreatePostModel";
 import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
 import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
-import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
 

@@ -1,8 +1,8 @@
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
-import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
-import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
-import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
-import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
+import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
+import {UserModel} from "../db/shemasModelsMongoose/users-schema-model";
+import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
+import {DeviceModel} from "../db/shemasModelsMongoose/devices-schema-model";
 
 
 export class TestingRepository {

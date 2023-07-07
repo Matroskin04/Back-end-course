@@ -9,5 +9,15 @@ export const CommentSchema = new mongoose.Schema<CommentDBType>({
     },
     createdAt: {type: String, required: true},
     postId: {type: String, required: true},
+    likesInfo: {
+        likesCount: {type: Number, required: true},
+        dislikesCount: {type: Number, required: true}
+    }
+    // myStatus: {
+    //     type: String,
+    //     required: true,
+    //     enum: ['None', 'Like', 'Dislike'],
+    // }
+
 });
 export const CommentModel = mongoose.model<CommentDBType>('comments', CommentSchema);

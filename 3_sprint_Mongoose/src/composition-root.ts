@@ -1,0 +1,61 @@
+import {PostsRepository} from "./repositories/posts-repository";
+import {BlogsRepository} from "./repositories/blogs-repository";
+import {BlogsQueryRepository} from "./queryRepository/blogs-query-repository";
+import {BlogsService} from "./domain/blogs-service";
+import {PostsQueryRepository} from "./queryRepository/posts-query-repository";
+import {PostsService} from "./domain/posts-service";
+import {BlogsController} from "./controllers/blogs-controller";
+import {PostsController} from "./controllers/posts-controller";
+import {DevicesRepository} from "./repositories/devices-repository";
+import {DevicesQueryRepository} from "./queryRepository/devices-query-repository";
+import {DevicesService} from "./domain/devices-service";
+import {DevicesController} from "./controllers/devices-controller";
+import {AuthService} from "./domain/auth-service";
+import {AuthController} from "./controllers/auth-controller";
+import {CommentsRepository} from "./repositories/comments-repository";
+import {CommentsQueryRepository} from "./queryRepository/comments-query-repository";
+import {CommentsService} from "./domain/comments-service";
+import {CommentsController} from "./controllers/comments-controller";
+import {EmailAdapter} from "./adapters/email-adapter";
+import {EmailManager} from "./managers/email-manager";
+import {JwtQueryRepository} from "./queryRepository/jwt-query-repository";
+import {JwtService} from "./domain/jwt-service";
+import {TestingRepository} from "./repositories/testing-repository";
+import {TestingController} from "./controllers/testing-controller";
+import {UsersRepository} from "./repositories/users-repository";
+import {UsersQueryRepository} from "./queryRepository/users-query-repository";
+import {UsersService} from "./domain/users-service";
+import {UsersController} from "./controllers/users-controller";
+
+const postsRepository = new PostsRepository();
+const blogsRepository = new BlogsRepository();
+const blogsQueryRepository = new BlogsQueryRepository();
+const blogsService = new BlogsService(blogsRepository, blogsQueryRepository);
+const postsQueryRepository = new PostsQueryRepository();
+const postsService = new PostsService(postsRepository, blogsQueryRepository);
+const commentsRepository = new CommentsRepository();
+const commentsQueryRepository = new CommentsQueryRepository(postsQueryRepository);
+export const usersQueryRepository = new UsersQueryRepository();
+const commentService = new CommentsService(commentsRepository, usersQueryRepository);
+export const devicesRepository = new DevicesRepository();
+export const devicesQueryRepository = new DevicesQueryRepository();
+export const jwtQueryRepository = new JwtQueryRepository();
+
+const devicesService = new DevicesService(jwtQueryRepository, devicesQueryRepository, devicesRepository);
+export const jwtService = new JwtService(jwtQueryRepository, devicesService);
+
+const emailAdapter = new EmailAdapter();
+export const emailManager = new EmailManager(emailAdapter);
+export const usersRepository = new UsersRepository();
+export const usersService = new UsersService(usersRepository, usersQueryRepository);
+const authService = new AuthService(emailManager, jwtService, usersService, usersRepository, usersQueryRepository);
+const testingRepository = new TestingRepository();
+
+//controllers
+export const blogsController = new BlogsController(blogsService, blogsQueryRepository, postsQueryRepository);
+export const authController = new AuthController(jwtService, devicesService, authService);
+export const devicesController = new DevicesController(devicesQueryRepository, devicesService);
+export const postsController = new PostsController(postsQueryRepository, postsService, commentsQueryRepository, commentService);
+export const commentsController = new CommentsController(commentsQueryRepository, commentService);
+export const usersController = new UsersController(usersQueryRepository, usersService);
+export const testingController = new TestingController(testingRepository);

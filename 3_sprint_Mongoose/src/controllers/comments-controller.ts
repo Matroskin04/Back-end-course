@@ -1,11 +1,12 @@
-import {RequestWithParams, RequestWithParamsAndBody} from "../types/requests-types";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types/requests-types";
 import {UriIdModel} from "../models/UriModels";
 import {Request, Response} from "express";
 import {ViewCommentModel} from "../models/CommentsModels/ViewCommentModel";
 import {UpdateCommentModel} from "../models/CommentsModels/UpdateCommentModel";
-import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {CommentsService} from "../domain/comments-service";
+import {UpdateLikeStatusModel} from "../models/CommentsModels/UpdateCommentLikeStatus";
 
 
 export class CommentsController {
@@ -44,8 +45,21 @@ export class CommentsController {
     async deleteComment(req: Request, res: Response<void>) {
 
         try {
-            await this.commentsService.deleteOne(req.params.id);
+            await this.commentsService.deleteComment(req.params.id);
             res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    }
+
+    async updateLikeStatusOfComment(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>, res: Response<string>) {
+
+        try {
+            const result = await this.commentsService.updateLikeStatusOfComment(req.params.id, req.body.likeStatus);
+
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).send('Comment with specified id doesn\'t exist');
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

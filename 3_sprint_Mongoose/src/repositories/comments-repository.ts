@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../db/shemasModelsMongoose/comments-shema-model";
+import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
 import {CommentDBType} from "../types/db-types";
+import {LikeStatus} from "../helpers/enums/like-status";
 
 export class CommentsRepository {
 
@@ -20,5 +21,11 @@ export class CommentsRepository {
 
         await CommentModel.create(comment);
         return;
+    }
+
+    async updateLikeStatusOfComment(_id: string, likeStatus: LikeStatus): Promise<boolean> {
+
+        const result = await CommentModel.updateOne({_id}, {$set: {myStatus: likeStatus}});
+        return result.modifiedCount === 1;
     }
 }

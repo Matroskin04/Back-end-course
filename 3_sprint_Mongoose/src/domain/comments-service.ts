@@ -1,17 +1,20 @@
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
 import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
-import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 import {CommentDBType} from "../types/db-types";
 import {CommentsRepository} from "../repositories/comments-repository";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import {LikeStatus} from "../helpers/enums/like-status";
+import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 
 
 export class CommentsService {
 
     constructor(protected commentsRepository: CommentsRepository,
-                protected usersQueryRepository: UsersQueryRepository) {}
+                protected usersQueryRepository: UsersQueryRepository,
+                protected commentsQueryRepository: CommentsQueryRepository) {}
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
@@ -19,7 +22,7 @@ export class CommentsService {
         return;
     }
 
-    async deleteOne(id: string): Promise<void> {
+    async deleteComment(id: string): Promise<void> {
 
         await  this.commentsRepository.deleteComment(id);
         return;
@@ -45,11 +48,30 @@ export class CommentsService {
                 userLogin: user.login
             },
             new Date().toISOString(),
-            postId
+            postId,
+            {
+                likesCount: 0,
+                dislikesCount: 0
+            }
         )
 
         await  this.commentsRepository.createCommentByPostId(comment);
         return mappingComment(comment);
+    }
+
+    async updateLikeStatusOfComment(commentId: string, likeStatus: LikeStatus): Promise<boolean> {
+
+        const comment = this.commentsQueryRepository.getCommentById(commentId);
+        if (!comment) {
+            return false;
+        }
+
+        const result = this.commentsRepository.updateLikeStatusOfComment(commentId, likeStatus);
+        if (!result) {
+            throw new Error('Updating like status failed');
+        }
+
+        return true;
     }
 }
 

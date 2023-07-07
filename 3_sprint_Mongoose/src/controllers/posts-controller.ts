@@ -15,7 +15,7 @@ import {CreatePostModel} from "../models/PostsModels/CreatePostModel";
 import {PostsService} from "../domain/posts-service";
 import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
 import {UpdatePostModel} from "../models/PostsModels/UpdatePostModel";
-import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {CommentsService} from "../domain/comments-service";

@@ -1,7 +1,7 @@
 import {BodyBlogType} from "./repositories-types/blogs-types-repositories";
 import {ObjectId} from "mongodb";
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
-import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
+import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 import {BlogDBType, PostDBType} from "../types/db-types";
 
 export class BlogsRepository {

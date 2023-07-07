@@ -12,7 +12,7 @@ import {
 } from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateInfoRequest} from "../middlewares/info-request-middlewares/validate-info-request-middleware";
 import {saveInfoRequest} from "../middlewares/info-request-middlewares/save-info-request-middleware";
-import {authController} from "../composition-root/auth-composition-root";
+import {authController} from "../composition-root";
 
 export const authRoutes = Router();
 

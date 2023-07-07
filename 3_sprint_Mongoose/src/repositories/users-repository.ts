@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {UserModel} from "../db/shemasModelsMongoose/users-shema-model";
+import {UserModel} from "../db/shemasModelsMongoose/users-schema-model";
 import {UserDBType} from "../types/db-types";
 
 

@@ -4,8 +4,8 @@ import {mongoURL} from "../db/db";
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
-import {PostModel} from "../db/shemasModelsMongoose/posts-shema-model";
+import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
+import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",
@@ -14,7 +14,6 @@ const generalBlogInputData = {
 };
 let idOfBlog: ObjectId | null = null;
 let idOfDeletedBlog: ObjectId | null= null;
-
 
 let idOfPost: ObjectId | null= null;
 

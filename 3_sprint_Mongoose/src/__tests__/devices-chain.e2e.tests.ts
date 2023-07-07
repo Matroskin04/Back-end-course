@@ -5,6 +5,15 @@ import {ObjectId} from "mongodb";
 import {AuthService} from "../domain/auth-service";
 import {DevicesService} from "../domain/devices-service";
 import mongoose from "mongoose";
+import {
+    devicesQueryRepository, devicesRepository,
+    emailManager,
+    jwtQueryRepository,
+    jwtService,
+    usersQueryRepository,
+    usersRepository,
+    usersService
+} from "../composition-root";
 
 
 //refresh 30 sec, access - 20 sec
@@ -213,11 +222,11 @@ describe('devices: /security/devices', () => {
               + POST -> '/auth/login' - one more login after 10 seconds; status 200;`, async () => {
 
         jest.spyOn(AuthService.prototype, 'loginUser')
-        const loginUser = new AuthService().loginUser;
+        const loginUser = new AuthService(emailManager, jwtService, usersService, usersRepository, usersQueryRepository).loginUser;
 
 
         jest.spyOn(DevicesService.prototype, 'createNewDevice');
-        const createNewDevice = new DevicesService().createNewDevice;
+        const createNewDevice = new DevicesService(jwtQueryRepository, devicesQueryRepository, devicesRepository).createNewDevice;
 
         //1
         await request(app)

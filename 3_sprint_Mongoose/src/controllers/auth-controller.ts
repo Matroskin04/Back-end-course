@@ -9,7 +9,7 @@ import {
 } from "../models/AuthModels/RegistrationAuthModel";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../models/AuthModels/PasswordRecoveryFlowAuthModel";
-import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {DevicesService} from "../domain/devices-service";
 import {AuthService} from "../domain/auth-service";
 import {JwtService} from "../domain/jwt-service";

@@ -39,9 +39,12 @@ export class CommentDBType {
             userLogin: string
         },
         public createdAt: string,
-        public postId: string
-    ) {
-    }
+        public postId: string,
+        public likesInfo: {
+            likesCount: number,
+            dislikesCount: number
+        }
+        ) {}
 }
 
 
@@ -67,6 +70,7 @@ export class DeviceDBType {
         public deviceId: string,
         public userId: string,
         public expirationDate: number
-    ) {}
+    ) {
+    }
 }
 

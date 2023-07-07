@@ -1,4 +1,4 @@
-import {DeviceModel} from "../db/shemasModelsMongoose/devices-shema-model";
+import {DeviceModel} from "../db/shemasModelsMongoose/devices-schema-model";
 import {DeviceDBType} from "../types/db-types";
 
 

@@ -15,10 +15,12 @@ import {
     NewPasswordAuthModel,
     PasswordRecoveryAuthModel
 } from "../../models/AuthModels/PasswordRecoveryFlowAuthModel";
+import {UpdateLikeStatusModel} from "../../models/CommentsModels/UpdateCommentLikeStatus";
 
 type getErrorsType = CreateBlogModel | CreatePostModel | CreatePostByBlogIdModel
                     | CreateUserModel | LoginAuthInputModel | CreateCommentByPostIdModel | RegistrationAuthModel
                     | RegisterConfirmAuthModel | RegisterResendConfirmAuthModel | NewPasswordAuthModel | PasswordRecoveryAuthModel
+                    | UpdateLikeStatusModel
 export const getErrors = (req: RequestWithBody<getErrorsType>,
                           res: Response<ViewAllErrorsModels>, next: NextFunction) => {
 

@@ -4,6 +4,11 @@ export type CommentOutputType = {
     commentatorInfo: {
         userId: string
         userLogin: string
-    },
-    createdAt: string,
+    }
+    createdAt: string
+    likesInfo: {
+        likesCount: number
+        dislikesCount: number
+        myStatus: 'None'| 'Like' | 'Dislike'
+    }
 }

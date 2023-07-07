@@ -1,9 +1,9 @@
 import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../../db/shemasModelsMongoose/comments-shema-model";
+import {CommentModel} from "../../db/shemasModelsMongoose/comments-schema-model";
 
-export const validateBodyOfComment = [
+export const validateContentOfComment = [
 
     body('content')
         .exists()
@@ -19,6 +19,7 @@ export const validateBodyOfComment = [
         .isLength({min: 20, max: 300})
         .withMessage('The length should be from 20 to 300 characters'),
 ]
+
 
 export const checkCommentByIdAndToken = async (req: Request, res: Response, next: NextFunction) => { //todo в бизнес слой
 

@@ -4,7 +4,7 @@ import {app} from "../setting";
 const request = require("supertest");
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 import mongoose from "mongoose";
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-shema-model";
+import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
 
 let idOfBlog: string;
 const arrayOfBlogs: Array<BlogTypeWithId | null> = [];

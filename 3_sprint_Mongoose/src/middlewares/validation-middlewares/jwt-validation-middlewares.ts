@@ -1,7 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {usersService} from "../../composition-root/users-composition-root";
-import {jwtQueryRepository} from "../../composition-root/jwt-composition-root";
-import {devicesQueryRepository} from "../../composition-root/devices-composition-root";
+import {devicesQueryRepository, jwtQueryRepository, usersService} from "../../composition-root";
 
 
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

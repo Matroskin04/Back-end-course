@@ -4,7 +4,7 @@ import {Response} from "express";
 import {ViewAllUsersModels, ViewUserModel} from "../models/UsersModels/ViewUserModel";
 import {CreateUserModel} from "../models/UsersModels/CreateUserModel";
 import {UriIdModel} from "../models/UriModels";
-import {HTTP_STATUS_CODE} from "../helpers/http-status";
+import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {UsersService} from "../domain/users-service";
 

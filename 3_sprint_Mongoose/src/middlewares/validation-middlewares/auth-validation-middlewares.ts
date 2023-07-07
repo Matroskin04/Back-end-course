@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {usersQueryRepository} from "../../composition-root/users-composition-root";
+import {usersQueryRepository} from "../../composition-root";
 
 
 export const validateLoginDataAuth = [
