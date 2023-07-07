@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
 import {CommentDBType} from "../types/db-types";
-import {LikeStatus} from "../helpers/enums/like-status";
 
 export class CommentsRepository {
 
@@ -23,9 +22,29 @@ export class CommentsRepository {
         return;
     }
 
-    async updateLikeStatusOfComment(_id: string, likeStatus: LikeStatus): Promise<boolean> {
+    async incrementNumberOfLikeOfComment(_id: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
 
-        const result = await CommentModel.updateOne({_id}, {$set: {myStatus: likeStatus}});
-        return result.modifiedCount === 1;
+        if (likeStatus === 'Like') {
+            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.likesCount': 1}});
+            return result.modifiedCount === 1;
+
+        } else {
+            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.dislikesCount': 1}});
+            return result.modifiedCount === 1;
+
+        }
+    }
+
+    async decrementNumberOfLikeOfComment(_id: string, decrementValue: 'Like' | 'Dislike'): Promise<boolean> {
+
+        if (decrementValue === 'Like') {
+            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.likesCount': -1}});
+            return result.modifiedCount === 1;
+
+        } else {
+            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.dislikesCount': -1}});
+            return result.modifiedCount === 1;
+
+        }
     }
 }

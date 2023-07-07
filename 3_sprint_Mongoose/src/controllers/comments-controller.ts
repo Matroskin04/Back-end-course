@@ -1,4 +1,4 @@
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types/requests-types";
+import {RequestWithParams, RequestWithParamsAndBody} from "../types/requests-types";
 import {UriIdModel} from "../models/UriModels";
 import {Request, Response} from "express";
 import {ViewCommentModel} from "../models/CommentsModels/ViewCommentModel";
@@ -56,7 +56,7 @@ export class CommentsController {
     async updateLikeStatusOfComment(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>, res: Response<string>) {
 
         try {
-            const result = await this.commentsService.updateLikeStatusOfComment(req.params.id, req.body.likeStatus);
+            const result = await this.commentsService.updateLikeStatusOfComment(req.params.id, req.userId!, req.body.likeStatus);
 
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).send('Comment with specified id doesn\'t exist');

@@ -44,7 +44,8 @@ export class CommentDBType {
             likesCount: number,
             dislikesCount: number
         }
-        ) {}
+    ) {
+    }
 }
 
 
@@ -77,10 +78,8 @@ export class DeviceDBType {
 export class LikesInfoDBType {
     constructor(
         public commentId: ObjectId,
-        public usersStatusLike: {
-            userId: ObjectId,
-            statusLike: 'Like' | 'Dislike'
-        }[]
+        public userId: ObjectId,
+        public statusLike: 'Like' | 'Dislike'
     ) {
     }
 }

@@ -8,23 +8,28 @@ import {CommentsRepository} from "../repositories/comments-repository";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {LikeStatus} from "../helpers/enums/like-status";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
+import {LikesInfoService} from "./likes-info-service";
+import {LikesInfoQueryRepository} from "../queryRepository/likes-info-query-repository";
 
 
 export class CommentsService {
 
     constructor(protected commentsRepository: CommentsRepository,
                 protected usersQueryRepository: UsersQueryRepository,
-                protected commentsQueryRepository: CommentsQueryRepository) {}
+                protected commentsQueryRepository: CommentsQueryRepository,
+                protected likesInfoService: LikesInfoService,
+                protected likesInfoQueryRepository: LikesInfoQueryRepository) {
+    }
 
     async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
 
-        await  this.commentsRepository.updateComment(id, idFromToken, content);
+        await this.commentsRepository.updateComment(id, idFromToken, content);
         return;
     }
 
     async deleteComment(id: string): Promise<void> {
 
-        await  this.commentsRepository.deleteComment(id);
+        await this.commentsRepository.deleteComment(id);
         return;
     }
 
@@ -55,23 +60,55 @@ export class CommentsService {
             }
         )
 
-        await  this.commentsRepository.createCommentByPostId(comment);
-        return mappingComment(comment);
+
+        await this.commentsRepository.createCommentByPostId(comment);
+        return mappingComment(comment, 'None');
     }
 
-    async updateLikeStatusOfComment(commentId: string, likeStatus: LikeStatus): Promise<boolean> {
+    async updateLikeStatusOfComment(commentId: string, userId: ObjectId, statusLike: LikeStatus): Promise<boolean> {
 
-        const comment = this.commentsQueryRepository.getCommentById(commentId);
+        const comment = await this.commentsQueryRepository.getCommentById(commentId); //todo несколько лайков от одного юзера
         if (!comment) {
             return false;
         }
 
-        const result = this.commentsRepository.updateLikeStatusOfComment(commentId, likeStatus);
-        if (!result) {
-            throw new Error('Updating like status failed');
-        }
+        if (statusLike === 'Like' || statusLike === 'Dislike') {
 
-        return true;
+            const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+            if (!result) {
+                throw new Error('Incrementing number of likes failed');
+            }
+
+            //Если информация уже есть, то меняем статус лайка
+            const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), statusLike);
+            if (isUpdate) {
+                return true;
+            }
+
+            //Если нет, то записываем
+            await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), statusLike);
+            return true;
+
+        } else {
+
+            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
+            if (!likeInfo) {
+                throw new Error(`Status of like is already 'None', it can't be changed`)
+            }
+
+
+            const result = await this.commentsRepository.decrementNumberOfLikeOfComment(commentId, likeInfo.statusLike);
+            if (!result) {
+                throw new Error('Decrementing number of likes failed');
+            }
+
+            const isDeleted = await this.likesInfoService.deleteLikeInfoComment(userId, new ObjectId(commentId))
+            if (!isDeleted) {
+                throw new Error('Deleting like info of comment failed');
+            }
+
+            return true;
+        }
     }
 }
 

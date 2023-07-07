@@ -6,19 +6,31 @@ import {variablesForReturn} from "./utils/variables-for-return";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
 import {mappingComment} from "../helpers/functions/comments-functions-helpers";
 import {PostsQueryRepository} from "./posts-query-repository";
+import {LikesInfoQueryRepository} from "./likes-info-query-repository";
 
 
 export class CommentsQueryRepository  {
-    constructor(protected postsQueryRepository: PostsQueryRepository) {}
+    constructor(protected postsQueryRepository: PostsQueryRepository,
+                protected likesInfoQueryRepository: LikesInfoQueryRepository) {}
 
-    async getCommentById(id: string): Promise<CommentOutputType | null> {
+    async getCommentById(commentId: string): Promise<CommentOutputType | null> {
 
-        const comment = await CommentModel.findOne({_id: new ObjectId(id)});
+        const comment = await CommentModel.findOne({_id: new ObjectId(commentId)});
         if (!comment) {
-            return null
+            return null;
         }
 
-        return mappingComment(comment)
+        let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
+        const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), new ObjectId(comment.commentatorInfo.userId));
+
+        if (!likeInfo) {
+            myStatus = 'None';
+
+        } else {
+            myStatus = likeInfo.statusLike;
+        }
+
+        return mappingComment(comment, myStatus);
     }
 
     async getCommentsOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
@@ -40,12 +52,13 @@ export class CommentsQueryRepository  {
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).lean();
 
+
         return {
             pagesCount: Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllCommentsOfPost,
-            items: allCommentOfPostsOnPages.map(p => mappingComment(p))
+            items: allCommentOfPostsOnPages.map(p => mappingComment(p, 'None')) //todo статус кого передавать? У нас нет userID
         }
     }
 }

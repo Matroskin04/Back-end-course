@@ -14,13 +14,13 @@ export class JwtService {
 
     createAccessToken(userId: string): string {
 
-        return jwt.sign({userId: userId}, env.PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '20s'})
+        return jwt.sign({userId: userId}, env.PRIVATE_KEY_ACCESS_TOKEN, {expiresIn: '6m'})
     }
 
     createRefreshToken(userId: string, existingDeviceId: string | null): string {
 
         const deviceId = existingDeviceId ?? randomUUID();
-        return jwt.sign({userId, deviceId}, env.PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '30s'})
+        return jwt.sign({userId, deviceId}, env.PRIVATE_KEY_REFRESH_TOKEN, {expiresIn: '10m'})
     }
 
     async changeTokensByRefreshToken(userId: ObjectId, cookieRefreshToken: string): Promise<AccessRefreshTokens> {

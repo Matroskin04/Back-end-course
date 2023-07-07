@@ -3,6 +3,7 @@ import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 import {UserModel} from "../db/shemasModelsMongoose/users-schema-model";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-schema-model";
+import {LikesInfoModel} from "../db/shemasModelsMongoose/likes-info-schema-model";
 
 
 export class TestingRepository {
@@ -14,7 +15,9 @@ export class TestingRepository {
             BlogModel.deleteMany({}),
             UserModel.deleteMany({}),
             CommentModel.deleteMany({}),
-            DeviceModel.deleteMany({})])
+            DeviceModel.deleteMany({}),
+            LikesInfoModel.deleteMany({})
+        ])
             .then(value => {
                 console.log('OK');
 
