@@ -3,7 +3,10 @@ import {authorization} from "../middlewares/authorization-middelwares";
 import {validateBodyOfPost} from "../middlewares/validation-middlewares/posts-validation-middlewares";
 import {getErrors} from "../middlewares/validation-middlewares/catch-errors-middlewares";
 import {validateContentOfComment} from "../middlewares/validation-middlewares/comments-validation-middlewares";
-import {validateAccessToken} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
+import {
+    validateAccessToken,
+    validateAccessTokenGetRequests
+} from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
 import {postsController} from "../composition-root";
 
@@ -19,6 +22,7 @@ postsRoutes.get('/:id',
 
 postsRoutes.get('/:id/comments',
     validateFormatOfUrlParams,
+    validateAccessTokenGetRequests,
     postsController.getAllCommentsOfPost.bind(postsController));
 
 postsRoutes.post('/',

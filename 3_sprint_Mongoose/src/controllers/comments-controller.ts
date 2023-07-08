@@ -20,7 +20,7 @@ export class CommentsController {
                          res: Response<ViewCommentModel>) {
 
         try {
-            const result = await this.commentsQueryRepository.getCommentById(req.params.id);
+            const result = await this.commentsQueryRepository.getCommentById(req.params.id, req.userId);
 
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);

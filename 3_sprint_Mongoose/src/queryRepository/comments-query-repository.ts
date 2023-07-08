@@ -4,7 +4,7 @@ import {QueryPostModel} from "../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
-import {mappingComment} from "../helpers/functions/comments-functions-helpers";
+import {mappingComment, mappingCommentForAllDocs} from "../helpers/functions/comments-functions-helpers";
 import {PostsQueryRepository} from "./posts-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";
 
@@ -13,29 +13,31 @@ export class CommentsQueryRepository  {
     constructor(protected postsQueryRepository: PostsQueryRepository,
                 protected likesInfoQueryRepository: LikesInfoQueryRepository) {}
 
-    async getCommentById(commentId: string): Promise<CommentOutputType | null> {
+    async getCommentById(commentId: string, userId: ObjectId | null): Promise<CommentOutputType | null> {
 
         const comment = await CommentModel.findOne({_id: new ObjectId(commentId)});
         if (!comment) {
             return null;
         }
+        console.log(userId)
 
         let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
-        const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), new ObjectId(comment.commentatorInfo.userId));
-
-        if (!likeInfo) {
-            myStatus = 'None';
-
-        } else {
+        if (userId) {
+            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
+            if (!likeInfo) {
+                throw new Error('Info of like is not found')
+            }
             myStatus = likeInfo.statusLike;
+        } else {
+            myStatus = 'None'
         }
 
         return mappingComment(comment, myStatus); //todo статус кого? У нас нет юзера.
     }
 
-    async getCommentsOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
+    async getCommentsOfPost(query: QueryPostModel, id: string, userId: ObjectId | null): Promise<CommentOfPostPaginationType | null> {
 
-        const post = await  this.postsQueryRepository.getSinglePost(id);
+        const post = await this.postsQueryRepository.getSinglePost(id);
         if (!post) {
             return null
         }
@@ -46,11 +48,13 @@ export class CommentsQueryRepository  {
             .countDocuments({postId: id});
 
 
-        const allCommentOfPostsOnPages = await CommentModel
+        const allCommentsOfPostOnPages = await CommentModel
             .find({postId: id})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).lean();
+
+        const allCommentsOfPost = await Promise.all(allCommentsOfPostOnPages.map(async p => mappingCommentForAllDocs(p, userId)));
 
 
         return {
@@ -58,7 +62,7 @@ export class CommentsQueryRepository  {
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllCommentsOfPost,
-            items: allCommentOfPostsOnPages.map(p => mappingComment(p, 'None')) //todo статус кого передавать? У нас нет userID
+            items: allCommentsOfPost//todo статус кого передавать? У нас нет userID
         }
     }
 }

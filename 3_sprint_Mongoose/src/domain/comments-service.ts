@@ -67,7 +67,7 @@ export class CommentsService {
 
     async updateLikeStatusOfComment(commentId: string, userId: ObjectId, statusLike: LikeStatus): Promise<boolean> {
 
-        const comment = await this.commentsQueryRepository.getCommentById(commentId);
+        const comment = await this.commentsQueryRepository.getCommentById(commentId, userId);
         if (!comment) {
             return false;
         }

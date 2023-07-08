@@ -59,7 +59,7 @@ export class PostsController {
                                res: Response<ViewAllCommentsOfPostModel>) {
 
         try {
-            const result = await this.commentsQueryRepository.getCommentsOfPost(req.query, req.params.id);
+            const result = await this.commentsQueryRepository.getCommentsOfPost(req.query, req.params.id, req.userId);
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 

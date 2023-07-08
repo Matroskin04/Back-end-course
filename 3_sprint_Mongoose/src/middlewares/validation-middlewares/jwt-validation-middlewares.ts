@@ -2,6 +2,24 @@ import {NextFunction, Request, Response} from "express";
 import {devicesQueryRepository, jwtQueryRepository, usersService} from "../../composition-root";
 
 
+export const validateAccessTokenGetRequests = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+    if (!req.headers.authorization) {
+        next();
+        return;
+    }
+
+    const token = req.headers.authorization.split(' ')[1];
+    const userId = await usersService.getUserIdByAccessToken(token);
+
+    if (userId) {
+        req.userId = userId;
+        next();
+        return;
+    }
+    res.sendStatus(401)
+}
+
 export const validateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     if (!req.headers.authorization) {
