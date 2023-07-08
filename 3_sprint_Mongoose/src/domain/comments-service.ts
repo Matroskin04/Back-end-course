@@ -74,26 +74,32 @@ export class CommentsService {
 
         if (statusLike === 'Like' || statusLike === 'Dislike') {
 
+            //Получаю like info
             const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
-            if (!likeInfo) {
-
+            if (!likeInfo) { //если нету такого документа
+                //Увеличиваю количество лайков/дизлайков
                 const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
                 if (!result) {
                     throw new Error('Incrementing number of likes failed');
                 }
-
+                //Создаю like info
                 await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), statusLike);
                 return true;
             }
 
             //Если информация уже есть, то меняем статус лайка
             const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), statusLike);
-            if (isUpdate) {
-                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
-                if (!result) {
+            if (isUpdate) {//если изменился, то
+                //увеличиваю на 1
+                const result1 = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+                if (!result1) {
                     throw new Error('Incrementing number of likes failed');
                 }
-
+                //уменьшаю на 1 тоЮ что убрали
+                const result2 = await this.commentsRepository.decrementNumberOfLikeOfComment(commentId, likeInfo.statusLike);
+                if (!result2) {
+                    throw new Error('Decrementing number of likes failed');
+                }
                 return true;
 
             } else {

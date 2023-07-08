@@ -19,15 +19,15 @@ export class CommentsQueryRepository  {
         if (!comment) {
             return null;
         }
-        console.log(userId)
 
         let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
         if (userId) {
             const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
             if (!likeInfo) {
-                throw new Error('Info of like is not found')
+                myStatus = 'None'
+            } else {
+                myStatus = likeInfo.statusLike;
             }
-            myStatus = likeInfo.statusLike;
         } else {
             myStatus = 'None'
         }
