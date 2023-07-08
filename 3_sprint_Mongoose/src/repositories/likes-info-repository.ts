@@ -18,7 +18,7 @@ export class LikesInfoRepository {
 
     async deleteLikeInfoComment(userId: ObjectId, commentId: ObjectId): Promise<boolean> {
 
-        const result = await LikesInfoModel.deleteOne({userId, commentId});
-        return result.deletedCount === 1;
+        const result = await LikesInfoModel.deleteMany({userId, commentId});
+        return result.deletedCount >= 1;
     }
 }

@@ -67,27 +67,38 @@ export class CommentsService {
 
     async updateLikeStatusOfComment(commentId: string, userId: ObjectId, statusLike: LikeStatus): Promise<boolean> {
 
-        const comment = await this.commentsQueryRepository.getCommentById(commentId); //todo несколько лайков от одного юзера
+        const comment = await this.commentsQueryRepository.getCommentById(commentId);
         if (!comment) {
             return false;
         }
 
         if (statusLike === 'Like' || statusLike === 'Dislike') {
 
-            const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
-            if (!result) {
-                throw new Error('Incrementing number of likes failed');
+            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
+            if (!likeInfo) {
+
+                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+                if (!result) {
+                    throw new Error('Incrementing number of likes failed');
+                }
+
+                await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), statusLike);
+                return true;
             }
 
             //Если информация уже есть, то меняем статус лайка
             const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), statusLike);
             if (isUpdate) {
-                return true;
-            }
+                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+                if (!result) {
+                    throw new Error('Incrementing number of likes failed');
+                }
 
-            //Если нет, то записываем
-            await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), statusLike);
-            return true;
+                return true;
+
+            } else {
+                throw new Error('You can\'t put the same reaction');
+            }
 
         } else {
 

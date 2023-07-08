@@ -12,7 +12,7 @@ export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislik
         createdAt: comment.createdAt,
         likesInfo: {
             likesCount: comment.likesInfo.likesCount,
-            dislikesCount: comment.likesInfo.likesCount,
+            dislikesCount: comment.likesInfo.dislikesCount,
             myStatus
         }
     }

@@ -20,17 +20,17 @@ export class CommentsQueryRepository  {
             return null;
         }
 
-        let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
-        const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), new ObjectId(comment.commentatorInfo.userId));
+        // let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
+        // const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), new ObjectId(comment.commentatorInfo.userId));
+        //
+        // if (!likeInfo) {
+        //     myStatus = 'None';
+        //
+        // } else {
+        //     myStatus = likeInfo.statusLike;
+        // }
 
-        if (!likeInfo) {
-            myStatus = 'None';
-
-        } else {
-            myStatus = likeInfo.statusLike;
-        }
-
-        return mappingComment(comment, myStatus);
+        return mappingComment(comment, 'None'); //todo статус кого? У нас нет юзера.
     }
 
     async getCommentsOfPost(query: QueryPostModel, id: string): Promise<CommentOfPostPaginationType | null> {
