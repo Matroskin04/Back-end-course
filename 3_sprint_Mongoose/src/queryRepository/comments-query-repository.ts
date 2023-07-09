@@ -61,7 +61,7 @@ export class CommentsQueryRepository  {
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllCommentsOfPost,
-            items: allCommentsOfPost//todo статус кого передавать? У нас нет userID
+            items: allCommentsOfPost
         }
     }
 }
