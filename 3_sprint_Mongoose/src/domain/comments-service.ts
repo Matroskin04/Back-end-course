@@ -103,7 +103,7 @@ export class CommentsService {
                 return true;
 
             } else {
-                throw new Error('You can\'t put the same reaction');
+                return true;
             }
 
         } else {

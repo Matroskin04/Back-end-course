@@ -8,7 +8,6 @@ import {mappingComment, mappingCommentForAllDocs} from "../helpers/functions/com
 import {PostsQueryRepository} from "./posts-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";
 
-
 export class CommentsQueryRepository  {
     constructor(protected postsQueryRepository: PostsQueryRepository,
                 protected likesInfoQueryRepository: LikesInfoQueryRepository) {}
