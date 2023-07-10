@@ -16,7 +16,7 @@ import {
 } from "../composition-root";
 
 
-//refresh 30 sec, access - 20 sec
+//refresh 60 sec, access - 30 sec
 let refreshToken1: string;
 let refreshToken2: string;
 let deviceId: string;
@@ -209,7 +209,7 @@ describe('devices: /security/devices', () => {
         expect(response3.body).toHaveLength(1);
 
         //задержка 30 сек, чтобы проверить expired token
-        await new Promise((resolve) => setTimeout(resolve, 30000))
+        await new Promise((resolve) => setTimeout(resolve, 60000))
         //refresh token is expired
         await request(app)
             .delete(`/hometask-03/security/devices/${deviceId}`)

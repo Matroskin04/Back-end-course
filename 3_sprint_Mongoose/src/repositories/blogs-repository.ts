@@ -7,13 +7,15 @@ import {BlogDBType, PostDBType} from "../types/db-types";
 export class BlogsRepository {
     async createBlog(blog: BlogDBType): Promise<void> {
 
-        await BlogModel.create(blog);
+        const blogInstance = new BlogModel(blog);
+        await blogInstance.save();
         return;
     }
 
     async createPostByBlogId(post: PostDBType): Promise<void> {
 
-        await PostModel.create(post);
+        const postInstance = new PostModel(post);
+        await postInstance.save();
         return;
     }
 

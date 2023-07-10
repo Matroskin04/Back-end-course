@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
@@ -21,7 +22,7 @@ const usersQueryRepository = new UsersQueryRepository();
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
 
-    beforeAll( async () => {
+    beforeAll(async () => {
         await mongoose.connection.close();
         await mongoose.connect(mongoURL);
 
@@ -147,7 +148,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             "errorsMessages": [{
                 "message": expect.any(String),
                 "field": "content"
-            }]});
+            }]
+        });
 
         const response2 = await request(app)
             .post(`/hometask-03/posts/${idOfPost}/comments`)
@@ -158,7 +160,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             "errorsMessages": [{
                 "message": expect.any(String),
                 "field": "content"
-            }]})
+            }]
+        })
 
         const response3 = await request(app)
             .post(`/hometask-03/posts/${idOfPost}/comments`)
@@ -169,7 +172,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             "errorsMessages": [{
                 "message": expect.any(String),
                 "field": "content"
-            }]})
+            }]
+        })
     })
 
     it(`Addition: - POST -> '/posts/{id}/comments' the post with such id doesnt exist; status: 404`, async () => {
@@ -197,7 +201,12 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 userId: idOfUser,
                 userLogin: 'Dima123'
             },
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
+            likesInfo: {
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: "None",
+            }
         });
         arrayOfComments.push(comment1.body);
 
@@ -227,7 +236,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 page: 1,
                 pageSize: 10,
                 totalCount: 3,
-                items: [arrayOfComments[2],arrayOfComments[1],arrayOfComments[0]]
+                items: [arrayOfComments[2], arrayOfComments[1], arrayOfComments[0]]
             });
 
         idOfComment = comment1.body.id;
@@ -256,7 +265,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 page: 1,
                 pageSize: 10,
                 totalCount: 3,
-                items: [arrayOfComments[2],arrayOfComments[1],arrayOfComments[0]]
+                items: [arrayOfComments[2], arrayOfComments[1], arrayOfComments[0]]
             });
     })
 
@@ -305,9 +314,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: null})
             .expect(400);
-        expect(response1.body).toEqual({errorsMessages: [{
-                    message: expect.any(String),
-                    field: "content" }]
+        expect(response1.body).toEqual({
+            errorsMessages: [{
+                message: expect.any(String),
+                field: "content"
+            }]
         })
 
         const response2 = await request(app)
@@ -315,9 +326,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .set('Authorization', `Bearer ${accessToken}`)
             .send({content: 'edit'})
             .expect(400);
-        expect(response2.body).toEqual({errorsMessages: [{
+        expect(response2.body).toEqual({
+            errorsMessages: [{
                 message: expect.any(String),
-                field: "content" }]
+                field: "content"
+            }]
         })
 
         await request(app)
@@ -363,10 +376,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: 'meschit9gmail.com'
             })
             .expect(400)
-        expect(response1.body).toEqual({errorsMessages: [
-                {message: expect.any(String), field: "login" },
-                {message: expect.any(String), field: "email" },
-                {message: expect.any(String), field: "password" },  ]
+        expect(response1.body).toEqual({
+            errorsMessages: [
+                {message: expect.any(String), field: "login"},
+                {message: expect.any(String), field: "email"},
+                {message: expect.any(String), field: "password"},]
         })
 
         const response2 = await request(app)
@@ -377,10 +391,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: null
             })
             .expect(400)
-        expect(response2.body).toEqual({errorsMessages: [
-                {message: expect.any(String), field: "login" },
-                {message: expect.any(String), field: "email" },
-                {message: expect.any(String), field: "password" },  ]
+        expect(response2.body).toEqual({
+            errorsMessages: [
+                {message: expect.any(String), field: "login"},
+                {message: expect.any(String), field: "email"},
+                {message: expect.any(String), field: "password"},]
         })
 
         await request(app)
@@ -405,7 +420,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: 'mfdsft1239@gmail.com'
             })
             .expect(400)
-        expect(response4.body).toEqual({errorsMessages: [ {message: expect.any(String), field: "login" }  ] })
+        expect(response4.body).toEqual({errorsMessages: [{message: expect.any(String), field: "login"}]})
 
         const response5 = await request(app)
             .post(`/hometask-03/auth/registration`)
@@ -415,7 +430,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
                 email: 'meschit9@gmail.com'
             })
             .expect(400)
-        expect(response5.body).toEqual({errorsMessages: [ {message: expect.any(String), field: "email" }  ] })
+        expect(response5.body).toEqual({errorsMessages: [{message: expect.any(String), field: "email"}]})
     })
 
     it(`+POST -> '/auth/registration-confirmation': Email was verified; status: 204;
@@ -452,7 +467,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               -POST -> '/auth/registration-confirmation': the confirmation code is incorrect (old code); status: 400;
               +POST -> '/auth/registration-confirmation': Email was verified; status: 204;`, async () => {
 
-        await new Promise( (resolve) => setTimeout(resolve, 8000))
+        await new Promise((resolve) => setTimeout(resolve, 8000))
         //create new user
         await request(app)
             .post(`/hometask-03/auth/registration`)
@@ -549,7 +564,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .expect(200)
         expect(refreshResponse.headers["set-cookie"]).not.toBe(refreshToken);
         expect(refreshResponse.body.accessToken).not.toBe(accessToken);
-        console.log(refreshResponse.headers["set-cookie"] === refreshToken)
+
         refreshToken = refreshResponse.headers["set-cookie"][0];
     })
 

@@ -18,7 +18,9 @@ export class CommentsRepository {
 
     async createCommentByPostId(comment: CommentDBType): Promise<void> {
 
-        await CommentModel.create(comment);
+        const commentInstance = new CommentModel(comment);
+        await commentInstance.save();
+
         return;
     }
 
