@@ -7,7 +7,9 @@ export class UsersRepository  {
 
     async createUser(bodyUser: UserDBType): Promise<void> {
 
-        await UserModel.create(bodyUser);
+        const userInstance = new UserModel(bodyUser);
+        await userInstance.save();
+
         return;
     }
 

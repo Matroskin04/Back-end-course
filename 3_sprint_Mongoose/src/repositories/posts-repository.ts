@@ -8,7 +8,9 @@ export class PostsRepository {
 
     async createPost(post: PostDBType): Promise<void> {
 
-        await PostModel.create(post);
+        const postInstance = new PostModel(post);
+        await postInstance.save();
+
         return;
     }
 

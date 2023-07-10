@@ -23,22 +23,22 @@ export class UsersService {
 
         const passHash = await this._generateHash(bodyUser.password);
 
-        const user: UserDBType = {
-            _id: new ObjectId(),
-            login: bodyUser.login,
-            email: bodyUser.email,
-            createdAt: new Date().toISOString(),
-            passwordHash: passHash,
-            emailConfirmation: {
+        const user = new UserDBType(
+            new ObjectId(),
+            bodyUser.login,
+            bodyUser.email,
+            new Date().toISOString(),
+            passHash,
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: new Date(),
                 isConfirmed: true
             },
-            passwordRecovery: {
+            {
                 confirmationCode: uuidv4(),
                 expirationDate: new Date()
-            }
-        }
+            })
+
 
         await this.usersRepository.createUser(user);
         return mappingUser(user);
@@ -51,7 +51,7 @@ export class UsersService {
 
     async _generateHash(password: string): Promise<string> {
 
-        return await bcrypt.hash(password, 10)
+        return await bcrypt.hash(password, 10) //todo только степень алгоритма? Добавлять соль?
     }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | false> {
@@ -67,7 +67,7 @@ export class UsersService {
     async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, env.PRIVATE_KEY_ACCESS_TOKEN) as {userId: string};
+            const decode = jwt.verify(token, env.PRIVATE_KEY_ACCESS_TOKEN) as { userId: string };
             return new ObjectId(decode.userId)
 
         } catch (err) {

@@ -6,7 +6,9 @@ export class LikesInfoRepository {
 
     async createLikeInfoComment(likeInfo: LikeInfoType): Promise<void> {
 
-        await LikesInfoModel.create(likeInfo);
+        const likesInfoInstance = new LikesInfoModel(likeInfo);
+        await likesInfoInstance.save();
+
         return;
     }
 
