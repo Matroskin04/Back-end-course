@@ -70,7 +70,8 @@ export class DeviceDBType {
         public lastActiveDate: string,
         public deviceId: string,
         public userId: string,
-        public expirationDate: number
+        public expirationDate: number,
+        public expireAt: Date = new Date()
     ) {
     }
 }

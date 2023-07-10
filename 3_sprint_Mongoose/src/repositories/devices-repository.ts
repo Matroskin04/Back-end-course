@@ -6,7 +6,11 @@ export class DevicesRepository {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {
 
-        await DeviceModel.create(infoDevice);
+        // await DeviceModel.create(infoDevice);
+
+        const deviceInstance = new DeviceModel(infoDevice);
+        await deviceInstance.save()
+
         return;
     }
 
