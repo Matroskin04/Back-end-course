@@ -7,6 +7,7 @@ import {CommentModel} from "../db/shemasModelsMongoose/comments-schema-model";
 import {mappingComment, mappingCommentForAllDocs} from "../helpers/functions/comments-functions-helpers";
 import {PostsQueryRepository} from "./posts-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";
+import {StatusOfLike} from "./query-repository-types/comments-types-query-repository";
 
 export class CommentsQueryRepository  {
     constructor(protected postsQueryRepository: PostsQueryRepository,
@@ -19,19 +20,16 @@ export class CommentsQueryRepository  {
             return null;
         }
 
-        let myStatus: 'Like' | 'Dislike' | 'None' //todo типизация
+        let myStatus: StatusOfLike = 'None'
         if (userId) {
             const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
-            if (!likeInfo) {
-                myStatus = 'None'
-            } else {
+
+            if (likeInfo) {
                 myStatus = likeInfo.statusLike;
             }
-        } else {
-            myStatus = 'None'
         }
 
-        return mappingComment(comment, myStatus); //todo статус кого? У нас нет юзера.
+        return mappingComment(comment, myStatus);
     }
 
     async getCommentsOfPost(query: QueryPostModel, id: string, userId: ObjectId | null): Promise<CommentOfPostPaginationType | null> {
