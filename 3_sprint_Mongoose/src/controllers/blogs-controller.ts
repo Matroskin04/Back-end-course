@@ -18,14 +18,14 @@ import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
-import { injectable } from "inversify";
+import {inject, injectable } from "inversify";
 
 @injectable()
 export class BlogsController {
 
-    constructor(protected blogsService: BlogsService,
-                protected blogsQueryRepository: BlogsQueryRepository,
-                protected postsQueryRepository: PostsQueryRepository) {
+    constructor(@inject(BlogsService) protected blogsService: BlogsService,
+                @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
+                @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository) {
     }
 
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,

@@ -12,14 +12,14 @@ import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
 import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {BlogsRepository} from "../repositories/blogs-repository";
-import { injectable } from "inversify";
+import {inject, injectable } from "inversify";
 
 
 @injectable()
 export class BlogsService {
 
-    constructor(protected blogsRepository: BlogsRepository,
-                protected blogsQueryRepository: BlogsQueryRepository) {}
+    constructor(@inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+                @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository) {}
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
