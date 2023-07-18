@@ -1,7 +1,8 @@
+import { injectable } from "inversify";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-schema-model";
 import {DeviceDBType} from "../types/db-types";
 
-
+@injectable()
 export class DevicesRepository {
 
     async createNewDevice(infoDevice: DeviceDBType): Promise<void> {

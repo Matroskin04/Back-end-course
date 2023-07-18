@@ -1,8 +1,10 @@
 import {DeviceOutputType} from "../repositories/repositories-types/devices-types-repositories";
 import {DeviceModel} from "../db/shemasModelsMongoose/devices-schema-model";
 import {DeviceDBType} from "../types/db-types";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class DevicesQueryRepository {
 
     async getAllDevicesByUserId(userId: string): Promise<DeviceOutputType[]> {

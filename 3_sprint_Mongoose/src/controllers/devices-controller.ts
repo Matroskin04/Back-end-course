@@ -5,8 +5,10 @@ import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {DevicesQueryRepository} from "../queryRepository/devices-query-repository";
 import {DevicesService} from "../domain/devices-service";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class DevicesController {
 
     constructor(protected devicesQueryRepository: DevicesQueryRepository,

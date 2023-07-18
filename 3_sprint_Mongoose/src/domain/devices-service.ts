@@ -5,8 +5,10 @@ import {createResponseService} from "./service-utils/functions/create-response-s
 import {DeviceDBType} from "../types/db-types";
 import {DevicesQueryRepository} from "../queryRepository/devices-query-repository";
 import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class DevicesService {
 
     constructor(protected jwtQueryRepository: JwtQueryRepository,
