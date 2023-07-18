@@ -1,7 +1,10 @@
+import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
 import {LikesInfoRepository} from "../repositories/likes-info-repository";
 import {LikesInfoDBType} from "../types/db-types";
 
+
+@injectable()
 export class LikesInfoService {
 
     constructor(protected likesInfoRepository: LikesInfoRepository) {

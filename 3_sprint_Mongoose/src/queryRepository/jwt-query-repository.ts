@@ -1,7 +1,8 @@
+import { injectable } from "inversify";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {env} from "../config";
 
-
+@injectable()
 export class JwtQueryRepository {
 
     getPayloadToken(refreshToken: string): JwtPayload | null {

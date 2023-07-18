@@ -5,8 +5,10 @@ import {AccessRefreshTokens} from "./service-types/jwt-types-service";
 import {env} from "../config";
 import {DevicesService} from "./devices-service";
 import {JwtQueryRepository} from "../queryRepository/jwt-query-repository";
+import { injectable } from 'inversify';
 
 
+@injectable()
 export class JwtService {
 
     constructor(protected jwtQueryRepository: JwtQueryRepository,

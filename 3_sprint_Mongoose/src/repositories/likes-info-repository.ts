@@ -1,7 +1,9 @@
 import {LikesInfoModel} from "../db/shemasModelsMongoose/likes-info-schema-model";
 import {LikeInfoType} from "./repositories-types/likes-info-types-repository";
 import {ObjectId} from "mongodb";
+import { injectable } from "inversify";
 
+@injectable()
 export class LikesInfoRepository {
 
     async createLikeInfoComment(likeInfo: LikeInfoType): Promise<void> {
