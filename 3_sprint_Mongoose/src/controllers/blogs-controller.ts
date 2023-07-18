@@ -18,8 +18,9 @@ import {UpdateBlogModel} from "../models/BlogsModels/UpdateBlogModel";
 import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
 import {PostsQueryRepository} from "../queryRepository/posts-query-repository";
+import { injectable } from "inversify";
 
-
+@injectable()
 export class BlogsController {
 
     constructor(protected blogsService: BlogsService,

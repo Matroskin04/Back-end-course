@@ -7,8 +7,9 @@ import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {CommentsService} from "../domain/comments-service";
 import {UpdateLikeStatusModel} from "../models/CommentsModels/UpdateCommentLikeStatus";
+import { injectable } from "inversify";
 
-
+@injectable()
 export class CommentsController {
 
 

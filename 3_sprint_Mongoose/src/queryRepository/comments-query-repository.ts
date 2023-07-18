@@ -8,7 +8,10 @@ import {mappingComment, mappingCommentForAllDocs} from "../helpers/functions/com
 import {PostsQueryRepository} from "./posts-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";
 import {StatusOfLike} from "./query-repository-types/comments-types-query-repository";
+import { injectable } from "inversify";
 
+
+@injectable()
 export class CommentsQueryRepository  {
     constructor(protected postsQueryRepository: PostsQueryRepository,
                 protected likesInfoQueryRepository: LikesInfoQueryRepository) {}

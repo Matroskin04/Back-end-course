@@ -3,7 +3,9 @@ import {ObjectId} from "mongodb";
 import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
 import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 import {BlogDBType, PostDBType} from "../types/db-types";
+import { injectable } from "inversify";
 
+@injectable()
 export class BlogsRepository {
     async createBlog(blog: BlogDBType): Promise<void> {
 

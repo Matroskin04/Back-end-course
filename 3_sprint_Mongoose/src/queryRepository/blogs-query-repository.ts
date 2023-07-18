@@ -5,8 +5,10 @@ import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
 import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class BlogsQueryRepository {
 
     async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> { //

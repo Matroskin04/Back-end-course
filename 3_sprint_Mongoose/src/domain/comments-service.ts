@@ -10,8 +10,9 @@ import {LikeStatus} from "../helpers/enums/like-status";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {LikesInfoService} from "./likes-info-service";
 import {LikesInfoQueryRepository} from "../queryRepository/likes-info-query-repository";
+import { injectable } from "inversify";
 
-
+@injectable()
 export class CommentsService {
 
     constructor(protected commentsRepository: CommentsRepository,
