@@ -77,7 +77,7 @@ export class AuthService {
             return null
         }
 
-        const accessToken = this.jwtService.createAccessToken(user._id.toString());
+        const accessToken  = this.jwtService.createAccessToken(user._id.toString());
         const refreshToken = this.jwtService.createRefreshToken(user._id.toString(), null);
 
         return {
