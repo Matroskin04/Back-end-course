@@ -13,8 +13,10 @@ import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {DevicesService} from "../domain/devices-service";
 import {AuthService} from "../domain/auth-service";
 import {JwtService} from "../domain/jwt-service";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class AuthController {
 
     constructor(protected jwtService: JwtService,

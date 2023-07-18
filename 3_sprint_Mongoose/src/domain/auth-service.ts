@@ -9,8 +9,9 @@ import {UsersRepository} from "../repositories/users-repository";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {JwtService} from "./jwt-service";
 import {EmailManager} from "../managers/email-manager";
+import { injectable } from "inversify";
 
-
+@injectable()
 export class AuthService {
 
     constructor(protected emailManager: EmailManager,

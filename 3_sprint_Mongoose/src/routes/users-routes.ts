@@ -3,9 +3,11 @@ import {getErrors} from "../middlewares/validation-middlewares/catch-errors-midd
 import {authorization} from "../middlewares/authorization-middelwares";
 import {validateBodyOfUser} from "../middlewares/validation-middlewares/users-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {usersController} from "../composition-root";
+import {container} from "../composition-root";
+import {UsersController} from "../controllers/users-controller";
 
 export const usersRoutes = Router();
+const usersController = container.resolve(UsersController);
 
 usersRoutes.get('/',
     authorization,

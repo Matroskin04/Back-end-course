@@ -9,10 +9,13 @@ import {
     validateAccessTokenGetRequests
 } from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {commentsController} from "../composition-root";
 import {validateBodyOfLikeStatus} from "../middlewares/validation-middlewares/likes-validation-middlewares";
+import {container} from "../composition-root";
+import {CommentsController} from "../controllers/comments-controller";
 
 export const commentsRoutes = Router();
+const commentsController = container.resolve(CommentsController);
+
 
 commentsRoutes.get('/:id',
     validateFormatOfUrlParams,

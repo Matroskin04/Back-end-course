@@ -8,9 +8,11 @@ import {
     validateAccessTokenGetRequests
 } from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateFormatOfUrlParams} from "../middlewares/urlParams-validation-middleware";
-import {postsController} from "../composition-root";
+import {container} from "../composition-root";
+import {PostsController} from "../controllers/posts-controller";
 
 export const postsRoutes = Router();
+const postsController = container.resolve(PostsController);
 
 
 postsRoutes.get('/',

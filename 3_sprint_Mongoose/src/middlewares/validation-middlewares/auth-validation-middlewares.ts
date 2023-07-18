@@ -1,6 +1,8 @@
 import {body} from "express-validator";
-import {usersQueryRepository} from "../../composition-root";
+import {container} from "../../composition-root";
+import {UsersQueryRepository} from "../../queryRepository/users-query-repository";
 
+const usersQueryRepository = container.resolve(UsersQueryRepository)
 
 export const validateLoginDataAuth = [
 

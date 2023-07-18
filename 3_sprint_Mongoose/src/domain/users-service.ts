@@ -11,8 +11,10 @@ import {UserDBType} from "../types/db-types";
 import {mappingUser} from "../helpers/functions/users-functions-helpers";
 import {UsersRepository} from "../repositories/users-repository";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class UsersService {
 
     constructor(protected usersRepository: UsersRepository,

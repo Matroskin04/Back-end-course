@@ -1,6 +1,9 @@
 import {Request, Response} from "express";
+import { injectable } from "inversify";
 import {TestingRepository} from "../repositories/testing-repository";
 
+
+@injectable()
 export class TestingController {
 
     constructor(protected testingRepository: TestingRepository) {}

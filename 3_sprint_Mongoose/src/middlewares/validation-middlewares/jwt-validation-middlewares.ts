@@ -1,6 +1,12 @@
 import {NextFunction, Request, Response} from "express";
-import {devicesQueryRepository, jwtQueryRepository, usersService} from "../../composition-root";
+import {container} from "../../composition-root";
+import {DevicesQueryRepository} from "../../queryRepository/devices-query-repository";
+import {JwtQueryRepository} from "../../queryRepository/jwt-query-repository";
+import {UsersService} from "../../domain/users-service";
 
+const devicesQueryRepository = container.resolve(DevicesQueryRepository);
+const jwtQueryRepository = container.resolve(JwtQueryRepository);
+const usersService = container.resolve(UsersService);
 
 export const validateAccessTokenGetRequests = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 

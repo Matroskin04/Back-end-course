@@ -5,8 +5,10 @@ import {variablesForReturn} from "./utils/variables-for-return";
 import {UserModel} from "../db/shemasModelsMongoose/users-schema-model";
 import {UserDBType} from "../types/db-types";
 import {mappingUser} from "../helpers/functions/users-functions-helpers";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class UsersQueryRepository {
 
     async getAllUsers(query: QueryUserModel): Promise<UsersPaginationType> {

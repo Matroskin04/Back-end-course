@@ -1,6 +1,9 @@
+import { injectable } from 'inversify';
 import nodemailer from 'nodemailer'
 
 const myPass = process.env.EMAILPASS
+
+@injectable()
 export class EmailAdapter {
 
     async sendEmailConfirmationMessage(email: string, subject: string, message: string): Promise<boolean> {

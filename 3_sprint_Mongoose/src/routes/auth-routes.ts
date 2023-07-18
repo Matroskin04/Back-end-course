@@ -12,9 +12,11 @@ import {
 } from "../middlewares/validation-middlewares/jwt-validation-middlewares";
 import {validateInfoRequest} from "../middlewares/info-request-middlewares/validate-info-request-middleware";
 import {saveInfoRequest} from "../middlewares/info-request-middlewares/save-info-request-middleware";
-import {authController} from "../composition-root";
+import {container} from "../composition-root";
+import {AuthController} from "../controllers/auth-controller";
 
 export const authRoutes = Router();
+const authController = container.resolve(AuthController);
 
 authRoutes.get('/me',
     validateAccessToken,

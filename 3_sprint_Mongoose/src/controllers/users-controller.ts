@@ -7,8 +7,10 @@ import {UriIdModel} from "../models/UriModels";
 import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {UsersQueryRepository} from "../queryRepository/users-query-repository";
 import {UsersService} from "../domain/users-service";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class UsersController {
 
     constructor(protected usersQueryRepository: UsersQueryRepository,
