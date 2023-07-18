@@ -7,8 +7,10 @@ import {QueryBlogModel} from "../models/BlogsModels/QueryBlogModel";
 import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class PostsQueryRepository {
 
     async getAllPosts(query: QueryPostModel): Promise<PostPaginationType> {

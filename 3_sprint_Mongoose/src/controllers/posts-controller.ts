@@ -19,8 +19,10 @@ import {HTTP_STATUS_CODE} from "../helpers/enums/http-status";
 import {ViewAllErrorsModels} from "../models/ViewAllErrorsModels";
 import {CommentsQueryRepository} from "../queryRepository/comments-query-repository";
 import {CommentsService} from "../domain/comments-service";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class PostsController {
 
     constructor(protected postsQueryRepository: PostsQueryRepository,

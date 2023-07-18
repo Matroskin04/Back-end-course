@@ -8,8 +8,10 @@ import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {PostDBType} from "../types/db-types";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
+import { injectable } from "inversify";
 
 
+@injectable()
 export class PostsService {
 
     constructor(protected postsRepository: PostsRepository,
