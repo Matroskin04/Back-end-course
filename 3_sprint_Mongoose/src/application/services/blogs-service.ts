@@ -7,12 +7,13 @@ import {
     PostTypeWithId
 } from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {BlogDBType, PostDBType} from "../../types/db-types";
 import {renameMongoIdBlog} from "../../helpers/functions/blogs-functions-helpers";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
 import {BlogsRepository} from "../../infrastructure/repositories/blogs-repository";
 import {inject, injectable } from "inversify";
+import {PostDBType} from "../../domain/db-types/posts-db-types";
+import {BlogModel} from "../../domain/blogs-schema-model";
 
 
 @injectable()
@@ -23,14 +24,7 @@ export class BlogsService {
 
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
-        const blog = new BlogDBType(
-            new ObjectId(),
-            bodyBlog.name,
-            bodyBlog.description,
-            bodyBlog.websiteUrl,
-            new Date().toISOString(),
-            false
-        )
+        const blog = BlogModel.makeInstance(bodyBlog.name, bodyBlog.description, bodyBlog.websiteUrl);
 
         await this.blogsRepository.createBlog(blog);
         return renameMongoIdBlog(blog);

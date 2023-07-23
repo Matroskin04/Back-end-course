@@ -2,15 +2,15 @@ import {BodyBlogType} from "./repositories-types/blogs-types-repositories";
 import {ObjectId} from "mongodb";
 import {BlogModel} from "../../domain/blogs-schema-model";
 import {PostModel} from "../../domain/posts-schema-model";
-import {BlogDBType, PostDBType} from "../../types/db-types";
 import { injectable } from "inversify";
+import {HydratedBlogType} from "../../domain/db-types/blogs-db-types";
+import {PostDBType} from "../../domain/db-types/posts-db-types";
 
 @injectable()
 export class BlogsRepository {
-    async createBlog(blog: BlogDBType): Promise<void> {
+    async createBlog(blog: HydratedBlogType): Promise<void> { //todo типизацию в другое место файл
 
-        const blogInstance = new BlogModel(blog);
-        await blogInstance.save();
+        await blog.save();
         return;
     }
 
