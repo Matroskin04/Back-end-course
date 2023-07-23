@@ -5,8 +5,8 @@ import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-ser
 import {ErrorsTypeService} from "./service-types/responses-types-service";
 import {UserDBType} from "../types/db-types";
 import {UsersService} from "./users-service";
-import {UsersRepository} from "../repositories/users-repository";
-import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import {UsersRepository} from "../infrastructure/repositories/users-repository";
+import {UsersQueryRepository} from "../infrastructure/queryRepository/users-query-repository";
 import {JwtService} from "./jwt-service";
 import {EmailManager} from "../managers/email-manager";
 import { injectable } from "inversify";

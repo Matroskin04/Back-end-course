@@ -1,7 +1,7 @@
 import {
     BodyUserType,
     UserOutputType,
-} from "../repositories/repositories-types/users-types-repositories";
+} from "../infrastructure/repositories/repositories-types/users-types-repositories";
 import bcrypt from "bcryptjs";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
@@ -9,8 +9,8 @@ import jwt from "jsonwebtoken";
 import {env} from "../config";
 import {UserDBType} from "../types/db-types";
 import {mappingUser} from "../helpers/functions/users-functions-helpers";
-import {UsersRepository} from "../repositories/users-repository";
-import {UsersQueryRepository} from "../queryRepository/users-query-repository";
+import {UsersRepository} from "../infrastructure/repositories/users-repository";
+import {UsersQueryRepository} from "../infrastructure/queryRepository/users-query-repository";
 import { injectable } from "inversify";
 
 

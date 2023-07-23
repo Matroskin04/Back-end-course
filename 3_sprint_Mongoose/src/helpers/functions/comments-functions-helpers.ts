@@ -1,6 +1,6 @@
-import {CommentOutputType} from "../../repositories/repositories-types/comments-types-repositories";
+import {CommentOutputType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 import {ObjectId} from "mongodb";
-import {LikesInfoQueryRepository} from "../../queryRepository/likes-info-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 
 export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislike'): CommentOutputType {
 

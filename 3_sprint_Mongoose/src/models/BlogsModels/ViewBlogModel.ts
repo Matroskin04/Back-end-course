@@ -1,5 +1,5 @@
-import {BlogTypeWithId} from "../../repositories/repositories-types/blogs-types-repositories";
-import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
+import {BlogTypeWithId} from "../../infrastructure/repositories/repositories-types/blogs-types-repositories";
+import {PostTypeWithId} from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 
 export type ViewBlogModel = BlogTypeWithId
 

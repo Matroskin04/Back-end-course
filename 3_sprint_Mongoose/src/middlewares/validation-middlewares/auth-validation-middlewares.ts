@@ -1,6 +1,6 @@
 import {body} from "express-validator";
 import {container} from "../../composition-root";
-import {UsersQueryRepository} from "../../queryRepository/users-query-repository";
+import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
 
 const usersQueryRepository = container.resolve(UsersQueryRepository)
 

@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {container} from "../../composition-root";
-import {DevicesQueryRepository} from "../../queryRepository/devices-query-repository";
-import {JwtQueryRepository} from "../../queryRepository/jwt-query-repository";
+import {DevicesQueryRepository} from "../../infrastructure/queryRepository/devices-query-repository";
+import {JwtQueryRepository} from "../../infrastructure/queryRepository/jwt-query-repository";
 import {UsersService} from "../../domain/users-service";
 
 const devicesQueryRepository = container.resolve(DevicesQueryRepository);

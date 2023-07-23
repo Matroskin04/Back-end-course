@@ -1,4 +1,4 @@
-import {BlogTypeWithId} from "../../repositories/repositories-types/blogs-types-repositories";
+import {BlogTypeWithId} from "../../infrastructure/repositories/repositories-types/blogs-types-repositories";
 
 export function renameMongoIdBlog(blog: any
 ): BlogTypeWithId {

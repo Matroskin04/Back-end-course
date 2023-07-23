@@ -2,7 +2,7 @@ import {describe} from "node:test";
 import {mongoURL} from "../db/db";
 import {app} from "../setting";
 const request = require("supertest");
-import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
+import {BlogTypeWithId} from "../infrastructure/repositories/repositories-types/blogs-types-repositories";
 import mongoose from "mongoose";
 import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
 

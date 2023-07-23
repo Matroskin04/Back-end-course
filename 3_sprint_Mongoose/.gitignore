@@ -6,3 +6,4 @@ yarn-error.log
 testing.mjs
 /coverage
 tests.ts
+config.ts

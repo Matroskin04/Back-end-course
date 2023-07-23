@@ -1,4 +1,4 @@
-import {CommentOutputType} from "../../repositories/repositories-types/comments-types-repositories";
+import {CommentOutputType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 
 export type ViewCommentOfPostModel = CommentOutputType
 

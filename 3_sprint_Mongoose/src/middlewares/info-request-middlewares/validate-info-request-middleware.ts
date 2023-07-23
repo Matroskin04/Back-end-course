@@ -1,5 +1,5 @@
 import {NextFunction,Response, Request} from "express";
-import {InfoRequestType} from "../../repositories/repositories-types/info-request-types-repository";
+import {InfoRequestType} from "../../infrastructure/repositories/repositories-types/info-request-types-repository";
 
 export let infoRequestsArr: InfoRequestType[] = [];
 

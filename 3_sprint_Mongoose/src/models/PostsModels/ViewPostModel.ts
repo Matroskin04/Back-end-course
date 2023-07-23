@@ -1,4 +1,4 @@
-import {PostTypeWithId} from "../../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId} from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 
 export type ViewPostModel = PostTypeWithId;
 

@@ -1,12 +1,12 @@
 import express from "express";
-import {blogsRoutes} from "./routes/blogs-routes";
-import {postsRoutes} from "./routes/posts-routes";
-import {usersRoutes} from "./routes/users-routes";
-import {authRoutes} from "./routes/auth-routes";
-import {testingRoutes} from "./routes/testing-routes";
-import {commentsRoutes} from "./routes/comments-routes";
+import {blogsRoutes} from "./api/routes/blogs-routes";
+import {postsRoutes} from "./api/routes/posts-routes";
+import {usersRoutes} from "./api/routes/users-routes";
+import {authRoutes} from "./api/routes/auth-routes";
+import {testingRoutes} from "./api/routes/testing-routes";
+import {commentsRoutes} from "./api/routes/comments-routes";
 import cookieParser from "cookie-parser";
-import {devicesRoutes} from "./routes/devices-routes";
+import {devicesRoutes} from "./api/routes/devices-routes";
 
 export const app = express()
 

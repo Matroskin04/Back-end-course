@@ -1,17 +1,17 @@
 import {
     BodyBlogType,
     BlogTypeWithId
-} from "../repositories/repositories-types/blogs-types-repositories";
+} from "../infrastructure/repositories/repositories-types/blogs-types-repositories";
 import {
     BodyPostByBlogIdType,
     PostTypeWithId
-} from "../repositories/repositories-types/posts-types-repositories";
+} from "../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
 import {BlogDBType, PostDBType} from "../types/db-types";
 import {renameMongoIdBlog} from "../helpers/functions/blogs-functions-helpers";
 import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
-import {BlogsQueryRepository} from "../queryRepository/blogs-query-repository";
-import {BlogsRepository} from "../repositories/blogs-repository";
+import {BlogsQueryRepository} from "../infrastructure/queryRepository/blogs-query-repository";
+import {BlogsRepository} from "../infrastructure/repositories/blogs-repository";
 import {inject, injectable } from "inversify";
 
 

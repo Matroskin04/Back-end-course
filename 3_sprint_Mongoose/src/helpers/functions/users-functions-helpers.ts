@@ -1,4 +1,4 @@
-import {UserOutputType} from "../../repositories/repositories-types/users-types-repositories";
+import {UserOutputType} from "../../infrastructure/repositories/repositories-types/users-types-repositories";
 
 export function mappingUser(user: any): UserOutputType {
     return {
