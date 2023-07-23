@@ -3,7 +3,7 @@ import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-rep
 import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
-import {BlogModel} from "../../db/shemasModelsMongoose/blogs-schema-model";
+import {BlogModel} from "../../domain/blogs-schema-model";
 import {renameMongoIdBlog} from "../../helpers/functions/blogs-functions-helpers";
 import { injectable } from "inversify";
 

@@ -1,9 +1,9 @@
-import {mongoURL} from "../db/db";
+import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
-import {AuthService} from "../domain/auth-service";
-import {DevicesService} from "../domain/devices-service";
+import {AuthService} from "../application/services/auth-service";
+import {DevicesService} from "../application/services/devices-service";
 import mongoose from "mongoose";
 import {
     devicesQueryRepository, devicesRepository,

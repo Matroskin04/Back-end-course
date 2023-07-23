@@ -6,7 +6,7 @@ import {CreateUserModel} from "../../models/UsersModels/CreateUserModel";
 import {UriIdModel} from "../../models/UriModels";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
 import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
-import {UsersService} from "../../domain/users-service";
+import {UsersService} from "../../application/services/users-service";
 import { injectable } from "inversify";
 
 

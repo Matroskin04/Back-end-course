@@ -3,7 +3,7 @@ import {ObjectId} from "mongodb";
 import {QueryPostModel} from "../../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
 import {variablesForReturn} from "./utils/variables-for-return";
-import {CommentModel} from "../../db/shemasModelsMongoose/comments-schema-model";
+import {CommentModel} from "../../domain/comments-schema-model";
 import {mappingComment, mappingCommentForAllDocs} from "../../helpers/functions/comments-functions-helpers";
 import {PostsQueryRepository} from "./posts-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";

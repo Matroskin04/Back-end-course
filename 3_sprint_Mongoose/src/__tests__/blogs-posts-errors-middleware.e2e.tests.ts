@@ -1,11 +1,11 @@
 import {describe} from "node:test";
 const request = require("supertest");
-import {mongoURL} from "../db/db";
+import {mongoURL} from "../infrastructure/db";
 import {app} from "../setting";
 import {ObjectId} from "mongodb";
 import mongoose from "mongoose";
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
-import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
+import {BlogModel} from "../domain/blogs-schema-model";
+import {PostModel} from "../domain/posts-schema-model";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",

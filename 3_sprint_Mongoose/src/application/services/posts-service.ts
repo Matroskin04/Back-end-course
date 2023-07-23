@@ -1,13 +1,13 @@
 import {
     BodyPostType,
-} from "../infrastructure/repositories/repositories-types/posts-types-repositories";
-import {PostsRepository} from "../infrastructure/repositories/posts-repository";
-import {BlogsQueryRepository} from "../infrastructure/queryRepository/blogs-query-repository";
+} from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
+import {PostsRepository} from "../../infrastructure/repositories/posts-repository";
+import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
-import {PostDBType} from "../types/db-types";
-import {renameMongoIdPost} from "../helpers/functions/posts-functions-helpers";
+import {PostDBType} from "../../types/db-types";
+import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import { injectable } from "inversify";
 
 

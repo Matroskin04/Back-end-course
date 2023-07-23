@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {UserModel} from "../../db/shemasModelsMongoose/users-schema-model";
+import {UserModel} from "../../domain/users-schema-model";
 import {UserDBType} from "../../types/db-types";
 
 

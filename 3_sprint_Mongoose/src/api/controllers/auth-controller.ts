@@ -10,9 +10,9 @@ import {
 import {ViewAllErrorsModels} from "../../models/ViewAllErrorsModels";
 import {NewPasswordAuthModel, PasswordRecoveryAuthModel} from "../../models/AuthModels/PasswordRecoveryFlowAuthModel";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
-import {DevicesService} from "../../domain/devices-service";
-import {AuthService} from "../../domain/auth-service";
-import {JwtService} from "../../domain/jwt-service";
+import {DevicesService} from "../../application/services/devices-service";
+import {AuthService} from "../../application/services/auth-service";
+import {JwtService} from "../../application/services/jwt-service";
 import { injectable } from "inversify";
 
 

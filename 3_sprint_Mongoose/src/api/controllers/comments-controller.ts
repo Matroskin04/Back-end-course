@@ -5,7 +5,7 @@ import {ViewCommentModel} from "../../models/CommentsModels/ViewCommentModel";
 import {UpdateCommentModel} from "../../models/CommentsModels/UpdateCommentModel";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
 import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
-import {CommentsService} from "../../domain/comments-service";
+import {CommentsService} from "../../application/services/comments-service";
 import {UpdateLikeStatusModel} from "../../models/CommentsModels/UpdateCommentLikeStatus";
 import { injectable } from "inversify";
 

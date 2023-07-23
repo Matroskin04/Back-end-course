@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import {DeviceModel} from "../../db/shemasModelsMongoose/devices-schema-model";
+import {DeviceModel} from "../../domain/devices-schema-model";
 import {DeviceDBType} from "../../types/db-types";
 
 @injectable()

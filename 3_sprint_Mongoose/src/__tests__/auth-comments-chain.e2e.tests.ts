@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb";
 import {UsersQueryRepository} from "../infrastructure/queryRepository/users-query-repository";
 import {app} from "../setting";
 import {EmailAdapter} from "../infrastructure/adapters/email-adapter";
-import {mongoURL} from "../db/db";
+import {mongoURL} from "../infrastructure/db";
 import {CommentDBType} from "../types/db-types";
 
 

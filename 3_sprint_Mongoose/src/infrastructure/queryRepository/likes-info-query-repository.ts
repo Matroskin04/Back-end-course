@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {LikesInfoModel} from "../../db/shemasModelsMongoose/likes-info-schema-model";
+import {LikesInfoModel} from "../../domain/likes-info-schema-model";
 import {LikesInfoDBType} from "../../types/db-types";
 
 @injectable()

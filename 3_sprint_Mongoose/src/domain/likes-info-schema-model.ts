@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {LikesInfoDBType} from "../../types/db-types";
+import {LikesInfoDBType} from "../types/db-types";
 import {ObjectId} from "mongodb";
 
 export const LikesInfoSchema = new mongoose.Schema<LikesInfoDBType>({

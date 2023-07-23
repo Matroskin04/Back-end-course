@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {BlogDBType} from "../../types/db-types";
+import {BlogDBType} from "../types/db-types";
 
 export const BlogSchema = new mongoose.Schema<BlogDBType>({
     name: {type: String, required: true},

@@ -1,15 +1,15 @@
-import {CreateCommentByPostIdModel} from "../models/CommentsModels/CreateCommentModel";
+import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
-import {CommentOutputType} from "../infrastructure/repositories/repositories-types/comments-types-repositories";
-import {PostModel} from "../db/shemasModelsMongoose/posts-schema-model";
-import {mappingComment} from "../helpers/functions/comments-functions-helpers";
-import {CommentDBType} from "../types/db-types";
-import {CommentsRepository} from "../infrastructure/repositories/comments-repository";
-import {UsersQueryRepository} from "../infrastructure/queryRepository/users-query-repository";
-import {LikeStatus} from "../helpers/enums/like-status";
-import {CommentsQueryRepository} from "../infrastructure/queryRepository/comments-query-repository";
+import {CommentOutputType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
+import {PostModel} from "../../domain/posts-schema-model";
+import {mappingComment} from "../../helpers/functions/comments-functions-helpers";
+import {CommentDBType} from "../../types/db-types";
+import {CommentsRepository} from "../../infrastructure/repositories/comments-repository";
+import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
+import {LikeStatus} from "../../helpers/enums/like-status";
+import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
 import {LikesInfoService} from "./likes-info-service";
-import {LikesInfoQueryRepository} from "../infrastructure/queryRepository/likes-info-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 import { injectable } from "inversify";
 
 @injectable()

@@ -11,7 +11,7 @@ import {ViewAllBlogsModel, ViewBlogModel, ViewPostsOfBlogModel} from "../../mode
 import {UriIdModel} from "../../models/UriModels";
 import {UriBlogIdModel} from "../../models/BlogsModels/UriBlogModel";
 import {CreateBlogModel} from "../../models/BlogsModels/CreateBlogModel";
-import {BlogsService} from "../../domain/blogs-service";
+import {BlogsService} from "../../application/services/blogs-service";
 import {CreatePostByBlogIdModel} from "../../models/PostsModels/CreatePostModel";
 import {PostTypeWithId} from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {UpdateBlogModel} from "../../models/BlogsModels/UpdateBlogModel";

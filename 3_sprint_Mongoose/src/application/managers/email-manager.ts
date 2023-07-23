@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import {EmailAdapter} from "../infrastructure/adapters/email-adapter";
+import {EmailAdapter} from "../../infrastructure/adapters/email-adapter";
 
 
 @injectable()

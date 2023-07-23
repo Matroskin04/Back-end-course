@@ -12,13 +12,13 @@ import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-q
 import {UriIdModel} from "../../models/UriModels";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../../models/PostsModels/ViewCommentsOfPostModel";
 import {CreatePostModel} from "../../models/PostsModels/CreatePostModel";
-import {PostsService} from "../../domain/posts-service";
+import {PostsService} from "../../application/services/posts-service";
 import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateCommentModel";
 import {UpdatePostModel} from "../../models/PostsModels/UpdatePostModel";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
 import {ViewAllErrorsModels} from "../../models/ViewAllErrorsModels";
 import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
-import {CommentsService} from "../../domain/comments-service";
+import {CommentsService} from "../../application/services/comments-service";
 import { injectable } from "inversify";
 
 

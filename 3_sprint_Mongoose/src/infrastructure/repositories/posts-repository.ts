@@ -1,6 +1,6 @@
 import {BodyPostType} from "./repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {PostModel} from "../../db/shemasModelsMongoose/posts-schema-model";
+import {PostModel} from "../../domain/posts-schema-model";
 import {PostDBType} from "../../types/db-types";
 import { injectable } from "inversify";
 

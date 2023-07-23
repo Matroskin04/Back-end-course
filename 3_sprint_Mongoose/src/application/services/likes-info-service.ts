@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {LikesInfoRepository} from "../infrastructure/repositories/likes-info-repository";
-import {LikesInfoDBType} from "../types/db-types";
+import {LikesInfoRepository} from "../../infrastructure/repositories/likes-info-repository";
+import {LikesInfoDBType} from "../../types/db-types";
 
 
 @injectable()

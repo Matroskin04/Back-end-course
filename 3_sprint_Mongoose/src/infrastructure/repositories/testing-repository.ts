@@ -1,9 +1,9 @@
-import {BlogModel} from "../../db/shemasModelsMongoose/blogs-schema-model";
-import {PostModel} from "../../db/shemasModelsMongoose/posts-schema-model";
-import {UserModel} from "../../db/shemasModelsMongoose/users-schema-model";
-import {CommentModel} from "../../db/shemasModelsMongoose/comments-schema-model";
-import {DeviceModel} from "../../db/shemasModelsMongoose/devices-schema-model";
-import {LikesInfoModel} from "../../db/shemasModelsMongoose/likes-info-schema-model";
+import {BlogModel} from "../../domain/blogs-schema-model";
+import {PostModel} from "../../domain/posts-schema-model";
+import {UserModel} from "../../domain/users-schema-model";
+import {CommentModel} from "../../domain/comments-schema-model";
+import {DeviceModel} from "../../domain/devices-schema-model";
+import {LikesInfoModel} from "../../domain/likes-info-schema-model";
 import { injectable } from "inversify";
 
 

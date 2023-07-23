@@ -1,5 +1,5 @@
 import {describe} from "node:test";
-import {mongoURL} from "../db/db";
+import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
 import {app} from "../setting";
 import mongoose from "mongoose";

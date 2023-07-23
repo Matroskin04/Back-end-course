@@ -2,7 +2,7 @@ import {EmailAndLoginTerm, UsersPaginationType} from "./query-repository-types/u
 import {QueryUserModel} from "../../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
-import {UserModel} from "../../db/shemasModelsMongoose/users-schema-model";
+import {UserModel} from "../../domain/users-schema-model";
 import {UserDBType} from "../../types/db-types";
 import {mappingUser} from "../../helpers/functions/users-functions-helpers";
 import { injectable } from "inversify";

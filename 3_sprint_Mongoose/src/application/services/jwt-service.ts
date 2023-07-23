@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken'
 import {ObjectId} from "mongodb";
 import {randomUUID} from "crypto";
 import {AccessRefreshTokens} from "./service-types/jwt-types-service";
-import {env} from "../config";
+import {env} from "../../config";
 import {DevicesService} from "./devices-service";
-import {JwtQueryRepository} from "../infrastructure/queryRepository/jwt-query-repository";
+import {JwtQueryRepository} from "../../infrastructure/queryRepository/jwt-query-repository";
 import { injectable } from 'inversify';
 
 

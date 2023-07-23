@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../../db/shemasModelsMongoose/comments-schema-model";
+import {CommentModel} from "../../domain/comments-schema-model";
 import {CommentDBType} from "../../types/db-types";
 
 @injectable()

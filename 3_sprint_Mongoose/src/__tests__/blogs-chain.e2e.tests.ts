@@ -1,10 +1,10 @@
 import {describe} from "node:test";
-import {mongoURL} from "../db/db";
+import {mongoURL} from "../infrastructure/db";
 import {app} from "../setting";
 const request = require("supertest");
 import {BlogTypeWithId} from "../infrastructure/repositories/repositories-types/blogs-types-repositories";
 import mongoose from "mongoose";
-import {BlogModel} from "../db/shemasModelsMongoose/blogs-schema-model";
+import {BlogModel} from "../domain/blogs-schema-model";
 
 let idOfBlog: string;
 const arrayOfBlogs: Array<BlogTypeWithId | null> = [];

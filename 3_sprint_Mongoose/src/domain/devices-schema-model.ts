@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {DeviceDBType} from "../../types/db-types";
+import {DeviceDBType} from "../types/db-types";
 
 export const DeviceSchema = new mongoose.Schema<DeviceDBType>({
     ip: {type: String, required: true},

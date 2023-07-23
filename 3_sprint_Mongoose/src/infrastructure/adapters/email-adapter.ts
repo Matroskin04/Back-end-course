@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import nodemailer from 'nodemailer'
 
-const myPass = process.env.EMAILPASS
+const myPass = process.env.EMAIL_PASS
 
 @injectable()
 export class EmailAdapter {
