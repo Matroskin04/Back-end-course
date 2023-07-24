@@ -1,12 +1,13 @@
 import {BodyPostType} from "./repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
 import {PostModel} from "../../domain/posts-schema-model";
-import {PostDBType} from "../../types/db-types";
 import { injectable } from "inversify";
+import {PostDBType} from "../../domain/db-types/posts-db-types";
 
 
 @injectable()
 export class PostsRepository {
+
 
     async createPost(post: PostDBType): Promise<void> {
 
@@ -14,6 +15,19 @@ export class PostsRepository {
         await postInstance.save();
 
         return;
+    }
+
+    async incrementNumberOfLikeOfPost(postId: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
+
+        if (likeStatus === 'Like') {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.likesCount': 1}});
+            return result.modifiedCount === 1;
+
+        } else {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.dislikesCount': 1}});
+            return result.modifiedCount === 1;
+
+        }
     }
 
     async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {

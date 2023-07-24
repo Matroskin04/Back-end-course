@@ -3,7 +3,7 @@ import {PostModel} from "../../domain/posts-schema-model";
 import {UserModel} from "../../domain/users-schema-model";
 import {CommentModel} from "../../domain/comments-schema-model";
 import {DeviceModel} from "../../domain/devices-schema-model";
-import {LikesInfoModel} from "../../domain/likes-info-schema-model";
+import {CommentsLikesInfoModel} from "../../domain/likes-info-schema-model";
 import { injectable } from "inversify";
 
 
@@ -18,7 +18,7 @@ export class TestingRepository {
             UserModel.deleteMany({}),
             CommentModel.deleteMany({}),
             DeviceModel.deleteMany({}),
-            LikesInfoModel.deleteMany({})
+            CommentsLikesInfoModel.deleteMany({})
         ])
             .then(value => {
                 console.log('OK');

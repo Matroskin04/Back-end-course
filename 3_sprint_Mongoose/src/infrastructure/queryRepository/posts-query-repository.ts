@@ -1,5 +1,5 @@
 import {PostPaginationType} from "./query-repository-types/posts-types-query-repository";
-import {PostTypeWithId} from "../repositories/repositories-types/posts-types-repositories";
+import {PostTypeWithId, PostViewType} from "../repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
 import {QueryPostModel} from "../../models/PostsModels/QueryPostModel";
 import {variablesForReturn} from "./utils/variables-for-return";
@@ -8,10 +8,14 @@ import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-qu
 import {PostModel} from "../../domain/posts-schema-model";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import { injectable } from "inversify";
+import {StatusOfLike} from "./query-repository-types/comments-types-query-repository";
+import {LikesInfoQueryRepository} from "./likes-info-query-repository";
+import {reformNewestLikes} from "./utils/likes-info-functions";
 
 
 @injectable()
 export class PostsQueryRepository {
+    constructor(protected likesInfoQueryRepository: LikesInfoQueryRepository) {}
 
     async getAllPosts(query: QueryPostModel): Promise<PostPaginationType> {
 
@@ -59,13 +63,27 @@ export class PostsQueryRepository {
         }
     }
 
-    async getSinglePost(id: string): Promise<null | PostTypeWithId> {
+    async getPostById(postId: string, userId: ObjectId | null): Promise<null | PostViewType> {
 
-        const singlePost = await PostModel.findOne({_id: new ObjectId(id)});
-
-        if (!singlePost) {
+        const post = await PostModel.findOne({_id: new ObjectId(postId)});
+        if (!post) {
             return null;
         }
-        return renameMongoIdPost(singlePost);
+
+        //set StatusLike
+        let myStatus: StatusOfLike = 'None'
+        if (userId) {
+            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(postId), userId);
+
+            if (likeInfo) {
+                myStatus = likeInfo.statusLike;
+            }
+        }
+
+        //find last 3 Likes
+        const newestLikes = await this.likesInfoQueryRepository.getNewestLikesOfPost(new ObjectId(postId));
+        const reformedNewestLikes = reformNewestLikes(newestLikes)
+
+        return renameMongoIdPost(post, reformedNewestLikes, myStatus);
     }
 }

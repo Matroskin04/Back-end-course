@@ -10,16 +10,19 @@ import {
 import {validateFormatOfUrlParams} from "../../middlewares/urlParams-validation-middleware";
 import {container} from "../../composition-root";
 import {PostsController} from "../controllers/posts-controller";
+import {validateBodyOfLikeStatus} from "../../middlewares/validation-middlewares/likes-validation-middlewares";
 
 export const postsRoutes = Router();
 const postsController = container.resolve(PostsController);
 
 
 postsRoutes.get('/',
+    validateAccessTokenGetRequests,
     postsController.getAllPosts.bind(postsController));
 
 postsRoutes.get('/:id',
     validateFormatOfUrlParams,
+    validateAccessTokenGetRequests,
     postsController.getPostById.bind(postsController));
 
 postsRoutes.get('/:id/comments',
@@ -47,10 +50,17 @@ postsRoutes.put('/:id',
     getErrors,
     postsController.updatePost.bind(postsController));
 
+postsRoutes.put('/:id/like-status',
+    validateAccessToken,
+    validateBodyOfLikeStatus,
+    getErrors,
+    postsController.updateLikeStatusOfPost.bind(postsController));
+
 postsRoutes.delete('/:id',
     validateFormatOfUrlParams,
     authorization,
     postsController.deletePost.bind(postsController));
+
 
 
 
