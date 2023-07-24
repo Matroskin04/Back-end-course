@@ -8,9 +8,9 @@ import {PostDBType} from "../../domain/db-types/posts-db-types";
 import {reformNewestLikes} from "../../infrastructure/queryRepository/utils/likes-info-functions";
 
 
-export function renameMongoIdPost(post: any, newestLikes: NewestLikesType, myStatus: 'None' | 'Like' | 'Dislike'): PostViewType {
+export function renameMongoIdPost(post: PostDBType, newestLikes: NewestLikesType, myStatus: 'None' | 'Like' | 'Dislike'): PostViewType {
     return {
-        id:	post._id,
+        id:	post._id.toString(),
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
@@ -18,8 +18,8 @@ export function renameMongoIdPost(post: any, newestLikes: NewestLikesType, mySta
         blogName: post.blogName,
         createdAt: post.createdAt,
         extendedLikesInfo: {
-            likesCount: post.likesCount,
-            dislikesCount: post.dislikesCount,
+            likesCount: post.likesInfo.likesCount,
+            dislikesCount: post.likesInfo.dislikesCount,
             myStatus,
             newestLikes
         }

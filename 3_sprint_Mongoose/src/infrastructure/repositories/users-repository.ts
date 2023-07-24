@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
 import {UserModel} from "../../domain/users-schema-model";
-import {UserDBType} from "../../types/db-types";
+import {UserDBType} from "../../domain/db-types/users-db-types";
 
 
 @injectable()

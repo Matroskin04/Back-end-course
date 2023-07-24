@@ -1,5 +1,6 @@
 import {
-    BodyPostType,
+    BodyPostByBlogIdType,
+    BodyPostType, PostTypeWithId,
 } from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {PostsRepository} from "../../infrastructure/repositories/posts-repository";
 import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
@@ -64,6 +65,36 @@ export class PostsService {
         const postMapped = renameMongoIdPost(post, reformedNewestLikes, 'None');
 
         return createResponseService(201, postMapped)
+    }
+
+    async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
+        //checking the existence of a blog
+        const blog = await this.blogsQueryRepository.getBlogById(blogId);
+        if (!blog) {
+            return null
+        }
+
+        const post = new PostDBType(
+            new ObjectId(),
+            body.title,
+            body.shortDescription,
+            body.content,
+            blogId,
+            blog.name,
+            new Date().toISOString(),
+            {
+                likesCount: 0,
+                dislikesCount: 0
+            }
+        )
+
+        await this.postsRepository.createPostByBlogId(post);
+
+        //find last 3 Likes
+        const newestLikes = await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+        const reformedNewestLikes = reformNewestLikes(newestLikes);
+
+        return renameMongoIdPost(post, reformedNewestLikes, 'None');
     }
 
     async updatePost(body: BodyPostType, id: string): Promise<ResponseTypeService> {

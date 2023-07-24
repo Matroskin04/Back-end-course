@@ -3,7 +3,6 @@ import {ObjectId} from "mongodb";
 import {PostModel} from "../../domain/posts-schema-model";
 import { injectable } from "inversify";
 import {PostDBType} from "../../domain/db-types/posts-db-types";
-import {CommentModel} from "../../domain/comments-schema-model";
 
 
 @injectable()
@@ -15,6 +14,13 @@ export class PostsRepository {
         const postInstance = new PostModel(post);
         await postInstance.save();
 
+        return;
+    }
+
+    async createPostByBlogId(post: PostDBType): Promise<void> {
+
+        const postInstance = new PostModel(post);
+        await postInstance.save();
         return;
     }
 

@@ -11,5 +11,5 @@ export type LikeInfoPostType = {
     userId: ObjectId
     login: string
     addedAt: string
-    statusLike: 'Like' | 'Dislike'
+    statusLike: 'Like' | 'Dislike' | 'None'
 }

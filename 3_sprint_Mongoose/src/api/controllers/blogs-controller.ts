@@ -19,13 +19,15 @@ import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
 import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
 import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-query-repository";
 import {inject, injectable } from "inversify";
+import {PostsService} from "../../application/services/posts-service";
 
 @injectable()
 export class BlogsController {
 
     constructor(@inject(BlogsService) protected blogsService: BlogsService,
                 @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
-                @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository) {
+                @inject(PostsQueryRepository) protected postsQueryRepository: PostsQueryRepository,
+                @inject(PostsService) protected postsService: PostsService) {
     }
 
     async getAllBlogs(req: RequestWithQuery<QueryBlogModel>,
@@ -82,7 +84,7 @@ export class BlogsController {
                              res: Response<PostTypeWithId>) {
 
         try {
-            const result = await this.blogsService.createPostByBlogId(req.params.blogId, req.body);
+            const result = await this.postsService.createPostByBlogId(req.params.blogId, req.body);
             result ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
 

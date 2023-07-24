@@ -21,9 +21,9 @@ export class LikesInfoQueryRepository {
     async getNewestLikesOfPost(postId: ObjectId): Promise<NewestLikesType> {
 
         return PostsLikesInfoModel
-            .find({postId})
+            .find({postId, statusLike: 'Like'})
             .sort({addedAt: -1})
-            .skip(3)
+            .limit(3)
             .lean();
     }
 }

@@ -84,7 +84,7 @@ export class PostsQueryRepository {
         //set StatusLike
         let myStatus: StatusOfLike = 'None'
         if (userId) {
-            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(postId), userId);
+            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(new ObjectId(postId), userId);
 
             if (likeInfo) {
                 myStatus = likeInfo.statusLike;

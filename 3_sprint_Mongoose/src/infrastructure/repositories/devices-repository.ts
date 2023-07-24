@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import {DeviceModel} from "../../domain/devices-schema-model";
-import {DeviceDBType} from "../../types/db-types";
+import {DeviceDBType} from "../../domain/db-types/devices-db-types";
 
 @injectable()
 export class DevicesRepository {
