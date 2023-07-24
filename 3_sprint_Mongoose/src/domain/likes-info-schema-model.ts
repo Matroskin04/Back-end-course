@@ -11,6 +11,7 @@ const CommentsLikesInfoSchema = new mongoose.Schema<CommentsLikesInfoDBType>({
         enum: ['Like', 'Dislike']
     }
 });
+
 export const CommentsLikesInfoModel = mongoose.model<CommentsLikesInfoDBType>('LikesInfoComments', CommentsLikesInfoSchema);
 
 const PostsLikesInfoSchema = new mongoose.Schema<PostsLikesInfoDBType>({
