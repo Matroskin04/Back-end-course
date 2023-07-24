@@ -34,7 +34,7 @@ export class BlogsQueryRepository {
         }
     }
 
-    async getSingleBlog(id: string): Promise<null | BlogTypeWithId> {
+    async getBlogById(id: string): Promise<null | BlogTypeWithId> {
 
         const blog = await BlogModel.findOne({_id: new ObjectId(id)});
 

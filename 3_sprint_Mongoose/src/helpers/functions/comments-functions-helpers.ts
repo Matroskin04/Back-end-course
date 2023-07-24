@@ -1,6 +1,7 @@
 import {CommentViewType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 import {ObjectId} from "mongodb";
 import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
+import {CommentDBType} from "../../domain/db-types/comments-db-types";
 
 export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislike'): CommentViewType {
 
@@ -21,7 +22,7 @@ export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislik
 }
 
 
-export async function mappingCommentForAllDocs(comment: any, userId: ObjectId | null): Promise<CommentViewType> {
+export async function mappingCommentForAllDocs(comment: CommentDBType, userId: ObjectId | null): Promise<CommentViewType> {
 
     const likesInfoQueryRepository = new LikesInfoQueryRepository();
 
@@ -35,7 +36,7 @@ export async function mappingCommentForAllDocs(comment: any, userId: ObjectId | 
     }
 
     return {
-        id: comment._id,
+        id: comment._id.toString(),
         content: comment.content,
         commentatorInfo: {
             userId: comment.commentatorInfo.userId,

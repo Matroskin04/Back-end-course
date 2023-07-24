@@ -43,7 +43,6 @@ export class CommentsQueryRepository  {
         }
 
         const paramsOfElems = await variablesForReturn(query);
-
         const countAllCommentsOfPost = await CommentModel
             .countDocuments({postId: postId});
 
@@ -55,7 +54,6 @@ export class CommentsQueryRepository  {
             .sort(paramsOfElems.paramSort).lean();
 
         const allCommentsOfPost = await Promise.all(allCommentsOfPostOnPages.map(async p => mappingCommentForAllDocs(p, userId)));
-
 
         return {
             pagesCount: Math.ceil(countAllCommentsOfPost / +paramsOfElems.pageSize),

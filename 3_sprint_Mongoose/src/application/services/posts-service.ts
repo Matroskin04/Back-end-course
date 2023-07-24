@@ -6,7 +6,6 @@ import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-q
 import {ObjectId} from "mongodb";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
-import {PostDBType} from "../../types/db-types";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import {injectable} from "inversify";
 import {LikeStatus} from "../../helpers/enums/like-status";
@@ -14,6 +13,8 @@ import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-q
 import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 import {LikesInfoService} from "./likes-info-service";
 import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
+import {reformNewestLikes} from "../../infrastructure/queryRepository/utils/likes-info-functions";
+import {PostDBType} from "../../domain/db-types/posts-db-types";
 
 
 @injectable()
@@ -29,7 +30,7 @@ export class PostsService {
 
     async createPost(body: BodyPostType): Promise<ResponseTypeService> {
 
-        const blog = await this.blogsQueryRepository.getSingleBlog(body.blogId);
+        const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
         if (!blog) {
             return createResponseService(400, {
                 errorsMessages: [{
@@ -46,18 +47,28 @@ export class PostsService {
             body.content,
             body.blogId,
             blog.name,
-            new Date().toISOString()
+            new Date().toISOString(),
+            {
+                likesCount: 0,
+                dislikesCount: 0
+            }
         )
 
+
         await this.postsRepository.createPost(post);
-        const postMapped = renameMongoIdPost(post);
+
+        //find last 3 Likes
+        const newestLikes = await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+        const reformedNewestLikes = reformNewestLikes(newestLikes);
+
+        const postMapped = renameMongoIdPost(post, reformedNewestLikes, 'None');
 
         return createResponseService(201, postMapped)
     }
 
     async updatePost(body: BodyPostType, id: string): Promise<ResponseTypeService> {
 
-        const blog = await this.blogsQueryRepository.getSingleBlog(body.blogId);
+        const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
         if (!blog) {
             return createResponseService(400, {
                 errorsMessages: [{

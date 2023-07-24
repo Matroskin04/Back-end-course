@@ -6,6 +6,7 @@ import {authorization} from "../../middlewares/authorization-middelwares";
 import {validateFormatOfUrlParams} from "../../middlewares/urlParams-validation-middleware";
 import {container} from "../../composition-root";
 import {BlogsController} from "../controllers/blogs-controller";
+import {validateAccessTokenGetRequests} from "../../middlewares/validation-middlewares/jwt-validation-middlewares";
 
 export const blogsRoutes = Router();
 const blogsController = container.resolve(BlogsController);
@@ -20,6 +21,7 @@ blogsRoutes.get('/:id',
 
 blogsRoutes.get('/:blogId/posts',
     validateFormatOfUrlParams,
+    validateAccessTokenGetRequests,
     blogsController.getAllPostsOfBlog.bind(blogsController));
 
 blogsRoutes.post('/',

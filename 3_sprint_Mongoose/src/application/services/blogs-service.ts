@@ -31,7 +31,7 @@ export class BlogsService {
 
     async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
         //checking the existence of a blog
-        const blog = await this.blogsQueryRepository.getSingleBlog(blogId);
+        const blog = await this.blogsQueryRepository.getBlogById(blogId);
         if (!blog) {
             return null
         }

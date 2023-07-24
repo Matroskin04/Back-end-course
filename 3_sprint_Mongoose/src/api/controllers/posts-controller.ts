@@ -36,7 +36,7 @@ export class PostsController {
                       res: Response<ViewAllPostsModel>) {
 
         try {
-            const result = await this.postsQueryRepository.getAllPosts(req.query);
+            const result = await this.postsQueryRepository.getAllPosts(req.query, req.userId);
             res.status(HTTP_STATUS_CODE.OK_200).send(result);
 
         } catch (err) {
