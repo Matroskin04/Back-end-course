@@ -8,11 +8,12 @@ import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {PostDBType} from "../../types/db-types";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
-import { injectable } from "inversify";
+import {injectable} from "inversify";
 import {LikeStatus} from "../../helpers/enums/like-status";
 import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-query-repository";
 import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 import {LikesInfoService} from "./likes-info-service";
+import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
 
 
 @injectable()
@@ -21,6 +22,7 @@ export class PostsService {
     constructor(protected postsRepository: PostsRepository,
                 protected blogsQueryRepository: BlogsQueryRepository,
                 protected postsQueryRepository: PostsQueryRepository,
+                protected usersQueryRepository: UsersQueryRepository,
                 protected likesInfoQueryRepository: LikesInfoQueryRepository,
                 protected likesInfoService: LikesInfoService) {
     }
@@ -78,61 +80,64 @@ export class PostsService {
         if (!post) {
             return false;
         }
+        //check of existing LikeInfo
+        const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(new ObjectId(postId), userId);
+        //если не существует, то у пользователя 'None'
+        if (!likeInfo) {
 
-        if (likeStatus === 'Like' || likeStatus === 'Dislike') {
-
-            //Получаю like info
-            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(new ObjectId(postId), userId);
-            if (!likeInfo) { //если нету такого документа
-                //Увеличиваю количество лайков/дизлайков
-                const result = await this.postsRepository.incrementNumberOfLikeOfPost(postId, likeStatus);
-                if (!result) {
-                    throw new Error('Incrementing number of likes failed');
-                }
-                //Создаю like info
-                await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(postId), likeStatus);
-                return true;
-            }
-
-            //Если информация уже есть, то меняем статус лайка
-            const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(postId), likeStatus);
-            if (isUpdate) {//если изменился, то
-                //увеличиваю на 1
-                const result1 = await this.commentsRepository.incrementNumberOfLikeOfComment(postId, likeStatus);
-                if (!result1) {
-                    throw new Error('Incrementing number of likes failed');
-                }
-                //уменьшаю на 1 тоЮ что убрали
-                const result2 = await this.commentsRepository.decrementNumberOfLikeOfComment(postId, likeInfo.statusLike);
-                if (!result2) {
-                    throw new Error('Decrementing number of likes failed');
-                }
-                return true;
-
-            } else {
-                return true;
-            }
-
-        } else {
-
-            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(postId), userId);
-            if (!likeInfo) {
-                throw new Error(`Status of like is already 'None', it can't be changed`)
-            }
-
-
-            const result = await this.commentsRepository.decrementNumberOfLikeOfComment(postId, likeInfo.statusLike);
+            if (likeStatus === 'None') return true //Если статусы совпадают, то ничего не делаем
+            //Увеличиваем количество лайков/дизлайков
+            const result = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
             if (!result) {
-                throw new Error('Decrementing number of likes failed');
+                throw new Error('Incrementing number of likes failed');
+            }
+            //Создаем like info
+            const user = await this.usersQueryRepository.getUserByUserId(userId);
+            if (!user) {
+                throw new Error('User with this userId is not found');
             }
 
-            const isDeleted = await this.likesInfoService.deleteLikeInfoComment(userId, new ObjectId(postId))
-            if (!isDeleted) {
-                throw new Error('Deleting like info of comment failed');
+            await this.likesInfoService.createLikeInfoPost(userId, new ObjectId(postId), user.login, likeStatus);
+
+            return true;
+        }
+
+        //Если существует likeInfo
+        if (likeStatus === likeInfo.statusLike) return true //Если статусы совпадают, то ничего не делаем;
+
+        if (likeInfo.statusLike === 'None') { //если стоит None
+            //меняем статус лайка
+            const isUpdate = await this.likesInfoService.updateLikeInfoPost(userId, new ObjectId(postId), likeStatus);
+            if (!isUpdate) {
+                throw new Error('Like status of the post is not updated')
+            }
+            //увеличиваю на 1 кол-во лайков/дизлайков
+            const result = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
+            if (!result) {
+                throw new Error('Incrementing number of post\'s likes failed');
             }
 
             return true;
         }
+
+        //Если стоит like/dislike:
+        //меняем статус лайка
+        const isUpdate = await this.likesInfoService.updateLikeInfoPost(userId, new ObjectId(postId), likeStatus);
+        if (!isUpdate) {
+            throw new Error('Like status of the post is not updated')
+        }
+
+        const result1 = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
+        if (!result1) {
+            throw new Error('Incrementing number of likes failed');
+        }
+        //уменьшаю на 1 то что убрали
+        const result2 = await this.postsRepository.decrementNumberOfLikesOfPost(postId, likeInfo.statusLike);
+        if (!result2) {
+            throw new Error('Decrementing number of likes failed');
+        }
+
+        return true;
     }
 
     async deleteSinglePost(id: string): Promise<boolean> {

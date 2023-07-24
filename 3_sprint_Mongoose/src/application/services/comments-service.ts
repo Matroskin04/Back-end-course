@@ -79,7 +79,7 @@ export class CommentsService {
             const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
             if (!likeInfo) { //если нету такого документа
                 //Увеличиваю количество лайков/дизлайков
-                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, likeStatus);
+                const result = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
                 if (!result) {
                     throw new Error('Incrementing number of likes failed');
                 }
@@ -92,12 +92,12 @@ export class CommentsService {
             const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
             if (isUpdate) {//если изменился, то
                 //увеличиваю на 1
-                const result1 = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, likeStatus);
+                const result1 = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
                 if (!result1) {
                     throw new Error('Incrementing number of likes failed');
                 }
                 //уменьшаю на 1 тоЮ что убрали
-                const result2 = await this.commentsRepository.decrementNumberOfLikeOfComment(commentId, likeInfo.statusLike);
+                const result2 = await this.commentsRepository.decrementNumberOfLikesOfComment(commentId, likeInfo.statusLike);
                 if (!result2) {
                     throw new Error('Decrementing number of likes failed');
                 }
@@ -115,7 +115,7 @@ export class CommentsService {
             }
 
 
-            const result = await this.commentsRepository.decrementNumberOfLikeOfComment(commentId, likeInfo.statusLike);
+            const result = await this.commentsRepository.decrementNumberOfLikesOfComment(commentId, likeInfo.statusLike);
             if (!result) {
                 throw new Error('Decrementing number of likes failed');
             }

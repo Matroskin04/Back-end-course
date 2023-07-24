@@ -3,9 +3,9 @@ import {QueryUserModel} from "../../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {UserModel} from "../../domain/users-schema-model";
-import {UserDBType} from "../../types/db-types";
 import {mappingUser} from "../../helpers/functions/users-functions-helpers";
 import { injectable } from "inversify";
+import {UserDBType} from "../../domain/db-types/users-db-types";
 
 
 @injectable()
@@ -52,7 +52,7 @@ export class UsersQueryRepository {
         return null;
     }
 
-    async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
+    async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> { // todo создавать ли отдельный метод для взятия логина
 
         const user = await UserModel.findOne({_id: userId});
 

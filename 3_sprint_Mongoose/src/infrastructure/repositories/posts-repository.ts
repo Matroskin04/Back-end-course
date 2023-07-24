@@ -3,6 +3,7 @@ import {ObjectId} from "mongodb";
 import {PostModel} from "../../domain/posts-schema-model";
 import { injectable } from "inversify";
 import {PostDBType} from "../../domain/db-types/posts-db-types";
+import {CommentModel} from "../../domain/comments-schema-model";
 
 
 @injectable()
@@ -15,19 +16,6 @@ export class PostsRepository {
         await postInstance.save();
 
         return;
-    }
-
-    async incrementNumberOfLikeOfPost(postId: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
-
-        if (likeStatus === 'Like') {
-            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.likesCount': 1}});
-            return result.modifiedCount === 1;
-
-        } else {
-            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.dislikesCount': 1}});
-            return result.modifiedCount === 1;
-
-        }
     }
 
     async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {
@@ -48,5 +36,34 @@ export class PostsRepository {
         const result = await PostModel.deleteOne({_id: new ObjectId(id)})
 
         return result.deletedCount === 1;
+    }
+
+    async incrementNumberOfLikesOfPost(postId: string, incrementValue: 'Like' | 'Dislike' | 'None'): Promise<boolean> {
+
+        if (incrementValue === 'Like') {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.likesCount': 1}});
+            return result.modifiedCount === 1;
+
+        }
+        if (incrementValue === 'Dislike') {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.dislikesCount': 1}});
+            return result.modifiedCount === 1;
+
+        }
+        return true
+    }
+
+    async decrementNumberOfLikesOfPost(postId: string, decrementValue: 'Like' | 'Dislike' | 'None'): Promise<boolean> {
+
+        if (decrementValue === 'Like') {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.likesCount': -1}});
+            return result.modifiedCount === 1;
+
+        }
+        if (decrementValue === 'Dislike') {
+            const result = await PostModel.updateOne({_id: postId}, {$inc: {'likesInfo.dislikesCount': -1}});
+            return result.modifiedCount === 1;
+        }
+        return true
     }
 }

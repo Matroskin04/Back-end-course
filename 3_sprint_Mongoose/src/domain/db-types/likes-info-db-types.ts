@@ -9,10 +9,13 @@ export class CommentsLikesInfoDBType {
     }
 }
 
-export type PostsLikesInfoDBType = {
-    postId: ObjectId
-    userId: ObjectId
-    login: string
-    addedAt: string
-    statusLike: 'Like' | 'Dislike'
+export class PostsLikesInfoDBType {
+    constructor(
+        public postId: ObjectId,
+        public userId: ObjectId,
+        public login: string,
+        public addedAt: string,
+        public statusLike: 'Like' | 'Dislike' | 'None'
+    ) {
+    }
 }

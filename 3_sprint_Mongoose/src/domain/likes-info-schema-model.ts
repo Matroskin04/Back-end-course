@@ -21,7 +21,7 @@ const PostsLikesInfoSchema = new mongoose.Schema<PostsLikesInfoDBType>({
     statusLike: {
         type: String,
         required: true,
-        enum: ['Like', 'Dislike']
+        enum: ['Like', 'Dislike', 'None']
     }
 });
 export const PostsLikesInfoModel = mongoose.model<PostsLikesInfoDBType>('LikesInfo', PostsLikesInfoSchema);
