@@ -4,6 +4,7 @@ import {
     BlogTypeWithId,
     BlogTypeWithMongoId
 } from "../infrastructure/repositories/repositories-types/blogs-types-repositories";
+import mongoose from "mongoose";
 
 export const BlogSchema = new mongoose.Schema<BlogDBType, BlogDBFullType, BlogDBInstanceMethodsType>({
     name: {type: String, required: true},
@@ -22,14 +23,15 @@ BlogSchema.static('makeInstance', function makeInstance(name: string, descriptio
         isMembership
     })
 });
-BlogSchema.method('renameIntoViewModel', function renameIntoViewModel(blog: BlogTypeWithMongoId): BlogTypeWithId {
+BlogSchema.method('renameIntoViewModel', function renameIntoViewModel(): BlogTypeWithId {
+    const that = this as BlogTypeWithMongoId
     return {
-        id: blog._id,
-        name: blog.name,
-        description: blog.description,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership
+        id: that._id,
+        name: that.name,
+        description: that.description,
+        websiteUrl: that.websiteUrl,
+        createdAt: that.createdAt,
+        isMembership: that.isMembership
     }
 });
 

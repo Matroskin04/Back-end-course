@@ -1,8 +1,8 @@
-import {CommentOutputType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
+import {CommentViewType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 import {ObjectId} from "mongodb";
 import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 
-export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislike'): CommentOutputType {
+export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislike'): CommentViewType {
 
     return {
         id: comment._id,
@@ -21,7 +21,7 @@ export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislik
 }
 
 
-export async function mappingCommentForAllDocs(comment: any, userId: ObjectId | null): Promise<CommentOutputType> {
+export async function mappingCommentForAllDocs(comment: any, userId: ObjectId | null): Promise<CommentViewType> {
 
     const likesInfoQueryRepository = new LikesInfoQueryRepository();
 

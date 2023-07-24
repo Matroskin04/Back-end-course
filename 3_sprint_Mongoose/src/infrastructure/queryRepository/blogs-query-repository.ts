@@ -4,7 +4,6 @@ import {ObjectId} from "mongodb";
 import {QueryBlogModel} from "../../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {BlogModel} from "../../domain/blogs-schema-model";
-import {renameMongoIdBlog} from "../../helpers/functions/blogs-functions-helpers";
 import { injectable } from "inversify";
 
 
@@ -24,23 +23,23 @@ export class BlogsQueryRepository {
             .find({name: {$regex: searchNameTerm ?? '', $options: 'i'} })
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize )
             .limit(+paramsOfElems.pageSize)
-            .sort(paramsOfElems.paramSort).lean();
+            .sort(paramsOfElems.paramSort);
 
         return {
             pagesCount:  Math.ceil(countAllBlogsSort / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,
             pageSize: +paramsOfElems.pageSize,
             totalCount: countAllBlogsSort,
-            items: allBlogsOnPages.map(p => renameMongoIdBlog(p))
+            items: allBlogsOnPages.map(p => p.renameIntoViewModel())
         }
     }
 
     async getSingleBlog(id: string): Promise<null | BlogTypeWithId> {
 
-        const singleBlog = await BlogModel.findOne({_id: new ObjectId(id)});
+        const blog = await BlogModel.findOne({_id: new ObjectId(id)});
 
-        if (singleBlog) {
-            return renameMongoIdBlog(singleBlog);
+        if (blog) {
+            return blog.renameIntoViewModel();
         }
         return null;
     }

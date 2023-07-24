@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {CommentDBType} from "../types/db-types";
+import {CommentDBType} from "./db-types/comments-db-types";
 
 export const CommentSchema = new mongoose.Schema<CommentDBType>({
     content: {type: String, required: true},

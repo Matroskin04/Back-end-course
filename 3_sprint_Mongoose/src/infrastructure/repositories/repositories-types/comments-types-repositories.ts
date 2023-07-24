@@ -1,4 +1,4 @@
-export type CommentOutputType = {
+export type CommentViewType = {
     id: string
     content: string
     commentatorInfo: {

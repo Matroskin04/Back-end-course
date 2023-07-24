@@ -7,7 +7,6 @@ import {
     PostTypeWithId
 } from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {renameMongoIdBlog} from "../../helpers/functions/blogs-functions-helpers";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
 import {BlogsRepository} from "../../infrastructure/repositories/blogs-repository";
@@ -25,9 +24,9 @@ export class BlogsService {
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
         const blog = BlogModel.makeInstance(bodyBlog.name, bodyBlog.description, bodyBlog.websiteUrl);
-
         await this.blogsRepository.createBlog(blog);
-        return renameMongoIdBlog(blog);
+
+        return blog.renameIntoViewModel();
     }
 
     async createPostByBlogId(blogId: string, body: BodyPostByBlogIdType): Promise<null | PostTypeWithId> {
@@ -52,6 +51,8 @@ export class BlogsService {
     }
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
+
+
 
         return await this.blogsRepository.updateBlog(bodyBlog, id);
     }

@@ -43,17 +43,6 @@ export class CommentsController {
         }
     }
 
-    async deleteComment(req: Request, res: Response<void>) {
-
-        try {
-            await this.commentsService.deleteComment(req.params.id);
-            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-
-        } catch (err) {
-            console.log(`Something was wrong. Error: ${err}`);
-        }
-    }
-
     async updateLikeStatusOfComment(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>, res: Response<string>) {
 
         try {
@@ -61,6 +50,17 @@ export class CommentsController {
 
             result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).send('Comment with specified id doesn\'t exist');
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    }
+
+    async deleteComment(req: Request, res: Response<void>) {
+
+        try {
+            await this.commentsService.deleteComment(req.params.id);
+            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);

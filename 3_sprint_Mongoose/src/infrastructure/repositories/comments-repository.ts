@@ -26,14 +26,14 @@ export class CommentsRepository {
         return;
     }
 
-    async incrementNumberOfLikeOfComment(_id: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
+    async incrementNumberOfLikeOfComment(commentId: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
 
         if (likeStatus === 'Like') {
-            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.likesCount': 1}});
+            const result = await CommentModel.updateOne({_id: commentId}, {$inc: {'likesInfo.likesCount': 1}});
             return result.modifiedCount === 1;
 
         } else {
-            const result = await CommentModel.updateOne({_id}, {$inc: {'likesInfo.dislikesCount': 1}});
+            const result = await CommentModel.updateOne({_id: commentId}, {$inc: {'likesInfo.dislikesCount': 1}});
             return result.modifiedCount === 1;
 
         }

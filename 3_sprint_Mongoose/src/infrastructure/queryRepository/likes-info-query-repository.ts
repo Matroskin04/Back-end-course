@@ -1,13 +1,29 @@
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {LikesInfoModel} from "../../domain/likes-info-schema-model";
-import {LikesInfoDBType} from "../../types/db-types";
+import {CommentsLikesInfoModel, PostsLikesInfoModel} from "../../domain/likes-info-schema-model";
+import {CommentsLikesInfoDBType, PostsLikesInfoDBType} from "../../domain/db-types/likes-info-db-types";
+import {NewestLikesType} from "../repositories/repositories-types/posts-types-repositories";
+
 
 @injectable()
 export class LikesInfoQueryRepository {
 
-    async getLikesInfoByCommentAndUser(commentId: ObjectId, userId: ObjectId): Promise<LikesInfoDBType | null> {
+    async getLikesInfoByCommentAndUser(commentId: ObjectId, userId: ObjectId): Promise<CommentsLikesInfoDBType | null> {
 
-        return LikesInfoModel.findOne({commentId, userId});
+        return CommentsLikesInfoModel.findOne({commentId, userId});
+    }
+
+    async getLikesInfoByPostAndUser(postId: ObjectId, userId: ObjectId): Promise<PostsLikesInfoDBType | null> {
+
+        return PostsLikesInfoModel.findOne({postId, userId});
+    }
+
+    async getNewestLikesOfPost(postId: ObjectId): Promise<NewestLikesType> {
+
+        return PostsLikesInfoModel
+            .find({postId})
+            .sort({addedAt: -1})
+            .skip(3)
+            .lean();
     }
 }

@@ -1,4 +1,4 @@
-import {CommentOutputType} from "../repositories/repositories-types/comments-types-repositories";
+import {CommentViewType} from "../repositories/repositories-types/comments-types-repositories";
 import {ObjectId} from "mongodb";
 import {QueryPostModel} from "../../models/PostsModels/QueryPostModel";
 import {CommentOfPostPaginationType} from "./query-repository-types/posts-types-query-repository";
@@ -16,7 +16,7 @@ export class CommentsQueryRepository  {
     constructor(protected postsQueryRepository: PostsQueryRepository,
                 protected likesInfoQueryRepository: LikesInfoQueryRepository) {}
 
-    async getCommentById(commentId: string, userId: ObjectId | null): Promise<CommentOutputType | null> {
+    async getCommentById(commentId: string, userId: ObjectId | null): Promise<CommentViewType | null> {
 
         const comment = await CommentModel.findOne({_id: new ObjectId(commentId)});
         if (!comment) {
@@ -35,9 +35,9 @@ export class CommentsQueryRepository  {
         return mappingComment(comment, myStatus);
     }
 
-    async getCommentsOfPost(query: QueryPostModel, id: string, userId: ObjectId | null): Promise<CommentOfPostPaginationType | null> {
+    async getCommentsOfPost(query: QueryPostModel, postId: string, userId: ObjectId | null): Promise<CommentOfPostPaginationType | null> {
 
-        const post = await this.postsQueryRepository.getSinglePost(id);
+        const post = await this.postsQueryRepository.getPostById(postId, userId);
         if (!post) {
             return null
         }
@@ -45,11 +45,11 @@ export class CommentsQueryRepository  {
         const paramsOfElems = await variablesForReturn(query);
 
         const countAllCommentsOfPost = await CommentModel
-            .countDocuments({postId: id});
+            .countDocuments({postId: postId});
 
 
         const allCommentsOfPostOnPages = await CommentModel
-            .find({postId: id})
+            .find({postId: postId})
             .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).lean();

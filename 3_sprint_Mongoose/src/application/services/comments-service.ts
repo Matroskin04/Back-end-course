@@ -1,9 +1,8 @@
 import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateCommentModel";
 import {ObjectId} from "mongodb";
-import {CommentOutputType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
+import {CommentViewType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 import {PostModel} from "../../domain/posts-schema-model";
 import {mappingComment} from "../../helpers/functions/comments-functions-helpers";
-import {CommentDBType} from "../../types/db-types";
 import {CommentsRepository} from "../../infrastructure/repositories/comments-repository";
 import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
 import {LikeStatus} from "../../helpers/enums/like-status";
@@ -11,6 +10,7 @@ import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comm
 import {LikesInfoService} from "./likes-info-service";
 import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
 import { injectable } from "inversify";
+import {CommentDBType} from "../../domain/db-types/comments-db-types";
 
 @injectable()
 export class CommentsService {
@@ -34,7 +34,7 @@ export class CommentsService {
         return;
     }
 
-    async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentOutputType> {
+    async createCommentByPostId(body: CreateCommentByPostIdModel, userId: ObjectId, postId: string): Promise<null | CommentViewType> {
 
         const user = await this.usersQueryRepository.getUserByUserId(userId)
         if (!user) {
@@ -66,33 +66,33 @@ export class CommentsService {
         return mappingComment(comment, 'None');
     }
 
-    async updateLikeStatusOfComment(commentId: string, userId: ObjectId, statusLike: LikeStatus): Promise<boolean> {
+    async updateLikeStatusOfComment(commentId: string, userId: ObjectId, likeStatus: LikeStatus): Promise<boolean> {
 
         const comment = await this.commentsQueryRepository.getCommentById(commentId, userId);
         if (!comment) {
             return false;
         }
 
-        if (statusLike === 'Like' || statusLike === 'Dislike') {
+        if (likeStatus === 'Like' || likeStatus === 'Dislike') {
 
             //Получаю like info
             const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
             if (!likeInfo) { //если нету такого документа
                 //Увеличиваю количество лайков/дизлайков
-                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+                const result = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, likeStatus);
                 if (!result) {
                     throw new Error('Incrementing number of likes failed');
                 }
                 //Создаю like info
-                await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), statusLike);
+                await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
                 return true;
             }
 
             //Если информация уже есть, то меняем статус лайка
-            const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), statusLike);
+            const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
             if (isUpdate) {//если изменился, то
                 //увеличиваю на 1
-                const result1 = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, statusLike);
+                const result1 = await this.commentsRepository.incrementNumberOfLikeOfComment(commentId, likeStatus);
                 if (!result1) {
                     throw new Error('Incrementing number of likes failed');
                 }

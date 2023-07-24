@@ -30,15 +30,15 @@ commentsRoutes.put('/:id',
     getErrors,
     commentsController.updateComment.bind(commentsController));
 
-commentsRoutes.delete('/:id',
-    validateFormatOfUrlParams,
-    validateAccessToken,
-    checkCommentByIdAndToken,
-    commentsController.deleteComment.bind(commentsController));
-
 commentsRoutes.put('/:id/like-status',
     validateAccessToken,
     validateBodyOfLikeStatus,
     getErrors,
     commentsController.updateLikeStatusOfComment.bind(commentsController));
+
+commentsRoutes.delete('/:id',
+    validateFormatOfUrlParams,
+    validateAccessToken,
+    checkCommentByIdAndToken,
+    commentsController.deleteComment.bind(commentsController));
 

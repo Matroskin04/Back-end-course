@@ -20,6 +20,7 @@ import {ViewAllErrorsModels} from "../../models/ViewAllErrorsModels";
 import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
 import {CommentsService} from "../../application/services/comments-service";
 import { injectable } from "inversify";
+import {UpdateLikeStatusModel} from "../../models/CommentsModels/UpdateCommentLikeStatus";
 
 
 @injectable()
@@ -47,7 +48,7 @@ export class PostsController {
                       res: Response<ViewPostModel>) {
 
         try {
-            const result = await this.postsQueryRepository.getSinglePost(req.params.id)
+            const result = await this.postsQueryRepository.getPostById(req.params.id, req.userId)
 
             result ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
                 : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
@@ -106,6 +107,19 @@ export class PostsController {
 
             result.status === 204 ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
                 : res.status(result.status).send(result.message);
+
+        } catch (err) {
+            console.log(`Something was wrong. Error: ${err}`);
+        }
+    }
+
+    async updateLikeStatusOfPost(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>, res: Response<string>) {
+
+        try {
+            const result = await this.postsService.updateLikeStatusOfPost(req.params.id, req.userId!, req.body.likeStatus);
+
+            result ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+                : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).send('Post with specified id doesn\'t exist');
 
         } catch (err) {
             console.log(`Something was wrong. Error: ${err}`);
