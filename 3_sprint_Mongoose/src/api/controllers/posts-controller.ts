@@ -8,7 +8,7 @@ import {
 import {QueryPostModel} from "../../models/PostsModels/QueryPostModel";
 import {Response} from "express";
 import {ViewAllPostsModel, ViewPostModel} from "../../models/PostsModels/ViewPostModel";
-import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-query-repository";
+import {PostsQueryRepository} from "../../infrastructure/queryRepositories/posts-query-repository";
 import {UriIdModel} from "../../models/UriModels";
 import {ViewAllCommentsOfPostModel, ViewCommentOfPostModel} from "../../models/PostsModels/ViewCommentsOfPostModel";
 import {CreatePostModel} from "../../models/PostsModels/CreatePostModel";
@@ -17,7 +17,7 @@ import {CreateCommentByPostIdModel} from "../../models/CommentsModels/CreateComm
 import {UpdatePostModel} from "../../models/PostsModels/UpdatePostModel";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
 import {ViewAllErrorsModels} from "../../models/ViewAllErrorsModels";
-import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
+import {CommentsQueryRepository} from "../../infrastructure/queryRepositories/comments-query-repository";
 import {CommentsService} from "../../application/services/comments-service";
 import { injectable } from "inversify";
 import {UpdateLikeStatusModel} from "../../models/CommentsModels/UpdateCommentLikeStatus";

@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import {env} from "../../config";
 import {mappingUser} from "../../helpers/functions/users-functions-helpers";
 import {UsersRepository} from "../../infrastructure/repositories/users-repository";
-import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
+import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
 import { injectable } from "inversify";
 import {UserDBType} from "../../domain/db-types/users-db-types";
 

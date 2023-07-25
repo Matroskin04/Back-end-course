@@ -3,18 +3,18 @@ import {
     BodyPostType, PostTypeWithId,
 } from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {PostsRepository} from "../../infrastructure/repositories/posts-repository";
-import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
+import {BlogsQueryRepository} from "../../infrastructure/queryRepositories/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
 import {renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import {injectable} from "inversify";
 import {LikeStatus} from "../../helpers/enums/like-status";
-import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-query-repository";
-import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
+import {PostsQueryRepository} from "../../infrastructure/queryRepositories/posts-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepositories/likes-info-query-repository";
 import {LikesInfoService} from "./likes-info-service";
-import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
-import {reformNewestLikes} from "../../infrastructure/queryRepository/utils/likes-info-functions";
+import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
+import {reformNewestLikes} from "../../infrastructure/queryRepositories/utils/likes-info-functions";
 import {PostDBType} from "../../domain/db-types/posts-db-types";
 
 
@@ -128,7 +128,7 @@ export class PostsService {
         if (!likeInfo) {
 
             if (likeStatus === 'None') return true //Если статусы совпадают, то ничего не делаем
-            //Увеличиваем количество лайков/дизлайков
+            //Иначе увеличиваем количество лайков/дизлайков
             const result = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
             if (!result) {
                 throw new Error('Incrementing number of likes failed');
@@ -144,26 +144,10 @@ export class PostsService {
             return true;
         }
 
-        //Если существует likeInfo
+        //Если существует likeInfo, то:
         if (likeStatus === likeInfo.statusLike) return true //Если статусы совпадают, то ничего не делаем;
-
-        if (likeInfo.statusLike === 'None') { //если стоит None
-            //меняем статус лайка
-            const isUpdate = await this.likesInfoService.updateLikeInfoPost(userId, new ObjectId(postId), likeStatus);
-            if (!isUpdate) {
-                throw new Error('Like status of the post is not updated')
-            }
-            //увеличиваю на 1 кол-во лайков/дизлайков
-            const result = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
-            if (!result) {
-                throw new Error('Incrementing number of post\'s likes failed');
-            }
-
-            return true;
-        }
-
-        //Если стоит like/dislike:
-        //меняем статус лайка
+        
+        //В ином случае меняем статус лайка
         const isUpdate = await this.likesInfoService.updateLikeInfoPost(userId, new ObjectId(postId), likeStatus);
         if (!isUpdate) {
             throw new Error('Like status of the post is not updated')

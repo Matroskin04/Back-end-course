@@ -2,8 +2,8 @@ import {DevicesRepository} from "../../infrastructure/repositories/devices-repos
 import {ObjectId} from "mongodb";
 import {ResponseTypeService} from "./service-types/responses-types-service";
 import {createResponseService} from "./service-utils/functions/create-response-service";
-import {DevicesQueryRepository} from "../../infrastructure/queryRepository/devices-query-repository";
-import {JwtQueryRepository} from "../../infrastructure/queryRepository/jwt-query-repository";
+import {DevicesQueryRepository} from "../../infrastructure/queryRepositories/devices-query-repository";
+import {JwtQueryRepository} from "../../infrastructure/queryRepositories/jwt-query-repository";
 import { injectable } from "inversify";
 import {DeviceDBType} from "../../domain/db-types/devices-db-types";
 

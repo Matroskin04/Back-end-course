@@ -4,11 +4,11 @@ import {CommentViewType} from "../../infrastructure/repositories/repositories-ty
 import {PostModel} from "../../domain/posts-schema-model";
 import {mappingComment} from "../../helpers/functions/comments-functions-helpers";
 import {CommentsRepository} from "../../infrastructure/repositories/comments-repository";
-import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
+import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
 import {LikeStatus} from "../../helpers/enums/like-status";
-import {CommentsQueryRepository} from "../../infrastructure/queryRepository/comments-query-repository";
+import {CommentsQueryRepository} from "../../infrastructure/queryRepositories/comments-query-repository";
 import {LikesInfoService} from "./likes-info-service";
-import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepositories/likes-info-query-repository";
 import { injectable } from "inversify";
 import {CommentDBType} from "../../domain/db-types/comments-db-types";
 
@@ -73,60 +73,60 @@ export class CommentsService {
             return false;
         }
 
-        if (likeStatus === 'Like' || likeStatus === 'Dislike') {
+        const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
+        //если не существует, то у пользователя 'None'
+        if (!likeInfo) {
 
-            //Получаю like info
-            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
-            if (!likeInfo) { //если нету такого документа
-                //Увеличиваю количество лайков/дизлайков
-                const result = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
-                if (!result) {
-                    throw new Error('Incrementing number of likes failed');
-                }
-                //Создаю like info
-                await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
-                return true;
+            if (likeStatus === 'None') return true //Если статусы совпадают, то ничего не делаем
+            //Иначе увеличиваем количество лайков/дизлайков
+            const result = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
+            if (!result) {
+                throw new Error('Incrementing number of likes failed');
             }
+            //Создаю like info
+            await this.likesInfoService.createLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
+            return true;
+        }
 
-            //Если информация уже есть, то меняем статус лайка
-            const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
-            if (isUpdate) {//если изменился, то
-                //увеличиваю на 1
-                const result1 = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
-                if (!result1) {
-                    throw new Error('Incrementing number of likes failed');
-                }
-                //уменьшаю на 1 тоЮ что убрали
-                const result2 = await this.commentsRepository.decrementNumberOfLikesOfComment(commentId, likeInfo.statusLike);
-                if (!result2) {
-                    throw new Error('Decrementing number of likes failed');
-                }
-                return true;
+        //Если существует likeInfo, то:
+        if (likeStatus === likeInfo.statusLike) { //Если статусы совпадают, то ничего не делаем;
+            return true
+        }
+        //Если пришел статус None, то:
+        if (likeStatus === 'None') {
 
-            } else {
-                return true;
-            }
-
-        } else {
-
-            const likeInfo = await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(new ObjectId(commentId), userId);
-            if (!likeInfo) {
-                throw new Error(`Status of like is already 'None', it can't be changed`)
-            }
-
-
+            //уменьшаю на 1 то, что убрали
             const result = await this.commentsRepository.decrementNumberOfLikesOfComment(commentId, likeInfo.statusLike);
             if (!result) {
                 throw new Error('Decrementing number of likes failed');
             }
-
+            //И удаляю информацию
             const isDeleted = await this.likesInfoService.deleteLikeInfoComment(userId, new ObjectId(commentId))
             if (!isDeleted) {
                 throw new Error('Deleting like info of comment failed');
             }
 
-            return true;
+            return true
         }
+
+        //Если пришел like/dislike, то
+        //обновляю информацию
+        const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
+        if (!isUpdate) {
+            throw new Error('Like status of the comment is not updated')
+        }
+        //увеличиваю на 1 то, что пришло
+        const result1 = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);
+        if (!result1) {
+            throw new Error('Incrementing number of likes failed');
+        }
+        //уменьшаю на 1 то, что убрали
+        const result2 = await this.commentsRepository.decrementNumberOfLikesOfComment(commentId, likeInfo.statusLike);
+        if (!result2) {
+            throw new Error('Decrementing number of likes failed');
+        }
+
+        return true;
     }
 }
 

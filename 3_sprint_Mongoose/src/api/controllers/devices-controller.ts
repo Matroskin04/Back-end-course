@@ -3,7 +3,7 @@ import {ViewDeviceModel} from "../../models/DevicesModels/ViewDeviceModel";
 import {RequestWithParams} from "../../types/requests-types";
 import {UriIdModel} from "../../models/UriModels";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
-import {DevicesQueryRepository} from "../../infrastructure/queryRepository/devices-query-repository";
+import {DevicesQueryRepository} from "../../infrastructure/queryRepositories/devices-query-repository";
 import {DevicesService} from "../../application/services/devices-service";
 import { injectable } from "inversify";
 

@@ -3,9 +3,9 @@ import {
     PostViewType
 } from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {ObjectId} from "mongodb";
-import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepositories/likes-info-query-repository";
 import {PostDBType} from "../../domain/db-types/posts-db-types";
-import {reformNewestLikes} from "../../infrastructure/queryRepository/utils/likes-info-functions";
+import {reformNewestLikes} from "../../infrastructure/queryRepositories/utils/likes-info-functions";
 
 
 export function renameMongoIdPost(post: PostDBType, newestLikes: NewestLikesType, myStatus: 'None' | 'Like' | 'Dislike'): PostViewType {
