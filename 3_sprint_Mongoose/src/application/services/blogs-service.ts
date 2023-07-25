@@ -2,7 +2,7 @@ import {
     BodyBlogType,
     BlogTypeWithId
 } from "../../infrastructure/repositories/repositories-types/blogs-types-repositories";
-import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
+import {BlogsQueryRepository} from "../../infrastructure/queryRepositories/blogs-query-repository";
 import {BlogsRepository} from "../../infrastructure/repositories/blogs-repository";
 import {inject, injectable } from "inversify";
 import {BlogModel} from "../../domain/blogs-schema-model";

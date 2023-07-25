@@ -1,6 +1,6 @@
 import {CommentViewType} from "../../infrastructure/repositories/repositories-types/comments-types-repositories";
 import {ObjectId} from "mongodb";
-import {LikesInfoQueryRepository} from "../../infrastructure/queryRepository/likes-info-query-repository";
+import {LikesInfoQueryRepository} from "../../infrastructure/queryRepositories/likes-info-query-repository";
 import {CommentDBType} from "../../domain/db-types/comments-db-types";
 
 export function mappingComment(comment: any, myStatus: 'None' | 'Like' | 'Dislike'): CommentViewType {

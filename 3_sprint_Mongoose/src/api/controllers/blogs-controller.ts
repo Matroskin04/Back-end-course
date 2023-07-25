@@ -16,8 +16,8 @@ import {CreatePostByBlogIdModel} from "../../models/PostsModels/CreatePostModel"
 import {PostTypeWithId} from "../../infrastructure/repositories/repositories-types/posts-types-repositories";
 import {UpdateBlogModel} from "../../models/BlogsModels/UpdateBlogModel";
 import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
-import {BlogsQueryRepository} from "../../infrastructure/queryRepository/blogs-query-repository";
-import {PostsQueryRepository} from "../../infrastructure/queryRepository/posts-query-repository";
+import {BlogsQueryRepository} from "../../infrastructure/queryRepositories/blogs-query-repository";
+import {PostsQueryRepository} from "../../infrastructure/queryRepositories/posts-query-repository";
 import {inject, injectable } from "inversify";
 import {PostsService} from "../../application/services/posts-service";
 

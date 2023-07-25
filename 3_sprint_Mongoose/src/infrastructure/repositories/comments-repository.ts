@@ -26,9 +26,9 @@ export class CommentsRepository {
         return;
     }
 
-    async incrementNumberOfLikesOfComment(commentId: string, likeStatus: 'Like' | 'Dislike'): Promise<boolean> {
+    async incrementNumberOfLikesOfComment(commentId: string, incrementValue: 'Like' | 'Dislike'): Promise<boolean> {
 
-        if (likeStatus === 'Like') {
+        if (incrementValue === 'Like') {
             const result = await CommentModel.updateOne({_id: commentId}, {$inc: {'likesInfo.likesCount': 1}});
             return result.modifiedCount === 1;
 

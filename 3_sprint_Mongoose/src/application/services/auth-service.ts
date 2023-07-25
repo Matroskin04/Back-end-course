@@ -5,7 +5,7 @@ import {ARTokensAndUserId, UserInformation} from "./service-types/auth-types-ser
 import {ErrorsTypeService} from "./service-types/responses-types-service";
 import {UsersService} from "./users-service";
 import {UsersRepository} from "../../infrastructure/repositories/users-repository";
-import {UsersQueryRepository} from "../../infrastructure/queryRepository/users-query-repository";
+import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
 import {JwtService} from "./jwt-service";
 import {EmailManager} from "../managers/email-manager";
 import { injectable } from "inversify";
