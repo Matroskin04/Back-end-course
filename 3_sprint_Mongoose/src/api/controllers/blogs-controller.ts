@@ -107,7 +107,8 @@ export class BlogsController {
         }
     }
 
-    async deleteBlog(req: RequestWithParams<UriIdModel>, res: Response<void>) {
+    async deleteBlog(req: RequestWithParams<UriIdModel>,
+                     res: Response<void>) {
 
         try {
             const result = await this.blogsService.deleteSingleBlog(req.params.id);

@@ -11,15 +11,15 @@ export class BlogsRepository {
         return;
     }
 
-    async deleteSingleBlog(id: string): Promise<boolean> {
+    async deleteSingleBlog(blogId: ObjectId): Promise<boolean> {
 
-        const result = await BlogModel.deleteOne({_id: new ObjectId(id)});
+        const result = await BlogModel.deleteOne({_id: blogId});
         return result.deletedCount === 1;
     }
 
-    async getBlogById(id: string): Promise<null | HydratedBlogType> {
+    async getBlogById(blogId: ObjectId): Promise<null | HydratedBlogType> {
 
-        const blog = await BlogModel.findOne({_id: new ObjectId(id)});
+        const blog = await BlogModel.findOne({_id: blogId});
 
         if (blog) {
             return blog;

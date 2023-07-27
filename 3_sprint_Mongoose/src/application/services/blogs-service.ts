@@ -6,6 +6,7 @@ import {BlogsQueryRepository} from "../../infrastructure/queryRepositories/blogs
 import {BlogsRepository} from "../../infrastructure/repositories/blogs-repository";
 import {inject, injectable } from "inversify";
 import {BlogModel} from "../../domain/blogs-schema-model";
+import {ObjectId} from "mongodb";
 
 
 @injectable()
@@ -24,7 +25,7 @@ export class BlogsService {
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
-        const blog = await this.blogsRepository.getBlogById(id);
+        const blog = await this.blogsRepository.getBlogById(new ObjectId(id));
         if (!blog) {
             return false
         }
@@ -37,7 +38,7 @@ export class BlogsService {
 
     async deleteSingleBlog(id: string): Promise<boolean> {
 
-        return await this.blogsRepository.deleteSingleBlog(id);
+        return await this.blogsRepository.deleteSingleBlog(new ObjectId(id));
     }
 }
 
