@@ -90,7 +90,7 @@ export class CommentsService {
 
         //Если существует likeInfo, то:
         if (likeStatus === likeInfo.statusLike) { //Если статусы совпадают, то ничего не делаем;
-            return true
+            return true;
         }
         //Если пришел статус None, то:
         if (likeStatus === 'None') {
@@ -101,19 +101,19 @@ export class CommentsService {
                 throw new Error('Decrementing number of likes failed');
             }
             //И удаляю информацию
-            const isDeleted = await this.likesInfoService.deleteLikeInfoComment(userId, new ObjectId(commentId))
+            const isDeleted = await this.likesInfoService.deleteLikeInfoComment(userId, new ObjectId(commentId));
             if (!isDeleted) {
                 throw new Error('Deleting like info of comment failed');
             }
 
-            return true
+            return true;
         }
 
         //Если пришел like/dislike, то
         //обновляю информацию
         const isUpdate = await this.likesInfoService.updateLikeInfoComment(userId, new ObjectId(commentId), likeStatus);
         if (!isUpdate) {
-            throw new Error('Like status of the comment is not updated')
+            throw new Error('Like status of the comment is not updated');
         }
         //увеличиваю на 1 то, что пришло
         const result1 = await this.commentsRepository.incrementNumberOfLikesOfComment(commentId, likeStatus);

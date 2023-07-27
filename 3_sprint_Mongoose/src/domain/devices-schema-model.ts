@@ -8,8 +8,10 @@ export const DeviceSchema = new mongoose.Schema<DeviceDBType>({
     deviceId: {type: String, required: true},
     userId: {type: String, required: true},
     expirationDate: {type: Number, required: true},
-    expireAt: {type: Date,
+    expireAt: {type: Date, //node cron
         default: Date.now,
         expires: '20m'}
 });
 export const DeviceModel = mongoose.model<DeviceDBType>('devices', DeviceSchema);
+//query - DTO
+//repo - Instance

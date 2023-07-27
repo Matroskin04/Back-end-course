@@ -25,7 +25,7 @@ blogsRoutes.get('/:blogId/posts',
     blogsController.getAllPostsOfBlog.bind(blogsController));
 
 blogsRoutes.post('/',
-    // authorization,
+    authorization,
     validateBodyOfBlog,
     getErrors,
     blogsController.createBlog.bind(blogsController));

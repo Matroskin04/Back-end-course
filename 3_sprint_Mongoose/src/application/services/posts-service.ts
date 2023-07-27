@@ -146,11 +146,11 @@ export class PostsService {
 
         //Если существует likeInfo, то:
         if (likeStatus === likeInfo.statusLike) return true //Если статусы совпадают, то ничего не делаем;
-        
+
         //В ином случае меняем статус лайка
         const isUpdate = await this.likesInfoService.updateLikeInfoPost(userId, new ObjectId(postId), likeStatus);
         if (!isUpdate) {
-            throw new Error('Like status of the post is not updated')
+            throw new Error('Like status of the post is not updated');
         }
 
         const result1 = await this.postsRepository.incrementNumberOfLikesOfPost(postId, likeStatus);
