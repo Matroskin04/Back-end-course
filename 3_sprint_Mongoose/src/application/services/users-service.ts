@@ -12,18 +12,20 @@ import {UsersRepository} from "../../infrastructure/repositories/users-repositor
 import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
 import { injectable } from "inversify";
 import {UserDBType} from "../../domain/db-types/users-db-types";
+import {CryptoAdapter} from "../../infrastructure/adapters/crypto-adapter";
 
 
 @injectable()
 export class UsersService {
 
     constructor(protected usersRepository: UsersRepository,
-                protected usersQueryRepository: UsersQueryRepository) {
+                protected usersQueryRepository: UsersQueryRepository,
+                protected cryptoAdapter: CryptoAdapter) {
     }
 
     async createUser(bodyUser: BodyUserType): Promise<UserOutputType> {
 
-        const passHash = await this._generateHash(bodyUser.password);
+        const passHash = await this.cryptoAdapter._generateHash(bodyUser.password);
 
         const user = new UserDBType(
             new ObjectId(),
@@ -49,11 +51,6 @@ export class UsersService {
     async deleteSingleUser(id: string): Promise<boolean> {
 
         return await this.usersRepository.deleteSingleUser(id);
-    }
-
-    async _generateHash(password: string): Promise<string> {
-
-        return await bcrypt.hash(password, 10) //todo только степень алгоритма? Добавлять соль?
     }
 
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | false> {
