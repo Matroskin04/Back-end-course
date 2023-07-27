@@ -2,20 +2,9 @@ import {ObjectId} from "mongodb";
 import {HydratedDocument, Model} from "mongoose";
 import {
     BlogTypeWithId,
-    BlogTypeWithMongoId
+    BodyBlogType
 } from "../../infrastructure/repositories/repositories-types/blogs-types-repositories";
 
-// export class BlogDBType {
-//     constructor(
-//         public _id: ObjectId,
-//         public name: string,
-//         public description: string,
-//         public websiteUrl: string,
-//         public createdAt: string,
-//         public isMembership: boolean
-//     ) {
-//     }
-// }
 
 export type BlogDBType = {
 
@@ -36,6 +25,7 @@ export type HydratedBlogType = HydratedDocument<BlogDBType, BlogDBInstanceMethod
 
 export type BlogDBInstanceMethodsType = {
     renameIntoViewModel: () => BlogTypeWithId;
+    updateBlogInfo: (blog: HydratedBlogType, updateData: BodyBlogType) => void
 };
 
 export type BlogDBStaticMethodsType = {

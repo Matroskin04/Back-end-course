@@ -17,16 +17,22 @@ export class BlogsService {
     async createBlog(bodyBlog: BodyBlogType): Promise<BlogTypeWithId> {
 
         const blog = BlogModel.makeInstance(bodyBlog.name, bodyBlog.description, bodyBlog.websiteUrl);
-        await this.blogsRepository.createBlog(blog);
+        await this.blogsRepository.saveBlog(blog);
 
         return blog.renameIntoViewModel();
     }
 
     async updateBlog(bodyBlog: BodyBlogType, id: string): Promise<boolean> {
 
+        const blog = await this.blogsRepository.getBlogById(id);
+        if (!blog) {
+            return false
+        }
 
+        blog.updateBlogInfo(blog, bodyBlog);
+        await this.blogsRepository.saveBlog(blog);
 
-        return await this.blogsRepository.updateBlog(bodyBlog, id);
+        return true
     }
 
     async deleteSingleBlog(id: string): Promise<boolean> {

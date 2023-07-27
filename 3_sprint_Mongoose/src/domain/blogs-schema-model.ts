@@ -2,7 +2,7 @@ import {BlogDBFullType, BlogDBInstanceMethodsType, BlogDBType, HydratedBlogType}
 import {ObjectId} from "mongodb";
 import {
     BlogTypeWithId,
-    BlogTypeWithMongoId
+    BlogTypeWithMongoId, BodyBlogType
 } from "../infrastructure/repositories/repositories-types/blogs-types-repositories";
 import mongoose from "mongoose";
 
@@ -34,6 +34,12 @@ BlogSchema.method('renameIntoViewModel', function renameIntoViewModel(): BlogTyp
         isMembership: that.isMembership
     }
 });
+BlogSchema.method('updateBlogInfo', function updateBlogInfo(blog: HydratedBlogType, updateData: BodyBlogType): void {
+    blog.name = updateData.name;
+    blog.description = updateData.description;
+    blog.websiteUrl = updateData.websiteUrl;
+    return;
+})
 
 
 export const BlogModel = mongoose.model<BlogDBType, BlogDBFullType>('blogs', BlogSchema);
