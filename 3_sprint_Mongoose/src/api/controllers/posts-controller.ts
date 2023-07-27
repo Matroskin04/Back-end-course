@@ -113,7 +113,8 @@ export class PostsController {
         }
     }
 
-    async updateLikeStatusOfPost(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>, res: Response<string>) {
+    async updateLikeStatusOfPost(req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>,
+                                 res: Response<string>) {
 
         try {
             const result = await this.postsService.updateLikeStatusOfPost(req.params.id, req.userId!, req.body.likeStatus);

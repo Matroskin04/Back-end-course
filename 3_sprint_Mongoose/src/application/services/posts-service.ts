@@ -16,6 +16,7 @@ import {LikesInfoService} from "./likes-info-service";
 import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
 import {reformNewestLikes} from "../../infrastructure/queryRepositories/utils/likes-info-functions";
 import {PostDBType} from "../../domain/db-types/posts-db-types";
+import {PostModel} from "../../domain/posts-schema-model";
 
 
 @injectable()
@@ -29,9 +30,9 @@ export class PostsService {
                 protected likesInfoService: LikesInfoService) {
     }
 
-    async createPost(body: BodyPostType): Promise<ResponseTypeService> {
+    async createPost(bodyPost: BodyPostType): Promise<ResponseTypeService> {
 
-        const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
+        const blog = await this.blogsQueryRepository.getBlogById(bodyPost.blogId);
         if (!blog) {
             return createResponseService(400, {
                 errorsMessages: [{
@@ -41,19 +42,7 @@ export class PostsService {
             })
         }
 
-        const post = new PostDBType(
-            new ObjectId(),
-            body.title,
-            body.shortDescription,
-            body.content,
-            body.blogId,
-            blog.name,
-            new Date().toISOString(),
-            {
-                likesCount: 0,
-                dislikesCount: 0
-            }
-        )
+        const post = PostModel.makeInstance(bodyPost, blog.name);
 
 
         await this.postsRepository.createPost(post);

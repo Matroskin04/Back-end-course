@@ -8,7 +8,7 @@ export type BlogType = {
     isMembership: boolean
 }
 
-export type BlogTypeWithId = BlogType & {id: ObjectId}
+export type BlogTypeWithId = BlogType & {id: ObjectId} //todo убрать из репозитория
 export type BlogTypeWithMongoId = BlogType & {_id: ObjectId}
 
 export type BodyBlogType = {
