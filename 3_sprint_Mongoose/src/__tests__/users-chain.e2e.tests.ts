@@ -3,7 +3,7 @@ import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
 import {app} from "../setting";
 import mongoose from "mongoose";
-import {UserDBType} from "../types/db-types";
+import {UserDBType} from "../domain/db-types/users-db-types";
 
 let idOfUser: string;
 const arrayOfUser: Array<UserDBType> = [];

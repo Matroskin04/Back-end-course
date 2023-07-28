@@ -1,8 +1,6 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-
-
-dotenv.config()
+dotenv.config();
 
 const dbName = 'home_works'
 export const mongoURL = process.env.MONGO_URL || `mongodb://0.0.0.0:27017/${dbName}`

@@ -5,21 +5,13 @@ import {ObjectId} from "mongodb";
 import {AuthService} from "../application/services/auth-service";
 import {DevicesService} from "../application/services/devices-service";
 import mongoose from "mongoose";
-import {
-    devicesQueryRepository, devicesRepository,
-    emailManager,
-    jwtQueryRepository,
-    jwtService,
-    usersQueryRepository,
-    usersRepository,
-    usersService
-} from "../composition-root";
 
 
 //refresh 60 sec, access - 30 sec
 let refreshToken1: string;
 let refreshToken2: string;
 let deviceId: string;
+
 
 describe('devices: /security/devices', () => {
 

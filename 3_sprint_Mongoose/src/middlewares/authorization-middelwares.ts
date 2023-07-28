@@ -4,7 +4,7 @@ import {Buffer} from "node:buffer";
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
     const authHeader: string | undefined = req.headers['authorization'];
 
-    if (authHeader !== undefined && authHeader === `Basic ${Buffer.from('admin:qwerty').toString('base64')}`) {
+    if (authHeader !== undefined && authHeader === `Basic ${Buffer.from(process.env.ADMIN_LOGIN_PASSWORD!).toString('base64')}`) {
         next()
 
     } else {
