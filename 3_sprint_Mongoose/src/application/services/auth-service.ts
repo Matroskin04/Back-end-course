@@ -10,6 +10,7 @@ import {JwtService} from "./jwt-service";
 import {EmailManager} from "../managers/email-manager";
 import { injectable } from "inversify";
 import {UserDBType} from "../../domain/db-types/users-db-types";
+import {CryptoAdapter} from "../../infrastructure/adapters/crypto-adapter";
 
 @injectable()
 export class AuthService {
@@ -18,12 +19,13 @@ export class AuthService {
                 protected jwtService: JwtService,
                 protected usersService: UsersService,
                 protected usersRepository: UsersRepository,
-                protected usersQueryRepository: UsersQueryRepository) {
+                protected usersQueryRepository: UsersQueryRepository,
+                protected cryptoAdapter: CryptoAdapter) {
     }
 
     async registerUser(email: string, login: string, password: string): Promise<void> {
 
-        const passwordHash = await this.usersService._generateHash(password);
+        const passwordHash = await this.cryptoAdapter._generateHash(password);
         const user = new UserDBType(
             new ObjectId(),
             login,
@@ -128,7 +130,7 @@ export class AuthService {
             return {errorsMessages: [{message: 'RecoveryCode is incorrect or expired', field: "recoveryCode"}]}
         }
 
-        const passwordHash = await this.usersService._generateHash(newPassword);
+        const passwordHash = await this.cryptoAdapter._generateHash(newPassword);
         await this.usersRepository.updatePassword(passwordHash, user._id);
 
         return true;
