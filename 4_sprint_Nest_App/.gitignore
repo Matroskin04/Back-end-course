@@ -2,6 +2,11 @@
 /dist
 /node_modules
 
+# Another files
+.env
+testing.mjs
+tests.ts
+
 # Logs
 logs
 *.log

@@ -47,7 +47,9 @@ export class BlogsController {
       const result = await this.blogsQueryRepository.getAllBlogs(query);
       return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
