@@ -1,7 +1,7 @@
-import { CommentViewType } from '../../posts/infrastructure/repository/comments-types-repositories';
+import { CommentViewType } from '../../comments/infrastructure/repository/comments-types-repositories';
 import { ObjectId } from 'mongodb';
 import { LikesInfoQueryRepository } from '../../infrastructure/queryRepositories/likes-info-query-repository';
-import { CommentDBType } from '../../domain/db-types/comments-db-types';
+import { CommentDBType } from '../../comments/domain/comments-db-types';
 
 export function mappingComment(
   comment: any,
