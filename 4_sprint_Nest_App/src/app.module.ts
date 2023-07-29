@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Post } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { BlogsService } from './blogs/application/blogs-service';
@@ -6,6 +6,7 @@ import { BlogsQueryRepository } from './blogs/infrastructure/query.repository/bl
 import { BlogsRepository } from './blogs/infrastructure/repository/blogs-repository';
 import { Blog, BlogSchema } from './blogs/domain/blogs-schema-model';
 import { BlogsController } from './blogs/api/blogs.controller';
+import { PostSchema } from './posts/domain/posts-schema-model';
 
 const mongoURL =
   process.env.MONGO_URL ||
@@ -19,6 +20,10 @@ const mongoURL =
       {
         name: Blog.name,
         schema: BlogSchema,
+      },
+      {
+        name: Post.name,
+        schema: PostSchema,
       },
     ]),
   ],

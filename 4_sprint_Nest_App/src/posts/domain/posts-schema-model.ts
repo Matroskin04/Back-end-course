@@ -1,21 +1,6 @@
-import mongoose from 'mongoose';
-import { PostDBFullType, PostDBType } from './posts-db-types';
 import { ObjectId } from 'mongodb';
 import { BodyPostType } from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
-const PostSchema = new mongoose.Schema<PostDBType, PostDBFullType>({
-  title: { type: String, required: true },
-  shortDescription: { type: String, required: true },
-  content: { type: String, required: true },
-  blogId: { type: String, required: true },
-  blogName: { type: String, required: true },
-  createdAt: { type: String, required: true },
-  likesInfo: {
-    likesCount: { type: Number, required: true },
-    dislikesCount: { type: Number, required: true },
-  },
-});
 
 @Schema()
 export class LikesInfo {
@@ -51,11 +36,8 @@ export class Post {
 
   @Prop({ type: LikesInfoSchema, required: true })
   likesInfo: LikesInfo;
-}
 
-PostSchema.static(
-  'makeInstance',
-  function makeInstance(postBody: BodyPostType, blogName: string) {
+  static createInstance(postBody: BodyPostType, blogName: string, PostModel) {
     return new PostModel({
       _id: new ObjectId(),
       title: postBody.title,
@@ -69,10 +51,11 @@ PostSchema.static(
         dislikesCount: 0,
       },
     });
-  },
-);
+  }
+}
 
-export const PostModel = mongoose.model<PostDBType, PostDBFullType>(
-  'posts',
-  PostSchema,
-);
+export const PostSchema = SchemaFactory.createForClass(Post);
+
+PostSchema.statics = {
+  createInstance: Post.createInstance,
+};
