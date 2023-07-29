@@ -38,3 +38,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/src/tests.js
+/src/domain/db-types/users-db-types.js
+/src/domain/users-schema-model.js

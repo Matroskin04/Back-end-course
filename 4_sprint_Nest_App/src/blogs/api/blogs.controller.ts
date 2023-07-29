@@ -5,8 +5,6 @@ import {
   ViewBlogModel,
   ViewPostsOfBlogModel,
 } from './models/ViewBlogModel';
-import { UriIdModel } from '../../models/UriModels';
-import { UriBlogIdModel } from './models/UriBlogModel';
 import { CreateBlogModel } from './models/CreateBlogModel';
 import { CreatePostByBlogIdModel } from '../../posts/api/models/CreatePostModel';
 import { PostTypeWithId } from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
@@ -28,7 +26,7 @@ import { PostsQueryRepository } from '../../posts/infrastructure/query.repositor
 import { BlogsService } from '../application/blogs-service';
 import { PostsService } from '../../posts/application/posts-service';
 
-@Controller('/hometask-03/blogs')
+@Controller('/hometask-nest/blogs')
 export class BlogsController {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
@@ -133,7 +131,7 @@ export class BlogsController {
     }
   }
 
-  @Delete()
+  @Delete(':id')
   async deleteBlog(@Param('id') blogId: string): Promise<boolean> {
     try {
       const result = await this.blogsService.deleteSingleBlog(blogId);

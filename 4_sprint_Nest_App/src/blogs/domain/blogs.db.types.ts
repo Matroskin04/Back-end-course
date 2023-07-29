@@ -16,7 +16,7 @@ export type BlogDBType = {
   isMembership: boolean;
 };
 
-export type BlogDataForUpdatingType = {
+export type BlogDTOType = {
   name: string;
   description: string;
   websiteUrl: string;
@@ -24,11 +24,11 @@ export type BlogDataForUpdatingType = {
 
 export type BlogDocument = HydratedDocument<Blog>;
 
-export type BlogModelType = Model<BlogDocument> & BlogModelStaticType;
+export type BlogModelType = Model<BlogDocument> & BlogModelStaticMethodsType;
 
-export type BlogModelStaticType = {
+export type BlogModelStaticMethodsType = {
   createInstance: (
-    blogDTO: BlogDataForUpdatingType,
+    blogDTO: BlogDTOType,
     BlogModel: BlogModelType,
   ) => BlogDocument;
 };

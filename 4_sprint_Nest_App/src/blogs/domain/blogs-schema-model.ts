@@ -1,8 +1,4 @@
-import {
-  BlogDataForUpdatingType,
-  BlogDocument,
-  BlogModelType,
-} from './blogs.db.types';
+import { BlogDTOType, BlogDocument, BlogModelType } from './blogs.db.types';
 import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BlogViewType } from '../infrastructure/query.repository/blogs-types-query-repository';
@@ -37,10 +33,7 @@ export class Blog {
     };
   }
 
-  updateBlogInfo(
-    blog: BlogDocument,
-    updateData: BlogDataForUpdatingType,
-  ): void {
+  updateBlogInfo(blog: BlogDocument, updateData: BlogDTOType): void {
     blog.name = updateData.name;
     blog.description = updateData.description;
     blog.websiteUrl = updateData.websiteUrl;
@@ -48,7 +41,7 @@ export class Blog {
   }
 
   static createInstance(
-    blogDTO: BlogDataForUpdatingType,
+    blogDTO: BlogDTOType,
     BlogModel: BlogModelType,
   ): BlogDocument {
     return new BlogModel(blogDTO);
@@ -62,5 +55,5 @@ BlogSchema.methods = {
   updateBlogInfo: Blog.prototype.updateBlogInfo,
 };
 BlogSchema.statics = {
-  makeInstance: Blog.createInstance,
+  createInstance: Blog.createInstance,
 };
