@@ -15,8 +15,13 @@
 //
 //
 
-class User {
-  login: 'egor';
-  pass: 123;
-  birth: 2004;
-}
+import { UserModel } from './domain/users-schema-model';
+
+console.log(1);
+const user = {
+  login: 'egor',
+  email: `123`,
+  passwordHash: `2004`,
+};
+const user1 = new UserModel(user);
+console.log(user1);

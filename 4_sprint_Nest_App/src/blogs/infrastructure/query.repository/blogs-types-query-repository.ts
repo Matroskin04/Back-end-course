@@ -1,4 +1,4 @@
-import { PostTypeWithId } from '../../../infrastructure/repositories/repositories-types/posts-types-repositories';
+import { PostTypeWithId } from '../../../posts/infrastructure/repository/posts-types-repositories';
 import { ViewBlogModel } from '../../api/models/ViewBlogModel';
 
 export type BlogPaginationType = {

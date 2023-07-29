@@ -7,7 +7,7 @@ import {
 } from './models/ViewBlogModel';
 import { CreateBlogModel } from './models/CreateBlogModel';
 import { CreatePostByBlogIdModel } from '../../posts/api/models/CreatePostModel';
-import { PostTypeWithId } from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
+import { PostTypeWithId } from '../../posts/infrastructure/repository/posts-types-repositories';
 import { UpdateBlogModel } from './models/UpdateBlogModel';
 
 import {

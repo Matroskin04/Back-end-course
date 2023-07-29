@@ -13,13 +13,13 @@ import {
   RegisterResendConfirmAuthModel,
   RegistrationAuthModel,
 } from '../../models/AuthModels/RegistrationAuthModel';
-import { CreateCommentByPostIdModel } from '../../models/CommentsModels/CreateCommentModel';
+import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
 import { LoginAuthInputModel } from '../../models/AuthModels/LoginAuthModels';
 import {
   NewPasswordAuthModel,
   PasswordRecoveryAuthModel,
 } from '../../models/AuthModels/PasswordRecoveryFlowAuthModel';
-import { UpdateLikeStatusModel } from '../../models/CommentsModels/UpdateCommentLikeStatus';
+import { UpdateLikeStatusModel } from '../../comments/api/models/UpdateCommentLikeStatus';
 
 type getErrorsType =
   | CreateBlogModel

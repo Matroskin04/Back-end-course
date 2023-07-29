@@ -22,7 +22,7 @@ export class Blog {
   @Prop({ type: Boolean, required: true, default: false })
   isMembership: boolean;
 
-  renameIntoViewModel(): BlogViewType {
+  modifyIntoViewModel(): BlogViewType {
     return {
       id: this._id,
       name: this.name,
@@ -51,7 +51,7 @@ export class Blog {
 export const BlogSchema = SchemaFactory.createForClass(Blog);
 
 BlogSchema.methods = {
-  renameIntoViewModel: Blog.prototype.renameIntoViewModel,
+  renameIntoViewModel: Blog.prototype.modifyIntoViewModel,
   updateBlogInfo: Blog.prototype.updateBlogInfo,
 };
 BlogSchema.statics = {

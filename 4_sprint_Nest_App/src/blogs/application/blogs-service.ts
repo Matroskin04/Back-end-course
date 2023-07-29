@@ -19,7 +19,7 @@ export class BlogsService {
     const blog = this.BlogModel.createInstance(inputBodyBlog, this.BlogModel);
     await this.blogsRepository.save(blog);
 
-    return blog.renameIntoViewModel();
+    return blog.modifyIntoViewModel();
   }
 
   async updateBlog(id: string, inputBodyBlog: BodyBlogType): Promise<boolean> {
@@ -35,6 +35,6 @@ export class BlogsService {
   }
 
   async deleteSingleBlog(id: string): Promise<boolean> {
-    return await this.blogsRepository.deleteSingleBlog(new ObjectId(id));
+    return this.blogsRepository.deleteSingleBlog(new ObjectId(id));
   }
 }
