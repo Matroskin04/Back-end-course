@@ -1,45 +1,35 @@
 import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
-import { BlogDBType } from '../../blogs/domain/blogs.db.types';
-import { BodyPostType } from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
+import { HydratedDocument, Model } from 'mongoose';
+import { Post } from './posts-schema-model';
 
-export class PostDBType {
-  constructor(
-    public _id: ObjectId,
-    public title: string,
-    public shortDescription: string,
-    public content: string,
-    public blogId: string,
-    public blogName: string,
-    public createdAt: string,
-    public likesInfo: {
-      likesCount: number;
-      dislikesCount: number;
-    },
-  ) {}
-}
-
-// export type PostDBInstanceMethodsType = {
-//     renameIntoViewModel: () => BlogTypeWithId;
-//     updateBlogInfo: (blog: HydratedBlogType, updateData: BodyBlogType) => void
-// };
-
-export type PostDBStaticMethodsType = {
-  makeInstance: (postBody: BodyPostType, blogName: string) => any;
+export type PostDBType = {
+  _id: ObjectId;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: string;
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+  };
+};
+export type PostDTOType = {
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
 };
 
-export type PostDBFullType = Model<BlogDBType> & PostDBStaticMethodsType;
+export type PostDocument = HydratedDocument<Post>;
 
-// export type PostDBType = {
-//     _id: ObjectId
-//     title: string
-//     shortDescription: string
-//     content: string
-//     blogId: string
-//     blogName: string
-//     createdAt: string
-//     likesInfo: {
-//         likesCount: number
-//         dislikesCount: number
-//     }
-// }
+export type PostModelType = Model<PostDocument> & PostModelStaticMethodsType;
+
+export type PostModelStaticMethodsType = {
+  createInstance: (
+    postBody: PostDTOType,
+    blogName: string,
+    PostModel: PostModelType,
+  ) => PostDocument;
+};

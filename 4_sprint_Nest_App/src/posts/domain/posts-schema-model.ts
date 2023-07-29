@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { BodyPostType } from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { PostDTOType, PostDocument, PostModelType } from './posts-db-types';
 
 @Schema()
 export class LikesInfo {
@@ -37,7 +37,19 @@ export class Post {
   @Prop({ type: LikesInfoSchema, required: true })
   likesInfo: LikesInfo;
 
-  static createInstance(postBody: BodyPostType, blogName: string, PostModel) {
+  updatePostInfo(post: PostDocument, updateData: PostDTOType): void {
+    post.title = updateData.title;
+    post.blogId = updateData.blogId;
+    post.content = updateData.content;
+    post.shortDescription = updateData.shortDescription;
+    return;
+  }
+
+  static createInstance(
+    postBody: PostDTOType,
+    blogName: string,
+    PostModel: PostModelType,
+  ): PostDocument {
     return new PostModel({
       _id: new ObjectId(),
       title: postBody.title,
@@ -55,6 +67,10 @@ export class Post {
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
+
+PostSchema.methods = {
+  updatePostInfo: Post.prototype.updatePostInfo,
+};
 
 PostSchema.statics = {
   createInstance: Post.createInstance,

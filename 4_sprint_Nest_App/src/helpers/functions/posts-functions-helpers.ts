@@ -1,10 +1,8 @@
-import {
-  NewestLikesType,
-  PostViewType,
-} from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
+import { NewestLikesType } from '../../posts/infrastructure/repository/posts-types-repositories';
 import { PostDBType } from '../../posts/domain/posts-db-types';
+import { PostViewType } from '../../posts/infrastructure/query.repository/posts-types-query-repository';
 
-export function renameMongoIdPost(
+export function modifyPostIntoViewModel(
   post: PostDBType,
   newestLikes: NewestLikesType,
   myStatus: 'None' | 'Like' | 'Dislike',
@@ -26,7 +24,7 @@ export function renameMongoIdPost(
   };
 }
 
-export async function mappingPostForAllDocs(
+export async function mappingPostForAllDocs( //todo такую логику лучше в функции оставить? Или в инстанс метод
   post: PostDBType,
   // userId: ObjectId | null,
 ): Promise<PostViewType> {
@@ -44,7 +42,7 @@ export async function mappingPostForAllDocs(
   //   }
   // }
 
-  //find last 3 Likes
+  // find last 3 Likes
   // const newestLikes = await likesInfoQueryRepository.getNewestLikesOfPost(
   //   post._id,
   // );

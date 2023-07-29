@@ -1,5 +1,8 @@
-import { PostTypeWithId } from '../../../infrastructure/repositories/repositories-types/posts-types-repositories';
-import { CommentViewType } from '../repository/comments-types-repositories';
+import {
+  NewestLikesType,
+  PostTypeWithId,
+} from '../repository/posts-types-repositories';
+import { CommentViewType } from '../../../comments/infrastructure/repository/comments-types-repositories';
 
 export type PostPaginationType = {
   pagesCount: number;
@@ -15,4 +18,13 @@ export type CommentOfPostPaginationType = {
   pageSize: number;
   totalCount: number;
   items: Array<CommentViewType>;
+};
+
+export type PostViewType = PostTypeWithId & {
+  extendedLikesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: 'None' | 'Like' | 'Dislike';
+    newestLikes: NewestLikesType;
+  };
 };

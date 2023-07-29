@@ -1,24 +1,40 @@
-import { BodyPostType } from './repositories-types/posts-types-repositories';
+import { BodyPostType, PostInstanceType } from './posts-types-repositories';
 import { ObjectId } from 'mongodb';
-import { PostModel } from '../../posts/domain/posts-schema-model';
-import { PostDBType } from '../../posts/domain/posts-db-types';
+import { PostDBType, PostModelType } from '../../domain/posts-db-types';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post } from '../../domain/posts-schema-model';
 
 export class PostsRepository {
-  async createPost(post: PostDBType): Promise<void> {
-    const postInstance = new PostModel(post);
-    await postInstance.save();
+  constructor(
+    @InjectModel(Post.name)
+    private PostModel: PostModelType,
+  ) {}
 
+  async getPostById(
+    postId: ObjectId,
+    // userId: ObjectId | null,
+  ): Promise<null | PostInstanceType> {
+    const post = await this.PostModel.findOne({ _id: postId });
+    if (!post) {
+      return null;
+    }
+
+    return post;
+  }
+
+  async save(post: PostInstanceType): Promise<void> {
+    await post.save();
     return;
   }
 
   async createPostByBlogId(post: PostDBType): Promise<void> {
-    const postInstance = new PostModel(post);
+    const postInstance = new this.PostModel(post);
     await postInstance.save();
     return;
   }
 
   async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {
-    const result = await PostModel.updateOne(
+    const result = await this.PostModel.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
@@ -32,8 +48,8 @@ export class PostsRepository {
     return result.modifiedCount === 1;
   }
 
-  async deleteSinglePost(id: string): Promise<boolean> {
-    const result = await PostModel.deleteOne({ _id: new ObjectId(id) });
+  async deleteSinglePost(id: ObjectId): Promise<boolean> {
+    const result = await this.PostModel.deleteOne({ _id: new ObjectId(id) });
 
     return result.deletedCount === 1;
   }
@@ -43,14 +59,14 @@ export class PostsRepository {
     incrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (incrementValue === 'Like') {
-      const result = await PostModel.updateOne(
+      const result = await this.PostModel.updateOne(
         { _id: postId },
         { $inc: { 'likesInfo.likesCount': 1 } },
       );
       return result.modifiedCount === 1;
     }
     if (incrementValue === 'Dislike') {
-      const result = await PostModel.updateOne(
+      const result = await this.PostModel.updateOne(
         { _id: postId },
         { $inc: { 'likesInfo.dislikesCount': 1 } },
       );
@@ -64,14 +80,14 @@ export class PostsRepository {
     decrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (decrementValue === 'Like') {
-      const result = await PostModel.updateOne(
+      const result = await this.PostModel.updateOne(
         { _id: postId },
         { $inc: { 'likesInfo.likesCount': -1 } },
       );
       return result.modifiedCount === 1;
     }
     if (decrementValue === 'Dislike') {
-      const result = await PostModel.updateOne(
+      const result = await this.PostModel.updateOne(
         { _id: postId },
         { $inc: { 'likesInfo.dislikesCount': -1 } },
       );

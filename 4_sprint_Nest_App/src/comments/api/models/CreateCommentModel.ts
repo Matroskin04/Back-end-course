@@ -1,3 +1,3 @@
 export type CreateCommentByPostIdModel = {
-    content: string
-}
+  content: string;
+};
