@@ -36,7 +36,7 @@ export class BlogsQueryRepository {
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllBlogsSort,
-      items: allBlogsOnPages.map((p) => p.renameIntoViewModel()),
+      items: allBlogsOnPages.map((p) => p.modifyIntoViewModel()),
     };
   }
 
@@ -44,7 +44,7 @@ export class BlogsQueryRepository {
     const blog = await this.BlogModel.findOne({ _id: new ObjectId(id) });
 
     if (blog) {
-      return blog.renameIntoViewModel();
+      return blog.modifyIntoViewModel();
     }
     return null;
   }
