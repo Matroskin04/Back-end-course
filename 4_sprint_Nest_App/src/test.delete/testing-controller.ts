@@ -1,14 +1,14 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { TestingRepository } from './testing-repository';
-import { Controller, Delete } from '@nestjs/common';
+import { Controller, Delete, Res } from '@nestjs/common';
 
 @Controller('/hometask-nest/testing/all-data')
 export class TestingController {
   constructor(protected testingRepository: TestingRepository) {}
 
   @Delete()
-  async deleteAllData() {
+  async deleteAllData(@Res() res: Response<void>) {
     await this.testingRepository.deleteAllData();
-    return;
+    res.sendStatus(204);
   }
 }
