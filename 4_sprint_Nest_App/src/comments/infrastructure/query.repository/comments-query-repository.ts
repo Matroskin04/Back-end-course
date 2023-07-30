@@ -12,6 +12,7 @@ import {
   mappingCommentForAllDocs,
 } from '../../../helpers/functions/comments-functions-helpers';
 import { StatusOfLike } from './comments-types-query-repository';
+import { Comment } from '../../domain/comments-schema-model';
 
 @Injectable()
 export class CommentsQueryRepository {
