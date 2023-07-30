@@ -1,4 +1,4 @@
-import { Module, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { BlogsService } from './blogs/application/blogs-service';
@@ -9,6 +9,7 @@ import { BlogsController } from './blogs/api/blogs.controller';
 import {
   LikesInfo,
   LikesInfoSchema,
+  Post,
   PostSchema,
 } from './posts/domain/posts-schema-model';
 import {
