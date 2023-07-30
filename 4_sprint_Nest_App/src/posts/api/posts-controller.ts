@@ -15,8 +15,11 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments-query-repository';
+import { Response } from 'express';
+import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
 
 @Controller('/hometask-nest/posts')
 export class PostsController {
@@ -29,10 +32,11 @@ export class PostsController {
   @Get()
   async getAllPosts(
     @Query() query: QueryPostModel,
-  ): Promise<ViewAllPostsModel> {
+    @Res() res: Response<ViewAllPostsModel>,
+  ) {
     try {
       const result = await this.postsQueryRepository.getAllPosts(query);
-      return result;
+      res.status(HTTP_STATUS_CODE.OK_200).send(result);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -43,11 +47,14 @@ export class PostsController {
   @Get(':id')
   async getPostById(
     @Param('id') postId: string,
-  ): Promise<ViewPostModel | null> {
+    @Res() res: Response<ViewPostModel>,
+  ) {
     try {
       const result = await this.postsQueryRepository.getPostById(postId);
 
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -59,13 +66,16 @@ export class PostsController {
   async getAllCommentsOfPost(
     @Param('postId') postId: string,
     @Query() query: QueryPostModel,
-  ): Promise<ViewAllCommentsOfPostModel | null> {
+    @Res() res: Response<ViewAllCommentsOfPostModel>,
+  ) {
     try {
       const result = await this.commentsQueryRepository.getCommentsOfPost(
         postId,
         query,
       );
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -76,11 +86,14 @@ export class PostsController {
   @Post()
   async createPost(
     @Body() inputPostModel: CreatePostModel,
-  ): Promise<ViewPostModel | false> {
+    @Res() res: Response<ViewPostModel | string>,
+  ) {
     try {
       const result = await this.postsService.createPost(inputPostModel);
 
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+        : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).json('Blog in not found');
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
