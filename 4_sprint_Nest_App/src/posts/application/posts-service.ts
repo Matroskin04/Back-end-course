@@ -58,17 +58,17 @@ export class PostsService {
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
     ];
     const postMapped = modifyPostIntoViewModel(
@@ -111,17 +111,17 @@ export class PostsService {
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
       {
         login: '123',
         userId: '123',
-        addedAt: new Date().toISOString(),
+        addedAt: '2023-07-30T09:53:33.591Z',
       },
     ];
     const postMapped = modifyPostIntoViewModel(
