@@ -1,6 +1,6 @@
-import { BodyPostType, PostInstanceType } from './posts-types-repositories';
+import { PostInstanceType } from './posts-types-repositories';
 import { ObjectId } from 'mongodb';
-import { PostDBType, PostModelType } from '../../domain/posts-db-types';
+import { PostModelType } from '../../domain/posts-db-types';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts-schema-model';
 
@@ -25,27 +25,6 @@ export class PostsRepository {
   async save(post: PostInstanceType): Promise<void> {
     await post.save();
     return;
-  }
-
-  async createPostByBlogId(post: PostDBType): Promise<void> {
-    const postInstance = new this.PostModel(post);
-    await postInstance.save();
-    return;
-  }
-
-  async updatePost(bodyPost: BodyPostType, id: string): Promise<boolean> {
-    const result = await this.PostModel.updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: {
-          title: bodyPost.title,
-          shortDescription: bodyPost.shortDescription,
-          content: bodyPost.content,
-        },
-      },
-    );
-
-    return result.modifiedCount === 1;
   }
 
   async deleteSinglePost(id: ObjectId): Promise<boolean> {

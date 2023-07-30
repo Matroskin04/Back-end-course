@@ -15,7 +15,7 @@
 //
 //
 
-import { UserModel } from './domain/users-schema-model';
+import { UserModel } from './users/domain/users-schema-model';
 
 console.log(1);
 const user = {

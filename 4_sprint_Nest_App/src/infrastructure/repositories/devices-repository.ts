@@ -1,6 +1,6 @@
 /*
 import { injectable } from "inversify";
-import {DeviceModel} from "../../domain/devices-schema-model";
+import {DeviceModel} from "../../domain/devices-schema-models";
 import {DeviceDBType} from "../../domain/db-types/devices-db-types";
 
 @injectable()

@@ -1,5 +1,5 @@
 /*
-import {CommentsLikesInfoModel, PostsLikesInfoModel} from "../../domain/likes-info-schema-model";
+import {CommentsLikesInfoModel, PostsLikesInfoModel} from "../../domain/likes-info-schema-models";
 import {LikeInfoCommentType, LikeInfoPostType} from "./repositories-types/likes-info-types-repository";
 import {ObjectId} from "mongodb";
 import { injectable } from "inversify";

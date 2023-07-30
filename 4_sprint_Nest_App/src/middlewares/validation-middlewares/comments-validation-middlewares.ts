@@ -2,7 +2,7 @@
 import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../../domain/comments-schema-model";
+import {CommentModel} from "../../domain/comments-schema-models";
 
 export const validateContentOfComment = [
 

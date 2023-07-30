@@ -1,18 +1,37 @@
-/*
-import mongoose from "mongoose";
-import {CommentDBType} from "./db-types/comments-db-types";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
+import {
+  LikesInfo,
+  LikesInfoSchema,
+} from '../../posts/domain/posts-schema-model';
 
-export const CommentSchema = new mongoose.Schema<CommentDBType>({
-    content: {type: String, required: true},
-    commentatorInfo: {
-        userId: {type: String, required: true},
-        userLogin: {type: String, required: true},
-    },
-    createdAt: {type: String, required: true},
-    postId: {type: String, required: true},
-    likesInfo: {
-        likesCount: {type: Number, required: true},
-        dislikesCount: {type: Number, required: true}
-    }
-});
-export const CommentModel = mongoose.model<CommentDBType>('comments', CommentSchema);*/
+@Schema()
+export class CommentatorInfo {
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  userLogin: string;
+}
+export const CommentatorInfoSchema =
+  SchemaFactory.createForClass(CommentatorInfo);
+@Schema()
+export class Comment {
+  _id: ObjectId;
+
+  @Prop({ required: true })
+  content: string;
+
+  @Prop({ type: CommentatorInfoSchema, required: true }) //todo create addition schema?
+  commentatorInfo: CommentatorInfo;
+
+  @Prop({ required: true })
+  createdAt: string;
+
+  @Prop({ required: true })
+  postId: string;
+
+  @Prop({ type: LikesInfoSchema, required: true }) //todo перенести из постов схему лайкинфо?
+  likesInfo: LikesInfo;
+}
+export const CommentSchema = SchemaFactory.createForClass(Comment);

@@ -11,7 +11,7 @@ export class LikesInfo {
   dislikesCount: number;
 }
 
-const LikesInfoSchema = SchemaFactory.createForClass(LikesInfo);
+export const LikesInfoSchema = SchemaFactory.createForClass(LikesInfo);
 @Schema()
 export class Post {
   _id: ObjectId;

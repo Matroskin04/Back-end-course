@@ -1,7 +1,7 @@
 /*
 import { injectable } from "inversify";
 import {ObjectId} from "mongodb";
-import {CommentModel} from "../../domain/comments-schema-model";
+import {CommentModel} from "../../domain/comments-schema-models";
 import {CommentDBType} from "../../domain/db-types/comments-db-types";
 
 @injectable()

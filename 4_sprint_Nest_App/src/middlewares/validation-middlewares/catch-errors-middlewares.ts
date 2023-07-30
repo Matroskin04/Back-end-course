@@ -7,7 +7,7 @@ import {
 import { validationResult } from 'express-validator';
 import { NextFunction, Response } from 'express';
 import { ViewAllErrorsModels } from '../../models/ViewAllErrorsModels';
-import { CreateUserModel } from '../../models/UsersModels/CreateUserModel';
+import { CreateUserModel } from '../../users/api/models/CreateUserModel';
 import {
   RegisterConfirmAuthModel,
   RegisterResendConfirmAuthModel,

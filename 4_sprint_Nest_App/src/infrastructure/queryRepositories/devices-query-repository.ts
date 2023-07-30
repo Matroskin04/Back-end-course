@@ -1,6 +1,6 @@
 /*
 import {DeviceOutputType} from "../repositories/repositories-types/devices-types-repositories";
-import {DeviceModel} from "../../domain/devices-schema-model";
+import {DeviceModel} from "../../domain/devices-schema-models";
 import { injectable } from "inversify";
 import {DeviceDBType} from "../../domain/db-types/devices-db-types";
 

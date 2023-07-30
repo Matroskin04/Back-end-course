@@ -1,6 +1,4 @@
 import { CommentViewType } from '../../comments/infrastructure/repository/comments-types-repositories';
-import { ObjectId } from 'mongodb';
-import { LikesInfoQueryRepository } from '../../infrastructure/queryRepositories/likes-info-query-repository';
 import { CommentDBType } from '../../comments/domain/comments-db-types';
 
 export function mappingComment(
@@ -25,22 +23,22 @@ export function mappingComment(
 
 export async function mappingCommentForAllDocs(
   comment: CommentDBType,
-  userId: ObjectId | null,
+  // userId: ObjectId | null,
 ): Promise<CommentViewType> {
-  const likesInfoQueryRepository = new LikesInfoQueryRepository();
+  // const likesInfoQueryRepository = new LikesInfoQueryRepository();
 
-  let myStatus: 'Like' | 'Dislike' | 'None' = 'None';
+  const myStatus: 'Like' | 'Dislike' | 'None' = 'None';
 
-  if (userId) {
-    const likeInfo =
-      await likesInfoQueryRepository.getLikesInfoByCommentAndUser(
-        comment._id,
-        userId,
-      );
-    if (likeInfo) {
-      myStatus = likeInfo.statusLike;
-    }
-  }
+  // if (userId) {
+  //   const likeInfo =
+  //     await likesInfoQueryRepository.getLikesInfoByCommentAndUser(
+  //       comment._id,
+  //       userId,
+  //     );
+  //   if (likeInfo) {
+  //     myStatus = likeInfo.statusLike;
+  //   }
+  // }
 
   return {
     id: comment._id.toString(),

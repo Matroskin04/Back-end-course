@@ -2,119 +2,167 @@ import {
   BodyPostByBlogIdType,
   BodyPostType,
   PostTypeWithId,
-} from '../../infrastructure/repositories/repositories-types/posts-types-repositories';
-import { PostsRepository } from '../../infrastructure/repositories/posts-repository';
+} from '../infrastructure/repository/posts-types-repositories';
+import { PostsRepository } from '../infrastructure/repository/posts-repository';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/query.repository/blogs-query-repository';
 import { ObjectId } from 'mongodb';
-import { ResponseTypeService } from '../../application/services/service-types/responses-types-service';
-import { createResponseService } from '../../application/services/service-utils/functions/create-response-service';
-import { renameMongoIdPost } from '../../helpers/functions/posts-functions-helpers';
-import { injectable } from 'inversify';
-import { LikeStatus } from '../../helpers/enums/like-status';
-import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
-import { LikesInfoQueryRepository } from '../../infrastructure/queryRepositories/likes-info-query-repository';
-import { LikesInfoService } from '../../application/services/likes-info-service';
-import { UsersQueryRepository } from '../../infrastructure/queryRepositories/users-query-repository';
-import { reformNewestLikes } from '../../infrastructure/queryRepositories/utils/likes-info-functions';
-import { PostDBType } from '../domain/posts-db-types';
-import { PostModel } from '../domain/posts-schema-model';
+import { modifyPostIntoViewModel } from '../../helpers/functions/posts-functions-helpers';
+import { PostModelType } from '../domain/posts-db-types';
+import { Post } from '../domain/posts-schema-model';
+import { InjectModel } from '@nestjs/mongoose';
+import { PostViewType } from '../infrastructure/query.repository/posts-types-query-repository';
+import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs-repository';
+import { Injectable } from '@nestjs/common';
 
-@injectable()
+@Injectable()
 export class PostsService {
   constructor(
+    @InjectModel(Post.name)
+    private PostModel: PostModelType,
     protected postsRepository: PostsRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
-    protected postsQueryRepository: PostsQueryRepository,
-    protected usersQueryRepository: UsersQueryRepository,
-    protected likesInfoQueryRepository: LikesInfoQueryRepository,
-    protected likesInfoService: LikesInfoService,
+    protected blogsRepository: BlogsRepository, // protected usersQueryRepository: UsersQueryRepository, // protected likesInfoQueryRepository: LikesInfoQueryRepository, // protected likesInfoService: LikesInfoService,
   ) {}
 
-  async createPost(bodyPost: BodyPostType): Promise<ResponseTypeService> {
-    const blog = await this.blogsQueryRepository.getBlogById(bodyPost.blogId);
-    if (!blog) {
-      return createResponseService(400, {
-        errorsMessages: [
-          {
-            message: 'Such blogId is not found',
-            field: 'blogId',
-          },
-        ],
-      });
-    }
+  async createPost(
+    inputBodyPost: BodyPostType,
+  ): Promise<PostViewType | false> /*Promise<ResponseTypeService>*/ {
+    //todo remove false
+    const blog = await this.blogsQueryRepository.getBlogById(
+      inputBodyPost.blogId,
+    );
+    if (!blog) return false;
+    // if (!blog) {
+    //   return createResponseService(400, {
+    //     errorsMessages: [
+    //       {
+    //         message: 'Such blogId is not found',
+    //         field: 'blogId',
+    //       },
+    //     ],
+    //   });
+    // }
 
-    const post = PostModel.makeInstance(bodyPost, blog.name);
-
-    await this.postsRepository.createPost(post);
+    const post = this.PostModel.createInstance(
+      inputBodyPost,
+      blog.name,
+      this.PostModel,
+    );
+    await this.postsRepository.save(post);
 
     //find last 3 Likes
-    const newestLikes =
-      await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
-    const reformedNewestLikes = reformNewestLikes(newestLikes);
+    // const newestLikes =
+    //   await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+    // const reformedNewestLikes = reformNewestLikes(newestLikes);
+    const reformedNewestLikes = [
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+    ];
+    const postMapped = modifyPostIntoViewModel(
+      post,
+      reformedNewestLikes,
+      'None',
+    );
 
-    const postMapped = renameMongoIdPost(post, reformedNewestLikes, 'None');
-
-    return createResponseService(201, postMapped);
+    // return createResponseService(201, postMapped);
+    return postMapped;
   }
 
   async createPostByBlogId(
     blogId: string,
-    body: BodyPostByBlogIdType,
+    inputBodyPost: BodyPostByBlogIdType,
   ): Promise<null | PostTypeWithId> {
     //checking the existence of a blog
-    const blog = await this.blogsQueryRepository.getBlogById(blogId);
+    const blog = await this.blogsRepository.getBlogById(new ObjectId(blogId));
     if (!blog) {
       return null;
     }
 
-    const post = new PostDBType(
-      new ObjectId(),
-      body.title,
-      body.shortDescription,
-      body.content,
-      blogId,
-      blog.name,
-      new Date().toISOString(),
-      {
-        likesCount: 0,
-        dislikesCount: 0,
-      },
-    );
+    const bodyPostWithBlogId: BodyPostType = {
+      ...inputBodyPost,
+      blogId: blog.id,
+    };
 
-    await this.postsRepository.createPostByBlogId(post);
+    const post = this.PostModel.createInstance(
+      bodyPostWithBlogId,
+      blog.name,
+      this.PostModel,
+    );
+    await this.postsRepository.save(post);
 
     //find last 3 Likes
-    const newestLikes =
-      await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
-    const reformedNewestLikes = reformNewestLikes(newestLikes);
+    // const newestLikes =
+    //   await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+    // const reformedNewestLikes = reformNewestLikes(newestLikes);
+    const reformedNewestLikes = [
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+      {
+        login: '123',
+        userId: '123',
+        addedAt: new Date().toISOString(),
+      },
+    ];
+    const postMapped = modifyPostIntoViewModel(
+      post,
+      reformedNewestLikes,
+      'None',
+    );
 
-    return renameMongoIdPost(post, reformedNewestLikes, 'None');
+    // return createResponseService(201, postMapped);
+    return postMapped;
   }
 
   async updatePost(
-    body: BodyPostType,
     id: string,
-  ): Promise<ResponseTypeService> {
-    const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
-    if (!blog) {
-      return createResponseService(400, {
-        errorsMessages: [
-          {
-            message: 'Such blogId is not found',
-            field: 'blogId',
-          },
-        ],
-      });
-    }
+    inputBodyPost: BodyPostType,
+  ): Promise<boolean> /*Promise<ResponseTypeService>*/ {
+    // const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
+    // if (!blog) {
+    //   return createResponseService(400, {
+    //     errorsMessages: [
+    //       {
+    //         message: 'Such blogId is not found',
+    //         field: 'blogId',
+    //       },
+    //     ],
+    //   });
+    // }
 
-    const result = await this.postsRepository.updatePost(body, id);
-    if (!result) {
-      return createResponseService(404, 'Not found');
-    }
-    return createResponseService(204, 'No content');
+    const post = await this.postsRepository.getPostById(new ObjectId(id));
+    if (!post) return false;
+
+    post.updatePostInfo(post, inputBodyPost);
+    await this.postsRepository.save(post);
+    return true;
+    // if (!result) {
+    //   return createResponseService(404, 'Not found');
+    // }
+    // return createResponseService(204, 'No content');
   }
 
-  async updateLikeStatusOfPost(
+  /* async updateLikeStatusOfPost(
     postId: string,
     userId: ObjectId,
     likeStatus: LikeStatus,
@@ -186,9 +234,9 @@ export class PostsService {
     }
 
     return true;
-  }
+  }*/
 
   async deleteSinglePost(id: string): Promise<boolean> {
-    return await this.postsRepository.deleteSinglePost(id);
+    return this.postsRepository.deleteSinglePost(new ObjectId(id));
   }
 }

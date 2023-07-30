@@ -1,172 +1,163 @@
-import {
-  RequestWithBody,
-  RequestWithParams,
-  RequestWithParamsAndBody,
-  RequestWithParamsAndQuery,
-  RequestWithQuery,
-} from '../../types/requests-types';
 import { QueryPostModel } from './models/QueryPostModel';
-import { Response } from 'express';
 import { ViewAllPostsModel, ViewPostModel } from './models/ViewPostModel';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
-import { UriIdModel } from '../../models/UriModels';
-import {
-  ViewAllCommentsOfPostModel,
-  ViewCommentOfPostModel,
-} from './models/ViewCommentsOfPostModel';
+import { ViewAllCommentsOfPostModel } from './models/ViewCommentsOfPostModel';
 import { CreatePostModel } from './models/CreatePostModel';
 import { PostsService } from '../application/posts-service';
-import { CreateCommentByPostIdModel } from '../../models/CommentsModels/CreateCommentModel';
 import { UpdatePostModel } from './models/UpdatePostModel';
-import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
-import { ViewAllErrorsModels } from '../../models/ViewAllErrorsModels';
-import { CommentsQueryRepository } from '../../infrastructure/queryRepositories/comments-query-repository';
-import { CommentsService } from '../../application/services/comments-service';
-import { injectable } from 'inversify';
-import { UpdateLikeStatusModel } from '../../models/CommentsModels/UpdateCommentLikeStatus';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments-query-repository';
 
-@injectable()
+@Controller('/hometask-nest/posts')
 export class PostsController {
   constructor(
     protected postsQueryRepository: PostsQueryRepository,
     protected postsService: PostsService,
     protected commentsQueryRepository: CommentsQueryRepository,
-    protected commentsService: CommentsService,
   ) {}
 
+  @Get()
   async getAllPosts(
-    req: RequestWithQuery<QueryPostModel>,
-    res: Response<ViewAllPostsModel>,
-  ) {
+    @Query() query: QueryPostModel,
+  ): Promise<ViewAllPostsModel> {
     try {
-      const result = await this.postsQueryRepository.getAllPosts(
-        req.query,
-        req.userId,
-      );
-      res.status(HTTP_STATUS_CODE.OK_200).send(result);
+      const result = await this.postsQueryRepository.getAllPosts(query);
+      return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
+  @Get(':id')
   async getPostById(
-    req: RequestWithParams<UriIdModel>,
-    res: Response<ViewPostModel>,
-  ) {
+    @Param('id') postId: string,
+  ): Promise<ViewPostModel | null> {
     try {
-      const result = await this.postsQueryRepository.getPostById(
-        req.params.id,
-        req.userId,
-      );
+      const result = await this.postsQueryRepository.getPostById(postId);
 
-      result
-        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+      return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
+  @Get(':postId/comments')
   async getAllCommentsOfPost(
-    req: RequestWithParamsAndQuery<UriIdModel, QueryPostModel>,
-    res: Response<ViewAllCommentsOfPostModel>,
-  ) {
+    @Param('postId') postId: string,
+    @Query() query: QueryPostModel,
+  ): Promise<ViewAllCommentsOfPostModel | null> {
     try {
       const result = await this.commentsQueryRepository.getCommentsOfPost(
-        req.query,
-        req.params.id,
-        req.userId,
+        postId,
+        query,
       );
-      result
-        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+      return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
+  @Post()
   async createPost(
-    req: RequestWithBody<CreatePostModel>,
-    res: Response<ViewPostModel | ViewAllErrorsModels>,
-  ) {
+    @Body() inputPostModel: CreatePostModel,
+  ): Promise<ViewPostModel | false> {
     try {
-      const result = await this.postsService.createPost(req.body);
+      const result = await this.postsService.createPost(inputPostModel);
 
-      result.status === 201
-        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result.message)
-        : res.status(result.status).json(result.message);
+      return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
-    }
-  }
-
-  async createCommentByPostId(
-    req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
-    res: Response<ViewCommentOfPostModel>,
-  ) {
-    try {
-      const result = await this.commentsService.createCommentByPostId(
-        req.body,
-        req.userId!,
-        req.params.id,
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
       );
-
-      result
-        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
     }
   }
 
+  // async createCommentByPostId(
+  //   req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
+  //   res: Response<ViewCommentOfPostModel>,
+  // ) {
+  //   try {
+  //     const result = await this.commentsService.createCommentByPostId(
+  //       req.body,
+  //       req.userId!,
+  //       req.params.id,
+  //     );
+  //
+  //     result
+  //       ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+  //       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  //   } catch (err) {
+  //     throw new InternalServerErrorException(
+  //       `Something was wrong. Error: ${err}`,
+  //     );
+  //   }
+  // }
+
+  @Put('id')
   async updatePost(
-    req: RequestWithParamsAndBody<UriIdModel, UpdatePostModel>,
-    res: Response<string | ViewAllErrorsModels>,
-  ) {
+    @Param('postId') postId: string,
+    @Body() inputPostModel: UpdatePostModel,
+  ): Promise<boolean> {
     try {
-      const result = await this.postsService.updatePost(
-        req.body,
-        req.params.id,
-      );
+      const result = await this.postsService.updatePost(postId, inputPostModel);
 
-      result.status === 204
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.status(result.status).send(result.message);
+      return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
-  async updateLikeStatusOfPost(
-    req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>,
-    res: Response<string>,
-  ) {
+  // async updateLikeStatusOfPost(
+  //   req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>,
+  //   res: Response<string>,
+  // ) {
+  //   try {
+  //     const result = await this.postsService.updateLikeStatusOfPost(
+  //       req.params.id,
+  //       req.userId!,
+  //       req.body.likeStatus,
+  //     );
+  //
+  //     result
+  //       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+  //       : res
+  //           .status(HTTP_STATUS_CODE.NOT_FOUND_404)
+  //           .send("Post with specified id doesn't exist");
+  //   } catch (err) {
+  //     throw new InternalServerErrorException(
+  //       `Something was wrong. Error: ${err}`,
+  //     );
+  //   }
+  // }
+
+  @Delete(':id')
+  async deletePost(@Param('id') postId: string): Promise<boolean> {
     try {
-      const result = await this.postsService.updateLikeStatusOfPost(
-        req.params.id,
-        req.userId!,
-        req.body.likeStatus,
+      const result = await this.postsService.deleteSinglePost(postId);
+
+      return result;
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
       );
-
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res
-            .status(HTTP_STATUS_CODE.NOT_FOUND_404)
-            .send("Post with specified id doesn't exist");
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
-    }
-  }
-
-  async deletePost(req: RequestWithParams<UriIdModel>, res: Response<void>) {
-    try {
-      const result = await this.postsService.deleteSinglePost(req.params.id);
-
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
     }
   }
 }

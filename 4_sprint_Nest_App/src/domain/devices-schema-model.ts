@@ -15,7 +15,7 @@ export const DeviceSchema = new mongoose.Schema<DeviceDBType>({
     expires: '20m',
   },
 });
-export const DeviceModel = mongoose.model<DeviceDBType>(
+export const DeviceModel = mongoose.models<DeviceDBType>(
   'devices',
   DeviceSchema,
 );

@@ -13,7 +13,7 @@ const CommentsLikesInfoSchema = new mongoose.Schema<CommentsLikesInfoDBType>({
     }
 });
 
-export const CommentsLikesInfoModel = mongoose.model<CommentsLikesInfoDBType>('LikesInfoComments', CommentsLikesInfoSchema);
+export const CommentsLikesInfoModel = mongoose.models<CommentsLikesInfoDBType>('LikesInfoComments', CommentsLikesInfoSchema);
 
 const PostsLikesInfoSchema = new mongoose.Schema<PostsLikesInfoDBType>({
     postId: {type: ObjectId, required: true},
@@ -26,5 +26,5 @@ const PostsLikesInfoSchema = new mongoose.Schema<PostsLikesInfoDBType>({
         enum: ['Like', 'Dislike', 'None']
     }
 });
-export const PostsLikesInfoModel = mongoose.model<PostsLikesInfoDBType>('LikesInfoPosts', PostsLikesInfoSchema);
+export const PostsLikesInfoModel = mongoose.models<PostsLikesInfoDBType>('LikesInfoPosts', PostsLikesInfoSchema);
 */
