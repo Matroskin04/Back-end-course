@@ -20,11 +20,14 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../infrastructure/query.repository/blogs-query-repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/query.repository/posts-query-repository';
 import { BlogsService } from '../application/blogs-service';
 import { PostsService } from '../../posts/application/posts-service';
+import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
+import { Response } from 'express';
 
 @Controller('/hometask-nest/blogs')
 export class BlogsController {
@@ -38,12 +41,13 @@ export class BlogsController {
   @Get()
   async getAllBlogs(
     @Query() query: QueryBlogModel,
-  ): Promise<ViewAllBlogsModel | undefined> {
+    @Res() res: Response<ViewAllBlogsModel>,
+  ) {
     //todo получить не объектом
     try {
       console.log(query);
       const result = await this.blogsQueryRepository.getAllBlogs(query);
-      return result;
+      res.status(HTTP_STATUS_CODE.OK_200).send(result);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -54,11 +58,14 @@ export class BlogsController {
   @Get(':id')
   async getBlogById(
     @Param('id') blogId: string,
-  ): Promise<ViewBlogModel | null> {
+    @Res() res: Response<ViewBlogModel>,
+  ) {
     try {
       console.log(blogId);
       const result = await this.blogsQueryRepository.getBlogById(blogId);
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -70,13 +77,16 @@ export class BlogsController {
   async getAllPostsOfBlog(
     @Param('blogId') blogId: string,
     @Query() query: QueryBlogModel,
-  ): Promise<ViewPostsOfBlogModel | null> {
+    @Res() res: Response<ViewPostsOfBlogModel>,
+  ) {
     try {
       const result = await this.postsQueryRepository.getPostsOfBlog(
         blogId,
         query,
       );
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -87,10 +97,11 @@ export class BlogsController {
   @Post()
   async createBlog(
     @Body() inputBlogModel: CreateBlogModel,
-  ): Promise<ViewBlogModel> {
+    @Res() res: Response<ViewBlogModel>,
+  ) {
     try {
       const result = await this.blogsService.createBlog(inputBlogModel);
-      return result;
+      res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -102,13 +113,16 @@ export class BlogsController {
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputPostModel: CreatePostByBlogIdModel,
-  ): Promise<PostTypeWithId | null> {
+    @Res() res: Response<PostTypeWithId>, //todo тип
+  ) {
     try {
       const result = await this.postsService.createPostByBlogId(
         blogId,
         inputPostModel,
       );
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -120,10 +134,13 @@ export class BlogsController {
   async updateBlog(
     @Param('id') blogId: string,
     @Body() inputBlogModel: UpdateBlogModel,
-  ): Promise<boolean> {
+    @Res() res: Response<void>,
+  ) {
     try {
       const result = await this.blogsService.updateBlog(blogId, inputBlogModel);
-      return result;
+      result
+        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -132,10 +149,12 @@ export class BlogsController {
   }
 
   @Delete(':id')
-  async deleteBlog(@Param('id') blogId: string): Promise<boolean> {
+  async deleteBlog(@Param('id') blogId: string, @Res() res: Response<void>) {
     try {
       const result = await this.blogsService.deleteSingleBlog(blogId);
-      return result;
+      result
+        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
