@@ -3,9 +3,12 @@ import {
   Get,
   InternalServerErrorException,
   Param,
+  Res,
 } from '@nestjs/common';
 import { ViewCommentModel } from './models/ViewCommentModel';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
+import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
+import { Response } from 'express';
 
 @Controller('/hometask-nest/comments')
 export class CommentsController {
@@ -16,13 +19,16 @@ export class CommentsController {
   @Get(':id')
   async getCommentById(
     @Param('id') commentId: string,
-  ): Promise<ViewCommentModel | null | undefined> {
+    @Res() res: Response<ViewCommentModel>,
+  ) {
     try {
       const result = await this.commentsQueryRepository.getCommentById(
         commentId,
       );
 
-      return result;
+      result
+        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
