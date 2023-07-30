@@ -141,6 +141,7 @@ export class PostsService {
     const blog = await this.blogsQueryRepository.getBlogById(
       inputBodyPost.blogId,
     );
+    console.log(blog);
     if (!blog) {
       return false;
       // return createResponseService(400, {

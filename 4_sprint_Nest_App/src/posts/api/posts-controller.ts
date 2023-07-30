@@ -130,10 +130,10 @@ export class PostsController {
   ) {
     try {
       const result = await this.postsService.updatePost(postId, inputPostModel);
-
+      console.log(result);
       result
         ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.status(HTTP_STATUS_CODE.NOT_FOUND_404);
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
