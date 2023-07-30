@@ -50,10 +50,11 @@ export class Blog {
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
 
+BlogSchema.statics = {
+  createInstance: Blog.createInstance,
+};
+
 BlogSchema.methods = {
   renameIntoViewModel: Blog.prototype.modifyIntoViewModel,
   updateBlogInfo: Blog.prototype.updateBlogInfo,
-};
-BlogSchema.statics = {
-  createInstance: Blog.createInstance,
 };

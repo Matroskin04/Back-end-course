@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { injectable } from 'inversify';
-import { TestingRepository } from '../../infrastructure/repositories/testing-repository';
+import { TestingRepository } from './testing-repository';
+import { Controller, Delete } from '@nestjs/common';
 
-@injectable()
+@Controller('/hometask-nest/testing/all-data')
 export class TestingController {
   constructor(protected testingRepository: TestingRepository) {}
 
+  @Delete()
   async deleteAllData(req: Request, res: Response<void>) {
     await this.testingRepository.deleteAllData();
     res.sendStatus(204);
