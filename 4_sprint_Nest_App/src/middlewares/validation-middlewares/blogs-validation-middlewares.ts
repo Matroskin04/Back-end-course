@@ -1,3 +1,4 @@
+/*
 import { body } from 'express-validator';
 
 export const validateBodyOfBlog = [
@@ -45,3 +46,4 @@ export const validateBodyOfBlog = [
     .isLength({ max: 100 })
     .withMessage('The length should be less than 101'),
 ];
+*/

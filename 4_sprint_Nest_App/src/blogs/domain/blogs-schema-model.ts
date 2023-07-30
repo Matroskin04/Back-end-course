@@ -55,6 +55,6 @@ BlogSchema.statics = {
 };
 
 BlogSchema.methods = {
-  renameIntoViewModel: Blog.prototype.modifyIntoViewModel,
+  modifyIntoViewModel: Blog.prototype.modifyIntoViewModel,
   updateBlogInfo: Blog.prototype.updateBlogInfo,
 };

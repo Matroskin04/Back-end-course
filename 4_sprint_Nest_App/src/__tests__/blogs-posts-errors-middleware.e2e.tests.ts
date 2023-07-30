@@ -1,3 +1,4 @@
+/*
 import { describe } from 'node:test';
 const request = require('supertest');
 import { mongoURL } from '../infrastructure/db';
@@ -462,3 +463,4 @@ describe('POST: /posts and /posts/{postId}/comments', () => {
     });
   });
 });
+*/

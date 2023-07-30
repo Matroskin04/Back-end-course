@@ -1,3 +1,4 @@
+/*
 import {body} from "express-validator";
 
 const validateTitle = body('title')
@@ -57,3 +58,4 @@ const validateBlogId =  body('blogId')
 export const checkErrorsPostByBlogId = [validateTitle, validateShortDescription, validateContent]
 export const validateBodyOfPost = [validateTitle, validateShortDescription, validateContent,validateBlogId]
 
+*/

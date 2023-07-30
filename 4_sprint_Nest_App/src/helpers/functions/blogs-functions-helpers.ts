@@ -1,3 +1,4 @@
+/*
 import { BlogTypeWithId } from '../../blogs/infrastructure/repository/blogs-types-repositories';
 
 export function renameMongoIdBlog(blog: any): BlogTypeWithId {
@@ -10,3 +11,4 @@ export function renameMongoIdBlog(blog: any): BlogTypeWithId {
     isMembership: blog.isMembership,
   };
 }
+*/

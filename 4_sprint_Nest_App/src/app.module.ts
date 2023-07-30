@@ -39,14 +39,10 @@ import { UsersQueryRepository } from './users/infrastructure/query.repository/us
 import { TestingController } from './test.delete/testing-controller';
 import { TestingRepository } from './test.delete/testing-repository';
 
-const mongoURL =
-  process.env.MONGO_URL ||
-  `mongodb://0.0.0.0:27017/Website_for_programmers_Nest`;
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(mongoURL),
+    MongooseModule.forRoot(process.env.MONGO_URL!),
     MongooseModule.forFeature([
       {
         name: Blog.name,

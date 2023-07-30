@@ -1,3 +1,4 @@
+/*
 import {describe} from "node:test";
 import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
@@ -149,4 +150,4 @@ describe('Posts All operation, chains: /posts', () => {
         await request(app).delete(`/posts/${idOfPost}`).auth('admin', 'qwerty').expect(404);
 
     })
-})
+})*/

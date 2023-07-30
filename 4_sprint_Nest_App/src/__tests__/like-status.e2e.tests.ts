@@ -1,3 +1,4 @@
+/*
 import {describe} from "node:test";
 import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
@@ -87,4 +88,4 @@ describe('comments: /comments - test like status', () => {
         })
 
     });
-})
+})*/

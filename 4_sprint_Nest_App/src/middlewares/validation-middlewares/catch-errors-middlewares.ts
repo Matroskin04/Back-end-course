@@ -1,3 +1,4 @@
+/*
 import { RequestWithBody } from '../../types/requests-types';
 import { CreateBlogModel } from '../../blogs/api/models/CreateBlogModel';
 import {
@@ -55,3 +56,4 @@ export const getErrors = (
     });
   } else next();
 };
+*/

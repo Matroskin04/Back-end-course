@@ -1,3 +1,4 @@
+/*
 import {mongoURL} from "../infrastructure/db";
 const request = require("supertest");
 import {app} from "../setting";
@@ -262,4 +263,4 @@ describe('devices: /security/devices', () => {
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
             .expect(200);
     })
-})
+})*/

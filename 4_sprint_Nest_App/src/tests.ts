@@ -14,14 +14,3 @@
 // }
 //
 //
-
-import { UserModel } from './users/domain/users-schema-model';
-
-console.log(1);
-const user = {
-  login: 'egor',
-  email: `123`,
-  passwordHash: `2004`,
-};
-const user1 = new UserModel(user);
-console.log(user1);
