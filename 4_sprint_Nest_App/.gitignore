@@ -43,3 +43,7 @@ lerna-debug.log*
 /src/domain/users-schema-model.js
 /src/users/domain/users-db-types.js
 /src/users/domain/users-schema-model.js
+/test/app.e2e-spec.d.ts
+/test/app.e2e-spec.js
+/test/app.e2e-spec.js.map
+/tsconfig.tsbuildinfo

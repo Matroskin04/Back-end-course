@@ -7,8 +7,8 @@ export class TestingController {
   constructor(protected testingRepository: TestingRepository) {}
 
   @Delete()
-  async deleteAllData(req: Request, res: Response<void>) {
+  async deleteAllData() {
     await this.testingRepository.deleteAllData();
-    res.sendStatus(204);
+    return;
   }
 }
