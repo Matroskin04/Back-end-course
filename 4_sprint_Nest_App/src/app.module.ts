@@ -21,6 +21,22 @@ import { PostsController } from './posts/api/posts-controller';
 import { PostsService } from './posts/application/posts-service';
 import { PostsQueryRepository } from './posts/infrastructure/query.repository/posts-query-repository';
 import { PostsRepository } from './posts/infrastructure/repository/posts-repository';
+import {
+  EmailConfirmation,
+  EmailConfirmationSchema,
+  PasswordRecovery,
+  PasswordRecoverySchema,
+  User,
+  UserSchema,
+} from './users/domain/users-schema-model';
+import { CommentsController } from './comments/api/comments-controller';
+import { UsersController } from './users/api/users-controller';
+import { CommentsQueryRepository } from './comments/infrastructure/query.repository/comments-query-repository';
+import { UsersService } from './users/application/users-service';
+import { UsersRepository } from './users/infrastructure/repository/users-repository';
+import { UsersQueryRepository } from './users/infrastructure/query.repository/users-query-repository';
+import { TestingController } from './test.delete/testing-controller';
+import { TestingRepository } from './test.delete/testing-repository';
 
 const mongoURL =
   process.env.MONGO_URL ||
@@ -44,16 +60,34 @@ const mongoURL =
         schema: LikesInfoSchema,
       },
       {
-        name: Comment.name, //todo вложенные схемы тоже здесь указывать?
+        name: Comment.name,
         schema: CommentSchema,
       },
       {
-        name: CommentatorInfo.name, //todo вложенные схемы тоже здесь указывать?
+        name: CommentatorInfo.name,
         schema: CommentatorInfoSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+      {
+        name: EmailConfirmation.name,
+        schema: EmailConfirmationSchema,
+      },
+      {
+        name: PasswordRecovery.name,
+        schema: PasswordRecoverySchema,
       },
     ]),
   ],
-  controllers: [BlogsController, PostsController],
+  controllers: [
+    BlogsController,
+    PostsController,
+    CommentsController,
+    UsersController,
+    TestingController,
+  ],
   providers: [
     BlogsService,
     BlogsQueryRepository,
@@ -61,6 +95,11 @@ const mongoURL =
     PostsService,
     PostsQueryRepository,
     PostsRepository,
+    CommentsQueryRepository,
+    UsersService,
+    UsersRepository,
+    UsersQueryRepository,
+    TestingRepository,
   ],
 })
 export class AppModule {}
