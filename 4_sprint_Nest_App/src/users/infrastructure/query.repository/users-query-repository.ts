@@ -40,8 +40,7 @@ export class UsersQueryRepository {
     const allUsersOnPages = await this.UserModel.find(paramsOfSearch)
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)
-      .sort(paramsOfElems.paramSort)
-      .lean();
+      .sort(paramsOfElems.paramSort);
 
     return {
       pagesCount: Math.ceil(countAllUsersSort / +paramsOfElems.pageSize),

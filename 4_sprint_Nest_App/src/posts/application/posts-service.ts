@@ -138,17 +138,20 @@ export class PostsService {
     id: string,
     inputBodyPost: BodyPostType,
   ): Promise<boolean> /*Promise<ResponseTypeService>*/ {
-    // const blog = await this.blogsQueryRepository.getBlogById(body.blogId);
-    // if (!blog) {
-    //   return createResponseService(400, {
-    //     errorsMessages: [
-    //       {
-    //         message: 'Such blogId is not found',
-    //         field: 'blogId',
-    //       },
-    //     ],
-    //   });
-    // }
+    const blog = await this.blogsQueryRepository.getBlogById(
+      inputBodyPost.blogId,
+    );
+    if (!blog) {
+      return false;
+      // return createResponseService(400, {
+      //   errorsMessages: [
+      //     {
+      //       message: 'Such blogId is not found',
+      //       field: 'blogId',
+      //     },
+      //   ],
+      // });
+    }
 
     const post = await this.postsRepository.getPostById(new ObjectId(id));
     if (!post) return false;

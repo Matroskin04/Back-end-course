@@ -19,6 +19,7 @@ export class BlogsQueryRepository {
   async getAllBlogs(query: QueryBlogModel): Promise<BlogPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
+    if (paramsOfElems.sortBy === 'createdAt') paramsOfElems.sortBy = '_id';
 
     const countAllBlogsSort = await this.BlogModel.countDocuments({
       name: { $regex: searchNameTerm ?? '', $options: 'i' },
