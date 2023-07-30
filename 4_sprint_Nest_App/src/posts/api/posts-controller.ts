@@ -122,15 +122,18 @@ export class PostsController {
   //   }
   // }
 
-  @Put('id')
+  @Put(':id')
   async updatePost(
-    @Param('postId') postId: string,
+    @Param('id') postId: string,
     @Body() inputPostModel: UpdatePostModel,
-  ): Promise<boolean> {
+    @Res() res: Response<void>,
+  ) {
     try {
       const result = await this.postsService.updatePost(postId, inputPostModel);
 
-      return result;
+      result
+        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+        : res.status(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,
@@ -162,11 +165,13 @@ export class PostsController {
   // }
 
   @Delete(':id')
-  async deletePost(@Param('id') postId: string): Promise<boolean> {
+  async deletePost(@Param('id') postId: string, @Res() res: Response<void>) {
     try {
       const result = await this.postsService.deleteSinglePost(postId);
 
-      return result;
+      result
+        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     } catch (err) {
       throw new InternalServerErrorException(
         `Something was wrong. Error: ${err}`,

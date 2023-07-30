@@ -47,7 +47,23 @@ export async function mappingPostForAllDocs( //todo такую логику лу
   //   post._id,
   // );
   // const reformedNewestLikes = reformNewestLikes(newestLikes);
-  const reformedNewestLikes = [];
+  const reformedNewestLikes = [
+    {
+      login: '123',
+      userId: '123',
+      addedAt: '2023-07-30T09:53:33.591Z',
+    },
+    {
+      login: '123',
+      userId: '123',
+      addedAt: '2023-07-30T09:53:33.591Z',
+    },
+    {
+      login: '123',
+      userId: '123',
+      addedAt: '2023-07-30T09:53:33.591Z',
+    },
+  ];
 
   return {
     id: post._id.toString(),

@@ -9,7 +9,7 @@ export class EmailConfirmation {
   @Prop({ required: true, default: uuidv4() })
   confirmationCode: string;
 
-  @Prop({ type: Date, required: true, default: new Date() })
+  @Prop({ type: Date, required: true, default: Date.now })
   expirationDate: Date;
 
   @Prop({ type: Boolean, required: true, default: true })
@@ -23,7 +23,7 @@ export class PasswordRecovery {
   @Prop({ required: true, default: uuidv4() })
   confirmationCode: string;
 
-  @Prop({ type: Date, required: true, default: new Date() })
+  @Prop({ type: Date, required: true, default: Date.now })
   expirationDate: Date;
 }
 export const PasswordRecoverySchema =
@@ -42,13 +42,13 @@ export class User {
   @Prop({ required: true, default: new Date().toISOString() })
   createdAt: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: 'someHash' })
   passwordHash: string;
 
-  @Prop({ type: EmailConfirmationSchema, required: true })
+  @Prop({ type: EmailConfirmationSchema, required: false })
   emailConfirmation: EmailConfirmation;
 
-  @Prop({ type: PasswordRecoverySchema, required: true })
+  @Prop({ type: PasswordRecoverySchema, required: false })
   passwordRecovery: PasswordRecovery;
 
   modifyIntoViewModel(): UserViewType {
