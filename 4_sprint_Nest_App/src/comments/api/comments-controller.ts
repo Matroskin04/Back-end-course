@@ -1,4 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  InternalServerErrorException,
+  Param,
+} from '@nestjs/common';
 import { ViewCommentModel } from './models/ViewCommentModel';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
 
@@ -19,7 +24,9 @@ export class CommentsController {
 
       return result;
     } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+      throw new InternalServerErrorException(
+        `Something was wrong. Error: ${err}`,
+      );
     }
   }
 
