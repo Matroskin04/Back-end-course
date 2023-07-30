@@ -1,11 +1,13 @@
 import { Blog } from '../blogs/domain/blogs-schema-model';
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PostModelType } from '../posts/domain/posts-db-types';
 import { BlogModelType } from '../blogs/domain/blogs.db.types';
 import { UserModelType } from '../users/domain/users-db-types';
 import { CommentModelType } from '../comments/domain/comments-db-types';
 import { User } from '../users/domain/users-schema-model';
+import { Post } from '../posts/domain/posts-schema-model';
+import { Comment } from '../comments/domain/comments-schema-model';
 
 @Injectable()
 export class TestingRepository {
