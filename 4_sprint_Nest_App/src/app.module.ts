@@ -38,6 +38,18 @@ import { UsersRepository } from './users/infrastructure/repository/users-reposit
 import { UsersQueryRepository } from './users/infrastructure/query.repository/users-query-repository';
 import { TestingController } from './test.delete/testing-controller';
 import { TestingRepository } from './test.delete/testing-repository';
+import { LocalStrategy } from './auth/strategy/local.strategy';
+import { AuthService } from './auth/service/auth-service';
+import { CryptoAdapter } from './adapters/crypto-adapter';
+import { EmailManager } from './managers/email-manager';
+import { EmailAdapter } from './adapters/email-adapter';
+import { AuthController } from './auth/auth-controller';
+import { JwtRefreshStrategy } from './auth/strategy/jwt-refresh.strategy';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtService } from './jwt/jwt-service';
+import { JwtQueryRepository } from './jwt/jwt-query-repository';
+import { JwtAccessGuard } from './auth/guards/jwt-access.guard';
+import { JwtAccessStrategy } from './auth/strategy/jwt-access.strategy';
 
 @Module({
   imports: [
@@ -77,8 +89,14 @@ import { TestingRepository } from './test.delete/testing-repository';
         schema: PasswordRecoverySchema,
       },
     ]),
+    JwtModule.register({
+      //todo надо?
+      secret: process.env.PRIVATE_KEY_ACCESS_TOKEN,
+      signOptions: { expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN },
+    }),
   ],
   controllers: [
+    AuthController,
     BlogsController,
     PostsController,
     CommentsController,
@@ -86,6 +104,7 @@ import { TestingRepository } from './test.delete/testing-repository';
     TestingController,
   ],
   providers: [
+    AuthService,
     BlogsService,
     BlogsQueryRepository,
     BlogsRepository,
@@ -96,7 +115,18 @@ import { TestingRepository } from './test.delete/testing-repository';
     UsersService,
     UsersRepository,
     UsersQueryRepository,
+    JwtService,
+    JwtQueryRepository,
     TestingRepository,
+    //Strategy
+    LocalStrategy,
+    JwtRefreshStrategy,
+    JwtAccessStrategy,
+
+    //Managers && Adapters
+    EmailManager,
+    CryptoAdapter,
+    EmailAdapter,
   ],
 })
 export class AppModule {}

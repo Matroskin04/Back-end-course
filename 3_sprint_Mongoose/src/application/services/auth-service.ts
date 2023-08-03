@@ -46,7 +46,6 @@ export class AuthService {
         await this.emailManager.sendEmailConfirmationMessage(user.email, user.emailConfirmation.confirmationCode);
 
         return;
-
     }
 
     async confirmEmail(userId: ObjectId): Promise<void> {
@@ -77,7 +76,7 @@ export class AuthService {
 
         const user = await this.usersService.checkCredentials(loginOrEmail, password);
         if (!user) {
-            return null
+            return null;
         }
 
         const accessToken  = this.jwtService.createAccessToken(user._id.toString());
