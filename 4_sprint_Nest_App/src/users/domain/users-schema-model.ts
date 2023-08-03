@@ -42,13 +42,13 @@ export class User {
   @Prop({ required: true, default: new Date().toISOString() })
   createdAt: string;
 
-  @Prop({ required: true, default: 'someHash' })
+  @Prop({ required: true })
   passwordHash: string;
 
-  @Prop({ type: EmailConfirmationSchema, required: false })
+  @Prop({ type: EmailConfirmationSchema, required: true })
   emailConfirmation: EmailConfirmation;
 
-  @Prop({ type: PasswordRecoverySchema, required: false })
+  @Prop({ type: PasswordRecoverySchema, required: true })
   passwordRecovery: PasswordRecovery;
 
   modifyIntoViewModel(): UserViewType {

@@ -20,6 +20,6 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true
   },
-  "include": ["./tests", "./src/app.module.ts", "./src/main.ts"],
+  "include": ["./tests", "./src"],
   "exclude": ["./src/infrastructure"]
 }

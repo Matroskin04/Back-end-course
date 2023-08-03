@@ -1,48 +1,36 @@
-// import {
-//   BodyUserType,
-//   UserOutputType,
-// } from '../../infrastructure/repositories/repositories-types/users-types-repositories';
-// import bcrypt from 'bcryptjs';
-// import { ObjectId } from 'mongodb';
-// import { v4 as uuidv4 } from 'uuid';
-// import jwt from 'jsonwebtoken';
-// import { env } from '../../config';
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { UsersRepository } from '../infrastructure/repository/users-repository';
 import { BodyUserType } from '../infrastructure/repository/users-types-repositories';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../domain/users-schema-model';
 import { UserModelType } from '../domain/users-db-types';
 import { UserViewType } from '../infrastructure/query.repository/users-types-query-repository';
+import { CryptoAdapter } from '../../adapters/crypto-adapter';
+import add from 'date-fns/add';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private UserModel: UserModelType,
+    protected cryptoAdapter: CryptoAdapter,
     protected usersRepository: UsersRepository, // protected usersQueryRepository: UsersQueryRepository, // protected cryptoAdapter: CryptoAdapter,
   ) {}
 
   async createUser(inputBodyUser: BodyUserType): Promise<UserViewType> {
-    // const passHash = await this.cryptoAdapter._generateHash(inputBodyUser.password);
+    const passwordHash = await this.cryptoAdapter._generateHash(
+      inputBodyUser.password,
+    );
 
-    const user = this.UserModel.createInstance(inputBodyUser, this.UserModel);
+    const userInfo = {
+      email: inputBodyUser.email,
+      login: inputBodyUser.login,
+      passwordHash,
+      emailConfirmation: {},
+      passwordRecovery: {},
+    };
 
-    // const user = new UserDBType(
-    //   new ObjectId(),
-    //   inputBodyUser.login,
-    //   inputBodyUser.email,
-    //   new Date().toISOString(),
-    //   'passHash',
-    //   {
-    //     confirmationCode: uuidv4(),
-    //     expirationDate: new Date(),
-    //     isConfirmed: true,
-    //   },
-    //   {
-    //     confirmationCode: uuidv4(),
-    //     expirationDate: new Date(),
-    //   },
-    // );
+    const user = this.UserModel.createInstance(userInfo, this.UserModel);
 
     await this.usersRepository.save(user);
     return user.modifyIntoViewModel();
@@ -51,20 +39,6 @@ export class UsersService {
   async deleteSingleUser(id: string): Promise<boolean> {
     return this.usersRepository.deleteSingleUser(id);
   }
-
-  // async checkCredentials(
-  //   loginOrEmail: string,
-  //   password: string,
-  // ): Promise<UserDBType | false> {
-  //   const user = await this.usersQueryRepository.getUserByLoginOrEmail(
-  //     loginOrEmail,
-  //   );
-  //   if (!user || !user.emailConfirmation.isConfirmed) {
-  //     return false;
-  //   }
-  //
-  //   return (await bcrypt.compare(password, user.passwordHash)) ? user : false;
-  // }
 
   // async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
   //

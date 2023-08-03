@@ -22,7 +22,7 @@ export class UsersRepository {
     return result.deletedCount === 1;
   }
 
-  /*  async updateConfirmation(id: ObjectId): Promise<boolean> {
+  async updateConfirmation(id: ObjectId): Promise<boolean> {
     const result = await this.UserModel.updateOne(
       { _id: id },
       { $set: { 'emailConfirmation.isConfirmed': true } },
@@ -74,5 +74,5 @@ export class UsersRepository {
       { $set: { passwordHash: newPasswordHash } },
     );
     return result.modifiedCount === 1;
-  }*/
+  }
 }

@@ -22,7 +22,16 @@ export type UserDBType = {
 export type UserDTOType = {
   login: string;
   email: string;
-  password: string;
+  passwordHash: string;
+  emailConfirmation: {
+    confirmationCode?: string;
+    expirationDate?: Date;
+    isConfirmed?: boolean;
+  };
+  passwordRecovery: {
+    confirmationCode?: string;
+    expirationDate?: Date;
+  };
 };
 
 export type UserDocument = HydratedDocument<User>;

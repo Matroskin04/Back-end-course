@@ -6,8 +6,9 @@ import {
 } from './users-types-query-repository';
 import { variablesForReturn } from '../../../infrastructure/queryRepositories/utils/variables-for-return';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModelType } from '../../domain/users-db-types';
+import { UserDBType, UserModelType } from '../../domain/users-db-types';
 import { User } from '../../domain/users-schema-model';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -51,7 +52,7 @@ export class UsersQueryRepository {
     };
   }
 
-  /*async getUserByLoginOrEmail(logOrEmail: string): Promise<UserDBType | null> {
+  async getUserByLoginOrEmail(logOrEmail: string): Promise<UserDBType | null> {
     const user = await this.UserModel.findOne({
       $or: [{ login: logOrEmail }, { email: logOrEmail }],
     });
@@ -65,7 +66,7 @@ export class UsersQueryRepository {
   async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
     // todo создавать ли отдельный метод для взятия логина
 
-    const user = await UserModel.findOne({ _id: userId });
+    const user = await this.UserModel.findOne({ _id: userId });
 
     if (user) {
       return user;
@@ -74,14 +75,16 @@ export class UsersQueryRepository {
   }
 
   async getUserByCodeConfirmation(code: string): Promise<UserDBType | null> {
-    return UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
+    return this.UserModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
   }
 
   async getUserByRecoveryCode(
     recoveryCode: string,
   ): Promise<UserDBType | null> {
-    return UserModel.findOne({
+    return this.UserModel.findOne({
       'passwordRecovery.confirmationCode': recoveryCode,
     });
-  }*/
+  }
 }

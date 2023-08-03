@@ -5,7 +5,7 @@ export type ErrorsTypeService = {
   }>;
 };
 
-export type ResponseTypeService = {
+export type ResponseTypeService ={
   status: number;
   message: any;
 };
