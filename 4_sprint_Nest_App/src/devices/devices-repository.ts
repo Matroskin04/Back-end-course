@@ -10,7 +10,7 @@ export class DevicesRepository {
 
         const deviceInstance = new DeviceModel(infoDevice);
         await deviceInstance.save();
-
+ 
         return;
     }
 
