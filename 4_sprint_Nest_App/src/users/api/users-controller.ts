@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { QueryUserModel } from './models/QueryUserModel';
 import { ViewAllUsersModels, ViewUserModel } from './models/ViewUserModel';
@@ -16,6 +17,7 @@ import { UsersQueryRepository } from '../infrastructure/query.repository/users-q
 import { UsersService } from '../application/users-service';
 import { Response } from 'express';
 import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
+import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 
 @Controller('/hometask-nest/users')
 export class UsersController {
@@ -24,19 +26,15 @@ export class UsersController {
     protected usersService: UsersService,
   ) {}
 
+  @UseGuards(BasicAuthGuard)
   @Get()
   async getAllUsers(
+    //todo try catch не нужны в nest?
     @Query() query: QueryUserModel,
     @Res() res: Response<ViewAllUsersModels | string>,
   ) {
-    try {
-      const result = await this.usersQueryRepository.getAllUsers(query);
-      res.status(HTTP_STATUS_CODE.OK_200).send(result);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.usersQueryRepository.getAllUsers(query);
+    res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 
   @Post()
@@ -44,28 +42,16 @@ export class UsersController {
     @Body() inputUserModel: CreateUserModel,
     @Res() res: Response<ViewUserModel | string>,
   ) {
-    try {
-      const result = await this.usersService.createUser(inputUserModel);
-      res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.usersService.createUser(inputUserModel);
+    res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
   }
 
   @Delete(':id')
   async deleteUser(@Param('id') userId: string, @Res() res: Response<void>) {
-    try {
-      const result = await this.usersService.deleteSingleUser(userId);
+    const result = await this.usersService.deleteSingleUser(userId);
 
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 }

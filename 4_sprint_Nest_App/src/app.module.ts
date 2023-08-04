@@ -50,6 +50,7 @@ import { JwtService } from './jwt/jwt-service';
 import { JwtQueryRepository } from './jwt/jwt-query-repository';
 import { JwtAccessGuard } from './auth/guards/jwt-access.guard';
 import { JwtAccessStrategy } from './auth/strategy/jwt-access.strategy';
+import { BasicStrategy } from './auth/strategy/basic.strategy';
 
 @Module({
   imports: [
@@ -122,6 +123,7 @@ import { JwtAccessStrategy } from './auth/strategy/jwt-access.strategy';
     LocalStrategy,
     JwtRefreshStrategy,
     JwtAccessStrategy,
+    BasicStrategy,
 
     //Managers && Adapters
     EmailManager,
