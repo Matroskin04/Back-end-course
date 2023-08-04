@@ -37,6 +37,7 @@ export class UsersController {
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createUser(
     @Body() inputUserModel: CreateUserModel,
@@ -46,6 +47,7 @@ export class UsersController {
     res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') userId: string, @Res() res: Response<void>) {
     const result = await this.usersService.deleteSingleUser(userId);

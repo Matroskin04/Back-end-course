@@ -14,11 +14,12 @@ import { CurrentUserId } from './decorators/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
 import { ValidateConfirmationCodeGuard } from './guards/validation.guards/validate-confirmation-code.guard';
-import { ValidateEmailGuard } from './guards/validation.guards/validate-email.guard';
+import { ValidateEmailResendingGuard } from './guards/validation.guards/validate-email-resending.guard';
 import {
   NewPasswordAuthModel,
   PasswordRecoveryAuthModel,
 } from './AuthModels/PasswordFlowAuthModels';
+import { ValidateEmailRegistrationGuard } from './guards/validation.guards/validate-email-registration.guard';
 
 @Controller('/hometask-nest/auth')
 export class AuthController {
@@ -75,6 +76,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(ValidateEmailRegistrationGuard)
   @Post('registration')
   async registerUser(
     @Body() inputRegisterModel: RegistrationAuthModels,
@@ -106,7 +108,7 @@ export class AuthController {
       .send('Email was verified. Account was activated');
   }
 
-  @UseGuards(ValidateEmailGuard)
+  @UseGuards(ValidateEmailResendingGuard)
   @Post('registration-email-resending')
   async resendEmailConfirmation(
     @Body() inputEmail: EmailResendingAuthModel,

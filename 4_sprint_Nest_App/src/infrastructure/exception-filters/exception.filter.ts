@@ -16,11 +16,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (status === 400) {
       const errorsResponse: any = {
-        errors: [],
+        errorsMessages: [],
       };
       const responseBody: any = exception.getResponse();
 
-      responseBody.message.forEach((m) => errorsResponse.errors.push(m));
+      responseBody.message.forEach((m) =>
+        errorsResponse.errorsMessages.push(m),
+      );
       response.status(status).json(errorsResponse);
     } else if (status === 500) {
       if (process.env.environment !== 'production') {
