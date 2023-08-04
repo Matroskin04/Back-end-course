@@ -16,10 +16,20 @@ export class ValidateEmailResendingGuard implements CanActivate {
       request.body.email,
     );
     if (!user) {
-      throw new Error('This email has not been registered yet');
+      throw new BadRequestException([
+        {
+          message: `This email has not been registered yet`,
+          field: 'email',
+        },
+      ]);
     }
     if (user.emailConfirmation.isConfirmed) {
-      throw new Error('Email is already confirmed');
+      throw new BadRequestException([
+        {
+          message: `Email is already confirmed`,
+          field: 'email',
+        },
+      ]);
     }
     request.userId = user._id;
 
