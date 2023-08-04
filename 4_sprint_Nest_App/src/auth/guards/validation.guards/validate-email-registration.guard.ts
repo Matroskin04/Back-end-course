@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  BadRequestException,
+} from '@nestjs/common';
 import { UsersQueryRepository } from '../../../users/infrastructure/query.repository/users-query-repository';
 
 @Injectable()
@@ -11,9 +16,12 @@ export class ValidateEmailRegistrationGuard implements CanActivate {
       request.body.login,
     );
     if (userByLogin) {
-      throw new Error(
-        `This ${request.body.login} is already exists, point out another`,
-      );
+      throw new BadRequestException([
+        {
+          message: `This ${request.body.login} is already exists, point out another`,
+          field: 'login',
+        },
+      ]);
     }
     return true;
   }

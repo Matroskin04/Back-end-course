@@ -3,7 +3,9 @@ import { IsEmail, IsString, Length, Matches } from 'class-validator';
 export class CreateUserModel {
   @IsString({ message: 'It should be a string' })
   @Length(3, 10)
-  @Matches(/^[a-zA-Z0-9_-]*$/)
+  @Matches(/^[a-zA-Z0-9_-]*$/, {
+    message: 'Incorrect login. Please, use only latin letters and numbers',
+  })
   login: string;
 
   @IsEmail({}, { message: 'Incorrect Email' })
