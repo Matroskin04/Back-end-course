@@ -7,7 +7,7 @@ import {
 import { UsersQueryRepository } from '../../../users/infrastructure/query.repository/users-query-repository';
 
 @Injectable()
-export class ValidateEmailGuard implements CanActivate {
+export class ValidateEmailResendingGuard implements CanActivate {
   constructor(protected usersQueryRepository: UsersQueryRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
