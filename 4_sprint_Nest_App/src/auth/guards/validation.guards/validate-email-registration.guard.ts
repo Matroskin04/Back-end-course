@@ -23,6 +23,18 @@ export class ValidateEmailRegistrationGuard implements CanActivate {
         },
       ]);
     }
+
+    const userByEmail = await this.usersQueryRepository.getUserByLoginOrEmail(
+      request.body.email,
+    );
+    if (userByEmail) {
+      throw new BadRequestException([
+        {
+          message: `This ${request.body.email} is already exists, point out another`,
+          field: 'email',
+        },
+      ]);
+    }
     return true;
   }
 }
