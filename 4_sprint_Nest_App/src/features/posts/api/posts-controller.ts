@@ -108,7 +108,7 @@ export class PostsController {
     @Res() res: Response<ViewCommentOfPostModel>,
   ) {
     const result = await this.commentsService.createCommentByPostId(
-      inputCommentModel,
+      inputCommentModel.content,
       userId,
       postId,
     );

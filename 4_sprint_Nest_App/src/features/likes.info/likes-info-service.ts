@@ -3,22 +3,35 @@ import { Injectable } from '@nestjs/common';
 import { LikesInfoRepository } from './likes-info-repository';
 import {
   CommentsLikesInfoDBType,
+  CommentsLikesInfoModelType,
   PostsLikesInfoDBType,
+  PostsLikesInfoModelType,
 } from './likes-info-db-types';
+import { InjectModel } from '@nestjs/mongoose';
+import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
 
 @Injectable()
 export class LikesInfoService {
-  constructor(protected likesInfoRepository: LikesInfoRepository) {}
+  constructor(
+    @InjectModel(CommentsLikesInfo.name)
+    private CommentsLikesInfoModel: CommentsLikesInfoModelType,
+    @InjectModel(PostsLikesInfo.name)
+    private PostsLikesInfoModel: PostsLikesInfoModelType,
+    protected likesInfoRepository: LikesInfoRepository,
+  ) {}
 
   async createLikeInfoComment(
     userId: ObjectId,
     commentId: ObjectId,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
-    const likeInfoOfComment = new CommentsLikesInfoDBType(
-      commentId,
-      userId,
-      statusLike,
+    const likeInfoOfComment = this.CommentsLikesInfoModel.createInstance(
+      {
+        commentId,
+        userId,
+        statusLike,
+      },
+      this.CommentsLikesInfoModel,
     );
 
     await this.likesInfoRepository.createLikeInfoComment(likeInfoOfComment);
@@ -31,15 +44,12 @@ export class LikesInfoService {
     login: string,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
-    const likeInfoOfPost = new PostsLikesInfoDBType(
-      postId,
-      userId,
-      login,
-      new Date().toISOString(),
-      statusLike,
+    const likeInfoOfPost = this.PostsLikesInfoModel.createInstance(
+      { postId, userId, login, addedAt: new Date().toISOString(), statusLike },
+      this.PostsLikesInfoModel,
     );
 
-    await this.likesInfoRepository.createLikeInfoPost(likeInfoOfPost);
+    await this.likesInfoRepository.save(likeInfoOfPost);
     return;
   }
 
@@ -49,6 +59,7 @@ export class LikesInfoService {
     statusLike: 'Like' | 'Dislike',
   ): Promise<boolean> {
     return this.likesInfoRepository.updateLikeInfoComment(
+      //todo save
       userId,
       commentId,
       statusLike,

@@ -5,6 +5,8 @@ import {
   LikesInfoSchema,
 } from '../../posts/domain/posts-schema-model';
 
+import { CommentDocument, CommentModelType } from './comments-db-types';
+
 @Schema()
 export class CommentatorInfo {
   @Prop({ required: true })
@@ -25,13 +27,31 @@ export class Comment {
   @Prop({ type: CommentatorInfoSchema, required: true }) //todo create addition schema?
   commentatorInfo: CommentatorInfo;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: new Date().toISOString() })
   createdAt: string;
 
   @Prop({ required: true })
   postId: string;
 
-  @Prop({ type: LikesInfoSchema, required: true }) //todo перенести из постов схему лайкинфо?
+  @Prop({ type: LikesInfoSchema }) //todo перенести из постов схему лайкинфо?
   likesInfo: LikesInfo;
+
+  static createInstance(
+    content: string,
+    userId: string,
+    userLogin: string,
+    postId: string,
+    CommentModel: CommentModelType,
+  ): CommentDocument {
+    return new CommentModel({
+      _id: new ObjectId(),
+      content,
+      commentatorInfo: {
+        userId,
+        userLogin,
+      },
+      postId,
+    });
+  }
 }
 export const CommentSchema = SchemaFactory.createForClass(Comment);

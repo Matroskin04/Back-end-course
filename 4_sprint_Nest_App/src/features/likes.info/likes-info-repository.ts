@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   LikeInfoCommentType,
   LikeInfoPostType,
+  PostLikeInfoInstance,
 } from './likes-info-types-repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
@@ -29,12 +30,8 @@ export class LikesInfoRepository {
     return;
   }
 
-  async createLikeInfoPost(likeInfo: LikeInfoPostType): Promise<void> {
-    const likesInfoInstance = this.PostsLikesInfoModel.createInstance(
-      likeInfo,
-      this.PostsLikesInfoModel,
-    );
-    await likesInfoInstance.save();
+  async save(likeInfo: PostLikeInfoInstance): Promise<void> {
+    await likeInfo.save();
 
     return;
   }

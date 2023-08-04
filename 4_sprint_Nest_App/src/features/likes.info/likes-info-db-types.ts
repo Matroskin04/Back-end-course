@@ -11,16 +11,16 @@ export class CommentsLikesInfoDBType {
 
   statusLike: 'Like' | 'Dislike';
 }
-export type CommentsLikesInfoDocument = HydratedDocument<CommentsLikesInfo>;
+export type CommentLikesInfoDocument = HydratedDocument<CommentsLikesInfo>;
 
-export type CommentsLikesInfoModelType = Model<CommentsLikesInfoDocument> &
+export type CommentsLikesInfoModelType = Model<CommentLikesInfoDocument> &
   CommentsLikesInfoStaticMethodsType;
 
 export type CommentsLikesInfoStaticMethodsType = {
   createInstance: (
     commentLikesInfoDTO: CommentsLikesInfoDTOType,
     CommentsLikesInfoModel: CommentsLikesInfoModelType,
-  ) => CommentsLikesInfoDocument;
+  ) => CommentLikesInfoDocument;
 };
 export class CommentsLikesInfoDTOType {
   commentId: ObjectId;
@@ -41,16 +41,16 @@ export class PostsLikesInfoDBType {
 
   statusLike: 'Like' | 'Dislike' | 'None';
 }
-export type PostsLikesInfoDocument = HydratedDocument<PostsLikesInfo>;
+export type PostLikesInfoDocument = HydratedDocument<PostsLikesInfo>;
 
-export type PostsLikesInfoModelType = Model<PostsLikesInfoDocument> &
+export type PostsLikesInfoModelType = Model<PostLikesInfoDocument> &
   PostsLikesInfoStaticMethodsType;
 
 export type PostsLikesInfoStaticMethodsType = {
   createInstance: (
     commentLikesInfoDTO: PostsLikesInfoDTOType,
     CommentsLikesInfoModel: PostsLikesInfoModelType,
-  ) => PostsLikesInfoDocument;
+  ) => PostLikesInfoDocument;
 };
 
 export class PostsLikesInfoDTOType {

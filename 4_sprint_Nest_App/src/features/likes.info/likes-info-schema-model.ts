@@ -8,11 +8,11 @@ import {
 import { Blog, BlogSchema } from '../blogs/domain/blogs-schema-model';
 import {
   CommentsLikesInfoDBType,
-  CommentsLikesInfoDocument,
+  CommentLikesInfoDocument,
   CommentsLikesInfoDTOType,
   CommentsLikesInfoModelType,
   PostsLikesInfoDBType,
-  PostsLikesInfoDocument,
+  PostLikesInfoDocument,
   PostsLikesInfoDTOType,
   PostsLikesInfoModelType,
 } from './likes-info-db-types';
@@ -33,7 +33,7 @@ export class CommentsLikesInfo {
   static createInstance(
     commentLikesInfoDTO: CommentsLikesInfoDTOType,
     CommentsLikesInfoModel: CommentsLikesInfoModelType,
-  ): CommentsLikesInfoDocument {
+  ): CommentLikesInfoDocument {
     return new CommentsLikesInfoModel(commentLikesInfoDTO);
   }
 }
@@ -67,7 +67,7 @@ export class PostsLikesInfo {
   static createInstance(
     commentLikesInfoDTO: PostsLikesInfoDTOType,
     CommentsLikesInfoModel: PostsLikesInfoModelType,
-  ): PostsLikesInfoDocument {
+  ): PostLikesInfoDocument {
     return new CommentsLikesInfoModel(commentLikesInfoDTO);
   }
 }

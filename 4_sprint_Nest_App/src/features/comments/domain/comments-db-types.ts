@@ -19,4 +19,15 @@ export type CommentDBType = {
 
 export type CommentDocument = HydratedDocument<Comment>;
 
-export type CommentModelType = Model<CommentDocument>;
+export type CommentModelType = Model<CommentDocument> &
+  CommentStaticMethodsType;
+
+export type CommentStaticMethodsType = {
+  createInstance: (
+    content: string,
+    userId: string,
+    userLogin: string,
+    postId: string,
+    CommentModel: CommentModelType,
+  ) => CommentDocument; //todo слишком много добавляется
+};

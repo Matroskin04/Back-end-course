@@ -74,7 +74,9 @@ export class PostsService {
     inputBodyPost: BodyPostByBlogIdType,
   ): Promise<null | PostTypeWithId> {
     //checking the existence of a blog
-    const blog = await this.blogsRepository.getBlogById(new ObjectId(blogId));
+    const blog = await this.blogsRepository.getBlogInstance(
+      new ObjectId(blogId),
+    );
     if (!blog) {
       return null;
     }

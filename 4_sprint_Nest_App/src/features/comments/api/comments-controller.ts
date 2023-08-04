@@ -1,84 +1,100 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   Param,
+  Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ViewCommentModel } from './models/ViewCommentModel';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
 import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
 import { Response } from 'express';
+import { CommentsService } from '../application/comments-service';
+import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';
+import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict.guard';
+import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';
+import { ObjectId } from 'mongodb';
+import { UpdateCommentModel } from './models/UpdateCommentModel';
+import { UpdateLikeStatusModel } from './models/UpdateCommentLikeStatus';
 
 @Controller('/hometask-nest/comments')
 export class CommentsController {
   constructor(
-    protected commentsQueryRepository: CommentsQueryRepository, // protected commentsService: CommentsService,
+    protected commentsQueryRepository: CommentsQueryRepository,
+    protected commentsService: CommentsService,
   ) {}
 
+  @UseGuards(JwtAccessNotStrictGuard)
   @Get(':id')
   async getCommentById(
     @Param('id') commentId: string,
+    @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewCommentModel>,
   ) {
-    try {
-      const result = await this.commentsQueryRepository.getCommentById(
-        commentId,
-      );
+    const result = await this.commentsQueryRepository.getCommentById(
+      commentId,
+      userId,
+    );
 
-      result
-        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    result
+      ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
-  /*async updateComment(
-    req: RequestWithParamsAndBody<UriIdModel, UpdateCommentModel>,
-    res: Response<void>,
+  @UseGuards(JwtAccessGuard) //todo addition guard
+  @Put(':id')
+  async updateComment(
+    @Param('id') commentId: ObjectId,
+    @CurrentUserId() userId: string,
+    @Body() inputCommentModel: UpdateCommentModel,
+    @Res() res: Response<void>,
   ) {
-    try {
-      await this.commentsService.updateComment(
-        req.params.id,
-        req.userId!.toString(),
-        req.body.content,
-      );
-      res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
-    }
+    console.log(typeof userId, 'str');
+    const result = await this.commentsService.updateComment(
+      commentId,
+      userId,
+      inputCommentModel.content,
+    );
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
+  @UseGuards(JwtAccessGuard)
+  @Put(':id/like-status')
   async updateLikeStatusOfComment(
-    req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>,
-    res: Response<string>,
+    @Param('id') commentId: string,
+    @CurrentUserId() userId: ObjectId,
+    @Body() inputLikeInfoModel: UpdateLikeStatusModel,
+    @Res() res: Response<string>,
   ) {
-    try {
-      const result = await this.commentsService.updateLikeStatusOfComment(
-        req.params.id,
-        req.userId!,
-        req.body.likeStatus,
-      );
+    const result = await this.commentsService.updateLikeStatusOfComment(
+      commentId,
+      userId,
+      inputLikeInfoModel.likeStatus,
+    );
 
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res
-            .status(HTTP_STATUS_CODE.NOT_FOUND_404)
-            .send("Comment with specified id doesn't exist");
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
-    }
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res
+          .status(HTTP_STATUS_CODE.NOT_FOUND_404)
+          .send("Comment with specified id doesn't exist");
   }
 
-  async deleteComment(req: Request, res: Response<void>) {
-    try {
-      await this.commentsService.deleteComment(req.params.id);
-      res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
-    }
-  }*/
+  @UseGuards(JwtAccessGuard) //todo addition guard
+  @Delete(':id')
+  async deleteComment(
+    @Param('id') commentId: string,
+    @CurrentUserId() userId: string,
+    @Res() res: Response<void>,
+  ) {
+    const result = await this.commentsService.deleteComment(commentId, userId);
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  }
 }

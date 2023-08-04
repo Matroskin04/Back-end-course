@@ -14,7 +14,7 @@ export class CommentsRepository {
         return;
     }
 
-    async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
+    async updateComment(id: string, userId: string, content: string): Promise<void> {
 
         await CommentModel.updateOne({_id: new ObjectId(id)}, {$set: {content: content}});
         return;

@@ -1,15 +1,27 @@
 import { ObjectId } from 'mongodb';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
 import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
 import { LikesInfoService } from '../../likes.info/likes-info-service';
 import { CreateCommentByPostIdModel } from '../api/models/CreateCommentModel';
 import { CommentViewType } from '../infrastructure/repository/comments-types-repositories';
+import { CommentsRepository } from '../infrastructure/repository/comments-repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post } from '../../posts/domain/posts-schema-model';
+import { PostModelType } from '../../posts/domain/posts-db-types';
+import { mappingComment } from '../../../helpers/functions/comments-functions-helpers';
+import { LikeStatus } from '../../../helpers/enums/like-status';
+import { Comment } from '../domain/comments-schema-model';
+import { CommentModelType } from '../domain/comments-db-types';
 
 @Injectable()
 export class CommentsService {
   constructor(
+    @InjectModel(Post.name)
+    private PostModel: PostModelType,
+    @InjectModel(Comment.name)
+    private CommentModel: CommentModelType,
     protected commentsRepository: CommentsRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
@@ -18,21 +30,31 @@ export class CommentsService {
   ) {}
 
   async updateComment(
-    id: string,
-    idFromToken: string,
+    commentId: ObjectId,
+    userId: string,
     content: string,
-  ): Promise<void> {
-    await this.commentsRepository.updateComment(id, idFromToken, content);
-    return;
+  ): Promise<boolean> {
+    const comment = await this.commentsRepository.getCommentInstance(commentId);
+    if (!comment) return false;
+    if (comment.commentatorInfo.userId !== userId)
+      throw new ForbiddenException();
+
+    comment.content = content;
+    await this.commentsRepository.save(comment);
+
+    return true;
   }
 
-  async deleteComment(id: string): Promise<void> {
-    await this.commentsRepository.deleteComment(id);
-    return;
+  async deleteComment(id: string, userId: string): Promise<boolean> {
+    const comment = await this.CommentModel.findOne({ id });
+    if (!comment) return false;
+    if (comment.commentatorInfo.userId !== userId)
+      throw new ForbiddenException();
+    return this.commentsRepository.deleteComment(id);
   }
 
   async createCommentByPostId(
-    body: CreateCommentByPostIdModel,
+    content: string,
     userId: ObjectId,
     postId: string,
   ): Promise<null | CommentViewType> {
@@ -41,27 +63,20 @@ export class CommentsService {
       return null;
     }
 
-    const post = await PostModel.findOne({ _id: new ObjectId(postId) });
+    const post = await this.PostModel.findOne({ _id: new ObjectId(postId) });
     if (!post) {
       return null;
     }
 
-    const comment = new CommentDBType(
-      new ObjectId(),
-      body.content,
-      {
-        userId: userId.toString(),
-        userLogin: user.login,
-      },
-      new Date().toISOString(),
+    const comment = this.CommentModel.createInstance(
+      content,
+      userId.toString(),
+      user.login,
       postId,
-      {
-        likesCount: 0,
-        dislikesCount: 0,
-      },
+      this.CommentModel,
     );
 
-    await this.commentsRepository.createCommentByPostId(comment);
+    await this.commentsRepository.save(comment);
     return mappingComment(comment, 'None');
   }
 

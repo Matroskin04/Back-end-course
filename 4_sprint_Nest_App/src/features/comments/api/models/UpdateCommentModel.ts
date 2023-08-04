@@ -1,3 +1,7 @@
-import { CreateCommentByPostIdModel } from './CreateCommentModel';
+import { IsString, Length } from 'class-validator';
 
-export type UpdateCommentModel = CreateCommentByPostIdModel;
+export class UpdateCommentModel {
+  @IsString({ message: 'It should be a string' })
+  @Length(20, 300)
+  content: string;
+}

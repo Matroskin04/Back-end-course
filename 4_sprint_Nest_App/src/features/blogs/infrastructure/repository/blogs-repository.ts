@@ -19,7 +19,7 @@ export class BlogsRepository {
     return result.deletedCount === 1;
   }
 
-  async getBlogById(blogId: ObjectId): Promise<null | BlogInstanceType> {
+  async getBlogInstance(blogId: ObjectId): Promise<null | BlogInstanceType> {
     const blog = await this.BlogModel.findOne({ _id: blogId });
 
     if (blog) {

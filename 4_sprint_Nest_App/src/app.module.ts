@@ -60,6 +60,8 @@ import {
 import { LikesInfoService } from './features/likes.info/likes-info-service';
 import { LikesInfoQueryRepository } from './features/likes.info/likes-info-query-repository';
 import { LikesInfoRepository } from './features/likes.info/likes-info-repository';
+import { CommentsService } from './features/comments/application/comments-service';
+import { CommentsRepository } from './features/comments/infrastructure/repository/comments-repository';
 
 @Module({
   imports: [
@@ -126,6 +128,9 @@ import { LikesInfoRepository } from './features/likes.info/likes-info-repository
     BlogsService,
     BlogsQueryRepository,
     BlogsRepository,
+    CommentsService,
+    CommentsQueryRepository,
+    CommentsRepository,
     LikesInfoService,
     LikesInfoQueryRepository,
     LikesInfoRepository,

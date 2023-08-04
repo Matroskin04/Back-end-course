@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { PostLikesInfoDocument } from './likes-info-db-types';
 
 export type LikeInfoCommentType = {
   commentId: ObjectId;
@@ -13,3 +14,5 @@ export type LikeInfoPostType = {
   addedAt: string;
   statusLike: 'Like' | 'Dislike' | 'None';
 };
+
+export type PostLikeInfoInstance = PostLikesInfoDocument;

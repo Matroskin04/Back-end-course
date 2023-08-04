@@ -23,7 +23,7 @@ export class BlogsService {
   }
 
   async updateBlog(id: string, inputBodyBlog: BodyBlogType): Promise<boolean> {
-    const blog = await this.blogsRepository.getBlogById(new ObjectId(id));
+    const blog = await this.blogsRepository.getBlogInstance(new ObjectId(id));
     if (!blog) {
       return false;
     }

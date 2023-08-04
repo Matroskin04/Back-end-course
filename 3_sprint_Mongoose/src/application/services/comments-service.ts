@@ -22,9 +22,9 @@ export class CommentsService {
                 protected likesInfoQueryRepository: LikesInfoQueryRepository) {
     }
 
-    async updateComment(id: string, idFromToken: string, content: string): Promise<void> {
+    async updateComment(id: string, userId: string, content: string): Promise<void> {
 
-        await this.commentsRepository.updateComment(id, idFromToken, content);
+        await this.commentsRepository.updateComment(id, userId, content);
         return;
     }
 
