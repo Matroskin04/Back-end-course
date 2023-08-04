@@ -13,6 +13,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PostViewType } from '../infrastructure/query.repository/posts-types-query-repository';
 import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs-repository';
 import { Injectable } from '@nestjs/common';
+import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
+import { reformNewestLikes } from '../../../infrastructure/queryRepositories/utils/likes-info-functions';
 
 @Injectable()
 export class PostsService {
@@ -21,7 +23,8 @@ export class PostsService {
     private PostModel: PostModelType,
     protected postsRepository: PostsRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
-    protected blogsRepository: BlogsRepository, // protected usersQueryRepository: UsersQueryRepository, // protected likesInfoQueryRepository: LikesInfoQueryRepository, // protected likesInfoService: LikesInfoService,
+    protected blogsRepository: BlogsRepository, // protected usersQueryRepository: UsersQueryRepository,
+    protected likesInfoQueryRepository: LikesInfoQueryRepository, // protected likesInfoService: LikesInfoService,
   ) {}
 
   async createPost(
@@ -104,33 +107,16 @@ export class PostsService {
     await this.postsRepository.save(post);
 
     //find last 3 Likes
-    // const newestLikes =
-    //   await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
-    // const reformedNewestLikes = reformNewestLikes(newestLikes);
-    const reformedNewestLikes = [
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-    ];
+    const newestLikes =
+      await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+    const reformedNewestLikes = reformNewestLikes(newestLikes);
+
     const postMapped = modifyPostIntoViewModel(
       post,
       reformedNewestLikes,
       'None',
     );
 
-    // return createResponseService(201, postMapped);
     return postMapped;
   }
 

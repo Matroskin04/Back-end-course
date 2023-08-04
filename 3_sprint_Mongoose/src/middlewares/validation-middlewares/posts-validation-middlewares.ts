@@ -54,6 +54,6 @@ const validateBlogId =  body('blogId')
     .withMessage('The string should not be empty')
 
 
-export const checkErrorsPostByBlogId = [validateTitle, validateShortDescription, validateContent]
+export const validateBodyOfPostByBlogId = [validateTitle, validateShortDescription, validateContent]
 export const validateBodyOfPost = [validateTitle, validateShortDescription, validateContent,validateBlogId]
 

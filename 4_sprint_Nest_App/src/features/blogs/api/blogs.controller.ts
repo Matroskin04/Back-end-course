@@ -88,66 +88,45 @@ export class BlogsController {
     @Body() inputBlogModel: CreateBlogModel,
     @Res() res: Response<ViewBlogModel>,
   ) {
-    try {
-      const result = await this.blogsService.createBlog(inputBlogModel);
-      res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.blogsService.createBlog(inputBlogModel);
+    res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post(`/:blogId/posts`)
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputPostModel: CreatePostByBlogIdModel,
     @Res() res: Response<PostTypeWithId>, //todo тип
   ) {
-    try {
-      const result = await this.postsService.createPostByBlogId(
-        blogId,
-        inputPostModel,
-      );
-      result
-        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.postsService.createPostByBlogId(
+      blogId,
+      inputPostModel,
+    );
+    result
+      ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   async updateBlog(
     @Param('id') blogId: string,
     @Body() inputBlogModel: UpdateBlogModel,
     @Res() res: Response<void>,
   ) {
-    try {
-      const result = await this.blogsService.updateBlog(blogId, inputBlogModel);
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.blogsService.updateBlog(blogId, inputBlogModel);
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteBlog(@Param('id') blogId: string, @Res() res: Response<void>) {
-    try {
-      const result = await this.blogsService.deleteSingleBlog(blogId);
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.blogsService.deleteSingleBlog(blogId);
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 }
