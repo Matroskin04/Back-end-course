@@ -1,8 +1,7 @@
-/*
-import { NewestLikesType } from '../../repositories/repositories-types/posts-types-repositories';
+import { NewestLikesType } from '../../../features/posts/infrastructure/repository/posts-types-repositories';
 
 export function reformNewestLikes(newestLikes: NewestLikesType) {
-  const reformedNewestLikes = [];
+  const reformedNewestLikes: any = [];
 
   for (const i of newestLikes) {
     reformedNewestLikes.push({
@@ -14,4 +13,3 @@ export function reformNewestLikes(newestLikes: NewestLikesType) {
 
   return reformedNewestLikes;
 }
-*/

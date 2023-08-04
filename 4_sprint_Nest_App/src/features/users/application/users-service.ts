@@ -7,7 +7,8 @@ import { User } from '../domain/users-schema-model';
 import { UserModelType } from '../domain/users-db-types';
 import { UserViewType } from '../infrastructure/query.repository/users-types-query-repository';
 import { CryptoAdapter } from '../../../adapters/crypto-adapter';
-import add from 'date-fns/add';
+import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
 @Injectable()
 export class UsersService {
   constructor(
@@ -40,14 +41,17 @@ export class UsersService {
     return this.usersRepository.deleteSingleUser(id);
   }
 
-  // async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
-  //
-  //     try {
-  //         const decode = jwt.verify(token, env.PRIVATE_KEY_ACCESS_TOKEN) as { userId: string };
-  //         return new ObjectId(decode.userId)
-  //
-  //     } catch (err) {
-  //         return null
-  //     }
-  // }
+  async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
+    try {
+      const decode = jwt.verify(
+        token,
+        process.env.PRIVATE_KEY_ACCESS_TOKEN!,
+      ) as {
+        userId: string;
+      };
+      return new ObjectId(decode.userId);
+    } catch (err) {
+      return null;
+    }
+  }
 }

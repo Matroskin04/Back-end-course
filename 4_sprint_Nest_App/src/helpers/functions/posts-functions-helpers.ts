@@ -1,6 +1,9 @@
 import { NewestLikesType } from '../../features/posts/infrastructure/repository/posts-types-repositories';
 import { PostDBType } from '../../features/posts/domain/posts-db-types';
 import { PostViewType } from '../../features/posts/infrastructure/query.repository/posts-types-query-repository';
+import { ObjectId } from 'mongodb';
+import { LikesInfoQueryRepository } from '../../features/likes.info/likes-info-query-repository';
+import { reformNewestLikes } from '../../infrastructure/queryRepositories/utils/likes-info-functions';
 
 export function modifyPostIntoViewModel(
   post: PostDBType,
@@ -24,46 +27,28 @@ export function modifyPostIntoViewModel(
   };
 }
 
-export async function mappingPostForAllDocs( //todo такую логику лучше в функции оставить? Или в инстанс метод
+export async function modifyPostForAllDocs( //todo такую логику лучше в функции оставить? Или в инстанс метод
   post: PostDBType,
-  // userId: ObjectId | null,
+  userId: ObjectId | null,
+  likesInfoQueryRepository: LikesInfoQueryRepository,
 ): Promise<PostViewType> {
-  // const likesInfoQueryRepository = new LikesInfoQueryRepository();
+  let myStatus: 'Like' | 'Dislike' | 'None' = 'None';
 
-  const myStatus: 'Like' | 'Dislike' | 'None' = 'None';
-
-  // if (userId) {
-  //   const likeInfo = await likesInfoQueryRepository.getLikesInfoByPostAndUser(
-  //     post._id,
-  //     userId,
-  //   );
-  //   if (likeInfo) {
-  //     myStatus = likeInfo.statusLike;
-  //   }
-  // }
+  if (userId) {
+    const likeInfo = await likesInfoQueryRepository.getLikesInfoByPostAndUser(
+      post._id,
+      userId,
+    );
+    if (likeInfo) {
+      myStatus = likeInfo.statusLike;
+    }
+  }
 
   // find last 3 Likes
-  // const newestLikes = await likesInfoQueryRepository.getNewestLikesOfPost(
-  //   post._id,
-  // );
-  // const reformedNewestLikes = reformNewestLikes(newestLikes);
-  const reformedNewestLikes = [
-    {
-      login: '123',
-      userId: '123',
-      addedAt: '2023-07-30T09:53:33.591Z',
-    },
-    {
-      login: '123',
-      userId: '123',
-      addedAt: '2023-07-30T09:53:33.591Z',
-    },
-    {
-      login: '123',
-      userId: '123',
-      addedAt: '2023-07-30T09:53:33.591Z',
-    },
-  ];
+  const newestLikes = await likesInfoQueryRepository.getNewestLikesOfPost(
+    post._id,
+  );
+  const reformedNewestLikes = reformNewestLikes(newestLikes);
 
   return {
     id: post._id.toString(),

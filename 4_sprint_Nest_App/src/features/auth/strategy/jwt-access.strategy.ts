@@ -1,13 +1,14 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
   'jwt-access',
 ) {
-  constructor() {
+  constructor(protected usersQueryRepository: UsersQueryRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -16,7 +17,9 @@ export class JwtAccessStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    //todo нужно сверять, существует ли такой userId в БД?
+    const user = this.usersQueryRepository.getUserByUserId(payload.userId);
+    if (!user) throw new UnauthorizedException();
+
     return { id: payload.userId };
   }
 }

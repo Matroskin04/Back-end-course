@@ -8,7 +8,7 @@ import { variablesForReturn } from '../../../../infrastructure/queryRepositories
 import { QueryBlogModel } from '../../../blogs/api/models/QueryBlogModel';
 import { PostsOfBlogPaginationType } from '../../../blogs/infrastructure/query.repository/blogs-types-query-repository';
 import {
-  mappingPostForAllDocs,
+  modifyPostForAllDocs,
   modifyPostIntoViewModel,
 } from '../../../../helpers/functions/posts-functions-helpers';
 import { StatusOfLike } from '../../../comments/infrastructure/query.repository/comments-types-query-repository';
@@ -17,19 +17,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts-schema-model';
 import { PostModelType } from '../../domain/posts-db-types';
+import { LikesInfoQueryRepository } from '../../../likes.info/likes-info-query-repository';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name)
     private PostModel: PostModelType,
-    // protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected likesInfoQueryRepository: LikesInfoQueryRepository,
     protected blogQueryRepository: BlogsQueryRepository,
   ) {}
 
   async getAllPosts(
     query: QueryPostModel,
-    // userId: ObjectId | null,
+    userId: ObjectId | null,
   ): Promise<PostPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
@@ -47,7 +48,9 @@ export class PostsQueryRepository {
       .lean();
 
     const allPosts = await Promise.all(
-      allPostsOnPages.map(async (p) => mappingPostForAllDocs(p)),
+      allPostsOnPages.map(async (p) =>
+        modifyPostForAllDocs(p, userId, this.likesInfoQueryRepository),
+      ), //todo Передаю репозиторий!!??
     );
 
     return {
@@ -62,7 +65,7 @@ export class PostsQueryRepository {
   async getPostsOfBlog(
     blogId: string,
     query: QueryBlogModel,
-    // userId: ObjectId | null,
+    userId: ObjectId | null,
   ): Promise<null | PostsOfBlogPaginationType> {
     //Проверка есть ли блог
     const blog = await this.blogQueryRepository.getBlogById(blogId);
@@ -84,7 +87,9 @@ export class PostsQueryRepository {
     if (allPostsOnPages.length === 0) return null;
 
     const allPostsOfBlog = await Promise.all(
-      allPostsOnPages.map(async (p) => mappingPostForAllDocs(p)), //2 parameter = userId
+      allPostsOnPages.map(async (p) =>
+        modifyPostForAllDocs(p, userId, this.likesInfoQueryRepository),
+      ), //2 parameter = userId
     );
 
     return {
