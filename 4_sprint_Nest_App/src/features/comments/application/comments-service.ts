@@ -1,19 +1,13 @@
-/*
-import { CreateCommentByPostIdModel } from '../../models/CommentsModels/CreateCommentModel';
 import { ObjectId } from 'mongodb';
-import { CommentViewType } from '../../infrastructure/repositories/repositories-types/comments-types-repositories';
-import { PostModel } from '../../domain/posts-schema-models';
-import { mappingComment } from '../../helpers/functions/comments-functions-helpers';
-import { CommentsRepository } from '../../infrastructure/repositories/comments-repository';
-import { UsersQueryRepository } from '../../infrastructure/queryRepositories/users-query-repository';
-import { LikeStatus } from '../../helpers/enums/like-status';
-import { CommentsQueryRepository } from '../../infrastructure/queryRepositories/comments-query-repository';
-import { LikesInfoService } from './likes-info-service';
-import { LikesInfoQueryRepository } from '../../infrastructure/queryRepositories/likes-info-query-repository';
-import { injectable } from 'inversify';
-import { CommentDBType } from '../../domain/db-types/comments-db-types';
+import { Injectable } from '@nestjs/common';
+import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
+import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
+import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
+import { LikesInfoService } from '../../likes.info/likes-info-service';
+import { CreateCommentByPostIdModel } from '../api/models/CreateCommentModel';
+import { CommentViewType } from '../infrastructure/repository/comments-types-repositories';
 
-@injectable()
+@Injectable()
 export class CommentsService {
   constructor(
     protected commentsRepository: CommentsRepository,
@@ -170,4 +164,3 @@ export class CommentsService {
     return true;
   }
 }
-*/

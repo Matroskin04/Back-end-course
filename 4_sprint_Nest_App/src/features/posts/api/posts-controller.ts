@@ -1,7 +1,10 @@
 import { QueryPostModel } from './models/QueryPostModel';
 import { ViewAllPostsModel, ViewPostModel } from './models/ViewPostModel';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
-import { ViewAllCommentsOfPostModel } from './models/ViewCommentsOfPostModel';
+import {
+  ViewAllCommentsOfPostModel,
+  ViewCommentOfPostModel,
+} from './models/ViewCommentsOfPostModel';
 import { CreatePostModel } from './models/CreatePostModel';
 import { PostsService } from '../application/posts-service';
 import { UpdatePostModel } from './models/UpdatePostModel';
@@ -16,10 +19,20 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments-query-repository';
 import { Response } from 'express';
 import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
+import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict.guard';
+import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';
+import { ObjectId } from 'mongodb';
+import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
+import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';
+import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
+import { CommentsController } from '../../comments/api/comments-controller';
+import { CommentsService } from '../../comments/application/comments-service';
+import { UpdateLikeStatusModel } from '../../comments/api/models/UpdateCommentLikeStatus';
 
 @Controller('/hometask-nest/posts')
 export class PostsController {
@@ -27,155 +40,126 @@ export class PostsController {
     protected postsQueryRepository: PostsQueryRepository,
     protected postsService: PostsService,
     protected commentsQueryRepository: CommentsQueryRepository,
+    protected commentsService: CommentsService,
   ) {}
 
+  @UseGuards(JwtAccessNotStrictGuard)
   @Get()
   async getAllPosts(
     @Query() query: QueryPostModel,
+    @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewAllPostsModel>,
   ) {
-    try {
-      const result = await this.postsQueryRepository.getAllPosts(query);
-      res.status(HTTP_STATUS_CODE.OK_200).send(result);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.postsQueryRepository.getAllPosts(query, userId);
+    res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 
+  @UseGuards(JwtAccessNotStrictGuard)
   @Get(':id')
   async getPostById(
     @Param('id') postId: string,
+    @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewPostModel>,
   ) {
-    try {
-      const result = await this.postsQueryRepository.getPostById(postId);
+    const result = await this.postsQueryRepository.getPostById(postId, userId);
 
-      result
-        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    result
+      ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
+  @UseGuards(JwtAccessNotStrictGuard)
   @Get(':postId/comments')
   async getAllCommentsOfPost(
     @Param('postId') postId: string,
+    @CurrentUserId() userId: ObjectId,
     @Query() query: QueryPostModel,
     @Res() res: Response<ViewAllCommentsOfPostModel>,
   ) {
-    try {
-      const result = await this.commentsQueryRepository.getCommentsOfPost(
-        postId,
-        query,
-      );
-      result
-        ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.commentsQueryRepository.getCommentsOfPost(
+      postId,
+      query,
+      userId,
+    );
+    result
+      ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createPost(
     @Body() inputPostModel: CreatePostModel,
     @Res() res: Response<ViewPostModel | string>,
   ) {
-    try {
-      const result = await this.postsService.createPost(inputPostModel);
+    const result = await this.postsService.createPost(inputPostModel);
 
-      result
-        ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-        : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).json('Blog in not found');
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    result
+      ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+      : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).json('Blog in not found');
   }
 
-  // async createCommentByPostId(
-  //   req: RequestWithParamsAndBody<UriIdModel, CreateCommentByPostIdModel>,
-  //   res: Response<ViewCommentOfPostModel>,
-  // ) {
-  //   try {
-  //     const result = await this.commentsService.createCommentByPostId(
-  //       req.body,
-  //       req.userId!,
-  //       req.params.id,
-  //     );
-  //
-  //     result
-  //       ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
-  //       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-  //   } catch (err) {
-  //     throw new InternalServerErrorException(
-  //       `Something was wrong. Error: ${err}`,
-  //     );
-  //   }
-  // }
+  @UseGuards(JwtAccessGuard)
+  @Post(':id/comments')
+  async createCommentByPostId(
+    @Param('postId') postId: string,
+    @CurrentUserId() userId: ObjectId,
+    @Body() inputCommentModel: CreateCommentByPostIdModel,
+    @Res() res: Response<ViewCommentOfPostModel>,
+  ) {
+    const result = await this.commentsService.createCommentByPostId(
+      inputCommentModel,
+      userId,
+      postId,
+    );
 
+    result
+      ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  }
+
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   async updatePost(
     @Param('id') postId: string,
     @Body() inputPostModel: UpdatePostModel,
     @Res() res: Response<void>,
   ) {
-    try {
-      const result = await this.postsService.updatePost(postId, inputPostModel);
-      console.log(result);
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    const result = await this.postsService.updatePost(postId, inputPostModel);
+
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
-  // async updateLikeStatusOfPost(
-  //   req: RequestWithParamsAndBody<UriIdModel, UpdateLikeStatusModel>,
-  //   res: Response<string>,
-  // ) {
-  //   try {
-  //     const result = await this.postsService.updateLikeStatusOfPost(
-  //       req.params.id,
-  //       req.userId!,
-  //       req.body.likeStatus,
-  //     );
-  //
-  //     result
-  //       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-  //       : res
-  //           .status(HTTP_STATUS_CODE.NOT_FOUND_404)
-  //           .send("Post with specified id doesn't exist");
-  //   } catch (err) {
-  //     throw new InternalServerErrorException(
-  //       `Something was wrong. Error: ${err}`,
-  //     );
-  //   }
-  // }
+  @UseGuards(JwtAccessGuard)
+  @Put(':id')
+  async updateLikeStatusOfPost(
+    @Param('postId') postId: string,
+    @CurrentUserId() userId: ObjectId,
+    @Body() inputLikeStatusModel: UpdateLikeStatusModel,
+    @Res() res: Response<string>,
+  ) {
+    const result = await this.postsService.updateLikeStatusOfPost(
+      postId,
+      userId,
+      inputLikeStatusModel.likeStatus,
+    );
 
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res
+          .status(HTTP_STATUS_CODE.NOT_FOUND_404)
+          .send("Post with specified id doesn't exist");
+  }
+
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deletePost(@Param('id') postId: string, @Res() res: Response<void>) {
-    try {
-      const result = await this.postsService.deleteSinglePost(postId);
+    const result = await this.postsService.deleteSinglePost(postId);
 
-      result
-        ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
-        : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        `Something was wrong. Error: ${err}`,
-      );
-    }
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 }

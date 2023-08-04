@@ -51,6 +51,15 @@ import { JwtQueryRepository } from './features/jwt/jwt-query-repository';
 import { JwtAccessGuard } from './features/auth/guards/jwt-access.guard';
 import { JwtAccessStrategy } from './features/auth/strategy/jwt-access.strategy';
 import { BasicStrategy } from './features/auth/strategy/basic.strategy';
+import {
+  CommentsLikesInfo,
+  CommentsLikesInfoSchema,
+  PostsLikesInfo,
+  PostsLikesInfoSchema,
+} from './features/likes.info/likes-info-schema-model';
+import { LikesInfoService } from './features/likes.info/likes-info-service';
+import { LikesInfoQueryRepository } from './features/likes.info/likes-info-query-repository';
+import { LikesInfoRepository } from './features/likes.info/likes-info-repository';
 
 @Module({
   imports: [
@@ -89,9 +98,17 @@ import { BasicStrategy } from './features/auth/strategy/basic.strategy';
         name: PasswordRecovery.name,
         schema: PasswordRecoverySchema,
       },
+      {
+        name: CommentsLikesInfo.name,
+        schema: CommentsLikesInfoSchema,
+      },
+      {
+        name: PostsLikesInfo.name,
+        schema: PostsLikesInfoSchema,
+      },
     ]),
     JwtModule.register({
-      //todo надо?
+      //todo как сделать разные?
       secret: process.env.PRIVATE_KEY_ACCESS_TOKEN,
       signOptions: { expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN },
     }),
@@ -109,6 +126,9 @@ import { BasicStrategy } from './features/auth/strategy/basic.strategy';
     BlogsService,
     BlogsQueryRepository,
     BlogsRepository,
+    LikesInfoService,
+    LikesInfoQueryRepository,
+    LikesInfoRepository,
     PostsService,
     PostsQueryRepository,
     PostsRepository,

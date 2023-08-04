@@ -18,6 +18,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts-schema-model';
 import { PostModelType } from '../../domain/posts-db-types';
 import { LikesInfoQueryRepository } from '../../../likes.info/likes-info-query-repository';
+import { reformNewestLikes } from '../../../../infrastructure/queryRepositories/utils/likes-info-functions';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -103,7 +104,7 @@ export class PostsQueryRepository {
 
   async getPostById(
     postId: string,
-    // userId: ObjectId | null,
+    userId: ObjectId | null,
   ): Promise<null | PostViewType> {
     const post = await this.PostModel.findOne({ _id: new ObjectId(postId) });
     if (!post) {
@@ -111,43 +112,26 @@ export class PostsQueryRepository {
     }
 
     //set StatusLike
-    const myStatus: StatusOfLike = 'None';
+    let myStatus: StatusOfLike = 'None';
 
-    // if (userId) {
-    //   const likeInfo =
-    //     await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(
-    //       new ObjectId(postId),
-    //       userId,
-    //     );
-    //
-    //   if (likeInfo) {
-    //     myStatus = likeInfo.statusLike;
-    //   }
-    // }
+    if (userId) {
+      const likeInfo =
+        await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(
+          new ObjectId(postId),
+          userId,
+        );
+
+      if (likeInfo) {
+        myStatus = likeInfo.statusLike;
+      }
+    }
 
     //find last 3 Likes
-    // const newestLikes =
-    //   await this.likesInfoQueryRepository.getNewestLikesOfPost(
-    //     new ObjectId(postId),
-    //   );
-    // const reformedNewestLikes = reformNewestLikes(newestLikes);
-    const reformedNewestLikes = [
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-    ];
+    const newestLikes =
+      await this.likesInfoQueryRepository.getNewestLikesOfPost(
+        new ObjectId(postId),
+      );
+    const reformedNewestLikes = reformNewestLikes(newestLikes);
 
     return modifyPostIntoViewModel(post, reformedNewestLikes, myStatus);
   }

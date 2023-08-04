@@ -12,9 +12,13 @@ import { Post } from '../domain/posts-schema-model';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostViewType } from '../infrastructure/query.repository/posts-types-query-repository';
 import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs-repository';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
 import { reformNewestLikes } from '../../../infrastructure/queryRepositories/utils/likes-info-functions';
+import { LikeStatus } from '../../../helpers/enums/like-status';
+import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
+import { LikesInfoService } from '../../likes.info/likes-info-service';
+import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
 
 @Injectable()
 export class PostsService {
@@ -22,29 +26,27 @@ export class PostsService {
     @InjectModel(Post.name)
     private PostModel: PostModelType,
     protected postsRepository: PostsRepository,
+    protected postsQueryRepository: PostsQueryRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
-    protected blogsRepository: BlogsRepository, // protected usersQueryRepository: UsersQueryRepository,
-    protected likesInfoQueryRepository: LikesInfoQueryRepository, // protected likesInfoService: LikesInfoService,
+    protected blogsRepository: BlogsRepository,
+    protected usersQueryRepository: UsersQueryRepository,
+    protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected likesInfoService: LikesInfoService,
   ) {}
 
-  async createPost(
-    inputBodyPost: BodyPostType,
-  ): Promise<PostViewType | false> /*Promise<ResponseTypeService>*/ {
+  async createPost(inputBodyPost: BodyPostType): Promise<PostViewType> {
     //todo remove false
     const blog = await this.blogsQueryRepository.getBlogById(
       inputBodyPost.blogId,
     );
-    if (!blog) return false;
-    // if (!blog) {
-    //   return createResponseService(400, {
-    //     errorsMessages: [
-    //       {
-    //         message: 'Such blogId is not found',
-    //         field: 'blogId',
-    //       },
-    //     ],
-    //   });
-    // }
+    if (!blog) {
+      throw new BadRequestException([
+        {
+          message: 'Such blogId is not found',
+          field: 'blogId',
+        },
+      ]);
+    }
 
     const post = this.PostModel.createInstance(
       inputBodyPost,
@@ -54,33 +56,16 @@ export class PostsService {
     await this.postsRepository.save(post);
 
     //find last 3 Likes
-    // const newestLikes =
-    //   await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
-    // const reformedNewestLikes = reformNewestLikes(newestLikes);
-    const reformedNewestLikes = [
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-      {
-        login: '123',
-        userId: '123',
-        addedAt: '2023-07-30T09:53:33.591Z',
-      },
-    ];
+    const newestLikes =
+      await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+    const reformedNewestLikes = reformNewestLikes(newestLikes);
+
     const postMapped = modifyPostIntoViewModel(
       post,
       reformedNewestLikes,
       'None',
     );
 
-    // return createResponseService(201, postMapped);
     return postMapped;
   }
 
@@ -120,24 +105,18 @@ export class PostsService {
     return postMapped;
   }
 
-  async updatePost(
-    id: string,
-    inputBodyPost: BodyPostType,
-  ): Promise<boolean> /*Promise<ResponseTypeService>*/ {
+  async updatePost(id: string, inputBodyPost: BodyPostType): Promise<boolean> {
     const blog = await this.blogsQueryRepository.getBlogById(
       inputBodyPost.blogId,
     );
-    console.log(blog);
+
     if (!blog) {
-      return false;
-      // return createResponseService(400, {
-      //   errorsMessages: [
-      //     {
-      //       message: 'Such blogId is not found',
-      //       field: 'blogId',
-      //     },
-      //   ],
-      // });
+      throw new BadRequestException([
+        {
+          message: 'Such blogId is not found',
+          field: 'blogId',
+        },
+      ]);
     }
 
     const post = await this.postsRepository.getPostById(new ObjectId(id));
@@ -145,14 +124,11 @@ export class PostsService {
 
     post.updatePostInfo(post, inputBodyPost);
     await this.postsRepository.save(post);
+
     return true;
-    // if (!result) {
-    //   return createResponseService(404, 'Not found');
-    // }
-    // return createResponseService(204, 'No content');
   }
 
-  /* async updateLikeStatusOfPost(
+  async updateLikeStatusOfPost(
     postId: string,
     userId: ObjectId,
     likeStatus: LikeStatus,
@@ -224,7 +200,7 @@ export class PostsService {
     }
 
     return true;
-  }*/
+  }
 
   async deleteSinglePost(id: string): Promise<boolean> {
     return this.postsRepository.deleteSinglePost(new ObjectId(id));

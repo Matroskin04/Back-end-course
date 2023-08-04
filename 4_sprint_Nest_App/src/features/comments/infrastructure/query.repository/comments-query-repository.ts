@@ -13,18 +13,20 @@ import {
 } from '../../../../helpers/functions/comments-functions-helpers';
 import { StatusOfLike } from './comments-types-query-repository';
 import { Comment } from '../../domain/comments-schema-model';
+import { LikesInfoQueryRepository } from '../../../likes.info/likes-info-query-repository';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name)
     private CommentModel: CommentModelType,
-    protected postsQueryRepository: PostsQueryRepository, // protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected postsQueryRepository: PostsQueryRepository,
+    protected likesInfoQueryRepository: LikesInfoQueryRepository,
   ) {}
 
   async getCommentById(
     commentId: string,
-    // userId: ObjectId | null,
+    userId: ObjectId | null,
   ): Promise<CommentViewType | null> {
     const comment = await this.CommentModel.findOne({
       _id: new ObjectId(commentId),
@@ -33,18 +35,18 @@ export class CommentsQueryRepository {
       return null;
     }
 
-    const myStatus: StatusOfLike = 'None';
-    // if (userId) {
-    //   const likeInfo =
-    //     await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(
-    //       new ObjectId(commentId),
-    //       userId,
-    //     );
-    //
-    //   if (likeInfo) {
-    //     myStatus = likeInfo.statusLike;
-    //   }
-    // }
+    let myStatus: StatusOfLike = 'None';
+    if (userId) {
+      const likeInfo =
+        await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(
+          new ObjectId(commentId),
+          userId,
+        );
+
+      if (likeInfo) {
+        myStatus = likeInfo.statusLike;
+      }
+    }
 
     return mappingComment(comment, myStatus);
   }
@@ -52,11 +54,9 @@ export class CommentsQueryRepository {
   async getCommentsOfPost(
     postId: string,
     query: QueryPostModel,
-    // userId: ObjectId | null,
+    userId: ObjectId | null,
   ): Promise<CommentOfPostPaginationType | null> {
-    const post = await this.postsQueryRepository.getPostById(
-      postId /*, userId*/,
-    );
+    const post = await this.postsQueryRepository.getPostById(postId, userId);
     if (!post) {
       return null;
     }
@@ -75,7 +75,9 @@ export class CommentsQueryRepository {
       .lean();
 
     const allCommentsOfPost = await Promise.all(
-      allCommentsOfPostOnPages.map(async (p) => mappingCommentForAllDocs(p)),
+      allCommentsOfPostOnPages.map(async (p) =>
+        mappingCommentForAllDocs(p, userId, this.likesInfoQueryRepository),
+      ),
     );
 
     return {

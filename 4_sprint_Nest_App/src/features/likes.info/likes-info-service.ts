@@ -1,59 +1,83 @@
-/*
-import { injectable } from "inversify";
-import {ObjectId} from "mongodb";
-import {LikesInfoRepository} from "../../infrastructure/repositories/likes-info-repository";
-import {CommentsLikesInfoDBType, PostsLikesInfoDBType} from "../../domain/db-types/likes-info-db-types";
+import { ObjectId } from 'mongodb';
+import { Injectable } from '@nestjs/common';
+import { LikesInfoRepository } from './likes-info-repository';
+import {
+  CommentsLikesInfoDBType,
+  PostsLikesInfoDBType,
+} from './likes-info-db-types';
 
-
-@injectable()
+@Injectable()
 export class LikesInfoService {
+  constructor(protected likesInfoRepository: LikesInfoRepository) {}
 
-    constructor(protected likesInfoRepository: LikesInfoRepository) {
-    }
+  async createLikeInfoComment(
+    userId: ObjectId,
+    commentId: ObjectId,
+    statusLike: 'Like' | 'Dislike',
+  ): Promise<void> {
+    const likeInfoOfComment = new CommentsLikesInfoDBType(
+      commentId,
+      userId,
+      statusLike,
+    );
 
-    async createLikeInfoComment(userId: ObjectId, commentId: ObjectId, statusLike: 'Like' | 'Dislike'): Promise<void> {
+    await this.likesInfoRepository.createLikeInfoComment(likeInfoOfComment);
+    return;
+  }
 
-        const likeInfoOfComment = new CommentsLikesInfoDBType(
-            commentId,
-            userId,
-            statusLike
-        )
+  async createLikeInfoPost(
+    userId: ObjectId,
+    postId: ObjectId,
+    login: string,
+    statusLike: 'Like' | 'Dislike',
+  ): Promise<void> {
+    const likeInfoOfPost = new PostsLikesInfoDBType(
+      postId,
+      userId,
+      login,
+      new Date().toISOString(),
+      statusLike,
+    );
 
-        await this.likesInfoRepository.createLikeInfoComment(likeInfoOfComment);
-        return;
-    }
+    await this.likesInfoRepository.createLikeInfoPost(likeInfoOfPost);
+    return;
+  }
 
-    async createLikeInfoPost(userId: ObjectId, postId: ObjectId, login: string, statusLike: 'Like' | 'Dislike'): Promise<void> {
+  async updateLikeInfoComment(
+    userId: ObjectId,
+    commentId: ObjectId,
+    statusLike: 'Like' | 'Dislike',
+  ): Promise<boolean> {
+    return this.likesInfoRepository.updateLikeInfoComment(
+      userId,
+      commentId,
+      statusLike,
+    );
+  }
 
-        const likeInfoOfPost = new PostsLikesInfoDBType(
-            postId,
-            userId,
-            login,
-            new Date().toISOString(),
-            statusLike
-        )
+  async updateLikeInfoPost(
+    userId: ObjectId,
+    postId: ObjectId,
+    statusLike: 'Like' | 'Dislike' | 'None',
+  ): Promise<boolean> {
+    return this.likesInfoRepository.updateLikeInfoPost(
+      userId,
+      postId,
+      statusLike,
+    );
+  }
 
-        await this.likesInfoRepository.createLikeInfoPost(likeInfoOfPost);
-        return;
-    }
+  async deleteLikeInfoComment(
+    userId: ObjectId,
+    commentId: ObjectId,
+  ): Promise<boolean> {
+    return this.likesInfoRepository.deleteLikeInfoComment(userId, commentId);
+  }
 
-    async updateLikeInfoComment(userId: ObjectId, commentId: ObjectId, statusLike: 'Like' | 'Dislike'): Promise<boolean> {
-
-        return this.likesInfoRepository.updateLikeInfoComment(userId, commentId, statusLike);
-    }
-
-    async updateLikeInfoPost(userId: ObjectId, postId: ObjectId, statusLike: 'Like' | 'Dislike' | 'None'): Promise<boolean> {
-
-        return this.likesInfoRepository.updateLikeInfoPost(userId, postId, statusLike);
-    }
-
-    async deleteLikeInfoComment(userId: ObjectId, commentId: ObjectId): Promise<boolean> {
-
-        return this.likesInfoRepository.deleteLikeInfoComment(userId, commentId);
-    }
-
-    async deleteLikeInfoPost(userId: ObjectId, postId: ObjectId): Promise<boolean> {
-
-        return this.likesInfoRepository.deleteLikeInfoComment(userId, postId);
-    }
-}*/
+  async deleteLikeInfoPost(
+    userId: ObjectId,
+    postId: ObjectId,
+  ): Promise<boolean> {
+    return this.likesInfoRepository.deleteLikeInfoComment(userId, postId);
+  }
+}

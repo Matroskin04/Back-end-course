@@ -1,30 +1,79 @@
-/*
-import mongoose from "mongoose";
-import {ObjectId} from "mongodb";
-import {CommentsLikesInfoDBType, PostsLikesInfoDBType} from "./db-types/likes-info-db-types";
+import { ObjectId } from 'mongodb';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {
+  BlogDocument,
+  BlogDTOType,
+  BlogModelType,
+} from '../blogs/domain/blogs.db.types';
+import { Blog, BlogSchema } from '../blogs/domain/blogs-schema-model';
+import {
+  CommentsLikesInfoDBType,
+  CommentsLikesInfoDocument,
+  CommentsLikesInfoDTOType,
+  CommentsLikesInfoModelType,
+  PostsLikesInfoDBType,
+  PostsLikesInfoDocument,
+  PostsLikesInfoDTOType,
+  PostsLikesInfoModelType,
+} from './likes-info-db-types';
 
-const CommentsLikesInfoSchema = new mongoose.Schema<CommentsLikesInfoDBType>({
-    commentId: {type: ObjectId, required: true},
-    userId: {type: ObjectId, required: true},
-    statusLike: {
-        type: String,
-        required: true,
-        enum: ['Like', 'Dislike']
-    }
-});
+@Schema()
+export class CommentsLikesInfo {
+  _id: ObjectId;
 
-export const CommentsLikesInfoModel = mongoose.models<CommentsLikesInfoDBType>('LikesInfoComments', CommentsLikesInfoSchema);
+  @Prop({ type: ObjectId, required: true })
+  commentId: ObjectId;
 
-const PostsLikesInfoSchema = new mongoose.Schema<PostsLikesInfoDBType>({
-    postId: {type: ObjectId, required: true},
-    userId: {type: ObjectId, required: true},
-    login: {type: String, required: true},
-    addedAt: {type: String, required: true},
-    statusLike: {
-        type: String,
-        required: true,
-        enum: ['Like', 'Dislike', 'None']
-    }
-});
-export const PostsLikesInfoModel = mongoose.models<PostsLikesInfoDBType>('LikesInfoPosts', PostsLikesInfoSchema);
-*/
+  @Prop({ type: ObjectId, required: true })
+  userId: ObjectId;
+
+  @Prop({ required: true, enum: ['Like', 'Dislike'] })
+  statusLike: 'Like' | 'Dislike';
+
+  static createInstance(
+    commentLikesInfoDTO: CommentsLikesInfoDTOType,
+    CommentsLikesInfoModel: CommentsLikesInfoModelType,
+  ): CommentsLikesInfoDocument {
+    return new CommentsLikesInfoModel(commentLikesInfoDTO);
+  }
+}
+
+export const CommentsLikesInfoSchema =
+  SchemaFactory.createForClass(CommentsLikesInfo);
+
+CommentsLikesInfoSchema.statics = {
+  createInstance: CommentsLikesInfo.createInstance,
+};
+
+@Schema()
+export class PostsLikesInfo {
+  _id: ObjectId;
+
+  @Prop({ type: ObjectId, required: true })
+  postId: { type: ObjectId; required: true };
+
+  @Prop({ type: ObjectId, required: true })
+  userId: { type: ObjectId; required: true };
+
+  @Prop({ required: true })
+  login: string;
+
+  @Prop({ required: true })
+  addedAt: string;
+
+  @Prop({ required: true, enum: ['Like', 'Dislike', 'None'] })
+  statusLike: 'Like' | 'Dislike';
+
+  static createInstance(
+    commentLikesInfoDTO: PostsLikesInfoDTOType,
+    CommentsLikesInfoModel: PostsLikesInfoModelType,
+  ): PostsLikesInfoDocument {
+    return new CommentsLikesInfoModel(commentLikesInfoDTO);
+  }
+}
+export const PostsLikesInfoSchema =
+  SchemaFactory.createForClass(PostsLikesInfo);
+
+PostsLikesInfoSchema.statics = {
+  createInstance: PostsLikesInfo.createInstance,
+};

@@ -1,19 +1,62 @@
 import { ObjectId } from 'mongodb';
+import { HydratedDocument, Model } from 'mongoose';
+import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
 
 export class CommentsLikesInfoDBType {
-  constructor(
-    public commentId: ObjectId,
-    public userId: ObjectId,
-    public statusLike: 'Like' | 'Dislike',
-  ) {}
+  _id: ObjectId;
+
+  commentId: ObjectId;
+
+  userId: ObjectId;
+
+  statusLike: 'Like' | 'Dislike';
+}
+export type CommentsLikesInfoDocument = HydratedDocument<CommentsLikesInfo>;
+
+export type CommentsLikesInfoModelType = Model<CommentsLikesInfoDocument> &
+  CommentsLikesInfoStaticMethodsType;
+
+export type CommentsLikesInfoStaticMethodsType = {
+  createInstance: (
+    commentLikesInfoDTO: CommentsLikesInfoDTOType,
+    CommentsLikesInfoModel: CommentsLikesInfoModelType,
+  ) => CommentsLikesInfoDocument;
+};
+export class CommentsLikesInfoDTOType {
+  commentId: ObjectId;
+  userId: ObjectId;
+  statusLike: 'Like' | 'Dislike';
 }
 
 export class PostsLikesInfoDBType {
-  constructor(
-    public postId: ObjectId,
-    public userId: ObjectId,
-    public login: string,
-    public addedAt: string,
-    public statusLike: 'Like' | 'Dislike' | 'None',
-  ) {}
+  _id: ObjectId;
+
+  postId: ObjectId;
+
+  userId: ObjectId;
+
+  login: string;
+
+  addedAt: string;
+
+  statusLike: 'Like' | 'Dislike' | 'None';
+}
+export type PostsLikesInfoDocument = HydratedDocument<PostsLikesInfo>;
+
+export type PostsLikesInfoModelType = Model<PostsLikesInfoDocument> &
+  PostsLikesInfoStaticMethodsType;
+
+export type PostsLikesInfoStaticMethodsType = {
+  createInstance: (
+    commentLikesInfoDTO: PostsLikesInfoDTOType,
+    CommentsLikesInfoModel: PostsLikesInfoModelType,
+  ) => PostsLikesInfoDocument;
+};
+
+export class PostsLikesInfoDTOType {
+  postId: ObjectId;
+  userId: ObjectId;
+  login: string;
+  addedAt: string;
+  statusLike: 'Like' | 'Dislike' | 'None';
 }
