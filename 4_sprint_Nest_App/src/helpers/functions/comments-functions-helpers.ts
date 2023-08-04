@@ -1,5 +1,5 @@
-import { CommentViewType } from '../../comments/infrastructure/repository/comments-types-repositories';
-import { CommentDBType } from '../../comments/domain/comments-db-types';
+import { CommentViewType } from '../../features/comments/infrastructure/repository/comments-types-repositories';
+import { CommentDBType } from '../../features/comments/domain/comments-db-types';
 
 export function mappingComment(
   comment: any,

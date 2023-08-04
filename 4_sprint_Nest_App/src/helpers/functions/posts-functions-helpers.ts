@@ -1,6 +1,6 @@
-import { NewestLikesType } from '../../posts/infrastructure/repository/posts-types-repositories';
-import { PostDBType } from '../../posts/domain/posts-db-types';
-import { PostViewType } from '../../posts/infrastructure/query.repository/posts-types-query-repository';
+import { NewestLikesType } from '../../features/posts/infrastructure/repository/posts-types-repositories';
+import { PostDBType } from '../../features/posts/domain/posts-db-types';
+import { PostViewType } from '../../features/posts/infrastructure/query.repository/posts-types-query-repository';
 
 export function modifyPostIntoViewModel(
   post: PostDBType,

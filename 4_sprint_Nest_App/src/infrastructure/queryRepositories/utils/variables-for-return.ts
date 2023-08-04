@@ -1,4 +1,4 @@
-import { QueryBlogModel } from '../../../blogs/api/models/QueryBlogModel';
+import { QueryBlogModel } from '../../../features/blogs/api/models/QueryBlogModel';
 import { VariablesForReturnType } from '../query-repository-types/general-types-repositories';
 
 export async function variablesForReturn(
