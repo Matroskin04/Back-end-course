@@ -1,22 +1,24 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './service/auth-service';
 import { ViewAuthModel, ViewTokenModel } from './AuthModels/ViewAuthModels';
-import { LoginAuthModel } from './AuthModels/LoginAuthModels';
 import { HTTP_STATUS_CODE } from '../helpers/enums/http-status';
 import {
-  RegisterConfirmAuthModel,
-  RegisterResendConfirmAuthModel,
-  RegistrationAuthModel,
-} from './AuthModels/RegistrationAuthModel';
-import { ViewAllErrorsModels } from '../models/ViewAllErrorsModels';
+  ConfirmationCodeAuthModel,
+  EmailResendingAuthModel,
+  RegistrationAuthModels,
+} from './AuthModels/RegistrationAuthModels';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CurrentUserId } from './decorators/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
-import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
+import { ValidateConfirmationCodeGuard } from './guards/validation.guards/validate-confirmation-code.guard';
+import { ValidateEmailGuard } from './guards/validation.guards/validate-email.guard';
+import {
+  NewPasswordAuthModel,
+  PasswordRecoveryAuthModel,
+} from './AuthModels/PasswordFlowAuthModels';
 
 @Controller('/hometask-nest/auth')
 export class AuthController {
@@ -76,7 +78,7 @@ export class AuthController {
 
   @Post('registration')
   async registerUser(
-    @Body() inputRegisterModel: RegistrationAuthModel,
+    @Body() inputRegisterModel: RegistrationAuthModels,
     @Res() res: Response<string>,
   ) {
     await this.authService.registerUser(
@@ -92,38 +94,36 @@ export class AuthController {
       );
   }
 
-  // async confirmEmail(
-  //   @Body() inputConfirmationCode: RegisterConfirmAuthModel, //todo Guard validation code
-  //   @Res() res: Response<string>,
-  // ) {
-  //   try {
-  //     await this.authService.confirmEmail(req.userId!);
-  //     res
-  //       .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-  //       .send('Email was verified. Account was activated');
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
+  @UseGuards(ValidateConfirmationCodeGuard)
+  @Post('registration-confirmation')
+  async confirmEmail(
+    @Body() inputConfirmationCode: ConfirmationCodeAuthModel,
+    @CurrentUserId() userId: ObjectId,
+    @Res() res: Response<string>,
+  ) {
+    await this.authService.confirmEmail(inputConfirmationCode.code);
+    res
+      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
+      .send('Email was verified. Account was activated');
+  }
 
-  // async resendEmailConfirmation(
-  //   @Body() inputEmail: RegisterResendConfirmAuthModel,
-  //   @Res() res: Response<string>,
-  // ) {
-  //   try {
-  //     await this.authService.resendConfirmationEmailMessage(
-  //       req.userId!,
-  //       inputEmail.email,
-  //     );
-  //     res
-  //       .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-  //       .send(
-  //         'Input data is accepted. Email with confirmation code will be send to passed email address.',
-  //       );
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
+  @UseGuards(ValidateEmailGuard)
+  @Post('registration-email-resending')
+  async resendEmailConfirmation(
+    @Body() inputEmail: EmailResendingAuthModel,
+    @CurrentUserId() userId: ObjectId,
+    @Res() res: Response<string>,
+  ) {
+    await this.authService.resendConfirmationEmailMessage(
+      userId,
+      inputEmail.email,
+    );
+    res
+      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
+      .send(
+        'Input data is accepted. Email with confirmation code will be send to passed email address.',
+      );
+  }
 
   // async newRefreshToken(req: Request, res: Response<string | ViewTokenModel>) {
   //   try {
@@ -159,39 +159,29 @@ export class AuthController {
   //   }
   // }
 
-  // async passwordRecovery(
-  //   req: RequestWithBody<PasswordRecoveryAuthModel>,
-  //   res: Response<string>,
-  // ) {
-  //   try {
-  //     await this.authService.sendEmailPasswordRecovery(req.body.email);
-  //     res
-  //       .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-  //       .send(
-  //         'Email with instruction will be send to passed email address (if a user with such email exists)',
-  //       );
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
-  //
-  // async saveNewPassword(
-  //   req: RequestWithBody<NewPasswordAuthModel>,
-  //   res: Response<string | ViewAllErrorsModels>,
-  // ) {
-  //   try {
-  //     const result = await this.authService.saveNewPassword(
-  //       req.body.newPassword,
-  //       req.body.recoveryCode,
-  //     );
-  //
-  //     result === true
-  //       ? res
-  //           .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-  //           .send('New password is saved')
-  //       : res.status(HTTP_STATUS_CODE.BAD_REQUEST_400).send(result);
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
+  @Post('password-recovery')
+  async passwordRecovery(
+    @Body() inputEmail: PasswordRecoveryAuthModel,
+    @Res() res: Response<string>,
+  ) {
+    await this.authService.sendEmailPasswordRecovery(inputEmail.email);
+    res
+      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
+      .send(
+        'Email with instruction will be send to passed email address (if a user with such email exists)',
+      );
+  }
+
+  @Post('new-password')
+  async saveNewPassword(
+    @Body() inputInfo: NewPasswordAuthModel,
+    @Res() res: Response<string>,
+  ) {
+    await this.authService.saveNewPassword(
+      inputInfo.newPassword,
+      inputInfo.recoveryCode,
+    );
+
+    res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('New password is saved');
+  }
 }

@@ -11,7 +11,7 @@ import { CryptoAdapter } from '../../adapters/crypto-adapter';
 import { UsersRepository } from '../../users/infrastructure/repository/users-repository';
 import { EmailManager } from '../../managers/email-manager';
 import { ARTokensAndUserId } from './auth.dto.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ErrorsTypeService } from '../../application/services/service-types/responses-types-service';
 import { UserInfoType } from './dto';
@@ -36,7 +36,6 @@ export class AuthService {
     const user = await this.usersQueryRepository.getUserByLoginOrEmail(
       loginOrEmail,
     );
-    console.log(user);
     if (!user || !user.emailConfirmation.isConfirmed) {
       return false;
     }
@@ -87,10 +86,7 @@ export class AuthService {
         expirationDate: add(new Date(), { hours: 5, seconds: 20 }),
         isConfirmed: false,
       },
-      passwordRecovery: {
-        confirmationCode: uuidv4(),
-        expirationDate: new Date(),
-      },
+      passwordRecovery: {},
     };
     const user = this.UserModel.createInstance(userInfo, this.UserModel);
 
@@ -103,8 +99,17 @@ export class AuthService {
     return;
   }
 
-  async confirmEmail(userId: ObjectId): Promise<void> {
-    const result = await this.usersRepository.updateConfirmation(userId);
+  async confirmEmail(inputConfirmationCode: string): Promise<void> {
+    const user = await this.usersQueryRepository.getUserByCodeConfirmation(
+      inputConfirmationCode,
+    );
+    if (!user) {
+      throw new BadRequestException([
+        { message: 'Code is incorrect', field: 'code' },
+      ]);
+    }
+
+    const result = await this.usersRepository.updateConfirmation(user._id);
     if (!result) {
       throw new Error('Email confirmation failed.');
     }
@@ -172,25 +177,21 @@ export class AuthService {
       recoveryCode,
     );
     if (!user) {
-      return {
-        errorsMessages: [
-          {
-            message: 'RecoveryCode is incorrect or expired',
-            field: 'recoveryCode',
-          },
-        ],
-      };
+      throw new BadRequestException([
+        {
+          message: 'RecoveryCode is incorrect or expired',
+          field: 'recoveryCode',
+        },
+      ]);
     }
 
     if (user.passwordRecovery.expirationDate < new Date()) {
-      return {
-        errorsMessages: [
-          {
-            message: 'RecoveryCode is incorrect or expired',
-            field: 'recoveryCode',
-          },
-        ],
-      };
+      throw new BadRequestException([
+        {
+          message: 'RecoveryCode is incorrect or expired',
+          field: 'recoveryCode',
+        },
+      ]);
     }
 
     const passwordHash = await this.cryptoAdapter._generateHash(newPassword);
