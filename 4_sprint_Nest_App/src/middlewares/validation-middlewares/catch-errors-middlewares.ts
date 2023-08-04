@@ -12,8 +12,8 @@ import { CreateUserModel } from '../../users/api/models/CreateUserModel';
 import {
   RegisterConfirmAuthModel,
   RegisterResendConfirmAuthModel,
-  RegistrationAuthModel,
-} from '../../models/AuthModels/RegistrationAuthModel';
+  RegistrationAuthModels,
+} from '../../models/AuthModels/RegistrationAuthModels';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
 import { LoginAuthInputModel } from '../../models/AuthModels/LoginAuthModels';
 import {
@@ -29,7 +29,7 @@ type getErrorsType =
   | CreateUserModel
   | LoginAuthInputModel
   | CreateCommentByPostIdModel
-  | RegistrationAuthModel
+  | RegistrationAuthModels
   | RegisterConfirmAuthModel
   | RegisterResendConfirmAuthModel
   | NewPasswordAuthModel
