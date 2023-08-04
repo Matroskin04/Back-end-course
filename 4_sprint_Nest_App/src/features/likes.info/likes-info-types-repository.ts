@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export type L5ikeInfoCommentType = {
+export type LikeInfoCommentType = {
   commentId: ObjectId;
   userId: ObjectId;
   statusLike: 'Like' | 'Dislike';
