@@ -35,7 +35,6 @@ export class AuthController {
     @Res() res: Response<ViewAuthModel>,
   ) {
     try {
-      console.log(userId, 'contr');
       const result = await this.authService.getUserInformation(userId);
 
       if (result) {
