@@ -3,7 +3,9 @@ import { BlogInstanceType } from './blogs-types-repositories';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogModelType } from '../../domain/blogs.db.types';
 import { Blog } from '../../domain/blogs-schema-model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BlogsRepository {
   constructor(
     @InjectModel(Blog.name)

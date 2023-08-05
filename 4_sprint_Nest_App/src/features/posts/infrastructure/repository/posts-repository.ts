@@ -3,7 +3,9 @@ import { ObjectId } from 'mongodb';
 import { PostModelType } from '../../domain/posts-db-types';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts-schema-model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PostsRepository {
   constructor(
     @InjectModel(Post.name)

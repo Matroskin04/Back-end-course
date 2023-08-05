@@ -143,7 +143,6 @@ import { CommentsRepository } from './features/comments/infrastructure/repositor
     JwtService,
     JwtQueryRepository,
     TestingRepository,
-
     //Strategy
     LocalStrategy,
     JwtRefreshStrategy,
