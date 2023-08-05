@@ -5,6 +5,7 @@ export const CurrentUserId = createParamDecorator(
     const request = context.switchToHttp().getRequest();
 
     if (request.userId) return request.userId;
-    else return request.user.id;
+    if (request.user) return request.user.id;
+    return null;
   },
 );
