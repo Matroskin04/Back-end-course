@@ -69,6 +69,7 @@ import { DevicesController } from './features/devices/devices-controller';
 import { DevicesService } from './features/devices/devices-service';
 import { DevicesQueryRepository } from './features/devices/devices-query-repository';
 import { DevicesRepository } from './features/devices/devices-repository';
+import { Device, DeviceSchema } from './features/devices/devices-schema-model';
 
 @Module({
   imports: [
@@ -118,6 +119,10 @@ import { DevicesRepository } from './features/devices/devices-repository';
       {
         name: PostLikesInfo.name,
         schema: PostsLikesInfoSchema,
+      },
+      {
+        name: Device.name,
+        schema: DeviceSchema,
       },
     ]),
     JwtModule.register({
