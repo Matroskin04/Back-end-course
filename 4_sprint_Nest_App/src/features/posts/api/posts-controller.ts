@@ -13,7 +13,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Put,
@@ -30,9 +29,7 @@ import { ObjectId } from 'mongodb';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
-import { CommentsController } from '../../comments/api/comments-controller';
 import { CommentsService } from '../../comments/application/comments-service';
-import { UpdateCommentLikeStatusModel } from '../../comments/api/models/UpdateCommentLikeStatusModel';
 import { UpdatePostLikeStatusModel } from './models/UpdateLikeStatusModel';
 
 @Controller('/hometask-nest/posts')
@@ -101,9 +98,9 @@ export class PostsController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post(':id/comments')
+  @Post(':postId/comments')
   async createCommentByPostId(
-    @Param('id') postId: string,
+    @Param('postId') postId: string,
     @CurrentUserId() userId: ObjectId,
     @Body() inputCommentModel: CreateCommentByPostIdModel,
     @Res() res: Response<ViewCommentOfPostModel>,
@@ -134,7 +131,7 @@ export class PostsController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Put(':id')
+  @Put(':postId/like-status')
   async updateLikeStatusOfPost(
     @Param('postId') postId: string,
     @CurrentUserId() userId: ObjectId,
