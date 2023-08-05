@@ -15,7 +15,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Put,

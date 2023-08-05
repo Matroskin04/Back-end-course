@@ -52,14 +52,14 @@ export class AuthService {
     const accessToken = this.jwtService.sign(
       { userId: userId.toString() },
       {
-        privateKey: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
+        secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
         expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN!,
       },
     );
     const refreshToken = this.jwtService.sign(
-      { userId: userId.toString() },
+      { userId: userId.toString(), deviceId: uuidv4() },
       {
-        privateKey: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
+        secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
         expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
       },
     );

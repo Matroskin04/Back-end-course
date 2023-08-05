@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtQueryRepository } from '../jwt/jwt-query-repository';
 import { DevicesQueryRepository } from './devices-query-repository';
 import { DevicesRepository } from './devices-repository';
@@ -27,9 +27,9 @@ export class DevicesService {
   ): Promise<void> {
     const payloadToken = this.jwtQueryRepository.getPayloadToken(refreshToken);
     if (!payloadToken) {
-      throw new Error('Refresh token is invalid.');
+      throw new UnauthorizedException();
     }
-
+    console.log(payloadToken);
     const device = await this.DeviceModel.createInstance(
       ip,
       title,

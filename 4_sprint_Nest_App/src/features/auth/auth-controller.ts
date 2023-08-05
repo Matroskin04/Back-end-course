@@ -66,7 +66,6 @@ export class AuthController {
     @Ip() ip: string,
     @TitleOfDevice() title: string,
   ) {
-    console.log('login, str', typeof ip);
     const result = await this.authService.loginUser(userId);
 
     if (result) {
