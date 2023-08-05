@@ -18,7 +18,9 @@ import { UsersService } from '../application/users-service';
 import { Response } from 'express';
 import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('/hometask-nest/users')
 export class UsersController {
   constructor(

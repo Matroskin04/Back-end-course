@@ -22,6 +22,13 @@ export class Blog {
   @Prop({ type: Boolean, required: true, default: false })
   isMembership: boolean;
 
+  static createInstance(
+    blogDTO: BlogDTOType,
+    BlogModel: BlogModelType,
+  ): BlogDocument {
+    return new BlogModel(blogDTO);
+  }
+
   modifyIntoViewModel(): BlogViewType {
     return {
       id: this._id,
@@ -38,13 +45,6 @@ export class Blog {
     blog.description = updateData.description;
     blog.websiteUrl = updateData.websiteUrl;
     return;
-  }
-
-  static createInstance(
-    blogDTO: BlogDTOType,
-    BlogModel: BlogModelType,
-  ): BlogDocument {
-    return new BlogModel(blogDTO);
   }
 }
 

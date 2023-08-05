@@ -1,6 +1,13 @@
 import { Response } from 'express';
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import {
+  Body,
+  Controller,
+  Get,
+  Ip,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './service/auth-service';
 import { ViewAuthModel, ViewTokenModel } from './AuthModels/ViewAuthModels';
 import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
@@ -20,31 +27,34 @@ import {
   PasswordRecoveryAuthModel,
 } from './AuthModels/PasswordFlowAuthModels';
 import { ValidateEmailRegistrationGuard } from './guards/validation.guards/validate-email-registration.guard';
+import { SkipThrottle } from '@nestjs/throttler';
+import { DevicesService } from '../devices/devices-service';
+import { TitleOfDevice } from './decorators/title-of-device.param.decorator';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { RefreshToken } from './decorators/refresh-token-param.decorator';
+import { JwtService } from '../jwt/jwt-service';
 
 @Controller('/hometask-nest/auth')
 export class AuthController {
   constructor(
     protected jwtService: JwtService,
-    // protected devicesService: DevicesService,
+    protected devicesService: DevicesService,
     protected authService: AuthService,
   ) {}
 
+  @SkipThrottle()
   @UseGuards(JwtAccessGuard)
   @Get('me')
   async getUserInformation(
     @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewAuthModel>,
   ) {
-    try {
-      const result = await this.authService.getUserInformation(userId);
+    const result = await this.authService.getUserInformation(userId);
 
-      if (result) {
-        res.status(HTTP_STATUS_CODE.OK_200).send(result);
-      } else {
-        res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-      }
-    } catch (err) {
-      console.log(`Something was wrong. Error: ${err}`);
+    if (result) {
+      res.status(HTTP_STATUS_CODE.OK_200).send(result);
+    } else {
+      res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
     }
   }
 
@@ -53,16 +63,19 @@ export class AuthController {
   async loginUser(
     @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewTokenModel>,
+    @Ip() ip: string,
+    @TitleOfDevice() title: string,
   ) {
+    console.log('login, str', typeof ip);
     const result = await this.authService.loginUser(userId);
 
     if (result) {
-      //   await this.devicesService.createNewDevice(
-      //     req.socket.remoteAddress || 'unknown',
-      //     req.headers['user-agent'] || 'unknown',
-      //     result.userId,
-      //     result.refreshToken,
-      //   );
+      await this.devicesService.createNewDevice(
+        ip || 'unknown',
+        title,
+        result.userId,
+        result.refreshToken,
+      );
 
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
@@ -125,40 +138,37 @@ export class AuthController {
         'Input data is accepted. Email with confirmation code will be send to passed email address.',
       );
   }
+  @SkipThrottle()
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh-token')
+  async newRefreshToken(
+    @CurrentUserId() userId: ObjectId,
+    @RefreshToken() refreshToken: string,
+    @Res() res: Response<ViewTokenModel | string>,
+  ) {
+    const tokens = await this.jwtService.changeTokensByRefreshToken(
+      userId,
+      refreshToken,
+    );
 
-  // async newRefreshToken(req: Request, res: Response<string | ViewTokenModel>) {
-  //   try {
-  //     const tokens = await this.jwtService.changeTokensByRefreshToken(
-  //       req.userId!,
-  //       req.refreshToken,
-  //     );
-  //     if (!tokens) {
-  //       res
-  //         .status(HTTP_STATUS_CODE.BAD_REQUEST_400)
-  //         .send('Something was wrong');
-  //       return;
-  //     }
-  //
-  //     res.cookie(`refreshToken`, tokens.refreshToken, {
-  //       httpOnly: true,
-  //       secure: true,
-  //     });
-  //     res
-  //       .status(HTTP_STATUS_CODE.OK_200)
-  //       .send({ accessToken: tokens.accessToken });
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
+    res.cookie(`refreshToken`, tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    res
+      .status(HTTP_STATUS_CODE.OK_200)
+      .send({ accessToken: tokens.accessToken });
+  }
 
-  // async logoutUser(req: Request, res: Response<void>) {
-  //   try {
-  //     await this.devicesService.deleteDeviceByRefreshToken(req.refreshToken);
-  //     res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-  //   } catch (err) {
-  //     console.log(`Something was wrong. Error: ${err}`);
-  //   }
-  // }
+  @SkipThrottle()
+  @UseGuards(JwtRefreshGuard)
+  async logoutUser(
+    @RefreshToken() refreshToken: string,
+    @Res() res: Response<void>,
+  ) {
+    await this.devicesService.deleteDeviceByRefreshToken(refreshToken);
+    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+  }
 
   @Post('password-recovery')
   async passwordRecovery(

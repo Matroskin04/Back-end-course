@@ -1,3 +1,3 @@
-import {DeviceOutputType} from "../devices-types-repositories";
+import { DeviceViewType } from '../devices-types-repositories';
 
-export type ViewDeviceModel = Array<DeviceOutputType>;
+export type ViewDeviceModel = Array<DeviceViewType>;

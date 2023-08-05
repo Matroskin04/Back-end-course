@@ -31,7 +31,9 @@ import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
 import { CommentsService } from '../../comments/application/comments-service';
 import { UpdatePostLikeStatusModel } from './models/UpdateLikeStatusModel';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('/hometask-nest/posts')
 export class PostsController {
   constructor(

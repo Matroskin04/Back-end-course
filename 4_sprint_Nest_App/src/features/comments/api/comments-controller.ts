@@ -20,7 +20,9 @@ import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decor
 import { ObjectId } from 'mongodb';
 import { UpdateCommentModel } from './models/UpdateCommentModel';
 import { UpdateCommentLikeStatusModel } from './models/UpdateCommentLikeStatusModel';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('/hometask-nest/comments')
 export class CommentsController {
   constructor(

@@ -1,52 +1,57 @@
-/*
-import {Request, Response} from "express";
-import {ViewDeviceModel} from "../../models/DevicesModels/ViewDeviceModel";
-import {RequestWithParams} from "../../types/requests-types";
-import {UriIdModel} from "../../models/UriModels";
-import {HTTP_STATUS_CODE} from "../../helpers/enums/http-status";
-import {DevicesQueryRepository} from "../../infrastructure/queryRepositories/devices-query-repository";
-import {DevicesService} from "../../application/services/devices-service";
-import { injectable } from "inversify";
+import { Controller, Delete, Get, Param, Res, UseGuards } from '@nestjs/common';
+import { DevicesQueryRepository } from './devices-query-repository';
+import { DevicesService } from './devices-service';
+import { ViewDeviceModel } from './DevicesModels/ViewDeviceModel';
+import { HTTP_STATUS_CODE } from '../../helpers/enums/http-status';
+import { SkipThrottle } from '@nestjs/throttler';
+import { JwtRefreshGuard } from '../auth/guards/jwt-refresh.guard';
+import { RefreshToken } from '../auth/decorators/refresh-token-param.decorator';
+import { Response } from 'express';
+import { CurrentUserId } from '../auth/decorators/current-user-id.param.decorator';
+import { ObjectId } from 'mongodb';
 
-
-@injectable()
+@SkipThrottle()
+@Controller('/hometask-nest/security/devices')
 export class DevicesController {
+  constructor(
+    protected devicesQueryRepository: DevicesQueryRepository,
+    protected devicesService: DevicesService,
+  ) {}
 
-    constructor(protected devicesQueryRepository: DevicesQueryRepository,
-                protected devicesService: DevicesService) {
-    }
+  @UseGuards(JwtRefreshGuard)
+  @Get()
+  async getAllDevices(
+    @CurrentUserId() userId: ObjectId,
+    @RefreshToken() refreshToken: string,
+    @Res() res: Response<ViewDeviceModel>,
+  ) {
+    const result = await this.devicesQueryRepository.getAllDevicesByUserId(
+      userId.toString(),
+    );
+    res.status(HTTP_STATUS_CODE.OK_200).send(result);
+  }
 
-    async getAllDevices(req: Request, res: Response<ViewDeviceModel>) {
+  @UseGuards(JwtRefreshGuard)
+  @Delete()
+  async deleteDevicesExcludeCurrent(
+    @RefreshToken() refreshToken: string,
+    @Res() res: Response<string>,
+  ) {
+    await this.devicesService.deleteDevicesExcludeCurrent(refreshToken);
+    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+  }
 
-        try {
-            const result = await this.devicesQueryRepository.getAllDevicesByUserId(req.userId!.toString());
-            res.status(HTTP_STATUS_CODE.OK_200).send(result);
-
-        } catch (err) {
-            console.log(`Something was wrong. Error: ${err}`);
-        }
-    }
-
-    async deleteDevicesExcludeCurrent(req: Request, res: Response<string>) {
-
-        try {
-            await this.devicesService.deleteDevicesExcludeCurrent(req.refreshToken);
-            res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
-
-        } catch (err) {
-            console.log(`Something was wrong. Error: ${err}`);
-        }
-    }
-
-    async deleteDeviceById(req: RequestWithParams<UriIdModel>, res: Response<string>) {
-
-        try {
-            const result = await this.devicesService.deleteDeviceById(req.params.id, req.userId!.toString());
-            res.status(result.status).send(result.message);
-
-        } catch (err) {
-            console.log(`Something was wrong. Error: ${err}`);
-        }
-    }
+  @UseGuards(JwtRefreshGuard)
+  @Delete(':id')
+  async deleteDeviceById(
+    @CurrentUserId() userId: ObjectId,
+    @Param('id') deviceId: string,
+    @Res() res: Response<string>,
+  ) {
+    const result = await this.devicesService.deleteDeviceById(
+      deviceId,
+      userId.toString(),
+    );
+    res.status(result.status).send(result.message);
+  }
 }
-*/

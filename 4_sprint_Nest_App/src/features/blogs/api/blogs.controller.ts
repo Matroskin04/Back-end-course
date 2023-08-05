@@ -33,7 +33,9 @@ import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict
 import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('/hometask-nest/blogs')
 export class BlogsController {
   constructor(

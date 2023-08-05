@@ -63,9 +63,19 @@ import { LikesInfoRepository } from './features/likes.info/likes-info-repository
 import { CommentsService } from './features/comments/application/comments-service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments-repository';
 import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-exists.decorator';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { DevicesController } from './features/devices/devices-controller';
+import { DevicesService } from './features/devices/devices-service';
+import { DevicesQueryRepository } from './features/devices/devices-query-repository';
+import { DevicesRepository } from './features/devices/devices-repository';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL!),
     MongooseModule.forFeature([
@@ -119,6 +129,7 @@ import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-
   controllers: [
     AuthController,
     BlogsController,
+    DevicesController,
     PostsController,
     CommentsController,
     UsersController,
@@ -132,6 +143,9 @@ import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-
     CommentsService,
     CommentsQueryRepository,
     CommentsRepository,
+    DevicesService,
+    DevicesQueryRepository,
+    DevicesRepository,
     LikesInfoService,
     LikesInfoQueryRepository,
     LikesInfoRepository,
@@ -155,6 +169,10 @@ import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-
     EmailManager,
     CryptoAdapter,
     EmailAdapter,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
