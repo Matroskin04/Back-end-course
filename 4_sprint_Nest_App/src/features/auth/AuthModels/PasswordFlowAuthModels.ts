@@ -1,4 +1,11 @@
-import { IsEmail, IsString, Length, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class PasswordRecoveryAuthModel {
   @IsEmail({}, { message: 'Incorrect Email' })
@@ -9,6 +16,8 @@ export class PasswordRecoveryAuthModel {
 }
 
 export class NewPasswordAuthModel {
+  @Transform(({ value }) => value?.trim())
+  @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })
   @Length(6, 20)
   newPassword: string;

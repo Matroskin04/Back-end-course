@@ -1,16 +1,20 @@
-import { IsString, Length, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateBlogModel {
+  @Transform(({ value }) => value?.trim())
+  @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })
-  @Length(0, 15)
+  @MaxLength(15)
   name: string;
 
+  @Transform(({ value }) => value?.trim())
+  @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })
-  @Length(0, 500)
+  @MaxLength(500)
   description: string;
 
   @IsString({ message: 'It should be a string' })
-  @Length(0, 100)
   @Matches(
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
     {

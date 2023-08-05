@@ -32,7 +32,8 @@ import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/CreateCommentModel';
 import { CommentsController } from '../../comments/api/comments-controller';
 import { CommentsService } from '../../comments/application/comments-service';
-import { UpdateLikeStatusModel } from '../../comments/api/models/UpdateCommentLikeStatus';
+import { UpdateCommentLikeStatusModel } from '../../comments/api/models/UpdateCommentLikeStatusModel';
+import { UpdatePostLikeStatusModel } from './models/UpdateLikeStatusModel';
 
 @Controller('/hometask-nest/posts')
 export class PostsController {
@@ -137,7 +138,7 @@ export class PostsController {
   async updateLikeStatusOfPost(
     @Param('postId') postId: string,
     @CurrentUserId() userId: ObjectId,
-    @Body() inputLikeStatusModel: UpdateLikeStatusModel,
+    @Body() inputLikeStatusModel: UpdatePostLikeStatusModel,
     @Res() res: Response<string>,
   ) {
     const result = await this.postsService.updateLikeStatusOfPost(

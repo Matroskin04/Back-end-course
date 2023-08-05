@@ -19,7 +19,7 @@ import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict
 import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { UpdateCommentModel } from './models/UpdateCommentModel';
-import { UpdateLikeStatusModel } from './models/UpdateCommentLikeStatus';
+import { UpdateCommentLikeStatusModel } from './models/UpdateCommentLikeStatusModel';
 
 @Controller('/hometask-nest/comments')
 export class CommentsController {
@@ -53,7 +53,6 @@ export class CommentsController {
     @Body() inputCommentModel: UpdateCommentModel,
     @Res() res: Response<void>,
   ) {
-    console.log(typeof userId, 'str');
     const result = await this.commentsService.updateComment(
       commentId,
       userId,
@@ -69,7 +68,7 @@ export class CommentsController {
   async updateLikeStatusOfComment(
     @Param('id') commentId: string,
     @CurrentUserId() userId: ObjectId,
-    @Body() inputLikeInfoModel: UpdateLikeStatusModel,
+    @Body() inputLikeInfoModel: UpdateCommentLikeStatusModel,
     @Res() res: Response<string>,
   ) {
     const result = await this.commentsService.updateLikeStatusOfComment(

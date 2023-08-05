@@ -1,6 +1,15 @@
-import { IsEmail, IsString, Length, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserModel {
+  @Transform(({ value }) => value?.trim())
+  @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })
   @Length(3, 10)
   @Matches(/^[a-zA-Z0-9_-]*$/, {
@@ -14,6 +23,8 @@ export class CreateUserModel {
   })
   email: string;
 
+  @Transform(({ value }) => value?.trim())
+  @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })
   @Length(6, 20)
   password: string;
