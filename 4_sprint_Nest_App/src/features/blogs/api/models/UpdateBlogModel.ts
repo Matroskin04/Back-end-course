@@ -15,6 +15,7 @@ export class UpdateBlogModel {
   description: string;
 
   @IsString({ message: 'It should be a string' })
+  @MaxLength(100)
   @Matches(
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
     {
