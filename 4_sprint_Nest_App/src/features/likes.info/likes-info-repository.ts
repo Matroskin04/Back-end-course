@@ -101,7 +101,7 @@ export class LikesInfoRepository {
   }
 
   async incrementNumberOfLikesOfPost(
-    postId: string,
+    postId: ObjectId,
     incrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (incrementValue === 'Like') {
@@ -122,7 +122,7 @@ export class LikesInfoRepository {
   }
 
   async decrementNumberOfLikesOfPost(
-    postId: string,
+    postId: ObjectId,
     decrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (decrementValue === 'Like') {

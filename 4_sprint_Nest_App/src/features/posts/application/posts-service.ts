@@ -137,7 +137,10 @@ export class PostsService {
     userId: ObjectId,
     likeStatus: LikeStatus,
   ) {
-    const post = await this.postsQueryRepository.getPostById(postId, userId);
+    const post = await this.postsQueryRepository.getPostById(
+      new ObjectId(postId),
+      userId,
+    );
     if (!post) {
       return false;
     }
@@ -153,7 +156,7 @@ export class PostsService {
       //Иначе увеличиваем количество лайков/дизлайков
       const result =
         await this.likesInfoRepository.incrementNumberOfLikesOfPost(
-          postId,
+          new ObjectId(postId),
           likeStatus,
         );
       if (!result) {
@@ -189,7 +192,7 @@ export class PostsService {
     }
 
     const result1 = await this.likesInfoRepository.incrementNumberOfLikesOfPost(
-      postId,
+      new ObjectId(postId),
       likeStatus,
     );
     if (!result1) {
@@ -197,7 +200,7 @@ export class PostsService {
     }
     //уменьшаю на 1 то что убрали
     const result2 = await this.likesInfoRepository.decrementNumberOfLikesOfPost(
-      postId,
+      new ObjectId(postId),
       likeInfo.statusLike,
     );
     if (!result2) {

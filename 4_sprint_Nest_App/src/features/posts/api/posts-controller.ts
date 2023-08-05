@@ -45,7 +45,7 @@ export class PostsController {
   @Get()
   async getAllPosts(
     @Query() query: QueryPostModel,
-    @CurrentUserId() userId: ObjectId,
+    @CurrentUserId() userId: ObjectId | null,
     @Res() res: Response<ViewAllPostsModel>,
   ) {
     const result = await this.postsQueryRepository.getAllPosts(query, userId);
@@ -56,10 +56,13 @@ export class PostsController {
   @Get(':id')
   async getPostById(
     @Param('id') postId: string,
-    @CurrentUserId() userId: ObjectId,
+    @CurrentUserId() userId: ObjectId | null,
     @Res() res: Response<ViewPostModel>,
   ) {
-    const result = await this.postsQueryRepository.getPostById(postId, userId);
+    const result = await this.postsQueryRepository.getPostById(
+      new ObjectId(postId),
+      userId,
+    );
 
     result
       ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
@@ -70,7 +73,7 @@ export class PostsController {
   @Get(':postId/comments')
   async getAllCommentsOfPost(
     @Param('postId') postId: string,
-    @CurrentUserId() userId: ObjectId,
+    @CurrentUserId() userId: ObjectId | null,
     @Query() query: QueryPostModel,
     @Res() res: Response<ViewAllCommentsOfPostModel>,
   ) {
@@ -139,7 +142,7 @@ export class PostsController {
     @Res() res: Response<string>,
   ) {
     const result = await this.postsService.updateLikeStatusOfPost(
-      postId,
+      postId.toString(),
       userId,
       inputLikeStatusModel.likeStatus,
     );

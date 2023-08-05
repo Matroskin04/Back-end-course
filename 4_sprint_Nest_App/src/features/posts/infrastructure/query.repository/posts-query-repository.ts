@@ -103,10 +103,10 @@ export class PostsQueryRepository {
   }
 
   async getPostById(
-    postId: string,
+    postId: ObjectId,
     userId: ObjectId | null,
   ): Promise<null | PostViewType> {
-    const post = await this.PostModel.findOne({ _id: new ObjectId(postId) });
+    const post = await this.PostModel.findOne({ _id: postId });
     if (!post) {
       return null;
     }

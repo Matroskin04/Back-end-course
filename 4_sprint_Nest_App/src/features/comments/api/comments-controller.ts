@@ -32,7 +32,7 @@ export class CommentsController {
   @Get(':id')
   async getCommentById(
     @Param('id') commentId: string,
-    @CurrentUserId() userId: ObjectId,
+    @CurrentUserId() userId: ObjectId | null,
     @Res() res: Response<ViewCommentModel>,
   ) {
     const result = await this.commentsQueryRepository.getCommentById(

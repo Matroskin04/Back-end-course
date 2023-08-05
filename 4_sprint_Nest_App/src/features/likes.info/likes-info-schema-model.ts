@@ -50,10 +50,10 @@ export class PostLikesInfo {
   _id: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
-  postId: { type: ObjectId; required: true };
+  postId: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
-  userId: { type: ObjectId; required: true };
+  userId: ObjectId;
 
   @Prop({ required: true })
   login: string;
