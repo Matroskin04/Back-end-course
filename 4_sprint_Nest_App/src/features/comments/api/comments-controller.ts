@@ -48,14 +48,14 @@ export class CommentsController {
   @UseGuards(JwtAccessGuard) //todo addition guard
   @Put(':id')
   async updateComment(
-    @Param('id') commentId: ObjectId,
-    @CurrentUserId() userId: string,
+    @Param('id') commentId: string,
+    @CurrentUserId() userId: ObjectId,
     @Body() inputCommentModel: UpdateCommentModel,
     @Res() res: Response<void>,
   ) {
     const result = await this.commentsService.updateComment(
-      commentId,
-      userId,
+      new ObjectId(commentId),
+      userId.toString(),
       inputCommentModel.content,
     );
     result
@@ -88,10 +88,13 @@ export class CommentsController {
   @Delete(':id')
   async deleteComment(
     @Param('id') commentId: string,
-    @CurrentUserId() userId: string,
+    @CurrentUserId() userId: ObjectId,
     @Res() res: Response<void>,
   ) {
-    const result = await this.commentsService.deleteComment(commentId, userId);
+    const result = await this.commentsService.deleteComment(
+      new ObjectId(commentId),
+      userId.toString(),
+    );
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);

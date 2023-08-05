@@ -46,12 +46,12 @@ export class CommentsService {
     return true;
   }
 
-  async deleteComment(id: string, userId: string): Promise<boolean> {
-    const comment = await this.CommentModel.findOne({ id });
+  async deleteComment(commentId: ObjectId, userId: string): Promise<boolean> {
+    const comment = await this.CommentModel.findOne({ _id: commentId });
     if (!comment) return false;
     if (comment.commentatorInfo.userId !== userId)
       throw new ForbiddenException();
-    return this.commentsRepository.deleteComment(id);
+    return this.commentsRepository.deleteComment(commentId);
   }
 
   async createCommentByPostId(

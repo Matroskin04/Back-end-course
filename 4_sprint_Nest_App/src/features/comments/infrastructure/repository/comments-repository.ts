@@ -24,8 +24,8 @@ export class CommentsRepository {
     return;
   }
 
-  async deleteComment(id: string): Promise<boolean> {
-    const result = await this.CommentModel.deleteOne({ _id: new ObjectId(id) });
+  async deleteComment(id: ObjectId): Promise<boolean> {
+    const result = await this.CommentModel.deleteOne({ _id: id });
     return result.deletedCount === 1;
   }
 }
