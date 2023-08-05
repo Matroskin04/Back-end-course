@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors();
   app.use(cookieParser());
   app.useGlobalPipes(

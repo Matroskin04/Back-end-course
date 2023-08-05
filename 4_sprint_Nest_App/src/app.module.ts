@@ -62,6 +62,7 @@ import { LikesInfoQueryRepository } from './features/likes.info/likes-info-query
 import { LikesInfoRepository } from './features/likes.info/likes-info-repository';
 import { CommentsService } from './features/comments/application/comments-service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments-repository';
+import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-exists.decorator';
 
 @Module({
   imports: [
@@ -112,7 +113,7 @@ import { CommentsRepository } from './features/comments/infrastructure/repositor
     JwtModule.register({
       //todo как сделать разные?
       secret: process.env.PRIVATE_KEY_ACCESS_TOKEN,
-      signOptions: { expiresIn: '10s' },
+      signOptions: { expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN },
     }),
   ],
   controllers: [
@@ -143,6 +144,7 @@ import { CommentsRepository } from './features/comments/infrastructure/repositor
     JwtService,
     JwtQueryRepository,
     TestingRepository,
+    IsBlogByIdExistsConstraint,
     //Strategy
     LocalStrategy,
     JwtRefreshStrategy,

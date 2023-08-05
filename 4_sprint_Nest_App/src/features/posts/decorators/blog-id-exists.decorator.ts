@@ -1,35 +1,26 @@
 import {
-  registerDecorator,
   ValidationArguments,
-  ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { Inject } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs-repository';
 
-export function IsBlogIdExists(validationOptions?: ValidationOptions) {
-  return function (object: object, propertyName: string) {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      async: true,
-      validator: IsBlogIdExistsConstraint,
-    });
-  };
-}
+@ValidatorConstraint({ name: 'IsBlogByIdExists', async: true })
+export class IsBlogByIdExistsConstraint
+  implements ValidatorConstraintInterface
+{
+  constructor(protected blogsRepository: BlogsRepository) {}
+  async validate(value: string, args: ValidationArguments | any) {
+    const blogId = args.object.blogId;
 
-@ValidatorConstraint({ name: 'IsBlogIdExists' })
-export class IsBlogIdExistsConstraint implements ValidatorConstraintInterface {
-  constructor(
-    @Inject(BlogsRepository) private readonly blogsRepository: BlogsRepository,
-  ) {}
-  async validate(value: string, args: ValidationArguments) {
     const blog = await this.blogsRepository.getBlogInstance(
-      new ObjectId(value),
+      new ObjectId(blogId),
     );
     return !!blog;
+  }
+
+  defaultMessage(args?: ValidationArguments): string {
+    return `Blog with such blogId doesn't exist`;
   }
 }
