@@ -1,24 +1,55 @@
-/*
-import mongoose from 'mongoose';
-import { DeviceDBType } from './db-types/devices-db-types';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 
-export const DeviceSchema = new mongoose.Schema<DeviceDBType>({
-  ip: { type: String, required: true },
-  title: { type: String, required: true },
-  lastActiveDate: { type: String, required: true, expires: 60 },
-  deviceId: { type: String, required: true },
-  userId: { type: String, required: true },
-  expirationDate: { type: Number, required: true },
-  expireAt: {
-    type: Date, //node cron
-    default: Date.now,
-    expires: '20m',
-  },
-});
-export const DeviceModel = mongoose.models<DeviceDBType>(
-  'devices',
-  DeviceSchema,
-);
-//query - DTO
-//repo - Instance
-*/
+import { DeviceDocument, DeviceModelType } from './devices-db-types';
+//node cron
+
+@Schema()
+export class Device {
+  _id: ObjectId;
+
+  @Prop({ required: true })
+  ip: string;
+
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  lastActiveDate: string;
+
+  @Prop({ required: true })
+  deviceId: string;
+
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  expirationDate: number;
+
+  static createInstance(
+    ip: string,
+    title: string,
+    payloadToken: any,
+    userId: ObjectId,
+    DeviceModel: DeviceModelType,
+  ): DeviceDocument {
+    return new DeviceModel({
+      ip,
+      title,
+      lastActiveDate: new Date(payloadToken.iat * 1000).toISOString(),
+      deviceId: payloadToken.deviceId,
+      userId: userId.toString(),
+      expirationDate: payloadToken.exp - payloadToken.iat,
+    });
+  }
+
+  // modifyIntoViewModel(): DeviceViewType {
+  //   return {
+  //
+  //   };
+}
+export const DeviceSchema = SchemaFactory.createForClass(Device);
+
+DeviceSchema.statics = {
+  createInstance: Device.createInstance,
+};

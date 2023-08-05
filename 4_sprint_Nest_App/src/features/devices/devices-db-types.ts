@@ -1,14 +1,34 @@
 import { ObjectId } from 'mongodb';
+import { HydratedDocument, Model } from 'mongoose';
+import { Device } from './devices-schema-model';
 
-export class DeviceDBType {
-  constructor(
-    public _id: ObjectId,
-    public ip: string,
-    public title: string,
-    public lastActiveDate: string,
-    public deviceId: string,
-    public userId: string,
-    public expirationDate: number,
-    public expireAt: Date = new Date(),
-  ) {}
-}
+export type DeviceDBType = {
+  _id: ObjectId;
+
+  ip: string;
+
+  title: string;
+
+  lastActiveDate: string;
+
+  deviceId: string;
+
+  userId: string;
+
+  expirationDate: number;
+};
+
+export type DeviceDocument = HydratedDocument<Device>;
+
+export type DeviceModelType = Model<DeviceDocument> &
+  DeviceModelStaticMethodsType;
+
+export type DeviceModelStaticMethodsType = {
+  createInstance: (
+    ip: string,
+    title: string,
+    payloadToken: any,
+    userId: ObjectId,
+    DeviceModel: DeviceModelType,
+  ) => DeviceDocument;
+};
