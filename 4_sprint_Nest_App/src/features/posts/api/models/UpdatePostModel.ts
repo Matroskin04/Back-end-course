@@ -4,8 +4,10 @@ import {
   IsString,
   Length,
   MaxLength,
+  Validate,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsBlogByIdExistsConstraint } from '../../decorators/blog-id-exists.decorator';
 
 export class UpdatePostModel {
   @Transform(({ value }) => value?.trim())
@@ -28,5 +30,6 @@ export class UpdatePostModel {
 
   @IsMongoId()
   @IsString({ message: 'It should be a string' })
+  @Validate(IsBlogByIdExistsConstraint)
   blogId: string;
 }
