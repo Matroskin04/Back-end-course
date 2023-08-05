@@ -26,14 +26,14 @@ export class JwtService {
       //todo another jwt service
       { userId: userId.toString() },
       {
-        privateKey: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
+        secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
         expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN!,
       },
     );
     const refreshToken = this.jwtServiceNest.sign(
-      { userId: userId.toString() },
+      { userId: userId.toString(), deviceId: payloadToken.deviceId },
       {
-        privateKey: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
+        secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
         expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
       },
     );

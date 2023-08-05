@@ -161,6 +161,7 @@ export class AuthController {
 
   @SkipThrottle()
   @UseGuards(JwtRefreshGuard)
+  @Post('logout')
   async logoutUser(
     @RefreshToken() refreshToken: string,
     @Res() res: Response<void>,
