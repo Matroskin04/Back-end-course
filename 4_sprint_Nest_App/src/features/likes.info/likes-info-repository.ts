@@ -1,73 +1,155 @@
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import {
-  LikeInfoCommentType,
-  LikeInfoPostType,
-  PostLikeInfoInstance,
+  CommentLikeInfoInstanceType,
+  PostLikeInfoInstanceType,
 } from './likes-info-types-repository';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
+import { CommentLikesInfo, PostLikesInfo } from './likes-info-schema-model';
 import {
-  CommentsLikesInfoModelType,
-  PostsLikesInfoModelType,
+  CommentLikesInfoModelType,
+  PostLikesInfoModelType,
 } from './likes-info-db-types';
+import { Comment } from '../comments/domain/comments-schema-model';
+import { CommentModelType } from '../comments/domain/comments-db-types';
+import { Post } from '../posts/domain/posts-schema-model';
+import { PostModelType } from '../posts/domain/posts-db-types';
 
 @Injectable()
 export class LikesInfoRepository {
   constructor(
-    @InjectModel(CommentsLikesInfo.name)
-    private CommentsLikesInfoModel: CommentsLikesInfoModelType,
-    @InjectModel(PostsLikesInfo.name)
-    private PostsLikesInfoModel: PostsLikesInfoModelType,
+    @InjectModel(Post.name)
+    private PostModel: PostModelType,
+    @InjectModel(Comment.name)
+    private CommentModel: CommentModelType,
+    @InjectModel(CommentLikesInfo.name)
+    private CommentsLikesInfoModel: CommentLikesInfoModelType,
+    @InjectModel(PostLikesInfo.name)
+    private PostsLikesInfoModel: PostLikesInfoModelType,
   ) {}
-  async createLikeInfoComment(likeInfo: LikeInfoCommentType): Promise<void> {
-    const likesInfoInstance = this.CommentsLikesInfoModel.createInstance(
-      likeInfo,
-      this.CommentsLikesInfoModel,
-    );
-    await likesInfoInstance.save();
 
-    return;
+  async getCommentLikeInfoInstance(
+    commentId: ObjectId,
+    userId: ObjectId,
+  ): Promise<CommentLikeInfoInstanceType | null> {
+    const commentLikeInfo = await this.CommentsLikesInfoModel.findOne({
+      commentId,
+      userId,
+    });
+
+    if (!commentLikeInfo) return null;
+    return commentLikeInfo;
   }
 
-  async save(likeInfo: PostLikeInfoInstance): Promise<void> {
+  async getPostLikeInfoInstance(
+    postId: ObjectId,
+    userId: ObjectId,
+  ): Promise<PostLikeInfoInstanceType | null> {
+    const postLikeInfo = await this.PostsLikesInfoModel.findOne({
+      postId,
+      userId,
+    });
+
+    if (!postLikeInfo) return null;
+    return postLikeInfo;
+  }
+
+  async save(
+    likeInfo: PostLikeInfoInstanceType | CommentLikeInfoInstanceType,
+  ): Promise<void> {
     await likeInfo.save();
 
     return;
   }
 
-  async updateLikeInfoComment(
-    userId: ObjectId,
-    commentId: ObjectId,
-    statusLike: 'Like' | 'Dislike',
+  async incrementNumberOfLikesOfComment(
+    commentId: string,
+    incrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
-    const result = await this.CommentsLikesInfoModel.updateOne(
-      { userId, commentId },
-      { statusLike },
-    );
-    return result.modifiedCount === 1;
+    if (incrementValue === 'Like') {
+      const result = await this.CommentModel.updateOne(
+        { _id: commentId },
+        { $inc: { 'likesInfo.likesCount': 1 } },
+      );
+      return result.modifiedCount === 1;
+    } else {
+      const result = await this.CommentModel.updateOne(
+        { _id: commentId },
+        { $inc: { 'likesInfo.dislikesCount': 1 } },
+      );
+      return result.modifiedCount === 1;
+    }
   }
 
-  async updateLikeInfoPost(
-    userId: ObjectId,
-    postId: ObjectId,
-    statusLike: 'Like' | 'Dislike' | 'None',
+  async decrementNumberOfLikesOfComment(
+    _id: string,
+    decrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
-    const result = await this.PostsLikesInfoModel.updateOne(
-      { userId, postId },
-      { statusLike },
-    );
-    return result.modifiedCount === 1;
+    if (decrementValue === 'Like') {
+      const result = await this.CommentModel.updateOne(
+        { _id },
+        { $inc: { 'likesInfo.likesCount': -1 } },
+      );
+      return result.modifiedCount === 1;
+    } else {
+      const result = await this.CommentModel.updateOne(
+        { _id },
+        { $inc: { 'likesInfo.dislikesCount': -1 } },
+      );
+      return result.modifiedCount === 1;
+    }
+  }
+
+  async incrementNumberOfLikesOfPost(
+    postId: string,
+    incrementValue: 'Like' | 'Dislike' | 'None',
+  ): Promise<boolean> {
+    if (incrementValue === 'Like') {
+      const result = await this.PostModel.updateOne(
+        { _id: postId },
+        { $inc: { 'likesInfo.likesCount': 1 } },
+      );
+      return result.modifiedCount === 1;
+    }
+    if (incrementValue === 'Dislike') {
+      const result = await this.PostModel.updateOne(
+        { _id: postId },
+        { $inc: { 'likesInfo.dislikesCount': 1 } },
+      );
+      return result.modifiedCount === 1;
+    }
+    return true;
+  }
+
+  async decrementNumberOfLikesOfPost(
+    postId: string,
+    decrementValue: 'Like' | 'Dislike' | 'None',
+  ): Promise<boolean> {
+    if (decrementValue === 'Like') {
+      const result = await this.PostModel.updateOne(
+        { _id: postId },
+        { $inc: { 'likesInfo.likesCount': -1 } },
+      );
+      return result.modifiedCount === 1;
+    }
+    if (decrementValue === 'Dislike') {
+      const result = await this.PostModel.updateOne(
+        { _id: postId },
+        { $inc: { 'likesInfo.dislikesCount': -1 } },
+      );
+      return result.modifiedCount === 1;
+    }
+    return true;
   }
 
   async deleteLikeInfoComment(
     userId: ObjectId,
     commentId: ObjectId,
   ): Promise<boolean> {
-    const result = await this.CommentsLikesInfoModel.deleteMany({
+    const result = await this.CommentsLikesInfoModel.deleteOne({
       userId,
       commentId,
     });
-    return result.deletedCount >= 1;
+    return result.deletedCount === 1;
   }
 }

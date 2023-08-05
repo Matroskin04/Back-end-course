@@ -4,10 +4,10 @@ import { PostDTOType, PostDocument, PostModelType } from './posts-db-types';
 
 @Schema()
 export class LikesInfo {
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, required: true })
   likesCount: number;
 
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, required: true })
   dislikesCount: number;
 }
 

@@ -102,7 +102,7 @@ export class PostsController {
   @UseGuards(JwtAccessGuard)
   @Post(':id/comments')
   async createCommentByPostId(
-    @Param('postId') postId: string,
+    @Param('id') postId: string,
     @CurrentUserId() userId: ObjectId,
     @Body() inputCommentModel: CreateCommentByPostIdModel,
     @Res() res: Response<ViewCommentOfPostModel>,

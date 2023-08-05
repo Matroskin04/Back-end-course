@@ -8,6 +8,14 @@ import { CommentModelType } from '../comments/domain/comments-db-types';
 import { User } from '../users/domain/users-schema-model';
 import { Post } from '../posts/domain/posts-schema-model';
 import { Comment } from '../comments/domain/comments-schema-model';
+import {
+  CommentLikesInfo,
+  PostLikesInfo,
+} from '../likes.info/likes-info-schema-model';
+import {
+  CommentLikesInfoModelType,
+  PostLikesInfoModelType,
+} from '../likes.info/likes-info-db-types';
 
 @Injectable()
 export class TestingRepository {
@@ -20,6 +28,10 @@ export class TestingRepository {
     private UserModel: UserModelType,
     @InjectModel(Comment.name)
     private CommentModel: CommentModelType,
+    @InjectModel(CommentLikesInfo.name)
+    private CommentLikesInfoModel: CommentLikesInfoModelType,
+    @InjectModel(PostLikesInfo.name)
+    private PostLikesInfoModel: PostLikesInfoModelType,
   ) {}
   async deleteAllData(): Promise<void> {
     return Promise.all([
@@ -28,7 +40,8 @@ export class TestingRepository {
       this.UserModel.deleteMany({}),
       this.CommentModel.deleteMany({}),
       // DeviceModel.deleteMany({}),
-      // CommentsLikesInfoModel.deleteMany({}),
+      this.CommentLikesInfoModel.deleteMany({}),
+      this.PostLikesInfoModel.deleteMany({}),
     ]).then(
       (value) => {
         console.log('OK');

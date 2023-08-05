@@ -4,7 +4,6 @@ import { UsersQueryRepository } from '../../users/infrastructure/query.repositor
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
 import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
 import { LikesInfoService } from '../../likes.info/likes-info-service';
-import { CreateCommentByPostIdModel } from '../api/models/CreateCommentModel';
 import { CommentViewType } from '../infrastructure/repository/comments-types-repositories';
 import { CommentsRepository } from '../infrastructure/repository/comments-repository';
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,6 +13,7 @@ import { mappingComment } from '../../../helpers/functions/comments-functions-he
 import { LikeStatus } from '../../../helpers/enums/like-status';
 import { Comment } from '../domain/comments-schema-model';
 import { CommentModelType } from '../domain/comments-db-types';
+import { LikesInfoRepository } from '../../likes.info/likes-info-repository';
 
 @Injectable()
 export class CommentsService {
@@ -26,6 +26,7 @@ export class CommentsService {
     protected usersQueryRepository: UsersQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected likesInfoService: LikesInfoService,
+    protected likesInfoRepository: LikesInfoRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
   ) {}
 
@@ -103,7 +104,7 @@ export class CommentsService {
       if (likeStatus === 'None') return true; //Если статусы совпадают, то ничего не делаем
       //Иначе увеличиваем количество лайков/дизлайков
       const result =
-        await this.commentsRepository.incrementNumberOfLikesOfComment(
+        await this.likesInfoRepository.incrementNumberOfLikesOfComment(
           commentId,
           likeStatus,
         );
@@ -128,7 +129,7 @@ export class CommentsService {
     if (likeStatus === 'None') {
       //уменьшаю на 1 то, что убрали
       const result =
-        await this.commentsRepository.decrementNumberOfLikesOfComment(
+        await this.likesInfoRepository.decrementNumberOfLikesOfComment(
           commentId,
           likeInfo.statusLike,
         );
@@ -149,7 +150,7 @@ export class CommentsService {
 
     //Если пришел like/dislike, то
     //обновляю информацию
-    const isUpdate = await this.likesInfoService.updateLikeInfoComment(
+    const isUpdate = await this.likesInfoService.updateCommentLikeInfo(
       userId,
       new ObjectId(commentId),
       likeStatus,
@@ -159,7 +160,7 @@ export class CommentsService {
     }
     //увеличиваю на 1 то, что пришло
     const result1 =
-      await this.commentsRepository.incrementNumberOfLikesOfComment(
+      await this.likesInfoRepository.incrementNumberOfLikesOfComment(
         commentId,
         likeStatus,
       );
@@ -168,7 +169,7 @@ export class CommentsService {
     }
     //уменьшаю на 1 то, что убрали
     const result2 =
-      await this.commentsRepository.decrementNumberOfLikesOfComment(
+      await this.likesInfoRepository.decrementNumberOfLikesOfComment(
         commentId,
         likeInfo.statusLike,
       );

@@ -52,9 +52,9 @@ import { JwtAccessGuard } from './features/auth/guards/jwt-access.guard';
 import { JwtAccessStrategy } from './features/auth/strategy/jwt-access.strategy';
 import { BasicStrategy } from './features/auth/strategy/basic.strategy';
 import {
-  CommentsLikesInfo,
+  CommentLikesInfo,
   CommentsLikesInfoSchema,
-  PostsLikesInfo,
+  PostLikesInfo,
   PostsLikesInfoSchema,
 } from './features/likes.info/likes-info-schema-model';
 import { LikesInfoService } from './features/likes.info/likes-info-service';
@@ -101,18 +101,18 @@ import { CommentsRepository } from './features/comments/infrastructure/repositor
         schema: PasswordRecoverySchema,
       },
       {
-        name: CommentsLikesInfo.name,
+        name: CommentLikesInfo.name,
         schema: CommentsLikesInfoSchema,
       },
       {
-        name: PostsLikesInfo.name,
+        name: PostLikesInfo.name,
         schema: PostsLikesInfoSchema,
       },
     ]),
     JwtModule.register({
       //todo как сделать разные?
       secret: process.env.PRIVATE_KEY_ACCESS_TOKEN,
-      signOptions: { expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN },
+      signOptions: { expiresIn: '10s' },
     }),
   ],
   controllers: [
@@ -137,13 +137,13 @@ import { CommentsRepository } from './features/comments/infrastructure/repositor
     PostsService,
     PostsQueryRepository,
     PostsRepository,
-    CommentsQueryRepository,
     UsersService,
     UsersRepository,
     UsersQueryRepository,
     JwtService,
     JwtQueryRepository,
     TestingRepository,
+
     //Strategy
     LocalStrategy,
     JwtRefreshStrategy,

@@ -51,7 +51,15 @@ export class Comment {
         userLogin,
       },
       postId,
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+      },
     });
   }
 }
 export const CommentSchema = SchemaFactory.createForClass(Comment);
+
+CommentSchema.statics = {
+  createInstance: Comment.createInstance,
+};

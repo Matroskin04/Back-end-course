@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HydratedDocument, Model } from 'mongoose';
-import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
+import { CommentLikesInfo, PostLikesInfo } from './likes-info-schema-model';
 
 export class CommentsLikesInfoDBType {
   _id: ObjectId;
@@ -11,18 +11,18 @@ export class CommentsLikesInfoDBType {
 
   statusLike: 'Like' | 'Dislike';
 }
-export type CommentLikesInfoDocument = HydratedDocument<CommentsLikesInfo>;
+export type CommentLikesInfoDocument = HydratedDocument<CommentLikesInfo>;
 
-export type CommentsLikesInfoModelType = Model<CommentLikesInfoDocument> &
-  CommentsLikesInfoStaticMethodsType;
+export type CommentLikesInfoModelType = Model<CommentLikesInfoDocument> &
+  CommentLikesInfoStaticMethodsType;
 
-export type CommentsLikesInfoStaticMethodsType = {
+export type CommentLikesInfoStaticMethodsType = {
   createInstance: (
-    commentLikesInfoDTO: CommentsLikesInfoDTOType,
-    CommentsLikesInfoModel: CommentsLikesInfoModelType,
+    commentLikesInfoDTO: CommentLikesInfoDTOType,
+    CommentsLikesInfoModel: CommentLikesInfoModelType,
   ) => CommentLikesInfoDocument;
 };
-export class CommentsLikesInfoDTOType {
+export class CommentLikesInfoDTOType {
   commentId: ObjectId;
   userId: ObjectId;
   statusLike: 'Like' | 'Dislike';
@@ -41,19 +41,19 @@ export class PostsLikesInfoDBType {
 
   statusLike: 'Like' | 'Dislike' | 'None';
 }
-export type PostLikesInfoDocument = HydratedDocument<PostsLikesInfo>;
+export type PostLikesInfoDocument = HydratedDocument<PostLikesInfo>;
 
-export type PostsLikesInfoModelType = Model<PostLikesInfoDocument> &
+export type PostLikesInfoModelType = Model<PostLikesInfoDocument> &
   PostsLikesInfoStaticMethodsType;
 
 export type PostsLikesInfoStaticMethodsType = {
   createInstance: (
-    commentLikesInfoDTO: PostsLikesInfoDTOType,
-    CommentsLikesInfoModel: PostsLikesInfoModelType,
+    postLikesInfoDTO: PostLikesInfoDTOType,
+    PostLikesInfoModel: PostLikesInfoModelType,
   ) => PostLikesInfoDocument;
 };
 
-export class PostsLikesInfoDTOType {
+export class PostLikesInfoDTOType {
   postId: ObjectId;
   userId: ObjectId;
   login: string;

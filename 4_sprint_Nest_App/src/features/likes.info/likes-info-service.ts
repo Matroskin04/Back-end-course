@@ -3,20 +3,20 @@ import { Injectable } from '@nestjs/common';
 import { LikesInfoRepository } from './likes-info-repository';
 import {
   CommentsLikesInfoDBType,
-  CommentsLikesInfoModelType,
+  CommentLikesInfoModelType,
   PostsLikesInfoDBType,
-  PostsLikesInfoModelType,
+  PostLikesInfoModelType,
 } from './likes-info-db-types';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
+import { CommentLikesInfo, PostLikesInfo } from './likes-info-schema-model';
 
 @Injectable()
 export class LikesInfoService {
   constructor(
-    @InjectModel(CommentsLikesInfo.name)
-    private CommentsLikesInfoModel: CommentsLikesInfoModelType,
-    @InjectModel(PostsLikesInfo.name)
-    private PostsLikesInfoModel: PostsLikesInfoModelType,
+    @InjectModel(CommentLikesInfo.name)
+    private CommentsLikesInfoModel: CommentLikesInfoModelType,
+    @InjectModel(PostLikesInfo.name)
+    private PostsLikesInfoModel: PostLikesInfoModelType,
     protected likesInfoRepository: LikesInfoRepository,
   ) {}
 
@@ -25,7 +25,7 @@ export class LikesInfoService {
     commentId: ObjectId,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
-    const likeInfoOfComment = this.CommentsLikesInfoModel.createInstance(
+    const commentLikesInfo = this.CommentsLikesInfoModel.createInstance(
       {
         commentId,
         userId,
@@ -34,7 +34,7 @@ export class LikesInfoService {
       this.CommentsLikesInfoModel,
     );
 
-    await this.likesInfoRepository.createLikeInfoComment(likeInfoOfComment);
+    await this.likesInfoRepository.save(commentLikesInfo);
     return;
   }
 
@@ -44,38 +44,48 @@ export class LikesInfoService {
     login: string,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
-    const likeInfoOfPost = this.PostsLikesInfoModel.createInstance(
+    const postLikesInfo = this.PostsLikesInfoModel.createInstance(
       { postId, userId, login, addedAt: new Date().toISOString(), statusLike },
       this.PostsLikesInfoModel,
     );
 
-    await this.likesInfoRepository.save(likeInfoOfPost);
+    await this.likesInfoRepository.save(postLikesInfo);
     return;
   }
 
-  async updateLikeInfoComment(
+  async updateCommentLikeInfo(
     userId: ObjectId,
     commentId: ObjectId,
     statusLike: 'Like' | 'Dislike',
   ): Promise<boolean> {
-    return this.likesInfoRepository.updateLikeInfoComment(
-      //todo save
-      userId,
-      commentId,
-      statusLike,
-    );
+    const commentLikeInfo =
+      await this.likesInfoRepository.getCommentLikeInfoInstance(
+        commentId,
+        userId,
+      );
+
+    if (!commentLikeInfo) return false;
+
+    commentLikeInfo.statusLike = statusLike;
+    await this.likesInfoRepository.save(commentLikeInfo);
+    return true;
   }
 
-  async updateLikeInfoPost(
+  async updatePostLikeInfo(
     userId: ObjectId,
     postId: ObjectId,
     statusLike: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
-    return this.likesInfoRepository.updateLikeInfoPost(
-      userId,
+    const postLikeInfo = await this.likesInfoRepository.getPostLikeInfoInstance(
       postId,
-      statusLike,
+      userId,
     );
+
+    if (!postLikeInfo) return false;
+
+    postLikeInfo.statusLike = statusLike;
+    await this.likesInfoRepository.save(postLikeInfo);
+    return true;
   }
 
   async deleteLikeInfoComment(

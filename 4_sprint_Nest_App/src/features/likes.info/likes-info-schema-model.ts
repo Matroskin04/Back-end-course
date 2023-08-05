@@ -9,16 +9,16 @@ import { Blog, BlogSchema } from '../blogs/domain/blogs-schema-model';
 import {
   CommentsLikesInfoDBType,
   CommentLikesInfoDocument,
-  CommentsLikesInfoDTOType,
-  CommentsLikesInfoModelType,
+  CommentLikesInfoDTOType,
+  CommentLikesInfoModelType,
   PostsLikesInfoDBType,
   PostLikesInfoDocument,
-  PostsLikesInfoDTOType,
-  PostsLikesInfoModelType,
+  PostLikesInfoDTOType,
+  PostLikesInfoModelType,
 } from './likes-info-db-types';
 
 @Schema()
-export class CommentsLikesInfo {
+export class CommentLikesInfo {
   _id: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
@@ -31,22 +31,22 @@ export class CommentsLikesInfo {
   statusLike: 'Like' | 'Dislike';
 
   static createInstance(
-    commentLikesInfoDTO: CommentsLikesInfoDTOType,
-    CommentsLikesInfoModel: CommentsLikesInfoModelType,
+    commentLikesInfoDTO: CommentLikesInfoDTOType,
+    CommentsLikesInfoModel: CommentLikesInfoModelType,
   ): CommentLikesInfoDocument {
     return new CommentsLikesInfoModel(commentLikesInfoDTO);
   }
 }
 
 export const CommentsLikesInfoSchema =
-  SchemaFactory.createForClass(CommentsLikesInfo);
+  SchemaFactory.createForClass(CommentLikesInfo);
 
 CommentsLikesInfoSchema.statics = {
-  createInstance: CommentsLikesInfo.createInstance,
+  createInstance: CommentLikesInfo.createInstance,
 };
 
 @Schema()
-export class PostsLikesInfo {
+export class PostLikesInfo {
   _id: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
@@ -62,18 +62,17 @@ export class PostsLikesInfo {
   addedAt: string;
 
   @Prop({ required: true, enum: ['Like', 'Dislike', 'None'] })
-  statusLike: 'Like' | 'Dislike';
+  statusLike: 'Like' | 'Dislike' | 'None';
 
   static createInstance(
-    commentLikesInfoDTO: PostsLikesInfoDTOType,
-    CommentsLikesInfoModel: PostsLikesInfoModelType,
+    postLikesInfoDTO: PostLikesInfoDTOType,
+    PostLikesInfoModel: PostLikesInfoModelType,
   ): PostLikesInfoDocument {
-    return new CommentsLikesInfoModel(commentLikesInfoDTO);
+    return new PostLikesInfoModel(postLikesInfoDTO);
   }
 }
-export const PostsLikesInfoSchema =
-  SchemaFactory.createForClass(PostsLikesInfo);
+export const PostsLikesInfoSchema = SchemaFactory.createForClass(PostLikesInfo);
 
 PostsLikesInfoSchema.statics = {
-  createInstance: PostsLikesInfo.createInstance,
+  createInstance: PostLikesInfo.createInstance,
 };

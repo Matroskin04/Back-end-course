@@ -32,46 +32,4 @@ export class PostsRepository {
 
     return result.deletedCount === 1;
   }
-
-  async incrementNumberOfLikesOfPost(
-    postId: string,
-    incrementValue: 'Like' | 'Dislike' | 'None',
-  ): Promise<boolean> {
-    if (incrementValue === 'Like') {
-      const result = await this.PostModel.updateOne(
-        { _id: postId },
-        { $inc: { 'likesInfo.likesCount': 1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-    if (incrementValue === 'Dislike') {
-      const result = await this.PostModel.updateOne(
-        { _id: postId },
-        { $inc: { 'likesInfo.dislikesCount': 1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-    return true;
-  }
-
-  async decrementNumberOfLikesOfPost(
-    postId: string,
-    decrementValue: 'Like' | 'Dislike' | 'None',
-  ): Promise<boolean> {
-    if (decrementValue === 'Like') {
-      const result = await this.PostModel.updateOne(
-        { _id: postId },
-        { $inc: { 'likesInfo.likesCount': -1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-    if (decrementValue === 'Dislike') {
-      const result = await this.PostModel.updateOne(
-        { _id: postId },
-        { $inc: { 'likesInfo.dislikesCount': -1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-    return true;
-  }
 }

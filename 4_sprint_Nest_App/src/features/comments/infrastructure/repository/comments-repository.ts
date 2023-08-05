@@ -28,42 +28,4 @@ export class CommentsRepository {
     const result = await this.CommentModel.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
   }
-
-  async incrementNumberOfLikesOfComment(
-    commentId: string,
-    incrementValue: 'Like' | 'Dislike',
-  ): Promise<boolean> {
-    if (incrementValue === 'Like') {
-      const result = await this.CommentModel.updateOne(
-        { _id: commentId },
-        { $inc: { 'likesInfo.likesCount': 1 } },
-      );
-      return result.modifiedCount === 1;
-    } else {
-      const result = await this.CommentModel.updateOne(
-        { _id: commentId },
-        { $inc: { 'likesInfo.dislikesCount': 1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-  }
-
-  async decrementNumberOfLikesOfComment(
-    _id: string,
-    decrementValue: 'Like' | 'Dislike',
-  ): Promise<boolean> {
-    if (decrementValue === 'Like') {
-      const result = await this.CommentModel.updateOne(
-        { _id },
-        { $inc: { 'likesInfo.likesCount': -1 } },
-      );
-      return result.modifiedCount === 1;
-    } else {
-      const result = await this.CommentModel.updateOne(
-        { _id },
-        { $inc: { 'likesInfo.dislikesCount': -1 } },
-      );
-      return result.modifiedCount === 1;
-    }
-  }
 }

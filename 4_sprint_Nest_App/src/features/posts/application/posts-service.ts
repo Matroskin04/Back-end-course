@@ -19,6 +19,7 @@ import { LikeStatus } from '../../../helpers/enums/like-status';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
 import { LikesInfoService } from '../../likes.info/likes-info-service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
+import { LikesInfoRepository } from '../../likes.info/likes-info-repository';
 
 @Injectable()
 export class PostsService {
@@ -31,6 +32,7 @@ export class PostsService {
     protected blogsRepository: BlogsRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected likesInfoRepository: LikesInfoRepository,
     protected likesInfoService: LikesInfoService,
   ) {}
 
@@ -149,10 +151,11 @@ export class PostsService {
     if (!likeInfo) {
       if (likeStatus === 'None') return true; //Если статусы совпадают, то ничего не делаем
       //Иначе увеличиваем количество лайков/дизлайков
-      const result = await this.postsRepository.incrementNumberOfLikesOfPost(
-        postId,
-        likeStatus,
-      );
+      const result =
+        await this.likesInfoRepository.incrementNumberOfLikesOfPost(
+          postId,
+          likeStatus,
+        );
       if (!result) {
         throw new Error('Incrementing number of likes failed');
       }
@@ -176,7 +179,7 @@ export class PostsService {
     if (likeStatus === likeInfo.statusLike) return true; //Если статусы совпадают, то ничего не делаем;
 
     //В ином случае меняем статус лайка
-    const isUpdate = await this.likesInfoService.updateLikeInfoPost(
+    const isUpdate = await this.likesInfoService.updatePostLikeInfo(
       userId,
       new ObjectId(postId),
       likeStatus,
@@ -185,7 +188,7 @@ export class PostsService {
       throw new Error('Like status of the post is not updated');
     }
 
-    const result1 = await this.postsRepository.incrementNumberOfLikesOfPost(
+    const result1 = await this.likesInfoRepository.incrementNumberOfLikesOfPost(
       postId,
       likeStatus,
     );
@@ -193,7 +196,7 @@ export class PostsService {
       throw new Error('Incrementing number of likes failed');
     }
     //уменьшаю на 1 то что убрали
-    const result2 = await this.postsRepository.decrementNumberOfLikesOfPost(
+    const result2 = await this.likesInfoRepository.decrementNumberOfLikesOfPost(
       postId,
       likeInfo.statusLike,
     );

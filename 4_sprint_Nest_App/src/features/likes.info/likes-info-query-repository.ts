@@ -5,15 +5,15 @@ import {
   PostsLikesInfoDBType,
 } from './likes-info-db-types';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentsLikesInfo, PostsLikesInfo } from './likes-info-schema-model';
+import { CommentLikesInfo, PostLikesInfo } from './likes-info-schema-model';
 import { NewestLikesType } from '../posts/infrastructure/repository/posts-types-repositories';
 
 @Injectable()
 export class LikesInfoQueryRepository {
   constructor(
-    @InjectModel(CommentsLikesInfo.name)
+    @InjectModel(CommentLikesInfo.name)
     private CommentsLikesInfoModel,
-    @InjectModel(PostsLikesInfo.name)
+    @InjectModel(PostLikesInfo.name)
     private PostsLikesInfoModel,
   ) {}
   async getLikesInfoByCommentAndUser(
