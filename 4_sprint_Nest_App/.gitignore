@@ -39,10 +39,10 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 /src/tests.js
-/src/domain/db-types/users-db-types.js
-/src/domain/users-schema-model.js
-/src/features/users/domain/users-db-types.js
-/src/features/users/domain/users-schema-model.js
+/src/domain/db-types/users.db.types.js
+/src/domain/users.entity.js
+/src/features/users/domain/users.db.types.js
+/src/features/users/domain/users.entity.js
 /test/app.e2e-spec.d.ts
 /test/app.e2e-spec.js
 /test/app.e2e-spec.js.map

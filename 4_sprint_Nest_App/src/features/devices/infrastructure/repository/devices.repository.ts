@@ -1,8 +1,8 @@
 import { DeviceInstanceType } from './devices.types.repository';
 import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
-import { Device } from '../../domain/devices-schema-model';
-import { DeviceModelType } from '../../domain/devices-db-types';
+import { Device } from '../../domain/devices.entity';
+import { DeviceModelType } from '../../domain/devices.db.types';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

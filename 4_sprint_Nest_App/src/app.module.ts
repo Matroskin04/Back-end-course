@@ -1,27 +1,27 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { BlogsService } from './features/blogs/application/blogs-service';
-import { BlogsQueryRepository } from './features/blogs/infrastructure/query.repository/blogs-query-repository';
-import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs-repository';
-import { Blog, BlogSchema } from './features/blogs/domain/blogs-schema-model';
+import { BlogsService } from './features/blogs/application/blogs.service';
+import { BlogsQueryRepository } from './features/blogs/infrastructure/query.repository/blogs.query.repository';
+import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
+import { Blog, BlogSchema } from './features/blogs/domain/blogs.entity';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import {
   LikesInfo,
   LikesInfoSchema,
   Post,
   PostSchema,
-} from './features/posts/domain/posts-schema-model';
+} from './features/posts/domain/posts.entity';
 import {
   Comment,
   CommentatorInfo,
   CommentatorInfoSchema,
   CommentSchema,
-} from './features/comments/domain/comments-schema-model';
-import { PostsController } from './features/posts/api/posts-controller';
-import { PostsService } from './features/posts/application/posts-service';
-import { PostsQueryRepository } from './features/posts/infrastructure/query.repository/posts-query-repository';
-import { PostsRepository } from './features/posts/infrastructure/repository/posts-repository';
+} from './features/comments/domain/comments.entity';
+import { PostsController } from './features/posts/api/posts.controller';
+import { PostsService } from './features/posts/application/posts.service';
+import { PostsQueryRepository } from './features/posts/infrastructure/query.repository/posts.query.repository';
+import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
 import {
   EmailConfirmation,
   EmailConfirmationSchema,
@@ -29,49 +29,46 @@ import {
   PasswordRecoverySchema,
   User,
   UserSchema,
-} from './features/users/domain/users-schema-model';
-import { CommentsController } from './features/comments/api/comments-controller';
-import { UsersController } from './features/users/api/users-controller';
-import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments-query-repository';
-import { UsersService } from './features/users/application/users-service';
-import { UsersRepository } from './features/users/infrastructure/repository/users-repository';
-import { UsersQueryRepository } from './features/users/infrastructure/query.repository/users-query-repository';
-import { TestingController } from './infrastructure/general-features/test.delete/testing-controller';
-import { TestingRepository } from './infrastructure/general-features/test.delete/testing-repository';
-import { LocalStrategy } from './features/auth/strategy/local.strategy';
-import { AuthService } from './features/auth/application/auth-service';
+} from './features/users/domain/users.entity';
+import { CommentsController } from './features/comments/api/comments.controller';
+import { UsersController } from './features/users/api/users.controller';
+import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
+import { UsersService } from './features/users/application/users.service';
+import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
+import { UsersQueryRepository } from './features/users/infrastructure/query.repository/users.query.repository';
+import { TestingController } from './features/testing/api/testing.controller';
+import { TestingRepository } from './features/testing/repository/testing.repository';
+import { LocalStrategy } from './infrastructure/strategy/local.strategy';
+import { AuthService } from './features/auth/application/auth.service';
 import { CryptoAdapter } from './infrastructure/adapters/crypto.adapter';
 import { EmailManager } from './infrastructure/managers/email-manager';
 import { EmailAdapter } from './infrastructure/adapters/email.adapter';
-import { AuthController } from './features/auth/api/auth-controller';
-import { JwtRefreshStrategy } from './features/auth/strategy/jwt-refresh.strategy';
+import { AuthController } from './features/auth/api/auth.controller';
+import { JwtRefreshStrategy } from './infrastructure/strategy/jwt-refresh.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtService } from './features/jwt/jwt-service';
-import { JwtQueryRepository } from './features/jwt/jwt-query-repository';
-import { JwtAccessStrategy } from './features/auth/strategy/jwt-access.strategy';
-import { BasicStrategy } from './features/auth/strategy/basic.strategy';
+import { JwtAccessStrategy } from './infrastructure/strategy/jwt-access.strategy';
+import { BasicStrategy } from './infrastructure/strategy/basic.strategy';
 import {
   CommentLikesInfo,
   CommentsLikesInfoSchema,
   PostLikesInfo,
   PostsLikesInfoSchema,
-} from './infrastructure/general-features/likes.info/domain/likes-info-schema-model';
-import { LikesInfoService } from './infrastructure/general-features/likes.info/application/likes-info-service';
-import { LikesInfoQueryRepository } from './infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
-import { LikesInfoRepository } from './infrastructure/general-features/likes.info/infrastructure/repository/likes-info-repository';
-import { CommentsService } from './features/comments/application/comments-service';
-import { CommentsRepository } from './features/comments/infrastructure/repository/comments-repository';
-import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-exists.decorator';
+} from './features/likes-info/domain/likes-info.entity';
+import { LikesInfoService } from './features/likes-info/application/likes-info.service';
+import { LikesInfoQueryRepository } from './features/likes-info/infrastructure/query.repository/likes-info.query.repository';
+import { LikesInfoRepository } from './features/likes-info/infrastructure/repository/likes-info.repository';
+import { CommentsService } from './features/comments/application/comments.service';
+import { CommentsRepository } from './features/comments/infrastructure/repository/comments.repository';
+import { IsBlogByIdExistsConstraint } from './infrastructure/decorators/posts/blog-id-exists.decorator';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { DevicesController } from './features/devices/api/devices-controller';
-import { DevicesService } from './features/devices/application/devices-service';
+import { DevicesController } from './features/devices/api/devices.controller';
+import { DevicesService } from './features/devices/application/devices.service';
 import { DevicesQueryRepository } from './features/devices/infrastructure/query.repository/devices.query.repository';
 import { DevicesRepository } from './features/devices/infrastructure/repository/devices.repository';
-import {
-  Device,
-  DeviceSchema,
-} from './features/devices/domain/devices-schema-model';
+import { Device, DeviceSchema } from './features/devices/domain/devices.entity';
+import { JwtQueryRepository } from './infrastructure/general-features/jwt/jwt.query.repository';
+import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
 
 @Module({
   imports: [

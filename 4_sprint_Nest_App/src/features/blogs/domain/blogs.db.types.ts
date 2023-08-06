@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HydratedDocument, Model } from 'mongoose';
-import { Blog } from './blogs-schema-model';
+import { Blog } from './blogs.entity';
 
 export type BlogDBType = {
   _id: ObjectId;
