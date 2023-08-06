@@ -10,10 +10,10 @@ import { variablesForReturn } from '../../../../infrastructure/queryRepositories
 import {
   mappingComment,
   mappingCommentForAllDocs,
-} from '../../../../helpers/functions/comments-functions-helpers';
+} from '../../../../infrastructure/helpers/functions/comments-functions-helpers';
 import { StatusOfLike } from './comments-types-query-repository';
 import { Comment } from '../../domain/comments-schema-model';
-import { LikesInfoQueryRepository } from '../../../likes.info/likes-info-query-repository';
+import { LikesInfoQueryRepository } from '../../../../infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
 
 @Injectable()
 export class CommentsQueryRepository {

@@ -6,20 +6,20 @@ import {
 import { PostsRepository } from '../infrastructure/repository/posts-repository';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/query.repository/blogs-query-repository';
 import { ObjectId } from 'mongodb';
-import { modifyPostIntoViewModel } from '../../../helpers/functions/posts-functions-helpers';
+import { modifyPostIntoViewModel } from '../../../infrastructure/helpers/functions/posts-functions-helpers';
 import { PostModelType } from '../domain/posts-db-types';
 import { Post } from '../domain/posts-schema-model';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostViewType } from '../infrastructure/query.repository/posts-types-query-repository';
 import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs-repository';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
+import { LikesInfoQueryRepository } from '../../../infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
 import { reformNewestLikes } from '../../../infrastructure/queryRepositories/utils/likes-info-functions';
-import { LikeStatus } from '../../../helpers/enums/like-status';
+import { LikeStatus } from '../../../infrastructure/helpers/enums/like-status';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
-import { LikesInfoService } from '../../likes.info/likes-info-service';
+import { LikesInfoService } from '../../../infrastructure/general-features/likes.info/application/likes-info-service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts-query-repository';
-import { LikesInfoRepository } from '../../likes.info/likes-info-repository';
+import { LikesInfoRepository } from '../../../infrastructure/general-features/likes.info/infrastructure/repository/likes-info-repository';
 
 @Injectable()
 export class PostsService {

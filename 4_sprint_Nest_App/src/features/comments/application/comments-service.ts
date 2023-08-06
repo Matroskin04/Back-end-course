@@ -2,18 +2,18 @@ import { ObjectId } from 'mongodb';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
-import { LikesInfoQueryRepository } from '../../likes.info/likes-info-query-repository';
-import { LikesInfoService } from '../../likes.info/likes-info-service';
+import { LikesInfoQueryRepository } from '../../../infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
+import { LikesInfoService } from '../../../infrastructure/general-features/likes.info/application/likes-info-service';
 import { CommentViewType } from '../infrastructure/repository/comments-types-repositories';
 import { CommentsRepository } from '../infrastructure/repository/comments-repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../posts/domain/posts-schema-model';
 import { PostModelType } from '../../posts/domain/posts-db-types';
-import { mappingComment } from '../../../helpers/functions/comments-functions-helpers';
-import { LikeStatus } from '../../../helpers/enums/like-status';
+import { mappingComment } from '../../../infrastructure/helpers/functions/comments-functions-helpers';
+import { LikeStatus } from '../../../infrastructure/helpers/enums/like-status';
 import { Comment } from '../domain/comments-schema-model';
 import { CommentModelType } from '../domain/comments-db-types';
-import { LikesInfoRepository } from '../../likes.info/likes-info-repository';
+import { LikesInfoRepository } from '../../../infrastructure/general-features/likes.info/infrastructure/repository/likes-info-repository';
 
 @Injectable()
 export class CommentsService {

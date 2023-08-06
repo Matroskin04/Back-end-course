@@ -1,4 +1,4 @@
-import { LikeStatus } from '../../../../helpers/enums/like-status';
+import { LikeStatus } from '../../../../infrastructure/helpers/enums/like-status';
 import { IsEnum } from 'class-validator';
 
 export class UpdateCommentLikeStatusModel {

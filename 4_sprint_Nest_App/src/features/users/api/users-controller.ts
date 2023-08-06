@@ -16,7 +16,7 @@ import { CreateUserModel } from './models/CreateUserModel';
 import { UsersQueryRepository } from '../infrastructure/query.repository/users-query-repository';
 import { UsersService } from '../application/users-service';
 import { Response } from 'express';
-import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
 import { BasicAuthGuard } from '../../auth/guards/basic-auth.guard';
 import { SkipThrottle } from '@nestjs/throttler';
 

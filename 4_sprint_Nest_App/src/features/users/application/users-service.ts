@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../domain/users-schema-model';
 import { UserModelType } from '../domain/users-db-types';
 import { UserViewType } from '../infrastructure/query.repository/users-types-query-repository';
-import { CryptoAdapter } from '../../../adapters/crypto-adapter';
+import { CryptoAdapter } from '../../../infrastructure/adapters/crypto.adapter';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 @Injectable()

@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users-query-repository';
-import { DevicesQueryRepository } from '../../devices/devices-query-repository';
+import { DevicesQueryRepository } from '../../devices/infrastructure/query.repository/devices.query.repository';
 import { Request } from 'express';
 
 @Injectable()

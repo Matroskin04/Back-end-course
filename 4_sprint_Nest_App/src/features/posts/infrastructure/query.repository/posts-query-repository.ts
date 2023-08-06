@@ -10,14 +10,14 @@ import { PostsOfBlogPaginationType } from '../../../blogs/infrastructure/query.r
 import {
   modifyPostForAllDocs,
   modifyPostIntoViewModel,
-} from '../../../../helpers/functions/posts-functions-helpers';
+} from '../../../../infrastructure/helpers/functions/posts-functions-helpers';
 import { StatusOfLike } from '../../../comments/infrastructure/query.repository/comments-types-query-repository';
 import { BlogsQueryRepository } from '../../../blogs/infrastructure/query.repository/blogs-query-repository';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts-schema-model';
 import { PostModelType } from '../../domain/posts-db-types';
-import { LikesInfoQueryRepository } from '../../../likes.info/likes-info-query-repository';
+import { LikesInfoQueryRepository } from '../../../../infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
 import { reformNewestLikes } from '../../../../infrastructure/queryRepositories/utils/likes-info-functions';
 
 @Injectable()

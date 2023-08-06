@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ViewCommentModel } from './models/ViewCommentModel';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments-query-repository';
-import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
 import { Response } from 'express';
 import { CommentsService } from '../application/comments-service';
 import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard';

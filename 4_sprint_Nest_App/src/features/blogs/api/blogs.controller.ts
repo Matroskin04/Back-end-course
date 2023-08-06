@@ -26,7 +26,7 @@ import { BlogsQueryRepository } from '../infrastructure/query.repository/blogs-q
 import { PostsQueryRepository } from '../../posts/infrastructure/query.repository/posts-query-repository';
 import { BlogsService } from '../application/blogs-service';
 import { PostsService } from '../../posts/application/posts-service';
-import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
 import { Response } from 'express';
 import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';

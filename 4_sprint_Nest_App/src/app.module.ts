@@ -36,19 +36,18 @@ import { CommentsQueryRepository } from './features/comments/infrastructure/quer
 import { UsersService } from './features/users/application/users-service';
 import { UsersRepository } from './features/users/infrastructure/repository/users-repository';
 import { UsersQueryRepository } from './features/users/infrastructure/query.repository/users-query-repository';
-import { TestingController } from './features/test.delete/testing-controller';
-import { TestingRepository } from './features/test.delete/testing-repository';
+import { TestingController } from './infrastructure/general-features/test.delete/testing-controller';
+import { TestingRepository } from './infrastructure/general-features/test.delete/testing-repository';
 import { LocalStrategy } from './features/auth/strategy/local.strategy';
-import { AuthService } from './features/auth/service/auth-service';
-import { CryptoAdapter } from './adapters/crypto-adapter';
-import { EmailManager } from './managers/email-manager';
-import { EmailAdapter } from './adapters/email-adapter';
-import { AuthController } from './features/auth/auth-controller';
+import { AuthService } from './features/auth/application/auth-service';
+import { CryptoAdapter } from './infrastructure/adapters/crypto.adapter';
+import { EmailManager } from './infrastructure/managers/email-manager';
+import { EmailAdapter } from './infrastructure/adapters/email.adapter';
+import { AuthController } from './features/auth/api/auth-controller';
 import { JwtRefreshStrategy } from './features/auth/strategy/jwt-refresh.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtService } from './features/jwt/jwt-service';
 import { JwtQueryRepository } from './features/jwt/jwt-query-repository';
-import { JwtAccessGuard } from './features/auth/guards/jwt-access.guard';
 import { JwtAccessStrategy } from './features/auth/strategy/jwt-access.strategy';
 import { BasicStrategy } from './features/auth/strategy/basic.strategy';
 import {
@@ -56,20 +55,23 @@ import {
   CommentsLikesInfoSchema,
   PostLikesInfo,
   PostsLikesInfoSchema,
-} from './features/likes.info/likes-info-schema-model';
-import { LikesInfoService } from './features/likes.info/likes-info-service';
-import { LikesInfoQueryRepository } from './features/likes.info/likes-info-query-repository';
-import { LikesInfoRepository } from './features/likes.info/likes-info-repository';
+} from './infrastructure/general-features/likes.info/domain/likes-info-schema-model';
+import { LikesInfoService } from './infrastructure/general-features/likes.info/application/likes-info-service';
+import { LikesInfoQueryRepository } from './infrastructure/general-features/likes.info/infrastructure/query.repository/likes-info-query-repository';
+import { LikesInfoRepository } from './infrastructure/general-features/likes.info/infrastructure/repository/likes-info-repository';
 import { CommentsService } from './features/comments/application/comments-service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments-repository';
 import { IsBlogByIdExistsConstraint } from './features/posts/decorators/blog-id-exists.decorator';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { DevicesController } from './features/devices/devices-controller';
-import { DevicesService } from './features/devices/devices-service';
-import { DevicesQueryRepository } from './features/devices/devices-query-repository';
-import { DevicesRepository } from './features/devices/devices-repository';
-import { Device, DeviceSchema } from './features/devices/devices-schema-model';
+import { DevicesController } from './features/devices/api/devices-controller';
+import { DevicesService } from './features/devices/application/devices-service';
+import { DevicesQueryRepository } from './features/devices/infrastructure/query.repository/devices.query.repository';
+import { DevicesRepository } from './features/devices/infrastructure/repository/devices.repository';
+import {
+  Device,
+  DeviceSchema,
+} from './features/devices/domain/devices-schema-model';
 
 @Module({
   imports: [

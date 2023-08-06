@@ -22,7 +22,7 @@ import {
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments-query-repository';
 import { Response } from 'express';
-import { HTTP_STATUS_CODE } from '../../../helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
 import { JwtAccessNotStrictGuard } from '../../auth/guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../auth/decorators/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
