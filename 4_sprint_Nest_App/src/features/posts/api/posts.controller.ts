@@ -92,7 +92,7 @@ export class PostsController {
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
-  @UseGuards(BasicAuthGuard)
+  /*@UseGuards(BasicAuthGuard)
   @Post()
   async createPost(
     @Body() inputPostModel: CreatePostInputModel,
@@ -103,7 +103,7 @@ export class PostsController {
     result
       ? res.status(HTTP_STATUS_CODE.CREATED_201).send(result)
       : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).json('Blog in not found');
-  }
+  }*/
 
   @UseGuards(JwtAccessGuard)
   @Post(':postId/comments')
@@ -124,7 +124,7 @@ export class PostsController {
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
-  @UseGuards(BasicAuthGuard)
+  /*@UseGuards(BasicAuthGuard)
   @Put(':id')
   async updatePost(
     @Param('id') postId: string,
@@ -136,7 +136,7 @@ export class PostsController {
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-  }
+  }*/
 
   @UseGuards(JwtAccessGuard)
   @Put(':postId/like-status')
@@ -159,7 +159,7 @@ export class PostsController {
           .send("Post with specified id doesn't exist");
   }
 
-  @UseGuards(BasicAuthGuard)
+  /*@UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deletePost(@Param('id') postId: string, @Res() res: Response<void>) {
     const result = await this.postsService.deleteSinglePost(postId);
@@ -167,5 +167,5 @@ export class PostsController {
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-  }
+  }*/
 }

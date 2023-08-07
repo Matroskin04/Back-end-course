@@ -5,20 +5,20 @@ import {
 import { ObjectId } from 'mongodb';
 import { QueryPostInputModel } from '../../api/models/input/query-post.input.model';
 import { variablesForReturn } from '../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
-import { QueryBlogInputModel } from '../../../blogs/api/models/input/query-blog.input.model';
-import { PostsOfBlogPaginationType } from '../../../blogs/infrastructure/query.repository/blogs.types.query.repository';
 import {
   modifyPostForAllDocs,
   modifyPostIntoViewModel,
 } from '../../../../infrastructure/helpers/functions/features/posts.functions.helpers';
 import { StatusOfLike } from '../../../comments/infrastructure/query.repository/comments.types.query.repository';
-import { BlogsQueryRepository } from '../../../blogs/infrastructure/query.repository/blogs.query.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts.entity';
 import { PostModelType } from '../../domain/posts.db.types';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../../infrastructure/helpers/functions/features/likes-info.functions.helpers';
+import { BlogsBloggerQueryRepository } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
+import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
+import { PostsOfBlogPaginationType } from '../../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.types.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -26,7 +26,7 @@ export class PostsQueryRepository {
     @InjectModel(Post.name)
     private PostModel: PostModelType,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
-    protected blogQueryRepository: BlogsQueryRepository,
+    protected blogBloggerQueryRepository: BlogsBloggerQueryRepository,
   ) {}
 
   async getAllPosts(
@@ -69,7 +69,7 @@ export class PostsQueryRepository {
     userId: ObjectId | null,
   ): Promise<null | PostsOfBlogPaginationType> {
     //Проверка есть ли блог
-    const blog = await this.blogQueryRepository.getBlogById(blogId);
+    const blog = await this.blogBloggerQueryRepository.getBlogById(blogId);
     if (!blog) {
       return null;
     }

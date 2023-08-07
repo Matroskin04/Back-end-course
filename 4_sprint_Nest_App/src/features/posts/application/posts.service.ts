@@ -4,15 +4,11 @@ import {
   PostTypeWithId,
 } from '../infrastructure/repository/posts.types.repositories';
 import { PostsRepository } from '../infrastructure/repository/posts.repository';
-import { BlogsQueryRepository } from '../../blogs/infrastructure/query.repository/blogs.query.repository';
 import { ObjectId } from 'mongodb';
 import { modifyPostIntoViewModel } from '../../../infrastructure/helpers/functions/features/posts.functions.helpers';
 import { PostModelType } from '../domain/posts.db.types';
 import { Post } from '../domain/posts.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostViewType } from '../infrastructure/query.repository/posts.types.query.repository';
-import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs.repository';
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../infrastructure/helpers/functions/features/likes-info.functions.helpers';
 import { LikeStatus } from '../../../infrastructure/helpers/enums/like-status';
@@ -20,6 +16,10 @@ import { UsersQueryRepository } from '../../users/infrastructure/query.repositor
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts.query.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
+import { BlogsSARepository } from '../../blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
+import { BlogsBloggerQueryRepository } from '../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
+import { BodyForUpdatePostDto } from './dto/body-for-update-post.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PostsService {
@@ -28,21 +28,21 @@ export class PostsService {
     private PostModel: PostModelType,
     protected postsRepository: PostsRepository,
     protected postsQueryRepository: PostsQueryRepository,
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected blogsRepository: BlogsRepository,
+    protected blogsBloggerQueryRepository: BlogsBloggerQueryRepository,
+    protected blogsRepository: BlogsSARepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
     protected likesInfoRepository: LikesInfoRepository,
     protected likesInfoService: LikesInfoService,
   ) {}
 
-  async createPost(inputBodyPost: BodyPostType): Promise<PostViewType> {
-    //todo remove false
-    const blog = await this.blogsQueryRepository.getBlogById(
+  /* async createPost(inputBodyPost: BodyPostType): Promise<PostViewType> {
+    const blog = await this.blogsBloggerQueryRepository.getBlogById(
       inputBodyPost.blogId,
     );
     if (!blog) {
       throw new BadRequestException([
+        //todo в функцию завернуть создание объекта
         {
           message: 'Such blogId is not found',
           field: 'blogId',
@@ -69,7 +69,7 @@ export class PostsService {
     );
 
     return postMapped;
-  }
+  }*/
 
   async createPostByBlogId(
     blogId: string,
@@ -109,8 +109,9 @@ export class PostsService {
     return postMapped;
   }
 
+  /*
   async updatePost(id: string, inputBodyPost: BodyPostType): Promise<boolean> {
-    const blog = await this.blogsQueryRepository.getBlogById(
+    const blog = await this.blogsBloggerQueryRepository.getBlogById(
       inputBodyPost.blogId,
     );
 
@@ -124,6 +125,24 @@ export class PostsService {
     }
 
     const post = await this.postsRepository.getPostById(new ObjectId(id));
+    if (!post) return false;
+
+    post.updatePostInfo(post, inputBodyPost);
+    await this.postsRepository.save(post);
+
+    return true;
+  }
+*/
+
+  async updatePostByBlogId(
+    blogId: string,
+    postId: string,
+    inputBodyPost: BodyForUpdatePostDto,
+  ) {
+    const blog = await this.blogsBloggerQueryRepository.getBlogById(blogId);
+    if (!blog) return false; //todo 500 error or default (if middle had to validate it)
+
+    const post = await this.postsRepository.getPostById(new ObjectId(postId));
     if (!post) return false;
 
     post.updatePostInfo(post, inputBodyPost);

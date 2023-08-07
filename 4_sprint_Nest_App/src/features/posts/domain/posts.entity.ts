@@ -1,6 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PostDTOType, PostDocument, PostModelType } from './posts.db.types';
+import {
+  PostDTOType,
+  PostDocument,
+  PostModelType,
+  PostUpdateDTOType,
+} from './posts.db.types';
 
 @Schema()
 export class LikesInfo {
@@ -37,9 +42,9 @@ export class Post {
   @Prop({ type: LikesInfoSchema, required: true })
   likesInfo: LikesInfo;
 
-  updatePostInfo(post: PostDocument, updateData: PostDTOType): void {
+  updatePostInfo(post: PostDocument, updateData: PostUpdateDTOType): void {
     post.title = updateData.title;
-    post.blogId = updateData.blogId;
+    // post.blogId = updateData.blogId;
     post.content = updateData.content;
     post.shortDescription = updateData.shortDescription;
     return;

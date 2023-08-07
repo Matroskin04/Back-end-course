@@ -12,10 +12,7 @@ export class PostsRepository {
     private PostModel: PostModelType,
   ) {}
 
-  async getPostById(
-    postId: ObjectId,
-    // userId: ObjectId | null,
-  ): Promise<null | PostInstanceType> {
+  async getPostById(postId: ObjectId): Promise<null | PostInstanceType> {
     const post = await this.PostModel.findOne({ _id: postId });
     if (!post) {
       return null;

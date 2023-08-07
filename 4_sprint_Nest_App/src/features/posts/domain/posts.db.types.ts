@@ -15,12 +15,6 @@ export type PostDBType = {
     dislikesCount: number;
   };
 };
-export type PostDTOType = {
-  title: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
-};
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -32,4 +26,17 @@ export type PostModelStaticMethodsType = {
     blogName: string,
     PostModel: PostModelType,
   ) => PostDocument;
+};
+
+export type PostDTOType = {
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+};
+
+export type PostUpdateDTOType = {
+  title: string;
+  shortDescription: string;
+  content: string;
 };
