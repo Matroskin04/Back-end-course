@@ -36,6 +36,7 @@ import { TitleOfDevice } from '../../../infrastructure/decorators/auth/title-of-
 import { JwtRefreshGuard } from '../../../infrastructure/guards/jwt-refresh.guard';
 import { RefreshToken } from '../../../infrastructure/decorators/auth/refresh-token-param.decorator';
 import { JwtService } from '../../../infrastructure/general-features/jwt/jwt.service';
+import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.guard';
 
 @Controller('/hometask-nest/auth')
 export class AuthController {
@@ -61,7 +62,7 @@ export class AuthController {
     }
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard, BlogOwnerByIdGuard)
   @Post('login')
   async loginUser(
     @CurrentUserId() userId: ObjectId,

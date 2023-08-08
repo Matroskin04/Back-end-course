@@ -1,6 +1,6 @@
-import { BlogType } from '../../../infrastructure/repository/blogs.types.repositories';
-import { PostTypeWithId } from '../../../../posts/infrastructure/repository/posts.types.repositories';
+import { PostTypeWithId } from '../../../../../posts/infrastructure/repository/posts.types.repositories';
 import { ObjectId } from 'mongodb';
+import { BlogType } from '../../../../super-admin-blogs/infrastructure/repository/blogs-sa.types.repositories';
 
 export type BlogOutputModel = BlogType & { id: ObjectId };
 

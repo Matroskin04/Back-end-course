@@ -1,7 +1,7 @@
 import { BlogDTOType, BlogDocument, BlogModelType } from './blogs.db.types';
 import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BlogViewType } from '../infrastructure/query.repository/blogs.types.query.repository';
+import { BlogViewType } from '../public-blogs/infrastructure/query.repository/blogs-public.types.query.repository';
 
 @Schema()
 export class Blog {
@@ -22,6 +22,11 @@ export class Blog {
   @Prop({ type: Boolean, required: true, default: false })
   isMembership: boolean;
 
+  @Prop({ type: Object, required: true })
+  blogOwnerInfo: {
+    userId: string;
+    userLogin: string;
+  };
   static createInstance(
     blogDTO: BlogDTOType,
     BlogModel: BlogModelType,

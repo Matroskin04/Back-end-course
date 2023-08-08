@@ -4,17 +4,17 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { BlogsRepository } from '../../../features/blogs/infrastructure/repository/blogs.repository';
+import { BlogsSARepository } from '../../../features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
 
 @ValidatorConstraint({ name: 'IsBlogByIdExists', async: true })
 export class IsBlogByIdExistsConstraint
   implements ValidatorConstraintInterface
 {
-  constructor(protected blogsRepository: BlogsRepository) {}
+  constructor(protected blogsSARepository: BlogsSARepository) {}
   async validate(value: string, args: ValidationArguments | any) {
     const blogId = args.object.blogId;
 
-    const blog = await this.blogsRepository.getBlogInstance(
+    const blog = await this.blogsSARepository.getBlogInstance(
       new ObjectId(blogId),
     );
     return !!blog;

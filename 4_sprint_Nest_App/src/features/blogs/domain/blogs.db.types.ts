@@ -14,6 +14,11 @@ export type BlogDBType = {
   createdAt: string;
 
   isMembership: boolean;
+
+  blogOwnerInfo: {
+    userId: string;
+    userLogin: string;
+  };
 };
 
 export type BlogDTOType = {
@@ -31,4 +36,9 @@ export type BlogModelStaticMethodsType = {
     blogDTO: BlogDTOType,
     BlogModel: BlogModelType,
   ) => BlogDocument;
+};
+
+export type blogOwnerInfoType = {
+  userId: string;
+  userLogin: string;
 };

@@ -1,11 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { BlogsService } from './features/blogs/application/blogs.service';
-import { BlogsQueryRepository } from './features/blogs/infrastructure/query.repository/blogs.query.repository';
-import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
 import { Blog, BlogSchema } from './features/blogs/domain/blogs.entity';
-import { BlogsController } from './features/blogs/api/blogs.controller';
 import {
   LikesInfo,
   LikesInfoSchema,
@@ -22,14 +18,7 @@ import { PostsController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsQueryRepository } from './features/posts/infrastructure/query.repository/posts.query.repository';
 import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
-import {
-  EmailConfirmation,
-  EmailConfirmationSchema,
-  PasswordRecovery,
-  PasswordRecoverySchema,
-  User,
-  UserSchema,
-} from './features/users/domain/users.entity';
+import { User, UserSchema } from './features/users/domain/users.entity';
 import { CommentsController } from './features/comments/api/comments.controller';
 import { UsersController } from './features/users/api/users.controller';
 import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
@@ -69,6 +58,22 @@ import { DevicesRepository } from './features/devices/infrastructure/repository/
 import { Device, DeviceSchema } from './features/devices/domain/devices.entity';
 import { JwtQueryRepository } from './infrastructure/general-features/jwt/jwt.query.repository';
 import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
+import {
+  EmailConfirmation,
+  EmailConfirmationSchema,
+  PasswordRecovery,
+  PasswordRecoverySchema,
+} from './features/users/domain/users.subschemas';
+import { BlogsPublicController } from './features/blogs/public-blogs/api/blogs-public.controller';
+import { BlogsBloggerController } from './features/blogs/blogger-blogs/api/blogs-blogger.controller';
+import { BlogsSAController } from './features/blogs/super-admin-blogs/api/blogs-sa.controller';
+import { BlogsBloggerService } from './features/blogs/blogger-blogs/application/blogs-blogger.service';
+import { BlogsSAService } from './features/blogs/super-admin-blogs/application/blogs-sa.service';
+import { BlogsPublicQueryRepository } from './features/blogs/public-blogs/infrastructure/query.repository/blogs-public.query.repository';
+import { BlogsBloggerQueryRepository } from './features/blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
+import { BlogsSAQueryRepository } from './features/blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
+import { BlogsBloggerRepository } from './features/blogs/blogger-blogs/infrastructure/repository/blogs-blogger.repository';
+import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
 
 @Module({
   imports: [
@@ -132,7 +137,9 @@ import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
   ],
   controllers: [
     AuthController,
-    BlogsController,
+    BlogsPublicController,
+    BlogsBloggerController,
+    BlogsSAController,
     DevicesController,
     PostsController,
     CommentsController,
@@ -141,9 +148,13 @@ import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
   ],
   providers: [
     AuthService,
-    BlogsService,
-    BlogsQueryRepository,
-    BlogsRepository,
+    BlogsBloggerService,
+    BlogsSAService,
+    BlogsPublicQueryRepository,
+    BlogsBloggerQueryRepository,
+    BlogsSAQueryRepository,
+    BlogsBloggerRepository,
+    BlogsSARepository,
     CommentsService,
     CommentsQueryRepository,
     CommentsRepository,
