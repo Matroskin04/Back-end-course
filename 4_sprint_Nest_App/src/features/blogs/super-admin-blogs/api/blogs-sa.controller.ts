@@ -1,60 +1,54 @@
-import { QueryBlogInputModel } from './models/input/query-blog.input.model';
-
 import {
-  ViewAllBlogsModel,
-  BlogOutputModel,
-  ViewPostsOfBlogModel,
-} from './models/output/blog.output.model';
-import { CreateBlogInputModel } from './models/input/create-blog.input.model';
-import { CreatePostByBlogIdModel } from '../../posts/api/models/input/create-post.input.model';
-import { PostTypeWithId } from '../../posts/infrastructure/repository/posts.types.repositories';
-import { UpdateBlogInputModel } from './models/input/update-blog.input.model';
-
-import {
-  Body,
   Controller,
-  Delete,
   Get,
   Param,
-  Post,
   Put,
   Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { BlogsQueryRepository } from '../infrastructure/query.repository/blogs.query.repository';
-import { PostsQueryRepository } from '../../posts/infrastructure/query.repository/posts.query.repository';
-import { BlogsService } from '../application/blogs.service';
-import { PostsService } from '../../posts/application/posts.service';
-import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
-import { Response } from 'express';
-import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/jwt-access-not-strict.guard';
-import { CurrentUserId } from '../../../infrastructure/decorators/auth/current-user-id.param.decorator';
-import { ObjectId } from 'mongodb';
-import { BasicAuthGuard } from '../../../infrastructure/guards/basic-auth.guard';
 import { SkipThrottle } from '@nestjs/throttler';
+import { BlogsSAQueryRepository } from '../infrastructure/query.repository/blogs-sa.query.repository';
+import { QueryBlogInputModel } from './models/input/query-blog.input.model';
+import { ViewAllBlogsModel } from './models/output/blog.output.model';
+import { HTTP_STATUS_CODE } from '../../../../infrastructure/helpers/enums/http-status';
+import { Response } from 'express';
+import { BasicAuthGuard } from '../../../../infrastructure/guards/basic-auth.guard';
+import { BlogsSAService } from '../application/blogs-sa.service';
 
 @SkipThrottle()
-@Controller('/hometask-nest/blogs')
-export class BlogsController {
+@Controller('/hometask-nest/sa/blogs')
+export class BlogsSAController {
   constructor(
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected postsQueryRepository: PostsQueryRepository,
-    protected blogsService: BlogsService,
-    protected postsService: PostsService,
+    protected blogsSAQueryRepository: BlogsSAQueryRepository,
+    protected blogsSAService: BlogsSAService,
   ) {}
 
+  @UseGuards(BasicAuthGuard)
   @Get()
   async getAllBlogs(
     @Query() query: QueryBlogInputModel,
     @Res() res: Response<ViewAllBlogsModel>,
   ) {
     //todo попробовать получить не объектом
-    const result = await this.blogsQueryRepository.getAllBlogs(query);
+    const result = await this.blogsSAQueryRepository.getAllBlogs(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 
-  @Get(':id')
+  @UseGuards(BasicAuthGuard)
+  @Put(':id/bind-with-user/:userId')
+  async bindBlogWithUser(
+    @Param('id') blogId: string,
+    @Param('userId') userId: string,
+    @Res() res: Response<ViewAllBlogsModel>,
+  ) {
+    const result = await this.blogsSAService.bindBlogWithUser(blogId, userId);
+    result
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  }
+
+  /* @Get(':id')
   async getBlogById(
     @Param('id') blogId: string,
     @Res() res: Response<BlogOutputModel>,
@@ -129,5 +123,5 @@ export class BlogsController {
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-  }
+  }*/
 }

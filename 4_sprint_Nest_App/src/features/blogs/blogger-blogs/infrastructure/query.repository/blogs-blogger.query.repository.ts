@@ -1,32 +1,40 @@
 import {
   BlogPaginationType,
   BlogViewType,
-} from './blogs.types.query.repository';
+} from './blogs-blogger.types.query.repository';
 import { ObjectId } from 'mongodb';
 import { QueryBlogInputModel } from '../../api/models/input/query-blog.input.model';
-import { variablesForReturn } from '../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
-import { Blog } from '../../domain/blogs.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogModelType } from '../../domain/blogs.db.types';
+import { Blog } from '../../../domain/blogs.entity';
+import { BlogModelType } from '../../../domain/blogs.db.types';
+import { variablesForReturn } from '../../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
 
 @Injectable()
-export class BlogsQueryRepository {
+export class BlogsBloggerQueryRepository {
   constructor(
     @InjectModel(Blog.name)
     private BlogModel: BlogModelType,
   ) {}
-  async getAllBlogs(query: QueryBlogInputModel): Promise<BlogPaginationType> {
+  async getAllBlogs(
+    query: QueryBlogInputModel,
+    userId: ObjectId,
+  ): Promise<BlogPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
 
     const countAllBlogsSort = await this.BlogModel.countDocuments({
       name: { $regex: searchNameTerm ?? '', $options: 'i' },
+      'blogOwnerInfo.userId': userId,
     });
 
-    const allBlogsOnPages = await this.BlogModel.find({
-      name: { $regex: searchNameTerm ?? '', $options: 'i' },
-    })
+    const allBlogsOnPages = await this.BlogModel.find(
+      {
+        name: { $regex: searchNameTerm ?? '', $options: 'i' },
+        'blogOwnerInfo.userId': userId,
+      },
+      { projection: { blogOwnerInfo: 0 } },
+    )
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)
       .sort(paramsOfElems.paramSort);
@@ -41,7 +49,10 @@ export class BlogsQueryRepository {
   }
 
   async getBlogById(id: string): Promise<null | BlogViewType> {
-    const blog = await this.BlogModel.findOne({ _id: new ObjectId(id) });
+    const blog = await this.BlogModel.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { blogOwnerInfo: 0 } },
+    );
 
     if (blog) {
       return blog.modifyIntoViewModel();
