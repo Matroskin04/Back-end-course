@@ -47,7 +47,7 @@ export class CommentsController {
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 
-  @UseGuards(JwtAccessGuard) //todo addition guard
+  @UseGuards(JwtAccessGuard) //todo addition guard 403
   @Put(':id')
   async updateComment(
     @Param('id') commentId: string,
@@ -86,7 +86,7 @@ export class CommentsController {
           .send("Comment with specified id doesn't exist");
   }
 
-  @UseGuards(JwtAccessGuard) //todo addition guard
+  @UseGuards(JwtAccessGuard) //todo addition guard 403
   @Delete(':id')
   async deleteComment(
     @Param('id') commentId: string,

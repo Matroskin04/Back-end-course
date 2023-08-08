@@ -30,7 +30,6 @@ export class BlogsSAController {
     @Query() query: QueryBlogInputModel,
     @Res() res: Response<ViewAllBlogsModel>,
   ) {
-    //todo попробовать получить не объектом
     const result = await this.blogsSAQueryRepository.getAllBlogs(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
@@ -92,7 +91,7 @@ export class BlogsSAController {
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputPostModel: CreatePostByBlogIdModel,
-    @Res() res: Response<PostTypeWithId>, //todo тип
+    @Res() res: Response<PostTypeWithId>,
   ) {
     const result = await this.postsService.createPostByBlogId(
       blogId,

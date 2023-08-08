@@ -28,4 +28,9 @@ export class CommentsRepository {
     const result = await this.CommentModel.deleteOne({ _id: id });
     return result.deletedCount === 1;
   }
+
+  async deleteCommentsByUserId(userId: ObjectId): Promise<boolean> {
+    const result = await this.CommentModel.deleteMany({ userId });
+    return result.deletedCount > 0;
+  }
 }

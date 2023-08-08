@@ -27,7 +27,6 @@ export class BlogsPublicController {
     @Query() query: QueryBlogInputModel,
     @Res() res: Response<ViewAllBlogsModel>,
   ) {
-    //todo попробовать получить не объектом
     const result = await this.blogsPublicQueryRepository.getAllBlogs(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }

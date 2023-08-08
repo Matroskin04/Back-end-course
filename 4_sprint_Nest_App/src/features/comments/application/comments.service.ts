@@ -105,7 +105,7 @@ export class CommentsService {
       //Иначе увеличиваем количество лайков/дизлайков
       const result =
         await this.likesInfoRepository.incrementNumberOfLikesOfComment(
-          commentId,
+          new ObjectId(commentId),
           likeStatus,
         );
       if (!result) {
@@ -130,7 +130,7 @@ export class CommentsService {
       //уменьшаю на 1 то, что убрали
       const result =
         await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-          commentId,
+          new ObjectId(commentId),
           likeInfo.statusLike,
         );
       if (!result) {
@@ -161,7 +161,7 @@ export class CommentsService {
     //увеличиваю на 1 то, что пришло
     const result1 =
       await this.likesInfoRepository.incrementNumberOfLikesOfComment(
-        commentId,
+        new ObjectId(commentId),
         likeStatus,
       );
     if (!result1) {
@@ -170,7 +170,7 @@ export class CommentsService {
     //уменьшаю на 1 то, что убрали
     const result2 =
       await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-        commentId,
+        new ObjectId(commentId),
         likeInfo.statusLike,
       );
     if (!result2) {

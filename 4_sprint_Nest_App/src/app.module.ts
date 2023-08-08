@@ -59,6 +59,8 @@ import { Device, DeviceSchema } from './features/devices/domain/devices.entity';
 import { JwtQueryRepository } from './infrastructure/general-features/jwt/jwt.query.repository';
 import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
 import {
+  BanInfo,
+  BanInfoSchema,
   EmailConfirmation,
   EmailConfirmationSchema,
   PasswordRecovery,
@@ -74,6 +76,10 @@ import { BlogsBloggerQueryRepository } from './features/blogs/blogger-blogs/infr
 import { BlogsSAQueryRepository } from './features/blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
 import { BlogsBloggerRepository } from './features/blogs/blogger-blogs/infrastructure/repository/blogs-blogger.repository';
 import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
+import {
+  BannedUser,
+  BannedUserSchema,
+} from './features/users/domain/users-banned/users-banned.entity';
 
 @Module({
   imports: [
@@ -128,12 +134,16 @@ import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastruc
         name: Device.name,
         schema: DeviceSchema,
       },
+      {
+        name: BanInfo.name,
+        schema: BanInfoSchema,
+      },
+      {
+        name: BannedUser.name,
+        schema: BannedUserSchema,
+      },
     ]),
-    JwtModule.register({
-      //todo как сделать разные?
-      secret: process.env.PRIVATE_KEY_ACCESS_TOKEN,
-      signOptions: { expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN },
-    }),
+    JwtModule.register({}),
   ],
   controllers: [
     AuthController,

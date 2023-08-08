@@ -5,13 +5,19 @@ import { CommentViewType } from '../repository/comments.types.repositories';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentModelType } from '../../domain/comments.db.types';
 import { QueryPostInputModel } from '../../../posts/api/models/input/query-post.input.model';
-import { CommentOfPostPaginationType } from '../../../posts/infrastructure/query.repository/posts.types.query.repository';
+import {
+  CommentOfPostPaginationType,
+  PostsDBType,
+} from '../../../posts/infrastructure/query.repository/posts.types.query.repository';
 import { variablesForReturn } from '../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
 import {
   mappingComment,
   mappingCommentForAllDocs,
 } from '../../../../infrastructure/helpers/functions/features/comments.functions.helpers';
-import { StatusOfLike } from './comments.types.query.repository';
+import {
+  CommentsDBType,
+  StatusOfLike,
+} from './comments.types.query.repository';
 import { Comment } from '../../domain/comments.entity';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 
@@ -90,5 +96,12 @@ export class CommentsQueryRepository {
       totalCount: countAllCommentsOfPost,
       items: allCommentsOfPost,
     };
+  }
+
+  async getAllCommentsOfUserDBFormat(
+    userId: ObjectId,
+  ): Promise<CommentsDBType | null> {
+    const comments = await this.CommentModel.find({ userId }).lean();
+    return comments;
   }
 }
