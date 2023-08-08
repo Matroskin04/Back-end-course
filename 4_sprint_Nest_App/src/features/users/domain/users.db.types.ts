@@ -17,18 +17,23 @@ export type UserDBType = {
     confirmationCode: string;
     expirationDate: Date;
   };
+  banInfo: {
+    isBanned: boolean;
+    banDate: string;
+    banReason: string;
+  };
 };
 
 export type UserDTOType = {
   login: string;
   email: string;
   passwordHash: string;
-  emailConfirmation: {
+  emailConfirmation?: {
     confirmationCode?: string;
     expirationDate?: Date;
     isConfirmed?: boolean;
   };
-  passwordRecovery: {
+  passwordRecovery?: {
     confirmationCode?: string;
     expirationDate?: Date;
   };
@@ -43,4 +48,9 @@ export type UserModelStaticMethodsType = {
     userDTO: UserDTOType,
     UserModel: UserModelType,
   ) => UserDocument;
+};
+
+export type BanInfoType = {
+  isBanned: boolean;
+  banReason: string;
 };

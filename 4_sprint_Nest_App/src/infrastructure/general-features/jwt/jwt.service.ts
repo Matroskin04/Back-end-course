@@ -23,7 +23,6 @@ export class JwtService {
     }
 
     const accessToken = this.jwtServiceNest.sign(
-      //todo another jwt service
       { userId: userId.toString() },
       {
         secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,

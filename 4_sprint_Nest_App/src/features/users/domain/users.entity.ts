@@ -1,34 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
-import { UserDocument, UserDTOType, UserModelType } from './users.db.types';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  BanInfoType,
+  UserDocument,
+  UserDTOType,
+  UserModelType,
+} from './users.db.types';
 import { UserViewType } from '../infrastructure/query.repository/users.types.query.repository';
-
-@Schema()
-export class EmailConfirmation {
-  @Prop({ required: true, default: uuidv4() })
-  confirmationCode: string;
-
-  @Prop({ type: Date, required: true, default: Date.now })
-  expirationDate: Date;
-
-  @Prop({ type: Boolean, required: true, default: true })
-  isConfirmed: boolean;
-}
-export const EmailConfirmationSchema =
-  SchemaFactory.createForClass(EmailConfirmation);
-
-@Schema()
-export class PasswordRecovery {
-  @Prop({ required: true, default: uuidv4() })
-  confirmationCode: string;
-
-  @Prop({ type: Date, required: true, default: Date.now })
-  expirationDate: Date;
-}
-export const PasswordRecoverySchema =
-  SchemaFactory.createForClass(PasswordRecovery);
-
+import {
+  BanInfo,
+  BanInfoSchema,
+  EmailConfirmation,
+  EmailConfirmationSchema,
+  PasswordRecovery,
+  PasswordRecoverySchema,
+} from './users.subschemas';
 @Schema()
 export class User {
   _id: ObjectId;
@@ -45,11 +31,14 @@ export class User {
   @Prop({ required: true })
   passwordHash: string;
 
-  @Prop({ type: EmailConfirmationSchema, required: true })
+  @Prop({ type: EmailConfirmationSchema, default: {} })
   emailConfirmation: EmailConfirmation;
 
-  @Prop({ type: PasswordRecoverySchema, required: true })
+  @Prop({ type: PasswordRecoverySchema, default: {} })
   passwordRecovery: PasswordRecovery;
+
+  @Prop({ type: BanInfoSchema, default: {} })
+  banInfo: BanInfo;
 
   modifyIntoViewModel(): UserViewType {
     return {
@@ -57,7 +46,19 @@ export class User {
       login: this.login,
       email: this.email,
       createdAt: this.createdAt,
+      banInfo: {
+        isBanned: this.banInfo.isBanned,
+        banDate: this.banInfo.banDate,
+        banReason: this.banInfo.banReason,
+      },
     };
+  }
+
+  updateBanInfo(banInfo: BanInfoType, user: UserDocument): void {
+    user.banInfo.isBanned = banInfo.isBanned;
+    user.banInfo.banReason = banInfo.banReason;
+    user.banInfo.banDate = new Date().toISOString();
+    return;
   }
 
   static createInstance(
@@ -75,4 +76,5 @@ UserSchema.statics = {
 
 UserSchema.methods = {
   modifyIntoViewModel: User.prototype.modifyIntoViewModel,
+  updateBanInfo: User.prototype.updateBanInfo,
 };

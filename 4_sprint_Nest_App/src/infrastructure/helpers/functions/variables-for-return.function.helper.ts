@@ -1,5 +1,5 @@
-import { QueryBlogInputModel } from '../../../features/blogs/api/models/input/query-blog.input.model';
 import { VariablesForReturnType } from './types/variables-for-return.types';
+import { QueryBlogInputModel } from '../../../features/blogs/blogger-blogs/api/models/input/query-blog.input.model';
 
 export async function variablesForReturn(
   query: QueryBlogInputModel,

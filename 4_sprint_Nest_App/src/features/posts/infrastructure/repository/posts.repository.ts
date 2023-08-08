@@ -14,10 +14,6 @@ export class PostsRepository {
 
   async getPostById(postId: ObjectId): Promise<null | PostInstanceType> {
     const post = await this.PostModel.findOne({ _id: postId });
-    if (!post) {
-      return null;
-    }
-
     return post;
   }
 
@@ -30,5 +26,10 @@ export class PostsRepository {
     const result = await this.PostModel.deleteOne({ _id: new ObjectId(id) });
 
     return result.deletedCount === 1;
+  }
+
+  async deletePostsByUserId(blogId: ObjectId): Promise<boolean> {
+    const result = await this.PostModel.deleteMany({ blogId });
+    return result.deletedCount > 0;
   }
 }

@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "rootDir": "./src",
+    //"rootDir": "./src", //todo почему не работало
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
@@ -20,5 +20,4 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true
   },
-  "include": ["./tests", "./src"],
 }

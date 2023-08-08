@@ -85,4 +85,8 @@ export class DevicesService {
 
     return await this.deviceRepository.deleteDeviceById(payloadToken.deviceId);
   }
+
+  async deleteAllDevicesByUserId(userId: string): Promise<boolean> {
+    return this.deviceRepository.deleteAllDevicesByUserId(new ObjectId(userId));
+  }
 }

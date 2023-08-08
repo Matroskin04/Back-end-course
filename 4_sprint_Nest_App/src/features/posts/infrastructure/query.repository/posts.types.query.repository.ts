@@ -3,6 +3,7 @@ import {
   PostTypeWithId,
 } from '../repository/posts.types.repositories';
 import { CommentViewType } from '../../../comments/infrastructure/repository/comments.types.repositories';
+import { PostDBType } from '../../domain/posts.db.types';
 
 export type PostPaginationType = {
   pagesCount: number;
@@ -28,3 +29,5 @@ export type PostViewType = PostTypeWithId & {
     newestLikes: NewestLikesType;
   };
 };
+
+export type PostsDBType = Array<PostDBType>;

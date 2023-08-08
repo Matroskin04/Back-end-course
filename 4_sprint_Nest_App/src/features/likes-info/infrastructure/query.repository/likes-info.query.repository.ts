@@ -10,6 +10,10 @@ import {
   PostLikesInfo,
 } from '../../domain/likes-info.entity';
 import { NewestLikesType } from '../../../posts/infrastructure/repository/posts.types.repositories';
+import {
+  CommentsLikesInfoOfUserType,
+  PostsLikesInfoOfUserType,
+} from './likes-info.types.query.repository';
 
 @Injectable()
 export class LikesInfoQueryRepository {
@@ -38,5 +42,23 @@ export class LikesInfoQueryRepository {
       .sort({ addedAt: -1 })
       .limit(3)
       .lean();
+  }
+
+  async getPostsLikesInfoByUserId(
+    userId: ObjectId,
+  ): Promise<PostsLikesInfoOfUserType> {
+    const postsLikesInfo = await this.PostsLikesInfoModel.find({
+      userId,
+    }).lean();
+    return postsLikesInfo;
+  }
+
+  async getCommentsLikesInfoByUserId(
+    userId: ObjectId,
+  ): Promise<CommentsLikesInfoOfUserType> {
+    const commentLikesInfo = await this.CommentsLikesInfoModel.find({
+      userId,
+    }).lean();
+    return commentLikesInfo;
   }
 }

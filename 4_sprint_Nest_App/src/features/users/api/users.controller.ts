@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   Param,
   Post,
+  Put,
   Query,
   Res,
   UseGuards,
@@ -22,9 +23,10 @@ import { Response } from 'express';
 import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic-auth.guard';
 import { SkipThrottle } from '@nestjs/throttler';
+import { UpdateBanInfoOfUserInputModel } from './models/input/update-ban-info-of-user.input.model';
 
 @SkipThrottle()
-@Controller('/hometask-nest/users')
+@Controller('/hometask-nest/sa/users')
 export class UsersController {
   constructor(
     protected usersQueryRepository: UsersQueryRepository,
@@ -34,9 +36,8 @@ export class UsersController {
   @UseGuards(BasicAuthGuard)
   @Get()
   async getAllUsers(
-    //todo try catch не нужны в nest?
     @Query() query: QueryUserInputModel,
-    @Res() res: Response<ViewAllUsersModels | string>,
+    @Res({ passthrough: true }) res: Response<ViewAllUsersModels | string>,
   ) {
     const result = await this.usersQueryRepository.getAllUsers(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
@@ -53,12 +54,23 @@ export class UsersController {
   }
 
   @UseGuards(BasicAuthGuard)
+  @Put(':id/ban')
+  async updateBanInfoOfUser(
+    @Param('id') userId: string,
+    @Body() inputBanInfo: UpdateBanInfoOfUserInputModel,
+    @Res() res: Response<void>,
+  ) {
+    await this.usersService.updateBanInfoOfUser(userId, inputBanInfo);
+    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+  }
+
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') userId: string, @Res() res: Response<void>) {
     const result = await this.usersService.deleteSingleUser(userId);
 
     result
-      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204) // throw new
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 }

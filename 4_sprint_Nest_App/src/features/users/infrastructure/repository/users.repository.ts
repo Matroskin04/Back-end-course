@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../domain/users.entity';
 import { UserModelType } from '../../domain/users.db.types';
-import { UserInstanceType } from './users.types.repositories';
+import {
+  BannedUserInstanceType,
+  UserInstanceType,
+} from './users.types.repositories';
 
 @Injectable()
 export class UsersRepository {
@@ -12,7 +15,12 @@ export class UsersRepository {
     private UserModel: UserModelType,
   ) {}
 
-  async save(user: UserInstanceType): Promise<void> {
+  async getUserById(userId: ObjectId): Promise<null | UserInstanceType> {
+    const user = await this.UserModel.findOne({ _id: userId });
+    return user;
+  }
+
+  async save(user: UserInstanceType | BannedUserInstanceType): Promise<void> {
     await user.save();
     return;
   }

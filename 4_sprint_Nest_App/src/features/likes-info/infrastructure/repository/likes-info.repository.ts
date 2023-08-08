@@ -66,7 +66,7 @@ export class LikesInfoRepository {
   }
 
   async incrementNumberOfLikesOfComment(
-    commentId: string,
+    commentId: ObjectId,
     incrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
     if (incrementValue === 'Like') {
@@ -85,18 +85,18 @@ export class LikesInfoRepository {
   }
 
   async decrementNumberOfLikesOfComment(
-    _id: string,
+    commentId: ObjectId,
     decrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
     if (decrementValue === 'Like') {
       const result = await this.CommentModel.updateOne(
-        { _id },
+        { _id: commentId },
         { $inc: { 'likesInfo.likesCount': -1 } },
       );
       return result.modifiedCount === 1;
     } else {
       const result = await this.CommentModel.updateOne(
-        { _id },
+        { _id: commentId },
         { $inc: { 'likesInfo.dislikesCount': -1 } },
       );
       return result.modifiedCount === 1;
@@ -154,5 +154,15 @@ export class LikesInfoRepository {
       commentId,
     });
     return result.deletedCount === 1;
+  }
+
+  async deleteLikesInfoPostsByUserId(userId: ObjectId): Promise<boolean> {
+    const result = await this.PostsLikesInfoModel.deleteMany({ userId });
+    return result.deletedCount > 0;
+  }
+
+  async deleteLikesInfoCommentsByUserId(userId: ObjectId): Promise<boolean> {
+    const result = await this.CommentsLikesInfoModel.deleteMany({ userId });
+    return result.deletedCount > 0;
   }
 }

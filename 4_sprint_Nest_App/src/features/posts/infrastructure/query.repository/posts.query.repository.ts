@@ -1,5 +1,6 @@
 import {
   PostPaginationType,
+  PostsDBType,
   PostViewType,
 } from './posts.types.query.repository';
 import { ObjectId } from 'mongodb';
@@ -18,7 +19,6 @@ import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/que
 import { reformNewestLikes } from '../../../../infrastructure/helpers/functions/features/likes-info.functions.helpers';
 import { BlogsBloggerQueryRepository } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
-import { PostsOfBlogPaginationType } from '../../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.types.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -26,7 +26,6 @@ export class PostsQueryRepository {
     @InjectModel(Post.name)
     private PostModel: PostModelType,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
-    protected blogBloggerQueryRepository: BlogsBloggerQueryRepository,
   ) {}
 
   async getAllPosts(
@@ -67,13 +66,7 @@ export class PostsQueryRepository {
     blogId: string,
     query: QueryBlogInputModel,
     userId: ObjectId | null,
-  ): Promise<null | PostsOfBlogPaginationType> {
-    //Проверка есть ли блог
-    const blog = await this.blogBloggerQueryRepository.getBlogById(blogId);
-    if (!blog) {
-      return null;
-    }
-
+  ): Promise<null | PostPaginationType> {
     const paramsOfElems = await variablesForReturn(query);
     const countAllPostsSort = await this.PostModel.countDocuments({
       blogId: blogId,
@@ -134,5 +127,12 @@ export class PostsQueryRepository {
     const reformedNewestLikes = reformNewestLikes(newestLikes);
 
     return modifyPostIntoViewModel(post, reformedNewestLikes, myStatus);
+  }
+
+  async getAllPostsOfBlogDBFormat(
+    blogId: ObjectId,
+  ): Promise<PostsDBType | null> {
+    const posts = await this.PostModel.find({ blogId }).lean();
+    return posts;
   }
 }

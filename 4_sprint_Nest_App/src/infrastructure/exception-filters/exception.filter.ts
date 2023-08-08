@@ -19,6 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const errorsResponse: any = {
           errorsMessages: [],
         };
+
         const responseBody: any = exception.getResponse();
 
         responseBody.message.forEach((m) =>

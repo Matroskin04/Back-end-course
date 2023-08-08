@@ -1,17 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
-  BlogDocument,
-  BlogDTOType,
-  BlogModelType,
-} from '../../blogs/domain/blogs.db.types';
-import { Blog, BlogSchema } from '../../blogs/domain/blogs.entity';
-import {
-  CommentsLikesInfoDBType,
   CommentLikesInfoDocument,
   CommentLikesInfoDTOType,
   CommentLikesInfoModelType,
-  PostsLikesInfoDBType,
   PostLikesInfoDocument,
   PostLikesInfoDTOType,
   PostLikesInfoModelType,

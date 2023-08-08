@@ -27,7 +27,7 @@ export function modifyPostIntoViewModel(
   };
 }
 
-export async function modifyPostForAllDocs( //todo такую логику лучше в функции оставить? Или в инстанс метод
+export async function modifyPostForAllDocs( //todo in repo
   post: PostDBType,
   userId: ObjectId | null,
   likesInfoQueryRepository: LikesInfoQueryRepository,

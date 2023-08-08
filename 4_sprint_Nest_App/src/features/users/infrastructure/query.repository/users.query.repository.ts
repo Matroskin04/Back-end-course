@@ -57,20 +57,13 @@ export class UsersQueryRepository {
       $or: [{ login: logOrEmail }, { email: logOrEmail }],
     });
 
-    if (user) {
-      return user;
-    }
-    return null;
+    return user;
   }
 
   async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
     // todo создавать ли отдельный метод для взятия логина
 
     const user = await this.UserModel.findOne({ _id: userId });
-
-    if (user) {
-      return user;
-    }
     return user;
   }
 
