@@ -134,13 +134,14 @@ export class UsersService {
         postsLikesInfo,
         commentsLikesInfo,
       };
-      console.log(userBannedInfo);
       //сохраняем её
       const bannedUser = this.BannedUserModel.createInstance(
         userBannedInfo,
         this.BannedUserModel,
       );
-      await this.usersRepository.save(bannedUser);
+      await this.bannedUsersRepository.save(bannedUser);
+      const all = await this.BannedUserModel.find();
+      console.log('1 all:', all);
 
       //Удаляем информацию из обычных коллекций
       if (posts) {
@@ -190,9 +191,8 @@ export class UsersService {
           if (!result)
             throw new Error('Decrementing number of likes/dislikes failed');
         }
-
-        return;
       }
+      return;
     }
 
     //Если юзера разбанят:
@@ -203,6 +203,8 @@ export class UsersService {
 
     const bannedUserInfo =
       await this.bannedUsersQueryRepository.getBannedUserById(userId);
+    const all = await this.BannedUserModel.find();
+    console.log('2 all:', all);
     if (!bannedUserInfo) throw new Error('Banned user info is not found');
 
     //переносим всю информацию в обычные коллекции:

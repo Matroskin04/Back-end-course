@@ -4,6 +4,7 @@ import { Post } from './posts.entity';
 
 export type PostDBType = {
   _id: ObjectId;
+  userId: string;
   title: string;
   shortDescription: string;
   content: string;

@@ -20,7 +20,7 @@ export class UsersRepository {
     return user;
   }
 
-  async save(user: UserInstanceType | BannedUserInstanceType): Promise<void> {
+  async save(user: UserInstanceType): Promise<void> {
     await user.save();
     return;
   }
