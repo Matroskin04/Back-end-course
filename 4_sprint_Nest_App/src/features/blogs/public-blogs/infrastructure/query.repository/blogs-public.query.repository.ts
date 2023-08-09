@@ -36,7 +36,7 @@ export class BlogsPublicQueryRepository {
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllBlogsSort,
-      items: allBlogsOnPages.map((p) => p.modifyIntoViewModel()),
+      items: allBlogsOnPages.map((p) => p.modifyIntoViewGeneralModel()),
     };
   }
 
@@ -44,7 +44,7 @@ export class BlogsPublicQueryRepository {
     const blog = await this.BlogModel.findOne({ _id: new ObjectId(id) });
 
     if (blog) {
-      return blog.modifyIntoViewModel();
+      return blog.modifyIntoViewGeneralModel();
     }
     return null;
   }

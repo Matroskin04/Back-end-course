@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CommentModelType } from '../../domain/comments.db.types';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentInstanceType } from './comments.types.repositories';
-import { Comment } from '../../domain/comments.entity';
+import { Comment, CommentatorInfo } from '../../domain/comments.entity';
 
 @Injectable()
 export class CommentsRepository {
@@ -35,7 +35,9 @@ export class CommentsRepository {
   }
 
   async deleteCommentsByUserId(userId: ObjectId): Promise<boolean> {
-    const result = await this.CommentModel.deleteMany({ userId });
+    const result = await this.CommentModel.deleteMany({
+      'CommentatorInfo.userId': userId,
+    });
     return result.deletedCount > 0;
   }
 }

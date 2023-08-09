@@ -5,11 +5,8 @@ import { Blog } from '../../../domain/blogs.entity';
 import { BlogModelType } from '../../../domain/blogs.db.types';
 import { variablesForReturn } from '../../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
 import { QueryBlogInputModel } from '../../../blogger-blogs/api/models/input/query-blog.input.model';
-import { BlogPaginationType } from '../../../public-blogs/infrastructure/query.repository/blogs-public.types.query.repository';
-import {
-  BlogSAOutputType,
-  ViewAllBlogsModel,
-} from './blogs-sa.types.query.repository';
+import { ViewAllBlogsModel } from './blogs-sa.types.query.repository';
+import { BlogSAOutputType } from '../../../../../../dist/src/features/blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.types.query.repository';
 
 @Injectable()
 export class BlogsSAQueryRepository {
@@ -37,7 +34,7 @@ export class BlogsSAQueryRepository {
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllBlogsSort,
-      items: allBlogsOnPages,
+      items: allBlogsOnPages.map((p) => p.modifyIntoViewSAModel()),
     };
   }
 

@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 export type BlogSAOutputModel = {
-  _id: ObjectId;
+  id: ObjectId;
 
   name: string;
 

@@ -35,7 +35,7 @@ export class BlogsBloggerService {
     const blog = this.BlogModel.createInstance(blogInfo, this.BlogModel);
     await this.blogsRepository.save(blog);
 
-    return blog.modifyIntoViewModel();
+    return blog.modifyIntoViewGeneralModel();
   }
 
   async updateBlog(id: string, inputBodyBlog: BodyBlogType): Promise<boolean> {

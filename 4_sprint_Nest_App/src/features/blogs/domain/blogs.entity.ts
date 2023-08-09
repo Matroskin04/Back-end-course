@@ -2,6 +2,7 @@ import { BlogDTOType, BlogDocument, BlogModelType } from './blogs.db.types';
 import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BlogViewType } from '../public-blogs/infrastructure/query.repository/blogs-public.types.query.repository';
+import { BlogSAOutputType } from '../super-admin-blogs/infrastructure/query.repository/blogs-sa.types.query.repository';
 
 @Schema()
 export class Blog {
@@ -34,7 +35,7 @@ export class Blog {
     return new BlogModel(blogDTO);
   }
 
-  modifyIntoViewModel(): BlogViewType {
+  modifyIntoViewGeneralModel(): BlogViewType {
     return {
       id: this._id,
       name: this.name,
@@ -42,6 +43,21 @@ export class Blog {
       websiteUrl: this.websiteUrl,
       createdAt: this.createdAt,
       isMembership: this.isMembership,
+    };
+  }
+
+  modifyIntoViewSAModel(): BlogSAOutputType {
+    return {
+      id: this._id,
+      name: this.name,
+      description: this.description,
+      websiteUrl: this.websiteUrl,
+      createdAt: this.createdAt,
+      isMembership: this.isMembership,
+      blogOwnerInfo: {
+        userId: this.blogOwnerInfo.userId,
+        userLogin: this.blogOwnerInfo.userLogin,
+      },
     };
   }
 
@@ -60,6 +76,7 @@ BlogSchema.statics = {
 };
 
 BlogSchema.methods = {
-  modifyIntoViewModel: Blog.prototype.modifyIntoViewModel,
+  modifyIntoViewModel: Blog.prototype.modifyIntoViewGeneralModel,
+  modifyIntoViewSAModel: Blog.prototype.modifyIntoViewSAModel,
   updateBlogInfo: Blog.prototype.updateBlogInfo,
 };

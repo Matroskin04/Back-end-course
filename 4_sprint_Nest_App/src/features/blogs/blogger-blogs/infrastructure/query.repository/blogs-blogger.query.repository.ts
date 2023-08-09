@@ -44,7 +44,7 @@ export class BlogsBloggerQueryRepository {
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllBlogsSort,
-      items: allBlogsOnPages.map((p) => p.modifyIntoViewModel()),
+      items: allBlogsOnPages.map((p) => p.modifyIntoViewGeneralModel()),
     };
   }
 
@@ -55,7 +55,7 @@ export class BlogsBloggerQueryRepository {
     );
 
     if (blog) {
-      return blog.modifyIntoViewModel();
+      return blog.modifyIntoViewGeneralModel();
     }
     return null;
   }

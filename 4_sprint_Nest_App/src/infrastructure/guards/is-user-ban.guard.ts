@@ -18,7 +18,8 @@ export class BlogOwnerByIdGuard implements CanActivate {
       request.body.loginOrEmail,
     );
     if (!user) throw new UnauthorizedException('User is not found');
-    if (user.banInfo.isBanned) return false; //Если забанен - то Forbidden
+    if (user.banInfo.isBanned)
+      throw new UnauthorizedException('User is banned'); //Если забанен - то Unauthorized
 
     return true;
   }

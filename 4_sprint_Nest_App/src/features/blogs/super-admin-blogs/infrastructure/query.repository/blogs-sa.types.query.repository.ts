@@ -8,9 +8,13 @@ export type ViewAllBlogsModel = {
   items: Array<BlogSAOutputType>;
 };
 
-export type BlogSAOutputType = {
-  _id: ObjectId;
+export type BlogSAOutputType = { id: ObjectId } & BlogBodyType;
 
+export type BlogSAOutputDBType = {
+  _id: ObjectId;
+} & BlogBodyType;
+
+type BlogBodyType = {
   name: string;
 
   description: string;
