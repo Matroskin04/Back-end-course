@@ -9,11 +9,11 @@ import { HydratedDocument, Model } from 'mongoose';
 import { BannedUser } from './users-banned.entity';
 
 export type BannedUserDTOType = {
-  _id: ObjectId;
+  userId: ObjectId;
   comments: CommentDBType[] | null;
-  posts: PostDBType[];
-  commentsLikesInfo: CommentsLikesInfoDBType[];
-  postsLikesInfo: PostsLikesInfoDBType[];
+  posts: PostDBType[] | null;
+  commentsLikesInfo: CommentsLikesInfoDBType[] | null;
+  postsLikesInfo: PostsLikesInfoDBType[] | null;
 };
 
 export type BannedUserDocument = HydratedDocument<BannedUser>;

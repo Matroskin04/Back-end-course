@@ -17,7 +17,6 @@ import { BanInfoType } from './dto/ban-info.dto';
 import { UsersQueryRepository } from '../infrastructure/query.repository/users.query.repository';
 import { DevicesService } from '../../devices/application/devices.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/query.repository/posts.query.repository';
-import { BlogsBloggerQueryRepository } from '../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { BlogsSAQueryRepository } from '../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
 import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments.query.repository';
 import { LikesInfo } from '../../posts/domain/posts.entity';
@@ -27,6 +26,7 @@ import { BannedUserModelType } from '../domain/users-banned/users-banned.db.type
 import { PostsRepository } from '../../posts/infrastructure/repository/posts.repository';
 import { CommentsRepository } from '../../comments/infrastructure/repository/comments.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
+import { PostDBType } from '../../posts/domain/posts.db.types';
 @Injectable()
 export class UsersService {
   constructor(
@@ -111,7 +111,7 @@ export class UsersService {
     const blog = await this.blogsSAQueryRepository.getBlogByUserId(
       new ObjectId(userId),
     );
-    let posts;
+    let posts: Array<PostDBType> | null = null;
     if (blog) {
       //если найден, то ищем посты
       posts = await this.postsQueryRepository.getAllPostsOfBlogDBFormat(
@@ -132,7 +132,7 @@ export class UsersService {
       );
     //объединяем информацию о забаненном юзере
     const userBannedInfo: BannedUser = {
-      _id: new ObjectId(userId),
+      userId: new ObjectId(userId),
       posts,
       comments,
       postsLikesInfo,
@@ -163,6 +163,17 @@ export class UsersService {
           new ObjectId(userId),
         );
       if (!result3) throw new Error('Deletion failed');
+
+      //обновляею количество лайков/дизлайков для постов
+      for (const e of postsLikesInfo) {
+        const result =
+          await this.likesInfoRepository.decrementNumberOfLikesOfPost(
+            e.postId,
+            e.statusLike,
+          );
+        if (!result)
+          throw new Error('Decrementing number of likes/dislikes failed');
+      }
     }
     if (commentsLikesInfo) {
       const result4 =
@@ -170,27 +181,17 @@ export class UsersService {
           new ObjectId(userId),
         );
       if (!result4) throw new Error('Deletion failed');
-    }
 
-    //обновляею количество лайков/дизлайков для постов и комментариев
-    for (const e of postsLikesInfo) {
-      const result =
-        await this.likesInfoRepository.decrementNumberOfLikesOfPost(
-          e.postId,
-          e.statusLike,
-        );
-      if (!result)
-        throw new Error('Decrementing number of likes/dislikes failed');
-    }
-
-    for (const e of commentsLikesInfo) {
-      const result =
-        await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-          e.commentId,
-          e.statusLike,
-        );
-      if (!result)
-        throw new Error('Decrementing number of likes/dislikes failed');
+      //обновляею количество лайков/дизлайков для комментариев
+      for (const e of commentsLikesInfo) {
+        const result =
+          await this.likesInfoRepository.decrementNumberOfLikesOfComment(
+            e.commentId,
+            e.statusLike,
+          );
+        if (!result)
+          throw new Error('Decrementing number of likes/dislikes failed');
+      }
     }
 
     return;

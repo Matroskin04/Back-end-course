@@ -18,7 +18,7 @@ export class BlogsBloggerQueryRepository {
   ) {}
   async getAllBlogs(
     query: QueryBlogInputModel,
-    userId: ObjectId,
+    userId: string,
   ): Promise<BlogPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);

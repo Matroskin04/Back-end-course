@@ -133,6 +133,6 @@ export class PostsQueryRepository {
     blogId: ObjectId,
   ): Promise<PostsDBType | null> {
     const posts = await this.PostModel.find({ blogId }).lean();
-    return posts;
+    return posts.length ? posts : null; //if length === 0 -> return null
   }
 }

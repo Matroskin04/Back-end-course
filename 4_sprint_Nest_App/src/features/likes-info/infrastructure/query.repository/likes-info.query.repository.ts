@@ -50,7 +50,7 @@ export class LikesInfoQueryRepository {
     const postsLikesInfo = await this.PostsLikesInfoModel.find({
       userId,
     }).lean();
-    return postsLikesInfo;
+    return postsLikesInfo.length ? postsLikesInfo : null; //if length === 0 -> return null
   }
 
   async getCommentsLikesInfoByUserId(
@@ -59,6 +59,6 @@ export class LikesInfoQueryRepository {
     const commentLikesInfo = await this.CommentsLikesInfoModel.find({
       userId,
     }).lean();
-    return commentLikesInfo;
+    return commentLikesInfo.length ? commentLikesInfo : null; //if length === 0 -> return null
   }
 }

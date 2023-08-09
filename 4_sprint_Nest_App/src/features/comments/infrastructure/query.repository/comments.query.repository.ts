@@ -102,6 +102,6 @@ export class CommentsQueryRepository {
     userId: ObjectId,
   ): Promise<CommentsDBType | null> {
     const comments = await this.CommentModel.find({ userId }).lean();
-    return comments;
+    return comments.length ? comments : null; //if length === 0 -> return null
   }
 }

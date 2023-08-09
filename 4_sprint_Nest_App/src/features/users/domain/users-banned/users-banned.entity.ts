@@ -24,19 +24,20 @@ import {
 
 @Schema()
 export class BannedUser {
-  _id: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  userId: ObjectId;
 
-  @Prop({ type: [LikesInfoSchema] })
+  @Prop({ type: [LikesInfoSchema] || null })
   comments: CommentDBType[] | null;
 
-  @Prop({ type: [PostSchema] })
-  posts: PostDBType[];
+  @Prop({ type: [PostSchema] || null })
+  posts: PostDBType[] | null;
 
-  @Prop({ type: [CommentsLikesInfoSchema] })
-  commentsLikesInfo: CommentsLikesInfoDBType[];
+  @Prop({ type: [CommentsLikesInfoSchema] || null })
+  commentsLikesInfo: CommentsLikesInfoDBType[] | null;
 
-  @Prop({ type: [PostsLikesInfoSchema] })
-  postsLikesInfo: PostsLikesInfoDBType[];
+  @Prop({ type: [PostsLikesInfoSchema] || null })
+  postsLikesInfo: PostsLikesInfoDBType[] | null;
 
   static createInstance(
     bannedUserDTO: BannedUserDTOType,

@@ -51,10 +51,9 @@ export class BlogsBloggerController {
     @CurrentUserId() userId: ObjectId,
     @Res() res: Response<ViewAllBlogsModel>,
   ) {
-    //todo попробовать получить не объектом
     const result = await this.blogsBloggerQueryRepository.getAllBlogs(
       query,
-      userId,
+      userId.toString(),
     );
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
@@ -108,9 +107,9 @@ export class BlogsBloggerController {
   }
 
   @UseGuards(JwtAccessGuard, BlogOwnerByIdGuard)
-  @Put(':id')
+  @Put(':blogId')
   async updateBlog(
-    @Param('id') blogId: string,
+    @Param('blogId') blogId: string,
     @Body() inputBlogModel: UpdateBlogInputModel,
     @Res() res: Response<void>,
   ) {
@@ -143,8 +142,11 @@ export class BlogsBloggerController {
   }
 
   @UseGuards(JwtAccessGuard, BlogOwnerByIdGuard)
-  @Delete(':id')
-  async deleteBlog(@Param('id') blogId: string, @Res() res: Response<void>) {
+  @Delete(':blogId')
+  async deleteBlog(
+    @Param('blogId') blogId: string,
+    @Res() res: Response<void>,
+  ) {
     const result = await this.blogsBloggerService.deleteSingleBlog(blogId);
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)

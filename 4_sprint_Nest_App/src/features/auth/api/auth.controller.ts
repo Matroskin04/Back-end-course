@@ -38,6 +38,7 @@ import { RefreshToken } from '../../../infrastructure/decorators/auth/refresh-to
 import { JwtService } from '../../../infrastructure/general-features/jwt/jwt.service';
 import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.guard';
 
+@SkipThrottle()
 @Controller('/hometask-nest/auth')
 export class AuthController {
   constructor(
