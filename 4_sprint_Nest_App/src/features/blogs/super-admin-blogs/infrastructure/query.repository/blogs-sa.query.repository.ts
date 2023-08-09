@@ -5,8 +5,10 @@ import { Blog } from '../../../domain/blogs.entity';
 import { BlogModelType } from '../../../domain/blogs.db.types';
 import { variablesForReturn } from '../../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
 import { QueryBlogInputModel } from '../../../blogger-blogs/api/models/input/query-blog.input.model';
-import { ViewAllBlogsModel } from './blogs-sa.types.query.repository';
-import { BlogSAOutputType } from '../../../../../../dist/src/features/blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.types.query.repository';
+import {
+  BlogSAOutputDBType,
+  ViewAllBlogsModel,
+} from './blogs-sa.types.query.repository';
 
 @Injectable()
 export class BlogsSAQueryRepository {
@@ -38,12 +40,12 @@ export class BlogsSAQueryRepository {
     };
   }
 
-  async getBlogById(blogId: ObjectId): Promise<BlogSAOutputType | null> {
+  async getBlogById(blogId: ObjectId): Promise<BlogSAOutputDBType | null> {
     const blog = this.BlogModel.findOne({ _id: blogId }).lean();
     return blog;
   }
 
-  async getBlogByUserId(userId: ObjectId): Promise<BlogSAOutputType | null> {
+  async getBlogByUserId(userId: ObjectId): Promise<BlogSAOutputDBType | null> {
     const blog = this.BlogModel.findOne({
       'blogOwnerInfo.userId': userId,
     }).lean();

@@ -76,7 +76,7 @@ BlogSchema.statics = {
 };
 
 BlogSchema.methods = {
-  modifyIntoViewModel: Blog.prototype.modifyIntoViewGeneralModel,
+  modifyIntoViewGeneralModel: Blog.prototype.modifyIntoViewGeneralModel,
   modifyIntoViewSAModel: Blog.prototype.modifyIntoViewSAModel,
   updateBlogInfo: Blog.prototype.updateBlogInfo,
 };
