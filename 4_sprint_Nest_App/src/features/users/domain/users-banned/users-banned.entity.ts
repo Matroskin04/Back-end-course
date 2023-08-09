@@ -21,13 +21,14 @@ import {
   BannedUserDTOType,
   BannedUserModelType,
 } from './users-banned.db.types';
+import { CommentsSchema } from '../../../comments/domain/comments.entity';
 
 @Schema()
 export class BannedUser {
   @Prop({ required: true })
   userId: string;
 
-  @Prop({ type: [LikesInfoSchema] || null })
+  @Prop({ type: [CommentsSchema] || null })
   comments: CommentDBType[] | null;
 
   @Prop({ type: [PostSchema] || null })

@@ -140,8 +140,6 @@ export class UsersService {
         this.BannedUserModel,
       );
       await this.bannedUsersRepository.save(bannedUser);
-      const all = await this.BannedUserModel.find();
-      console.log('1 all:', all);
 
       //Удаляем информацию из обычных коллекций
       if (posts) {
@@ -203,8 +201,6 @@ export class UsersService {
 
     const bannedUserInfo =
       await this.bannedUsersQueryRepository.getBannedUserById(userId);
-    const all = await this.BannedUserModel.find();
-    console.log('2 all:', all);
     if (!bannedUserInfo) throw new Error('Banned user info is not found');
 
     //переносим всю информацию в обычные коллекции:

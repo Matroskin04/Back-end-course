@@ -55,8 +55,8 @@ export class Comment {
     });
   }
 }
-export const CommentSchema = SchemaFactory.createForClass(Comment);
+export const CommentsSchema = SchemaFactory.createForClass(Comment);
 
-CommentSchema.statics = {
+CommentsSchema.statics = {
   createInstance: Comment.createInstance,
 };

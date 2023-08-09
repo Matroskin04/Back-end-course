@@ -12,7 +12,7 @@ import {
   Comment,
   CommentatorInfo,
   CommentatorInfoSchema,
-  CommentSchema,
+  CommentsSchema,
 } from './features/comments/domain/comments.entity';
 import { PostsController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
@@ -106,7 +106,7 @@ import { BannedUsersRepository } from './features/users/infrastructure/users-ban
       },
       {
         name: Comment.name,
-        schema: CommentSchema,
+        schema: CommentsSchema,
       },
       {
         name: CommentatorInfo.name,
