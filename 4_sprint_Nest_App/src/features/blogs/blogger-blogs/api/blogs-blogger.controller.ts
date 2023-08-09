@@ -94,11 +94,13 @@ export class BlogsBloggerController {
   @Post(`/:blogId/posts`)
   async createPostByBlogId(
     @Param('blogId') blogId: string,
+    @CurrentUserId() userId: ObjectId,
     @Body() inputPostModel: CreatePostByBlogIdModel,
     @Res() res: Response<PostTypeWithId>,
   ) {
     const result = await this.postsService.createPostByBlogId(
       blogId,
+      userId,
       inputPostModel,
     );
     result

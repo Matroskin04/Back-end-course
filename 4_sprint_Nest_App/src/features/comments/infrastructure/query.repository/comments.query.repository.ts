@@ -101,7 +101,9 @@ export class CommentsQueryRepository {
   async getAllCommentsOfUserDBFormat(
     userId: ObjectId,
   ): Promise<CommentsDBType | null> {
-    const comments = await this.CommentModel.find({ userId }).lean();
+    const comments = await this.CommentModel.find({
+      'commentatorInfo.userId': userId,
+    }).lean();
     return comments.length ? comments : null; //if length === 0 -> return null
   }
 }

@@ -26,11 +26,7 @@ import { BannedUserModelType } from '../domain/users-banned/users-banned.db.type
 import { PostsRepository } from '../../posts/infrastructure/repository/posts.repository';
 import { CommentsRepository } from '../../comments/infrastructure/repository/comments.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
-import { PostDBType } from '../../posts/domain/posts.db.types';
 import { BannedUsersQueryRepository } from '../infrastructure/users-banned/banned-users.query.repository';
-import { PostsService } from '../../posts/application/posts.service';
-import { LikesInfoService } from '../../likes-info/application/likes-info.service';
-import { CommentsService } from '../../comments/application/comments.service';
 import { BannedUsersRepository } from '../infrastructure/users-banned/banned-users.repository';
 @Injectable()
 export class UsersService {
@@ -107,11 +103,6 @@ export class UsersService {
         },
       ]);
 
-    //ищем блог юзера (для дальнейшего поиска/создания постов)
-    const blog = await this.blogsSAQueryRepository.getBlogByUserId(
-      new ObjectId(userId),
-    );
-
     if (banInfo.isBanned) {
       //Если юзера банят:
       //обновляем инфо о юзере
@@ -121,13 +112,8 @@ export class UsersService {
       //удаляем все девайсы
       await this.devicesService.deleteAllDevicesByUserId(userId);
 
-      let posts: Array<PostDBType> | null = null;
-      if (blog) {
-        //если найден, то ищем посты
-        posts = await this.postsQueryRepository.getAllPostsOfBlogDBFormat(
-          blog._id.toString(),
-        );
-      }
+      //если найден, то ищем посты
+      const posts = await this.postsQueryRepository.getPostsByUserId(userId);
       const comments =
         await this.commentsQueryRepository.getAllCommentsOfUserDBFormat(
           new ObjectId(userId),
@@ -157,11 +143,9 @@ export class UsersService {
       await this.usersRepository.save(bannedUser);
 
       //Удаляем информацию из обычных коллекций
-      if (posts && blog) {
+      if (posts) {
         //если найден, то ищем посты
-        const result1 = await this.postsRepository.deletePostsByUserId(
-          blog._id.toString(),
-        );
+        const result1 = await this.postsRepository.deletePostsByUserId(userId);
         if (!result1) throw new Error('Deletion failed');
       }
       if (comments) {
@@ -206,9 +190,9 @@ export class UsersService {
           if (!result)
             throw new Error('Decrementing number of likes/dislikes failed');
         }
-      }
 
-      return;
+        return;
+      }
     }
 
     //Если юзера разбанят:
@@ -222,7 +206,7 @@ export class UsersService {
     if (!bannedUserInfo) throw new Error('Banned user info is not found');
 
     //переносим всю информацию в обычные коллекции:
-    if (blog && bannedUserInfo.posts) {
+    if (bannedUserInfo.posts) {
       await this.postsRepository.createPosts(bannedUserInfo.posts);
     }
 

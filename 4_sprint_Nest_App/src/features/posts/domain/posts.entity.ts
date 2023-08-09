@@ -22,6 +22,9 @@ export class Post {
   _id: ObjectId;
 
   @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
@@ -57,6 +60,7 @@ export class Post {
   ): PostDocument {
     return new PostModel({
       _id: new ObjectId(),
+      userId: postBody.userId,
       title: postBody.title,
       shortDescription: postBody.shortDescription,
       content: postBody.content,

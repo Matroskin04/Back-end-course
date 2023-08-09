@@ -129,8 +129,8 @@ export class PostsQueryRepository {
     return modifyPostIntoViewModel(post, reformedNewestLikes, myStatus);
   }
 
-  async getAllPostsOfBlogDBFormat(blogId: string): Promise<PostsDBType | null> {
-    const posts = await this.PostModel.find({ blogId }).lean();
+  async getPostsByUserId(userId: string): Promise<PostsDBType | null> {
+    const posts = await this.PostModel.find({ userId }).lean();
     return posts.length ? posts : null; //if length === 0 -> return null
   }
 }

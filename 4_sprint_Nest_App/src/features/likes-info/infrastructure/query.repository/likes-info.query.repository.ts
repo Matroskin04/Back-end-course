@@ -57,7 +57,7 @@ export class LikesInfoQueryRepository {
     userId: string,
   ): Promise<CommentsLikesInfoOfUserType> {
     const commentLikesInfo = await this.CommentsLikesInfoModel.find({
-      'CommentatorInfo.userId': userId,
+      userId,
     }).lean();
     return commentLikesInfo.length ? commentLikesInfo : null; //if length === 0 -> return null
   }

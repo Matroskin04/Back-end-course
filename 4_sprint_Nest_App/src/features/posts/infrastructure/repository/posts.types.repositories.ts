@@ -19,6 +19,7 @@ export type NewestLikesType = Array<{
 
 export type BodyPostType = {
   title: string;
+  userId: string;
   shortDescription: string;
   content: string;
   blogId: string;

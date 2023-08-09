@@ -73,6 +73,7 @@ export class PostsService {
 
   async createPostByBlogId(
     blogId: string,
+    userId: ObjectId,
     inputBodyPost: BodyPostByBlogIdType,
   ): Promise<null | PostTypeWithId> {
     //checking the existence of a blog
@@ -85,6 +86,7 @@ export class PostsService {
 
     const bodyPostWithBlogId: BodyPostType = {
       ...inputBodyPost,
+      userId: userId.toString(),
       blogId: blog.id,
     };
 

@@ -30,6 +30,7 @@ export type PostModelStaticMethodsType = {
 
 export type PostDTOType = {
   title: string;
+  userId: string;
   shortDescription: string;
   content: string;
   blogId: string;
