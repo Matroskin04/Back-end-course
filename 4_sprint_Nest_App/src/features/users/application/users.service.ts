@@ -206,13 +206,16 @@ export class UsersService {
             throw new Error('Decrementing number of likes/dislikes failed');
         }
       }
+
+      return;
     }
+
+    //Если юзера разбанят:
 
     //меняем инфо о бане юзера
     user.updateBanInfo(banInfo, user);
     await this.usersRepository.save(user);
 
-    //если юзера разбанят:
     const bannedUserInfo =
       await this.bannedUsersQueryRepository.getBannedUserById(
         new ObjectId(userId),
