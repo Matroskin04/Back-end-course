@@ -52,16 +52,17 @@ export class UsersService {
     const userByEmail = await this.usersQueryRepository.getUserByLoginOrEmail(
       inputBodyUser.email,
     );
-    if (userByEmail)
-      new BadRequestException([
+    if (userByEmail) {
+      throw new BadRequestException([
         { message: 'User with such email already exists', field: 'email' },
       ]);
+    }
 
     const userByLogin = await this.usersQueryRepository.getUserByLoginOrEmail(
       inputBodyUser.login,
     );
     if (userByLogin)
-      new BadRequestException([
+      throw new BadRequestException([
         { message: 'User with such email already exists', field: 'email' },
       ]);
 

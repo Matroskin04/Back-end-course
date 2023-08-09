@@ -31,10 +31,10 @@ export class BanInfo {
   @Prop({ required: true, default: false })
   isBanned: boolean;
 
-  @Prop({ required: true, default: null })
+  @Prop({ type: String || null, default: null })
   banDate: string | null;
 
-  @Prop({ required: true, default: null })
+  @Prop({ type: String || null, default: null })
   banReason: string | null;
 }
 export const BanInfoSchema = SchemaFactory.createForClass(BanInfo);

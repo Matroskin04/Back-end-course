@@ -16,6 +16,10 @@ import {
   CommentLikesInfoModelType,
   PostLikesInfoModelType,
 } from '../../likes-info/domain/likes-info.db.types';
+import { Device } from '../../devices/domain/devices.entity';
+import { DeviceModelType } from '../../devices/domain/devices.db.types';
+import { BannedUser } from '../../users/domain/users-banned/users-banned.entity';
+import { BannedUserModelType } from '../../users/domain/users-banned/users-banned.db.types';
 
 @Injectable()
 export class TestingRepository {
@@ -24,8 +28,12 @@ export class TestingRepository {
     private PostModel: PostModelType,
     @InjectModel(Blog.name)
     private BlogModel: BlogModelType,
+    @InjectModel(Device.name)
+    private DeviceModel: DeviceModelType,
     @InjectModel(User.name)
     private UserModel: UserModelType,
+    @InjectModel(BannedUser.name)
+    private BannedUserModel: BannedUserModelType,
     @InjectModel(Comment.name)
     private CommentModel: CommentModelType,
     @InjectModel(CommentLikesInfo.name)
@@ -38,8 +46,9 @@ export class TestingRepository {
       this.PostModel.deleteMany({}),
       this.BlogModel.deleteMany({}),
       this.UserModel.deleteMany({}),
+      this.BannedUserModel.deleteMany({}),
       this.CommentModel.deleteMany({}),
-      // DeviceModel.deleteMany({}),
+      this.DeviceModel.deleteMany({}),
       this.CommentLikesInfoModel.deleteMany({}),
       this.PostLikesInfoModel.deleteMany({}),
     ]).then(
