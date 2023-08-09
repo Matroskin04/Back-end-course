@@ -125,7 +125,7 @@ export class UsersService {
       if (blog) {
         //если найден, то ищем посты
         posts = await this.postsQueryRepository.getAllPostsOfBlogDBFormat(
-          blog._id,
+          blog._id.toString(),
         );
       }
       const comments =
@@ -138,16 +138,17 @@ export class UsersService {
         );
       const commentsLikesInfo =
         await this.likesInfoQueryRepository.getCommentsLikesInfoByUserId(
-          new ObjectId(userId),
+          userId,
         );
       //объединяем информацию о забаненном юзере
       const userBannedInfo: BannedUser = {
-        userId: new ObjectId(userId),
+        userId: userId,
         posts,
         comments,
         postsLikesInfo,
         commentsLikesInfo,
       };
+      console.log(userBannedInfo);
       //сохраняем её
       const bannedUser = this.BannedUserModel.createInstance(
         userBannedInfo,
@@ -159,13 +160,13 @@ export class UsersService {
       if (posts && blog) {
         //если найден, то ищем посты
         const result1 = await this.postsRepository.deletePostsByUserId(
-          blog._id,
+          blog._id.toString(),
         );
         if (!result1) throw new Error('Deletion failed');
       }
       if (comments) {
         const result2 = await this.commentsRepository.deleteCommentsByUserId(
-          new ObjectId(userId),
+          userId,
         );
         if (!result2) throw new Error('Deletion failed');
       }
@@ -217,9 +218,7 @@ export class UsersService {
     await this.usersRepository.save(user);
 
     const bannedUserInfo =
-      await this.bannedUsersQueryRepository.getBannedUserById(
-        new ObjectId(userId),
-      );
+      await this.bannedUsersQueryRepository.getBannedUserById(userId);
     if (!bannedUserInfo) throw new Error('Banned user info is not found');
 
     //переносим всю информацию в обычные коллекции:
@@ -268,7 +267,7 @@ export class UsersService {
 
     //удаляем инфо юзера из забаненных
     const result = await this.bannedUsersRepository.deleteBannedUserById(
-      new ObjectId(userId),
+      userId,
     );
     if (!result) throw new Error('Deletion failed');
 

@@ -24,8 +24,8 @@ import {
 
 @Schema()
 export class BannedUser {
-  @Prop({ type: ObjectId, required: true })
-  userId: ObjectId;
+  @Prop({ required: true })
+  userId: string;
 
   @Prop({ type: [LikesInfoSchema] || null })
   comments: CommentDBType[] | null;

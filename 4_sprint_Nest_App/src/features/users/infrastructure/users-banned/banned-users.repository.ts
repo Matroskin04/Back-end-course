@@ -14,7 +14,7 @@ export class BannedUsersRepository {
     private BannedUserModel: BannedUserModelType,
   ) {}
 
-  async deleteBannedUserById(userId: ObjectId): Promise<boolean> {
+  async deleteBannedUserById(userId: string): Promise<boolean> {
     const result = await this.BannedUserModel.deleteOne({ userId });
     return result.deletedCount === 1;
   }

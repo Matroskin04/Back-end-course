@@ -14,7 +14,7 @@ export class BannedUsersQueryRepository {
     private BannedUserModel: BannedUserModelType,
   ) {}
 
-  async getBannedUserById(userId: ObjectId): Promise<BannedUserDTOType | null> {
+  async getBannedUserById(userId: string): Promise<BannedUserDTOType | null> {
     const user = await this.BannedUserModel.findOne({ userId });
     return user;
   }

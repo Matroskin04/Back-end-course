@@ -33,7 +33,7 @@ export class PostsRepository {
     return result.deletedCount === 1;
   }
 
-  async deletePostsByUserId(blogId: ObjectId): Promise<boolean> {
+  async deletePostsByUserId(blogId: string): Promise<boolean> {
     const result = await this.PostModel.deleteMany({ blogId });
     return result.deletedCount > 0;
   }

@@ -54,10 +54,10 @@ export class LikesInfoQueryRepository {
   }
 
   async getCommentsLikesInfoByUserId(
-    userId: ObjectId,
+    userId: string,
   ): Promise<CommentsLikesInfoOfUserType> {
     const commentLikesInfo = await this.CommentsLikesInfoModel.find({
-      userId,
+      'CommentatorInfo.userId': userId,
     }).lean();
     return commentLikesInfo.length ? commentLikesInfo : null; //if length === 0 -> return null
   }
