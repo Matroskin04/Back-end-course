@@ -22,6 +22,11 @@ export class PostsRepository {
     return;
   }
 
+  async createPosts(posts): Promise<void> {
+    await this.PostModel.create(posts);
+    return;
+  } //todo типизация
+
   async deleteSinglePost(id: ObjectId): Promise<boolean> {
     const result = await this.PostModel.deleteOne({ _id: new ObjectId(id) });
 

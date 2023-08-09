@@ -80,6 +80,8 @@ import {
   BannedUser,
   BannedUserSchema,
 } from './features/users/domain/users-banned/users-banned.entity';
+import { BannedUsersQueryRepository } from './features/users/infrastructure/users-banned/banned-users.query.repository';
+import { BannedUsersRepository } from './features/users/infrastructure/users-banned/banned-users.repository';
 
 @Module({
   imports: [
@@ -180,6 +182,8 @@ import {
     UsersService,
     UsersRepository,
     UsersQueryRepository,
+    BannedUsersQueryRepository,
+    BannedUsersRepository,
     JwtService,
     JwtQueryRepository,
     TestingRepository,

@@ -57,7 +57,7 @@ export class User {
   updateBanInfo(banInfo: BanInfoType, user: UserDocument): void {
     user.banInfo.isBanned = banInfo.isBanned;
     user.banInfo.banReason = banInfo.banReason;
-    user.banInfo.banDate = new Date().toISOString();
+    user.banInfo.banDate = banInfo.isBanned ? new Date().toISOString() : null;
     return;
   }
 

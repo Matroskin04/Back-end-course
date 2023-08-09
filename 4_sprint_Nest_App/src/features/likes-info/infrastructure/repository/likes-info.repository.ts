@@ -65,6 +65,16 @@ export class LikesInfoRepository {
     return;
   }
 
+  async createPostsLikesInfo(postsLikesInfo): Promise<void> {
+    await this.PostsLikesInfoModel.create(postsLikesInfo);
+    return;
+  } //todo типизация
+
+  async createCommentsLikesInfo(commentsLikesInfo): Promise<void> {
+    await this.CommentsLikesInfoModel.create(commentsLikesInfo);
+    return;
+  } //todo типизация
+
   async incrementNumberOfLikesOfComment(
     commentId: ObjectId,
     incrementValue: 'Like' | 'Dislike',

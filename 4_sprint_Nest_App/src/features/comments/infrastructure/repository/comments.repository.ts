@@ -24,6 +24,11 @@ export class CommentsRepository {
     return;
   }
 
+  async createComments(comments): Promise<void> {
+    await this.CommentModel.create(comments);
+    return;
+  } //todo типизация
+
   async deleteComment(id: ObjectId): Promise<boolean> {
     const result = await this.CommentModel.deleteOne({ _id: id });
     return result.deletedCount === 1;

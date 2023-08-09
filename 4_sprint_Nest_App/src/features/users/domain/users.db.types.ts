@@ -52,5 +52,5 @@ export type UserModelStaticMethodsType = {
 
 export type BanInfoType = {
   isBanned: boolean;
-  banReason: string;
+  banReason: string | null;
 };

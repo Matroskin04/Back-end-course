@@ -27,6 +27,11 @@ import { PostsRepository } from '../../posts/infrastructure/repository/posts.rep
 import { CommentsRepository } from '../../comments/infrastructure/repository/comments.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
 import { PostDBType } from '../../posts/domain/posts.db.types';
+import { BannedUsersQueryRepository } from '../infrastructure/users-banned/banned-users.query.repository';
+import { PostsService } from '../../posts/application/posts.service';
+import { LikesInfoService } from '../../likes-info/application/likes-info.service';
+import { CommentsService } from '../../comments/application/comments.service';
+import { BannedUsersRepository } from '../infrastructure/users-banned/banned-users.repository';
 @Injectable()
 export class UsersService {
   constructor(
@@ -45,6 +50,8 @@ export class UsersService {
     protected postsRepository: PostsRepository,
     protected commentsRepository: CommentsRepository,
     protected likesInfoRepository: LikesInfoRepository,
+    private bannedUsersQueryRepository: BannedUsersQueryRepository,
+    protected bannedUsersRepository: BannedUsersRepository,
   ) {}
 
   async createUser(inputBodyUser: BodyUserType): Promise<UserViewType> {
@@ -100,74 +107,136 @@ export class UsersService {
         },
       ]);
 
-    //обновляем инфо о юзере
-    user.updateBanInfo(banInfo, user);
-    await this.usersRepository.save(user);
-
-    //удаляем все девайсы
-    await this.devicesService.deleteAllDevicesByUserId(userId);
-
-    //ищем блог юзера (для дальнейшего поиска постов)
+    //ищем блог юзера (для дальнейшего поиска/создания постов)
     const blog = await this.blogsSAQueryRepository.getBlogByUserId(
       new ObjectId(userId),
     );
-    let posts: Array<PostDBType> | null = null;
-    if (blog) {
-      //если найден, то ищем посты
-      posts = await this.postsQueryRepository.getAllPostsOfBlogDBFormat(
-        blog._id,
-      );
-    }
-    const comments =
-      await this.commentsQueryRepository.getAllCommentsOfUserDBFormat(
-        new ObjectId(userId),
-      );
-    const postsLikesInfo =
-      await this.likesInfoQueryRepository.getPostsLikesInfoByUserId(
-        new ObjectId(userId),
-      );
-    const commentsLikesInfo =
-      await this.likesInfoQueryRepository.getCommentsLikesInfoByUserId(
-        new ObjectId(userId),
-      );
-    //объединяем информацию о забаненном юзере
-    const userBannedInfo: BannedUser = {
-      userId: new ObjectId(userId),
-      posts,
-      comments,
-      postsLikesInfo,
-      commentsLikesInfo,
-    };
-    //сохраняем её
-    const bannedUser = this.BannedUserModel.createInstance(
-      userBannedInfo,
-      this.BannedUserModel,
-    );
-    await this.usersRepository.save(bannedUser);
 
-    //Удаляем информацию из обычных коллекций
-    if (posts && blog) {
-      //если найден, то ищем посты
-      const result1 = await this.postsRepository.deletePostsByUserId(blog._id);
-      if (!result1) throw new Error('Deletion failed');
-    }
-    if (comments) {
-      const result2 = await this.commentsRepository.deleteCommentsByUserId(
-        new ObjectId(userId),
-      );
-      if (!result2) throw new Error('Deletion failed');
-    }
-    if (postsLikesInfo) {
-      const result3 =
-        await this.likesInfoRepository.deleteLikesInfoPostsByUserId(
+    if (banInfo.isBanned) {
+      //Если юзера банят:
+      //обновляем инфо о юзере
+      user.updateBanInfo(banInfo, user);
+      await this.usersRepository.save(user);
+
+      //удаляем все девайсы
+      await this.devicesService.deleteAllDevicesByUserId(userId);
+
+      let posts: Array<PostDBType> | null = null;
+      if (blog) {
+        //если найден, то ищем посты
+        posts = await this.postsQueryRepository.getAllPostsOfBlogDBFormat(
+          blog._id,
+        );
+      }
+      const comments =
+        await this.commentsQueryRepository.getAllCommentsOfUserDBFormat(
           new ObjectId(userId),
         );
-      if (!result3) throw new Error('Deletion failed');
+      const postsLikesInfo =
+        await this.likesInfoQueryRepository.getPostsLikesInfoByUserId(
+          new ObjectId(userId),
+        );
+      const commentsLikesInfo =
+        await this.likesInfoQueryRepository.getCommentsLikesInfoByUserId(
+          new ObjectId(userId),
+        );
+      //объединяем информацию о забаненном юзере
+      const userBannedInfo: BannedUser = {
+        userId: new ObjectId(userId),
+        posts,
+        comments,
+        postsLikesInfo,
+        commentsLikesInfo,
+      };
+      //сохраняем её
+      const bannedUser = this.BannedUserModel.createInstance(
+        userBannedInfo,
+        this.BannedUserModel,
+      );
+      await this.usersRepository.save(bannedUser);
 
-      //обновляею количество лайков/дизлайков для постов
-      for (const e of postsLikesInfo) {
+      //Удаляем информацию из обычных коллекций
+      if (posts && blog) {
+        //если найден, то ищем посты
+        const result1 = await this.postsRepository.deletePostsByUserId(
+          blog._id,
+        );
+        if (!result1) throw new Error('Deletion failed');
+      }
+      if (comments) {
+        const result2 = await this.commentsRepository.deleteCommentsByUserId(
+          new ObjectId(userId),
+        );
+        if (!result2) throw new Error('Deletion failed');
+      }
+      if (postsLikesInfo) {
+        const result3 =
+          await this.likesInfoRepository.deleteLikesInfoPostsByUserId(
+            new ObjectId(userId),
+          );
+        if (!result3) throw new Error('Deletion failed');
+
+        //уменьшаем количество лайков/дизлайков для постов
+        for (const e of postsLikesInfo) {
+          const result =
+            await this.likesInfoRepository.decrementNumberOfLikesOfPost(
+              e.postId,
+              e.statusLike,
+            );
+          if (!result)
+            throw new Error('Decrementing number of likes/dislikes failed');
+        }
+      }
+      if (commentsLikesInfo) {
+        const result4 =
+          await this.likesInfoRepository.deleteLikesInfoCommentsByUserId(
+            new ObjectId(userId),
+          );
+        if (!result4) throw new Error('Deletion failed');
+
+        //уменьшаем количество лайков/дизлайков для комментариев
+        for (const e of commentsLikesInfo) {
+          //todo PromiseAll?
+          const result =
+            await this.likesInfoRepository.decrementNumberOfLikesOfComment(
+              e.commentId,
+              e.statusLike,
+            );
+          if (!result)
+            throw new Error('Decrementing number of likes/dislikes failed');
+        }
+      }
+    }
+
+    //меняем инфо о бане юзера
+    user.updateBanInfo(banInfo, user);
+    await this.usersRepository.save(user);
+
+    //если юзера разбанят:
+    const bannedUserInfo =
+      await this.bannedUsersQueryRepository.getBannedUserById(
+        new ObjectId(userId),
+      );
+    if (!bannedUserInfo) throw new Error('Banned user info is not found');
+
+    //переносим всю информацию в обычные коллекции:
+    if (blog && bannedUserInfo.posts) {
+      await this.postsRepository.createPosts(bannedUserInfo.posts);
+    }
+
+    if (bannedUserInfo.comments) {
+      await this.commentsRepository.createComments(bannedUserInfo.comments);
+    }
+
+    if (bannedUserInfo.postsLikesInfo) {
+      await this.likesInfoRepository.createPostsLikesInfo(
+        bannedUserInfo.postsLikesInfo,
+      );
+
+      //увеличиваем количество лайков/дизлайков для постов
+      for (const e of bannedUserInfo.postsLikesInfo) {
         const result =
-          await this.likesInfoRepository.decrementNumberOfLikesOfPost(
+          await this.likesInfoRepository.incrementNumberOfLikesOfPost(
             e.postId,
             e.statusLike,
           );
@@ -175,17 +244,17 @@ export class UsersService {
           throw new Error('Decrementing number of likes/dislikes failed');
       }
     }
-    if (commentsLikesInfo) {
-      const result4 =
-        await this.likesInfoRepository.deleteLikesInfoCommentsByUserId(
-          new ObjectId(userId),
-        );
-      if (!result4) throw new Error('Deletion failed');
 
-      //обновляею количество лайков/дизлайков для комментариев
-      for (const e of commentsLikesInfo) {
+    if (bannedUserInfo.commentsLikesInfo) {
+      await this.likesInfoRepository.createCommentsLikesInfo(
+        bannedUserInfo.commentsLikesInfo,
+      );
+
+      //увеличиваем количество лайков/дизлайков для комментариев
+      for (const e of bannedUserInfo.commentsLikesInfo) {
+        //todo PromiseAll?
         const result =
-          await this.likesInfoRepository.decrementNumberOfLikesOfComment(
+          await this.likesInfoRepository.incrementNumberOfLikesOfComment(
             e.commentId,
             e.statusLike,
           );
@@ -193,6 +262,12 @@ export class UsersService {
           throw new Error('Decrementing number of likes/dislikes failed');
       }
     }
+
+    //удаляем инфо юзера из забаненных
+    const result = await this.bannedUsersRepository.deleteBannedUserById(
+      new ObjectId(userId),
+    );
+    if (!result) throw new Error('Deletion failed');
 
     return;
   }

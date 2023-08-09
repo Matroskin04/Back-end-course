@@ -108,7 +108,6 @@ export class PostsService {
 
     return postMapped;
   }
-
   /*
   async updatePost(id: string, inputBodyPost: BodyPostType): Promise<boolean> {
     const blog = await this.blogsBloggerQueryRepository.getBlogById(
