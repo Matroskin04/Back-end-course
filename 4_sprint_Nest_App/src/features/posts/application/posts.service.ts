@@ -5,13 +5,13 @@ import {
 } from '../infrastructure/repository/posts.types.repositories';
 import { PostsRepository } from '../infrastructure/repository/posts.repository';
 import { ObjectId } from 'mongodb';
-import { modifyPostIntoViewModel } from '../../../infrastructure/helpers/functions/features/posts.functions.helpers';
+import { modifyPostIntoViewModel } from '../../../infrastructure/utils/functions/features/posts.functions.helpers';
 import { PostModelType } from '../domain/posts.db.types';
 import { Post } from '../domain/posts.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
-import { reformNewestLikes } from '../../../infrastructure/helpers/functions/features/likes-info.functions.helpers';
-import { LikeStatus } from '../../../infrastructure/helpers/enums/like-status';
+import { reformNewestLikes } from '../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
+import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users.query.repository';
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts.query.repository';
@@ -99,7 +99,9 @@ export class PostsService {
 
     //find last 3 Likes
     const newestLikes =
-      await this.likesInfoQueryRepository.getNewestLikesOfPost(post._id);
+      await this.likesInfoQueryRepository.getNewestLikesOfPost(
+        post._id.toString(),
+      );
     const reformedNewestLikes = reformNewestLikes(newestLikes);
 
     const postMapped = modifyPostIntoViewModel(
@@ -167,8 +169,8 @@ export class PostsService {
     //check of existing LikeInfo
     const likeInfo =
       await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(
-        new ObjectId(postId),
-        userId,
+        postId,
+        userId.toString(),
       );
     //если не существует, то у пользователя 'None'
     if (!likeInfo) {
@@ -176,7 +178,7 @@ export class PostsService {
       //Иначе увеличиваем количество лайков/дизлайков
       const result =
         await this.likesInfoRepository.incrementNumberOfLikesOfPost(
-          new ObjectId(postId),
+          postId,
           likeStatus,
         );
       if (!result) {
@@ -189,8 +191,8 @@ export class PostsService {
       }
 
       await this.likesInfoService.createLikeInfoPost(
-        userId,
-        new ObjectId(postId),
+        userId.toString(),
+        postId,
         user.login,
         likeStatus,
       );
@@ -203,8 +205,8 @@ export class PostsService {
 
     //В ином случае меняем статус лайка
     const isUpdate = await this.likesInfoService.updatePostLikeInfo(
-      userId,
-      new ObjectId(postId),
+      userId.toString(),
+      postId,
       likeStatus,
     );
     if (!isUpdate) {
@@ -212,7 +214,7 @@ export class PostsService {
     }
 
     const result1 = await this.likesInfoRepository.incrementNumberOfLikesOfPost(
-      new ObjectId(postId),
+      postId,
       likeStatus,
     );
     if (!result1) {
@@ -220,7 +222,7 @@ export class PostsService {
     }
     //уменьшаю на 1 то что убрали
     const result2 = await this.likesInfoRepository.decrementNumberOfLikesOfPost(
-      new ObjectId(postId),
+      postId,
       likeInfo.statusLike,
     );
     if (!result2) {

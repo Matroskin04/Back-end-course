@@ -21,8 +21,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
-import { JwtAccessGuard } from '../../../../infrastructure/guards/jwt-access.guard';
-import { HTTP_STATUS_CODE } from '../../../../infrastructure/helpers/enums/http-status';
+import { JwtAccessGuard } from '../../../../infrastructure/guards/authorization-guards/jwt-access.guard';
+import { HTTP_STATUS_CODE } from '../../../../infrastructure/utils/enums/http-status';
 import { PostsQueryRepository } from '../../../posts/infrastructure/query.repository/posts.query.repository';
 import { PostsService } from '../../../posts/application/posts.service';
 import { BlogsBloggerQueryRepository } from '../infrastructure/query.repository/blogs-blogger.query.repository';

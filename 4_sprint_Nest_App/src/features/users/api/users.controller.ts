@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Put,
@@ -20,8 +19,8 @@ import { CreateUserInputModel } from './models/input/create-user.input.model';
 import { UsersQueryRepository } from '../infrastructure/query.repository/users.query.repository';
 import { UsersService } from '../application/users.service';
 import { Response } from 'express';
-import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
-import { BasicAuthGuard } from '../../../infrastructure/guards/basic-auth.guard';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
+import { BasicAuthGuard } from '../../../infrastructure/guards/authorization-guards/basic-auth.guard';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UpdateBanInfoOfUserInputModel } from './models/input/update-ban-info-of-user.input.model';
 
@@ -70,7 +69,7 @@ export class UsersController {
     const result = await this.usersService.deleteSingleUser(userId);
 
     result
-      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204) // throw new
+      ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
   }
 }

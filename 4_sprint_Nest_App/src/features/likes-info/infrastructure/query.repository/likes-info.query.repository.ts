@@ -24,20 +24,20 @@ export class LikesInfoQueryRepository {
     private PostsLikesInfoModel,
   ) {}
   async getLikesInfoByCommentAndUser(
-    commentId: ObjectId,
-    userId: ObjectId,
+    commentId: string,
+    userId: string,
   ): Promise<CommentsLikesInfoDBType | null> {
     return this.CommentsLikesInfoModel.findOne({ commentId, userId });
   }
 
   async getLikesInfoByPostAndUser(
-    postId: ObjectId,
-    userId: ObjectId,
+    postId: string,
+    userId: string,
   ): Promise<PostsLikesInfoDBType | null> {
     return this.PostsLikesInfoModel.findOne({ postId, userId });
   }
 
-  async getNewestLikesOfPost(postId: ObjectId): Promise<NewestLikesType> {
+  async getNewestLikesOfPost(postId: string): Promise<NewestLikesType> {
     return this.PostsLikesInfoModel.find({ postId, statusLike: 'Like' })
       .sort({ addedAt: -1 })
       .limit(3)
@@ -45,7 +45,7 @@ export class LikesInfoQueryRepository {
   }
 
   async getPostsLikesInfoByUserId(
-    userId: ObjectId,
+    userId: string,
   ): Promise<PostsLikesInfoOfUserType> {
     const postsLikesInfo = await this.PostsLikesInfoModel.find({
       userId,
@@ -54,7 +54,7 @@ export class LikesInfoQueryRepository {
   }
 
   async getCommentsLikesInfoByUserId(
-    userId: ObjectId,
+    userId: string,
   ): Promise<CommentsLikesInfoOfUserType> {
     const commentLikesInfo = await this.CommentsLikesInfoModel.find({
       userId,

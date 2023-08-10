@@ -9,8 +9,8 @@ import { CommentsRepository } from '../infrastructure/repository/comments.reposi
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../posts/domain/posts.entity';
 import { PostModelType } from '../../posts/domain/posts.db.types';
-import { mappingComment } from '../../../infrastructure/helpers/functions/features/comments.functions.helpers';
-import { LikeStatus } from '../../../infrastructure/helpers/enums/like-status';
+import { mappingComment } from '../../../infrastructure/utils/functions/features/comments.functions.helpers';
+import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
 import { Comment } from '../domain/comments.entity';
 import { CommentModelType } from '../domain/comments.db.types';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
@@ -64,7 +64,7 @@ export class CommentsService {
       return null;
     }
 
-    const post = await this.PostModel.findOne({ _id: new ObjectId(postId) });
+    const post = await this.PostModel.findOne({ _id: new ObjectId(postId) }); //todo!
     if (!post) {
       return null;
     }
@@ -96,8 +96,8 @@ export class CommentsService {
 
     const likeInfo =
       await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(
-        new ObjectId(commentId),
-        userId,
+        commentId,
+        userId.toString(),
       );
     //если не существует, то у пользователя 'None'
     if (!likeInfo) {
@@ -105,7 +105,7 @@ export class CommentsService {
       //Иначе увеличиваем количество лайков/дизлайков
       const result =
         await this.likesInfoRepository.incrementNumberOfLikesOfComment(
-          new ObjectId(commentId),
+          commentId,
           likeStatus,
         );
       if (!result) {
@@ -113,8 +113,8 @@ export class CommentsService {
       }
       //Создаю like info
       await this.likesInfoService.createLikeInfoComment(
-        userId,
-        new ObjectId(commentId),
+        userId.toString(),
+        commentId,
         likeStatus,
       );
       return true;
@@ -130,7 +130,7 @@ export class CommentsService {
       //уменьшаю на 1 то, что убрали
       const result =
         await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-          new ObjectId(commentId),
+          commentId,
           likeInfo.statusLike,
         );
       if (!result) {
@@ -138,8 +138,8 @@ export class CommentsService {
       }
       //И удаляю информацию
       const isDeleted = await this.likesInfoService.deleteLikeInfoComment(
-        userId,
-        new ObjectId(commentId),
+        userId.toString(),
+        commentId,
       );
       if (!isDeleted) {
         throw new Error('Deleting like info of comment failed');
@@ -151,8 +151,8 @@ export class CommentsService {
     //Если пришел like/dislike, то
     //обновляю информацию
     const isUpdate = await this.likesInfoService.updateCommentLikeInfo(
-      userId,
-      new ObjectId(commentId),
+      userId.toString(),
+      commentId,
       likeStatus,
     );
     if (!isUpdate) {
@@ -161,7 +161,7 @@ export class CommentsService {
     //увеличиваю на 1 то, что пришло
     const result1 =
       await this.likesInfoRepository.incrementNumberOfLikesOfComment(
-        new ObjectId(commentId),
+        commentId,
         likeStatus,
       );
     if (!result1) {
@@ -170,7 +170,7 @@ export class CommentsService {
     //уменьшаю на 1 то, что убрали
     const result2 =
       await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-        new ObjectId(commentId),
+        commentId,
         likeInfo.statusLike,
       );
     if (!result2) {

@@ -1,7 +1,8 @@
+import { HydratedDocument } from 'mongoose';
 import {
-  CommentLikesInfoDocument,
-  PostLikesInfoDocument,
-} from '../../domain/likes-info.db.types';
+  CommentLikesInfo,
+  PostLikesInfo,
+} from '../../domain/likes-info.entity';
 
-export type PostLikeInfoInstanceType = PostLikesInfoDocument;
-export type CommentLikeInfoInstanceType = CommentLikesInfoDocument;
+export type PostLikeInfoInstanceType = HydratedDocument<PostLikesInfo>;
+export type CommentLikeInfoInstanceType = HydratedDocument<CommentLikesInfo>;

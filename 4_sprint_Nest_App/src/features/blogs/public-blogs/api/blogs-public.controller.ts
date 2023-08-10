@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PostsQueryRepository } from '../../../posts/infrastructure/query.repository/posts.query.repository';
-import { HTTP_STATUS_CODE } from '../../../../infrastructure/helpers/enums/http-status';
-import { JwtAccessNotStrictGuard } from '../../../../infrastructure/guards/jwt-access-not-strict.guard';
+import { HTTP_STATUS_CODE } from '../../../../infrastructure/utils/enums/http-status';
+import { JwtAccessNotStrictGuard } from '../../../../infrastructure/guards/authorization-guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';

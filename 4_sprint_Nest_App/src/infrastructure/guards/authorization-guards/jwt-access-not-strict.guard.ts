@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
-import { UsersService } from '../../features/users/application/users.service';
+import { UsersService } from '../../../features/users/application/users.service';
 
 @Injectable()
 export class JwtAccessNotStrictGuard extends AuthGuard('jwt') {

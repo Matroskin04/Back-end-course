@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtQueryRepository } from './jwt.query.repository';
 import { AccessRefreshTokens } from './jwt.types.service';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
-import { DevicesRepository } from '../../../features/devices/infrastructure/repository/devices.repository';
+import { DevicesRepository } from '../devices/infrastructure/repository/devices.repository';
 
 @Injectable()
 export class JwtService {

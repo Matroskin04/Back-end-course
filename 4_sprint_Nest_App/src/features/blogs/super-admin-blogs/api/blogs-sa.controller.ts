@@ -11,9 +11,9 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { BlogsSAQueryRepository } from '../infrastructure/query.repository/blogs-sa.query.repository';
 import { QueryBlogInputModel } from './models/input/query-blog.input.model';
 import { ViewAllBlogsModel } from './models/output/blog.output.model';
-import { HTTP_STATUS_CODE } from '../../../../infrastructure/helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../../infrastructure/utils/enums/http-status';
 import { Response } from 'express';
-import { BasicAuthGuard } from '../../../../infrastructure/guards/basic-auth.guard';
+import { BasicAuthGuard } from '../../../../infrastructure/guards/authorization-guards/basic-auth.guard';
 import { BlogsSAService } from '../application/blogs-sa.service';
 
 @SkipThrottle()

@@ -5,9 +5,9 @@ import { DevicesRepository } from '../infrastructure/repository/devices.reposito
 import { InjectModel } from '@nestjs/mongoose';
 import { Device } from '../domain/devices.entity';
 import { DeviceModelType } from '../domain/devices.db.types';
-import { ResponseTypeService } from '../../../infrastructure/helpers/functions/types/create-responses-service.types.service';
-import { createResponseService } from '../../../infrastructure/helpers/functions/create-response-service.function.helper';
-import { JwtQueryRepository } from '../../../infrastructure/general-features/jwt/jwt.query.repository';
+import { ResponseTypeService } from '../../../infrastructure/utils/functions/types/create-responses-service.types.service';
+import { createResponseService } from '../../../infrastructure/utils/functions/create-response-service.function.helper';
+import { JwtQueryRepository } from '../../jwt/jwt.query.repository';
 
 @Injectable()
 export class DevicesService {

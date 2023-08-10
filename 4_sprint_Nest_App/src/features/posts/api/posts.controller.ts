@@ -25,12 +25,12 @@ import {
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments.query.repository';
 import { Response } from 'express';
-import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
-import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/jwt-access-not-strict.guard';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
+import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
-import { BasicAuthGuard } from '../../../infrastructure/guards/basic-auth.guard';
-import { JwtAccessGuard } from '../../../infrastructure/guards/jwt-access.guard';
+import { BasicAuthGuard } from '../../../infrastructure/guards/authorization-guards/basic-auth.guard';
+import { JwtAccessGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access.guard';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/input/create-comment.input.model';
 import { CommentsService } from '../../comments/application/comments.service';
 import { UpdatePostLikeStatusModel } from './models/input/update-like-status.input.model';

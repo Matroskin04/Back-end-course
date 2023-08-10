@@ -13,16 +13,16 @@ import {
   AuthOutputModel,
   ViewTokenModel,
 } from './models/output/auth.output.model';
-import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
 import {
   ConfirmationCodeAuthModel,
   EmailResendingAuthModel,
   RegistrationAuthInputModel,
 } from './models/input/registration-auth.input.model';
-import { LocalAuthGuard } from '../../../infrastructure/guards/local-auth.guard';
+import { LocalAuthGuard } from '../../../infrastructure/guards/authorization-guards/local-auth.guard';
 import { CurrentUserId } from '../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
-import { JwtAccessGuard } from '../../../infrastructure/guards/jwt-access.guard';
+import { JwtAccessGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access.guard';
 import { ValidateConfirmationCodeGuard } from '../../../infrastructure/guards/validation-guards/validate-confirmation-code.guard';
 import { ValidateEmailResendingGuard } from '../../../infrastructure/guards/validation-guards/validate-email-resending.guard';
 import {
@@ -33,9 +33,9 @@ import { ValidateEmailRegistrationGuard } from '../../../infrastructure/guards/v
 import { SkipThrottle } from '@nestjs/throttler';
 import { DevicesService } from '../../devices/application/devices.service';
 import { TitleOfDevice } from '../../../infrastructure/decorators/auth/title-of-device.param.decorator';
-import { JwtRefreshGuard } from '../../../infrastructure/guards/jwt-refresh.guard';
+import { JwtRefreshGuard } from '../../../infrastructure/guards/authorization-guards/jwt-refresh.guard';
 import { RefreshToken } from '../../../infrastructure/decorators/auth/refresh-token-param.decorator';
-import { JwtService } from '../../../infrastructure/general-features/jwt/jwt.service';
+import { JwtService } from '../../jwt/jwt.service';
 import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.guard';
 
 @SkipThrottle()

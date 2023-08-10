@@ -14,10 +14,10 @@ export class CommentLikesInfo {
   _id: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
-  commentId: ObjectId;
+  commentId: string;
 
   @Prop({ type: ObjectId, required: true })
-  userId: ObjectId;
+  userId: string;
 
   @Prop({ required: true, enum: ['Like', 'Dislike'] })
   statusLike: 'Like' | 'Dislike';
@@ -42,10 +42,10 @@ export class PostLikesInfo {
   _id: ObjectId;
 
   @Prop({ type: ObjectId, required: true })
-  postId: ObjectId;
+  postId: string;
 
   @Prop({ type: ObjectId, required: true })
-  userId: ObjectId;
+  userId: string;
 
   @Prop({ required: true })
   login: string;

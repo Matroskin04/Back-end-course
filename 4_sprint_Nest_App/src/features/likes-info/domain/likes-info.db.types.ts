@@ -5,9 +5,9 @@ import { CommentLikesInfo, PostLikesInfo } from './likes-info.entity';
 export class CommentsLikesInfoDBType {
   _id: ObjectId;
 
-  commentId: ObjectId;
+  commentId: string;
 
-  userId: ObjectId;
+  userId: string;
 
   statusLike: 'Like' | 'Dislike';
 }
@@ -23,17 +23,17 @@ export type CommentLikesInfoStaticMethodsType = {
   ) => CommentLikesInfoDocument;
 };
 export class CommentLikesInfoDTOType {
-  commentId: ObjectId;
-  userId: ObjectId;
+  commentId: string;
+  userId: string;
   statusLike: 'Like' | 'Dislike';
 }
 
 export class PostsLikesInfoDBType {
   _id: ObjectId;
 
-  postId: ObjectId;
+  postId: string;
 
-  userId: ObjectId;
+  userId: string;
 
   login: string;
 
@@ -54,8 +54,8 @@ export type PostsLikesInfoStaticMethodsType = {
 };
 
 export class PostLikesInfoDTOType {
-  postId: ObjectId;
-  userId: ObjectId;
+  postId: string;
+  userId: string;
   login: string;
   addedAt: string;
   statusLike: 'Like' | 'Dislike' | 'None';

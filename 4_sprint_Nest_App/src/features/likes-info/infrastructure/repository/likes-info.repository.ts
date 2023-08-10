@@ -33,8 +33,8 @@ export class LikesInfoRepository {
   ) {}
 
   async getCommentLikeInfoInstance(
-    commentId: ObjectId,
-    userId: ObjectId,
+    commentId: string,
+    userId: string,
   ): Promise<CommentLikeInfoInstanceType | null> {
     const commentLikeInfo = await this.CommentsLikesInfoModel.findOne({
       commentId,
@@ -46,8 +46,8 @@ export class LikesInfoRepository {
   }
 
   async getPostLikeInfoInstance(
-    postId: ObjectId,
-    userId: ObjectId,
+    postId: string,
+    userId: string,
   ): Promise<PostLikeInfoInstanceType | null> {
     const postLikeInfo = await this.PostsLikesInfoModel.findOne({
       postId,
@@ -79,7 +79,7 @@ export class LikesInfoRepository {
   } //todo типизация
 
   async incrementNumberOfLikesOfComment(
-    commentId: ObjectId,
+    commentId: string,
     incrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
     if (incrementValue === 'Like') {
@@ -98,7 +98,7 @@ export class LikesInfoRepository {
   }
 
   async decrementNumberOfLikesOfComment(
-    commentId: ObjectId,
+    commentId: string,
     decrementValue: 'Like' | 'Dislike',
   ): Promise<boolean> {
     if (decrementValue === 'Like') {
@@ -117,7 +117,7 @@ export class LikesInfoRepository {
   }
 
   async incrementNumberOfLikesOfPost(
-    postId: ObjectId,
+    postId: string,
     incrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (incrementValue === 'Like') {
@@ -138,7 +138,7 @@ export class LikesInfoRepository {
   }
 
   async decrementNumberOfLikesOfPost(
-    postId: ObjectId,
+    postId: string,
     decrementValue: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     if (decrementValue === 'Like') {
@@ -159,8 +159,8 @@ export class LikesInfoRepository {
   }
 
   async deleteLikeInfoComment(
-    userId: ObjectId,
-    commentId: ObjectId,
+    userId: string,
+    commentId: string,
   ): Promise<boolean> {
     const result = await this.CommentsLikesInfoModel.deleteOne({
       userId,
@@ -169,12 +169,12 @@ export class LikesInfoRepository {
     return result.deletedCount === 1;
   }
 
-  async deleteLikesInfoPostsByUserId(userId: ObjectId): Promise<boolean> {
+  async deleteLikesInfoPostsByUserId(userId: string): Promise<boolean> {
     const result = await this.PostsLikesInfoModel.deleteMany({ userId });
     return result.deletedCount > 0;
   }
 
-  async deleteLikesInfoCommentsByUserId(userId: ObjectId): Promise<boolean> {
+  async deleteLikesInfoCommentsByUserId(userId: string): Promise<boolean> {
     const result = await this.CommentsLikesInfoModel.deleteMany({ userId });
     return result.deletedCount > 0;
   }

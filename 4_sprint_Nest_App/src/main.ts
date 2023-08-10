@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import * as process from 'process';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { useContainer, ValidationError } from 'class-validator';
-import { HttpExceptionFilter } from './infrastructure/exception-filters/exception.filter';
 import cookieParser from 'cookie-parser';
+import { AllExceptionsFilter } from './infrastructure/exception-filters/exception.filter';
 
 const PORT = process.env.PORT || 5000;
 
@@ -33,7 +33,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen(PORT);
 }
 bootstrap();

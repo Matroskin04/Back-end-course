@@ -9,11 +9,11 @@ import {
   CommentOfPostPaginationType,
   PostsDBType,
 } from '../../../posts/infrastructure/query.repository/posts.types.query.repository';
-import { variablesForReturn } from '../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function.helper';
 import {
   mappingComment,
   mappingCommentForAllDocs,
-} from '../../../../infrastructure/helpers/functions/features/comments.functions.helpers';
+} from '../../../../infrastructure/utils/functions/features/comments.functions.helpers';
 import {
   CommentsDBType,
   StatusOfLike,
@@ -45,8 +45,8 @@ export class CommentsQueryRepository {
     if (userId) {
       const likeInfo =
         await this.likesInfoQueryRepository.getLikesInfoByCommentAndUser(
-          new ObjectId(commentId),
-          userId,
+          commentId,
+          userId.toString(),
         );
 
       if (likeInfo) {

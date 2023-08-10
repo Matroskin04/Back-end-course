@@ -56,8 +56,8 @@ import { DevicesService } from './features/devices/application/devices.service';
 import { DevicesQueryRepository } from './features/devices/infrastructure/query.repository/devices.query.repository';
 import { DevicesRepository } from './features/devices/infrastructure/repository/devices.repository';
 import { Device, DeviceSchema } from './features/devices/domain/devices.entity';
-import { JwtQueryRepository } from './infrastructure/general-features/jwt/jwt.query.repository';
-import { JwtService } from './infrastructure/general-features/jwt/jwt.service';
+import { JwtQueryRepository } from './features/jwt/jwt.query.repository';
+import { JwtService } from './features/jwt/jwt.service';
 import {
   BanInfo,
   BanInfoSchema,
@@ -82,6 +82,41 @@ import {
 } from './features/users/domain/users-banned/users-banned.entity';
 import { BannedUsersQueryRepository } from './features/users/infrastructure/users-banned/banned-users.query.repository';
 import { BannedUsersRepository } from './features/users/infrastructure/users-banned/banned-users.repository';
+
+const services = [
+  AuthService,
+  BlogsBloggerService,
+  CommentsService,
+  BlogsSAService,
+  DevicesService,
+  LikesInfoService,
+  JwtService,
+  UsersService,
+  PostsService,
+];
+const queryRepositories = [
+  BlogsPublicQueryRepository,
+  BlogsBloggerQueryRepository,
+  BlogsSAQueryRepository,
+  PostsQueryRepository,
+  LikesInfoQueryRepository,
+  DevicesQueryRepository,
+  UsersQueryRepository,
+  CommentsQueryRepository,
+  BannedUsersQueryRepository,
+];
+const repositories = [
+  BlogsBloggerRepository,
+  BlogsSARepository,
+  CommentsRepository,
+  DevicesRepository,
+  LikesInfoRepository,
+  PostsRepository,
+  UsersRepository,
+  BannedUsersRepository,
+  JwtQueryRepository,
+  TestingRepository,
+];
 
 @Module({
   imports: [
@@ -159,34 +194,9 @@ import { BannedUsersRepository } from './features/users/infrastructure/users-ban
     TestingController,
   ],
   providers: [
-    AuthService,
-    BlogsBloggerService,
-    BlogsSAService,
-    BlogsPublicQueryRepository,
-    BlogsBloggerQueryRepository,
-    BlogsSAQueryRepository,
-    BlogsBloggerRepository,
-    BlogsSARepository,
-    CommentsService,
-    CommentsQueryRepository,
-    CommentsRepository,
-    DevicesService,
-    DevicesQueryRepository,
-    DevicesRepository,
-    LikesInfoService,
-    LikesInfoQueryRepository,
-    LikesInfoRepository,
-    PostsService,
-    PostsQueryRepository,
-    PostsRepository,
-    UsersService,
-    UsersRepository,
-    UsersQueryRepository,
-    BannedUsersQueryRepository,
-    BannedUsersRepository,
-    JwtService,
-    JwtQueryRepository,
-    TestingRepository,
+    ...services,
+    ...queryRepositories,
+    ...repositories,
     IsBlogByIdExistsConstraint,
     //Strategy
     LocalStrategy,
@@ -198,6 +208,8 @@ import { BannedUsersRepository } from './features/users/infrastructure/users-ban
     EmailManager,
     CryptoAdapter,
     EmailAdapter,
+
+    //Throttler
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

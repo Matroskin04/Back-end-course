@@ -21,8 +21,8 @@ export class LikesInfoService {
   ) {}
 
   async createLikeInfoComment(
-    userId: ObjectId,
-    commentId: ObjectId,
+    userId: string,
+    commentId: string,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
     const commentLikesInfo = this.CommentsLikesInfoModel.createInstance(
@@ -39,8 +39,8 @@ export class LikesInfoService {
   }
 
   async createLikeInfoPost(
-    userId: ObjectId,
-    postId: ObjectId,
+    userId: string,
+    postId: string,
     login: string,
     statusLike: 'Like' | 'Dislike',
   ): Promise<void> {
@@ -54,8 +54,8 @@ export class LikesInfoService {
   }
 
   async updateCommentLikeInfo(
-    userId: ObjectId,
-    commentId: ObjectId,
+    userId: string,
+    commentId: string,
     statusLike: 'Like' | 'Dislike',
   ): Promise<boolean> {
     const commentLikeInfo =
@@ -72,8 +72,8 @@ export class LikesInfoService {
   }
 
   async updatePostLikeInfo(
-    userId: ObjectId,
-    postId: ObjectId,
+    userId: string,
+    postId: string,
     statusLike: 'Like' | 'Dislike' | 'None',
   ): Promise<boolean> {
     const postLikeInfo = await this.likesInfoRepository.getPostLikeInfoInstance(
@@ -89,16 +89,13 @@ export class LikesInfoService {
   }
 
   async deleteLikeInfoComment(
-    userId: ObjectId,
-    commentId: ObjectId,
+    userId: string,
+    commentId: string,
   ): Promise<boolean> {
     return this.likesInfoRepository.deleteLikeInfoComment(userId, commentId);
   }
 
-  async deleteLikeInfoPost(
-    userId: ObjectId,
-    postId: ObjectId,
-  ): Promise<boolean> {
+  async deleteLikeInfoPost(userId: string, postId: string): Promise<boolean> {
     return this.likesInfoRepository.deleteLikeInfoComment(userId, postId);
   }
 }

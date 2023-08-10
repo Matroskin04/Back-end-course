@@ -5,18 +5,18 @@ import {
 } from './posts.types.query.repository';
 import { ObjectId } from 'mongodb';
 import { QueryPostInputModel } from '../../api/models/input/query-post.input.model';
-import { variablesForReturn } from '../../../../infrastructure/helpers/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function.helper';
 import {
   modifyPostForAllDocs,
   modifyPostIntoViewModel,
-} from '../../../../infrastructure/helpers/functions/features/posts.functions.helpers';
+} from '../../../../infrastructure/utils/functions/features/posts.functions.helpers';
 import { StatusOfLike } from '../../../comments/infrastructure/query.repository/comments.types.query.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../domain/posts.entity';
 import { PostModelType } from '../../domain/posts.db.types';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
-import { reformNewestLikes } from '../../../../infrastructure/helpers/functions/features/likes-info.functions.helpers';
+import { reformNewestLikes } from '../../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
 import { BlogsBloggerQueryRepository } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
 
@@ -110,8 +110,8 @@ export class PostsQueryRepository {
     if (userId) {
       const likeInfo =
         await this.likesInfoQueryRepository.getLikesInfoByPostAndUser(
-          new ObjectId(postId),
-          userId,
+          postId.toString(),
+          userId.toString(),
         );
 
       if (likeInfo) {
@@ -122,7 +122,7 @@ export class PostsQueryRepository {
     //find last 3 Likes
     const newestLikes =
       await this.likesInfoQueryRepository.getNewestLikesOfPost(
-        new ObjectId(postId),
+        postId.toString(),
       );
     const reformedNewestLikes = reformNewestLikes(newestLikes);
 

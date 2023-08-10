@@ -2,7 +2,6 @@ import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import * as bcrypt from 'bcryptjs';
-import { UsersService } from '../../users/application/users.service';
 import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users.query.repository';
 import { UserDBType, UserModelType } from '../../users/domain/users.db.types';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,6 +12,7 @@ import { EmailManager } from '../../../infrastructure/managers/email-manager';
 import {
   ARTokensAndUserIdType,
   ErrorsTypeService,
+  UserDBServiceType,
   UserInfoType,
 } from './dto/auth.dto.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -26,7 +26,6 @@ export class AuthService {
     protected cryptoAdapter: CryptoAdapter,
     protected emailManager: EmailManager,
     protected jwtService: JwtService,
-    protected usersService: UsersService,
     protected usersRepository: UsersRepository,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
@@ -34,7 +33,7 @@ export class AuthService {
   async validateUser(
     loginOrEmail: string,
     password: string,
-  ): Promise<UserDBType | false> {
+  ): Promise<UserDBServiceType | false> {
     const user = await this.usersQueryRepository.getUserByLoginOrEmail(
       loginOrEmail,
     );

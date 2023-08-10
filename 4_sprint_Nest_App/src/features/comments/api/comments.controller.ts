@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { CommentOutputModel } from './models/output/comment.output.model';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments.query.repository';
-import { HTTP_STATUS_CODE } from '../../../infrastructure/helpers/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
 import { Response } from 'express';
 import { CommentsService } from '../application/comments.service';
-import { JwtAccessGuard } from '../../../infrastructure/guards/jwt-access.guard';
-import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/jwt-access-not-strict.guard';
+import { JwtAccessGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access.guard';
+import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { UpdateCommentInputModel } from './models/input/update-comment.input.model';
