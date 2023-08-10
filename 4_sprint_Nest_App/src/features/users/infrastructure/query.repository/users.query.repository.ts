@@ -23,7 +23,6 @@ export class UsersQueryRepository {
     const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
     const searchEmailTerm: string | null = query?.searchEmailTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
-    const banStatus = query?.banStatus;
 
     if (searchEmailTerm)
       emailAndLoginTerm.push({
@@ -34,8 +33,8 @@ export class UsersQueryRepository {
         login: { $regex: searchLoginTerm ?? '', $options: 'i' },
       });
     if (emailAndLoginTerm.length) paramsOfSearch = { $or: emailAndLoginTerm };
-    if (banStatus !== 'all')
-      paramsOfSearch['banInfo.isBanned'] = banStatus === 'banned';
+    if (query?.banStatus && query?.banStatus !== 'all')
+      paramsOfSearch['banInfo.isBanned'] = query.banStatus === 'banned';
 
     const countAllUsersSort = await this.UserModel.countDocuments(
       paramsOfSearch,
