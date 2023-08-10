@@ -36,8 +36,8 @@ export async function modifyPostForAllDocs( //todo in repo
 
   if (userId) {
     const likeInfo = await likesInfoQueryRepository.getLikesInfoByPostAndUser(
-      post._id,
-      userId,
+      post._id.toString(),
+      userId.toString(),
     );
     if (likeInfo) {
       myStatus = likeInfo.statusLike;
@@ -46,7 +46,7 @@ export async function modifyPostForAllDocs( //todo in repo
 
   // find last 3 Likes
   const newestLikes = await likesInfoQueryRepository.getNewestLikesOfPost(
-    post._id,
+    post._id.toString(),
   );
   const reformedNewestLikes = reformNewestLikes(newestLikes);
 

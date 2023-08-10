@@ -34,8 +34,8 @@ export async function mappingCommentForAllDocs(
   if (userId) {
     const likeInfo =
       await likesInfoQueryRepository.getLikesInfoByCommentAndUser(
-        comment._id,
-        userId,
+        comment._id.toString(),
+        userId.toString(),
       );
     if (likeInfo) {
       myStatus = likeInfo.statusLike;

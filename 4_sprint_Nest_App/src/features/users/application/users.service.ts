@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { UsersRepository } from '../infrastructure/repository/users.repository';
 import { BodyUserType } from '../infrastructure/repository/users.types.repositories';
 import { InjectModel } from '@nestjs/mongoose';
@@ -116,12 +115,10 @@ export class UsersService {
           new ObjectId(userId),
         );
       const postsLikesInfo =
-        await this.likesInfoQueryRepository.getPostsLikesInfoByUserId(
-          new ObjectId(userId),
-        );
+        await this.likesInfoQueryRepository.getPostsLikesInfoByUserId(userId);
       const commentsLikesInfo =
         await this.likesInfoQueryRepository.getCommentsLikesInfoByUserId(
-          new ObjectId(userId),
+          userId,
         );
       //объединяем информацию о забаненном юзере
       const userBannedInfo: BannedUser = {
@@ -152,9 +149,7 @@ export class UsersService {
       }
       if (postsLikesInfo) {
         const result3 =
-          await this.likesInfoRepository.deleteLikesInfoPostsByUserId(
-            new ObjectId(userId),
-          );
+          await this.likesInfoRepository.deleteLikesInfoPostsByUserId(userId);
         if (!result3) throw new Error('Deletion failed');
 
         //уменьшаем количество лайков/дизлайков для постов
@@ -179,7 +174,7 @@ export class UsersService {
       if (commentsLikesInfo) {
         const result4 =
           await this.likesInfoRepository.deleteLikesInfoCommentsByUserId(
-            new ObjectId(userId),
+            userId,
           );
         if (!result4) throw new Error('Deletion failed');
 
