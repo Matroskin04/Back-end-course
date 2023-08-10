@@ -54,7 +54,7 @@ export class LikesInfoQueryRepository {
   }
 
   async getCommentsLikesInfoByUserId(
-    userId: string,
+    userId: ObjectId,
   ): Promise<CommentsLikesInfoOfUserType> {
     const commentLikesInfo = await this.CommentsLikesInfoModel.find({
       userId,

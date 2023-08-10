@@ -5,4 +5,6 @@ export type QueryUserInputModel = {
   sortDirection?: string;
   pageNumber?: string | number;
   pageSize?: string | number;
+  banStatus?: 'all' | 'banned' | 'notBanned';
 };
+//todo лучше разделить для бана и просто

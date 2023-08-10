@@ -121,7 +121,7 @@ export class UsersService {
         );
       const commentsLikesInfo =
         await this.likesInfoQueryRepository.getCommentsLikesInfoByUserId(
-          userId,
+          new ObjectId(userId),
         );
       //объединяем информацию о забаненном юзере
       const userBannedInfo: BannedUser = {
@@ -158,13 +158,19 @@ export class UsersService {
         if (!result3) throw new Error('Deletion failed');
 
         //уменьшаем количество лайков/дизлайков для постов
-        for (const e of postsLikesInfo) {
-          if (e.userId.toString() === userId) continue; //если это пост данного юзера (которого банят), то не изменяем
+        for (const likeInfo of postsLikesInfo) {
+          if (
+            posts &&
+            posts.findIndex(
+              (post) => post.userId === likeInfo.userId.toString(),
+            ) > -1
+          )
+            continue; //если это пост данного юзера (которого банят), то не изменяем
 
           const result =
             await this.likesInfoRepository.decrementNumberOfLikesOfPost(
-              e.postId,
-              e.statusLike,
+              likeInfo.postId,
+              likeInfo.statusLike,
             );
           if (!result)
             throw new Error('Decrementing number of likes/dislikes failed');
@@ -178,13 +184,20 @@ export class UsersService {
         if (!result4) throw new Error('Deletion failed');
 
         //уменьшаем количество лайков/дизлайков для комментариев
-        for (const e of commentsLikesInfo) {
-          if (e.userId.toString() === userId) continue; //если это коммент данного юзера (которого банят), то не изменяем
+        for (const likeInfo of commentsLikesInfo) {
+          if (
+            comments &&
+            comments.findIndex(
+              (comment) =>
+                comment.commentatorInfo.userId === likeInfo.userId.toString(),
+            ) > -1
+          )
+            continue; //если это коммент данного юзера (которого банят), то не изменяем
           //todo PromiseAll?
           const result =
             await this.likesInfoRepository.decrementNumberOfLikesOfComment(
-              e.commentId,
-              e.statusLike,
+              likeInfo.commentId,
+              likeInfo.statusLike,
             );
           if (!result)
             throw new Error('Decrementing number of likes/dislikes failed');
@@ -218,13 +231,19 @@ export class UsersService {
       );
 
       //увеличиваем количество лайков/дизлайков для постов
-      for (const e of bannedUserInfo.postsLikesInfo) {
-        if (e.userId.toString() === userId) continue; //если это пост данного юзера (которого банят), то не изменяем
+      for (const likeInfo of bannedUserInfo.postsLikesInfo) {
+        if (
+          bannedUserInfo.posts &&
+          bannedUserInfo.posts.findIndex(
+            (post) => post.userId === likeInfo.userId.toString(),
+          ) > -1
+        )
+          continue; //если это пост данного юзера (которого банят), то не изменяем
 
         const result =
           await this.likesInfoRepository.incrementNumberOfLikesOfPost(
-            e.postId,
-            e.statusLike,
+            likeInfo.postId,
+            likeInfo.statusLike,
           );
         if (!result)
           throw new Error('Decrementing number of likes/dislikes failed');
@@ -237,14 +256,21 @@ export class UsersService {
       );
 
       //увеличиваем количество лайков/дизлайков для комментариев
-      for (const e of bannedUserInfo.commentsLikesInfo) {
-        if (e.userId.toString() === userId) continue; //если это коммент данного юзера (которого банят), то не изменяем
+      for (const likeInfo of bannedUserInfo.commentsLikesInfo) {
+        if (
+          bannedUserInfo.comments &&
+          bannedUserInfo.comments.findIndex(
+            (comment) =>
+              comment.commentatorInfo.userId === likeInfo.userId.toString(),
+          ) > -1
+        )
+          continue; //если это коммент данного юзера (которого банят), то не изменяем
 
         //todo PromiseAll?
         const result =
           await this.likesInfoRepository.incrementNumberOfLikesOfComment(
-            e.commentId,
-            e.statusLike,
+            likeInfo.commentId,
+            likeInfo.statusLike,
           );
         if (!result)
           throw new Error('Decrementing number of likes/dislikes failed');
