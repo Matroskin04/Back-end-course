@@ -25,7 +25,7 @@ export class CommentsRepository {
   }
 
   async createComments(comments): Promise<void> {
-    await this.CommentModel.create(comments);
+    await this.CommentModel.insertMany(comments);
     return;
   } //todo типизация
 

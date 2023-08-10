@@ -5,7 +5,6 @@ import {
   BannedUserDTOType,
   BannedUserModelType,
 } from '../../domain/users-banned/users-banned.db.types';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class BannedUsersQueryRepository {

@@ -23,7 +23,7 @@ export class PostsRepository {
   }
 
   async createPosts(posts): Promise<void> {
-    await this.PostModel.create(posts);
+    await this.PostModel.insertMany(posts);
     return;
   } //todo типизация
 

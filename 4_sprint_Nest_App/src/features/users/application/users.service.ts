@@ -105,9 +105,6 @@ export class UsersService {
 
     if (banInfo.isBanned) {
       //Если юзера банят:
-      //обновляем инфо о юзере
-      user.updateBanInfo(banInfo, user);
-      await this.usersRepository.save(user);
 
       //удаляем все девайсы
       await this.devicesService.deleteAllDevicesByUserId(userId);
@@ -162,6 +159,8 @@ export class UsersService {
 
         //уменьшаем количество лайков/дизлайков для постов
         for (const e of postsLikesInfo) {
+          if (e.userId.toString() === userId) continue; //если это пост данного юзера (которого банят), то не изменяем
+
           const result =
             await this.likesInfoRepository.decrementNumberOfLikesOfPost(
               e.postId,
@@ -180,6 +179,7 @@ export class UsersService {
 
         //уменьшаем количество лайков/дизлайков для комментариев
         for (const e of commentsLikesInfo) {
+          if (e.userId.toString() === userId) continue; //если это коммент данного юзера (которого банят), то не изменяем
           //todo PromiseAll?
           const result =
             await this.likesInfoRepository.decrementNumberOfLikesOfComment(
@@ -190,14 +190,14 @@ export class UsersService {
             throw new Error('Decrementing number of likes/dislikes failed');
         }
       }
+      //обновляем инфо о юзере
+      user.updateBanInfo(banInfo, user);
+      await this.usersRepository.save(user);
+
       return;
     }
 
     //Если юзера разбанят:
-
-    //меняем инфо о бане юзера
-    user.updateBanInfo(banInfo, user);
-    await this.usersRepository.save(user);
 
     const bannedUserInfo =
       await this.bannedUsersQueryRepository.getBannedUserById(userId);
@@ -219,6 +219,8 @@ export class UsersService {
 
       //увеличиваем количество лайков/дизлайков для постов
       for (const e of bannedUserInfo.postsLikesInfo) {
+        if (e.userId.toString() === userId) continue; //если это пост данного юзера (которого банят), то не изменяем
+
         const result =
           await this.likesInfoRepository.incrementNumberOfLikesOfPost(
             e.postId,
@@ -236,6 +238,8 @@ export class UsersService {
 
       //увеличиваем количество лайков/дизлайков для комментариев
       for (const e of bannedUserInfo.commentsLikesInfo) {
+        if (e.userId.toString() === userId) continue; //если это коммент данного юзера (которого банят), то не изменяем
+
         //todo PromiseAll?
         const result =
           await this.likesInfoRepository.incrementNumberOfLikesOfComment(
@@ -252,6 +256,10 @@ export class UsersService {
       userId,
     );
     if (!result) throw new Error('Deletion failed');
+
+    //меняем инфо о бане юзера
+    user.updateBanInfo(banInfo, user);
+    await this.usersRepository.save(user);
 
     return;
   }

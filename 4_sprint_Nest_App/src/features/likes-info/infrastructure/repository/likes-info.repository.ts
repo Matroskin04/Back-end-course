@@ -12,6 +12,7 @@ import {
 import {
   CommentLikesInfoModelType,
   PostLikesInfoModelType,
+  PostsLikesInfoDBType,
 } from '../../domain/likes-info.db.types';
 import { Comment } from '../../../comments/domain/comments.entity';
 import { CommentModelType } from '../../../comments/domain/comments.db.types';
@@ -65,13 +66,15 @@ export class LikesInfoRepository {
     return;
   }
 
-  async createPostsLikesInfo(postsLikesInfo): Promise<void> {
-    await this.PostsLikesInfoModel.create(postsLikesInfo);
+  async createPostsLikesInfo(
+    postsLikesInfo: PostsLikesInfoDBType[],
+  ): Promise<void> {
+    await this.PostsLikesInfoModel.insertMany(postsLikesInfo);
     return;
   } //todo типизация
 
   async createCommentsLikesInfo(commentsLikesInfo): Promise<void> {
-    await this.CommentsLikesInfoModel.create(commentsLikesInfo);
+    await this.CommentsLikesInfoModel.insertMany(commentsLikesInfo);
     return;
   } //todo типизация
 
