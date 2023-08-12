@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UsersQueryRepository } from '../../../features/users/infrastructure/query.repository/users.query.repository';
 
-@Injectable()
+@Injectable() //todo validator Constraints
 export class ValidateConfirmationCodeGuard implements CanActivate {
   constructor(protected usersQueryRepository: UsersQueryRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -31,7 +31,6 @@ export class ValidateConfirmationCodeGuard implements CanActivate {
       ]); //Code is already been applied
     }
     request.userId = user._id;
-    //todo - норм?
 
     return true;
   }

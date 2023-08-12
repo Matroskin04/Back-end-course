@@ -1,21 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
 import { CommentDBType } from '../../../comments/domain/comments.db.types';
 import {
   CommentsLikesInfoDBType,
   PostsLikesInfoDBType,
 } from '../../../likes-info/domain/likes-info.db.types';
 import { PostDBType } from '../../../posts/domain/posts.db.types';
-import {
-  LikesInfoSchema,
-  PostSchema,
-} from '../../../posts/domain/posts.entity';
+import { PostSchema } from '../../../posts/domain/posts.entity';
 import {
   CommentsLikesInfoSchema,
   PostsLikesInfoSchema,
 } from '../../../likes-info/domain/likes-info.entity';
-import { UserDocument, UserDTOType, UserModelType } from '../users.db.types';
-import { User, UserSchema } from '../users.entity';
 import {
   BannedUserDocument,
   BannedUserDTOType,

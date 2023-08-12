@@ -7,4 +7,4 @@ export type QueryUserInputModel = {
   pageSize?: string | number;
   banStatus?: 'all' | 'banned' | 'notBanned';
 };
-//todo лучше разделить для бана и просто
+//todo вынести

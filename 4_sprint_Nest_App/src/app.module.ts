@@ -136,7 +136,7 @@ const repositories = [
         schema: PostSchema,
       },
       {
-        name: LikesInfo.name, //todo вложенные схемы тоже здесь указывать?
+        name: LikesInfo.name,
         schema: LikesInfoSchema,
       },
       {

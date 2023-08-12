@@ -143,7 +143,7 @@ export class PostsService {
     inputBodyPost: BodyForUpdatePostDto,
   ) {
     const blog = await this.blogsBloggerQueryRepository.getBlogById(blogId);
-    if (!blog) return false; //todo 500 error or default (if middle had to validate it)
+    if (!blog) return false;
 
     const post = await this.postsRepository.getPostById(new ObjectId(postId));
     if (!post) return false;
@@ -232,7 +232,7 @@ export class PostsService {
     return true;
   }
 
-  async deleteSinglePost(id: string): Promise<boolean> {
-    return this.postsRepository.deleteSinglePost(new ObjectId(id));
+  async deleteSinglePost(postId: string, blogId: string): Promise<boolean> {
+    return this.postsRepository.deleteSinglePost(new ObjectId(postId), blogId);
   }
 }

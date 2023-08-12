@@ -158,11 +158,11 @@ export class BlogsBloggerController {
   @UseGuards(JwtAccessGuard, BlogOwnerByIdGuard)
   @Delete(':blogId/posts/:postId')
   async deletePostOfBlog(
-    //todo blogId не нужен,?
+    @Param('blogId') blogId: string,
     @Param('postId') postId: string,
     @Res() res: Response<void>,
   ) {
-    const result = await this.postsService.deleteSinglePost(postId);
+    const result = await this.postsService.deleteSinglePost(postId, blogId);
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);

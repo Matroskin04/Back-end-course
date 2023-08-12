@@ -63,7 +63,7 @@ export class UsersQueryRepository {
   }
 
   async getUserByUserId(userId: ObjectId): Promise<UserDBType | null> {
-    // todo создавать ли отдельный метод для взятия логина
+    // todo отдельный логин
 
     const user = await this.UserModel.findOne({ _id: userId });
     return user;

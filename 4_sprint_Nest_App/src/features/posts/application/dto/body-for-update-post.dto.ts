@@ -2,7 +2,6 @@ import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class BodyForUpdatePostDto {
-  //todo как делать
   @Transform(({ value }) => value?.trim())
   @IsNotEmpty({ message: 'The field shouldn\t be empty' })
   @IsString({ message: 'It should be a string' })

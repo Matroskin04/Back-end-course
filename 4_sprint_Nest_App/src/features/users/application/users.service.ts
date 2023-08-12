@@ -188,7 +188,7 @@ export class UsersService {
             ) > -1
           )
             continue; //если это коммент данного юзера (которого банят), то не изменяем
-          //todo PromiseAll?
+
           const result =
             await this.likesInfoRepository.decrementNumberOfLikesOfComment(
               likeInfo.commentId,

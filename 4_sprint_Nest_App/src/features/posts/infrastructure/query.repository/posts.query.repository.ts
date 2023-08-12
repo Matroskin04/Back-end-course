@@ -17,7 +17,6 @@ import { Post } from '../../domain/posts.entity';
 import { PostModelType } from '../../domain/posts.db.types';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
-import { BlogsBloggerQueryRepository } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
 
 @Injectable()
@@ -50,7 +49,7 @@ export class PostsQueryRepository {
     const allPosts = await Promise.all(
       allPostsOnPages.map(async (p) =>
         modifyPostForAllDocs(p, userId, this.likesInfoQueryRepository),
-      ), //todo Передаю репозиторий!!??
+      ), //todo методы
     );
 
     return {

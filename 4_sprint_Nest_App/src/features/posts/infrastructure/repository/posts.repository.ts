@@ -27,8 +27,11 @@ export class PostsRepository {
     return;
   } //todo типизация
 
-  async deleteSinglePost(id: ObjectId): Promise<boolean> {
-    const result = await this.PostModel.deleteOne({ _id: new ObjectId(id) });
+  async deleteSinglePost(postId: ObjectId, blogId: string): Promise<boolean> {
+    const result = await this.PostModel.deleteOne({
+      _id: postId,
+      blogId: blogId,
+    });
 
     return result.deletedCount === 1;
   }

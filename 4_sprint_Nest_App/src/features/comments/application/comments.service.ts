@@ -14,6 +14,7 @@ import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
 import { Comment } from '../domain/comments.entity';
 import { CommentModelType } from '../domain/comments.db.types';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
+import { PostsRepository } from '../../posts/infrastructure/repository/posts.repository';
 
 @Injectable()
 export class CommentsService {
@@ -23,6 +24,7 @@ export class CommentsService {
     @InjectModel(Comment.name)
     private CommentModel: CommentModelType,
     protected commentsRepository: CommentsRepository,
+    protected postsRepository: PostsRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected likesInfoService: LikesInfoService,
@@ -64,7 +66,7 @@ export class CommentsService {
       return null;
     }
 
-    const post = await this.PostModel.findOne({ _id: new ObjectId(postId) }); //todo!
+    const post = await this.postsRepository.getPostById(new ObjectId(postId));
     if (!post) {
       return null;
     }
