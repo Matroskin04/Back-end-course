@@ -33,6 +33,8 @@ import { CreatePostByBlogIdModel } from '../../../posts/api/models/input/create-
 import { PostTypeWithId } from '../../../posts/infrastructure/repository/posts.types.repositories';
 import { BlogOwnerByIdGuard } from '../../../../infrastructure/guards/blog-owner-by-id.guard';
 import { UpdatePostByBlogIdInputModel } from './models/input/update-post-by-blog-id.input.model';
+import { CommentsService } from '../../../comments/application/comments.service';
+import { CommentsQueryRepository } from '../../../comments/infrastructure/query.repository/comments.query.repository';
 
 @SkipThrottle()
 @Controller('/hometask-nest/blogger/blogs')
@@ -42,6 +44,7 @@ export class BlogsBloggerController {
     protected postsQueryRepository: PostsQueryRepository,
     protected blogsBloggerService: BlogsBloggerService,
     protected postsService: PostsService,
+    protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   @UseGuards(JwtAccessGuard)
@@ -74,6 +77,19 @@ export class BlogsBloggerController {
     result
       ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Get('comments')
+  async getCommentsOfBlogger(
+    @CurrentUserId() userId: ObjectId,
+    @Query() query: QueryBlogInputModel,
+  ) {
+    const result = await this.commentsQueryRepository.getCommentsOfBlogger(
+      query,
+      userId,
+    );
+    return result;
   }
 
   @UseGuards(JwtAccessGuard)

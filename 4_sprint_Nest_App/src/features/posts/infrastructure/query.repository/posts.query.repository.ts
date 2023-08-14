@@ -140,7 +140,7 @@ export class PostsQueryRepository {
   async getAllPostsIdOfBlogger(
     arrBlogsId: BlogsIdInputType,
   ): Promise<PostsIdOfBloggerType> {
-    const allPostsId: any = [];
+    let allPostsId: PostsIdOfBloggerType = [];
     for (const blog of arrBlogsId) {
       const postsOfBlog = await this.PostModel.find(
         {
@@ -148,7 +148,7 @@ export class PostsQueryRepository {
         },
         { _id: 1 },
       ).lean();
-      allPostsId.push(postsOfBlog);
+      allPostsId = allPostsId.concat(postsOfBlog);
     }
     return allPostsId;
   }

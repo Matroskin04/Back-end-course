@@ -111,13 +111,11 @@ export class CommentsQueryRepository {
       await this.blogsBloggerQueryRepository.getAllBlogsIdOfBlogger(
         userId.toString(),
       );
-    console.log('allBlogsId', allBlogsIdOfBlogger);
 
     const allPostsIdOfBlogger =
       await this.postsQueryRepository.getAllPostsIdOfBlogger(
         allBlogsIdOfBlogger,
       );
-    console.log('allPostsIdOfBlogger', allPostsIdOfBlogger);
 
     const countAllCommentsOfBlogger = await this.CommentModel.countDocuments({
       postId: { $in: allPostsIdOfBlogger.map((e) => e._id.toString()) },

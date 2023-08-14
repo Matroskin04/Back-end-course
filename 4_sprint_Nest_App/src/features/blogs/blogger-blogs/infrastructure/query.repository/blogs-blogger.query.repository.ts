@@ -1,5 +1,6 @@
 import {
   BlogPaginationType,
+  BlogsIdType,
   BlogViewType,
 } from './blogs-blogger.types.query.repository';
 import { ObjectId } from 'mongodb';
@@ -48,9 +49,9 @@ export class BlogsBloggerQueryRepository {
     };
   }
 
-  async getBlogById(id: string): Promise<null | BlogViewType> {
+  async getBlogById(id: ObjectId): Promise<null | BlogViewType> {
     const blog = await this.BlogModel.findOne(
-      { _id: new ObjectId(id) },
+      { _id: id },
       { projection: { blogOwnerInfo: 0 } },
     );
 
@@ -58,5 +59,15 @@ export class BlogsBloggerQueryRepository {
       return blog.modifyIntoViewGeneralModel();
     }
     return null;
+  }
+
+  async getAllBlogsIdOfBlogger(userId: string): Promise<BlogsIdType> {
+    const allBlogsId = await this.BlogModel.find(
+      {
+        'blogOwnerInfo.userId': userId,
+      },
+      { _id: 1 },
+    ).lean();
+    return allBlogsId;
   }
 }
