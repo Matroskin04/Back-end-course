@@ -1,6 +1,6 @@
 import { IsBoolean, IsString, MinLength } from 'class-validator';
 
-export class BanInfoType {
+export class BanInfoSAType {
   @IsBoolean({ message: 'The value must be boolean' })
   isBanned: boolean;
 

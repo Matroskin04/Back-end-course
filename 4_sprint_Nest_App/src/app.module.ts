@@ -80,11 +80,14 @@ import { BlogsSAQueryRepository } from './features/blogs/super-admin-blogs/infra
 import { BlogsBloggerRepository } from './features/blogs/blogger-blogs/infrastructure/repository/blogs-blogger.repository';
 import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
 import {
-  BannedUser,
-  BannedUserSchema,
-} from './features/users/banned/domain/users-banned.entity';
-import { BannedUsersQueryRepository } from './features/users/banned/infrastructure/banned-users.query.repository';
-import { BannedUsersRepository } from './features/users/banned/infrastructure/banned-users.repository';
+  BannedUserBySA,
+  BannedUserBySASchema,
+} from './features/users/banned/banned-sa-users/domain/users-banned.entity';
+import { BannedUsersQueryRepository } from './features/users/banned/banned-sa-users/infrastructure/banned-users.query.repository';
+import { BannedUsersRepository } from './features/users/banned/banned-sa-users/infrastructure/banned-users.repository';
+import { UsersBloggerRepository } from './features/users/blogger/infrastructure/repository/users-blogger.repository';
+import { UsersBloggerService } from './features/users/blogger/application/users-blogger.service';
+import { UsersBloggerController } from './features/users/blogger/api/users-blogger.controller';
 
 const services = [
   AuthService,
@@ -95,6 +98,7 @@ const services = [
   LikesInfoService,
   JwtService,
   UsersSaService,
+  UsersBloggerService,
   PostsService,
 ];
 const queryRepositories = [
@@ -116,6 +120,7 @@ const repositories = [
   LikesInfoRepository,
   PostsRepository,
   UsersRepository,
+  UsersBloggerRepository,
   BannedUsersRepository,
   JwtQueryRepository,
   TestingRepository,
@@ -179,8 +184,8 @@ const repositories = [
         schema: BanInfoSchema,
       },
       {
-        name: BannedUser.name,
-        schema: BannedUserSchema,
+        name: BannedUserBySA.name,
+        schema: BannedUserBySASchema,
       },
     ]),
     JwtModule.register({}),
@@ -194,6 +199,7 @@ const repositories = [
     PostsController,
     CommentsController,
     UsersSaController,
+    UsersBloggerController,
     TestingController,
   ],
   providers: [

@@ -18,8 +18,8 @@ import {
 } from '../../likes-info/domain/likes-info.db.types';
 import { Device } from '../../devices/domain/devices.entity';
 import { DeviceModelType } from '../../devices/domain/devices.db.types';
-import { BannedUser } from '../../users/banned/domain/users-banned.entity';
-import { BannedUserModelType } from '../../users/banned/domain/users-banned.db.types';
+import { BannedUserBySA } from '../../users/banned/banned-sa-users/domain/users-banned.entity';
+import { BannedUserModelType } from '../../users/banned/banned-sa-users/domain/users-banned.db.types';
 
 @Injectable()
 export class TestingRepository {
@@ -32,7 +32,7 @@ export class TestingRepository {
     private DeviceModel: DeviceModelType,
     @InjectModel(User.name)
     private UserModel: UserModelType,
-    @InjectModel(BannedUser.name)
+    @InjectModel(BannedUserBySA.name)
     private BannedUserModel: BannedUserModelType,
     @InjectModel(Comment.name)
     private CommentModel: CommentModelType,
