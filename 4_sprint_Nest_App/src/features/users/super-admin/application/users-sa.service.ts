@@ -9,26 +9,26 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../domain/users.entity';
 import { UserModelType } from '../domain/users.db.types';
 import { UserViewType } from '../infrastructure/query.repository/users.types.query.repository';
-import { CryptoAdapter } from '../../../infrastructure/adapters/crypto.adapter';
+import { CryptoAdapter } from '../../../../infrastructure/adapters/crypto.adapter';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import { BanInfoType } from './dto/ban-info.dto';
 import { UsersQueryRepository } from '../infrastructure/query.repository/users.query.repository';
-import { DevicesService } from '../../devices/application/devices.service';
-import { PostsQueryRepository } from '../../posts/infrastructure/query.repository/posts.query.repository';
-import { BlogsSAQueryRepository } from '../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
-import { CommentsQueryRepository } from '../../comments/infrastructure/query.repository/comments.query.repository';
-import { LikesInfo } from '../../posts/domain/posts.entity';
-import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
-import { BannedUser } from '../domain/users-banned/users-banned.entity';
-import { BannedUserModelType } from '../domain/users-banned/users-banned.db.types';
-import { PostsRepository } from '../../posts/infrastructure/repository/posts.repository';
-import { CommentsRepository } from '../../comments/infrastructure/repository/comments.repository';
-import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
-import { BannedUsersQueryRepository } from '../infrastructure/users-banned/banned-users.query.repository';
-import { BannedUsersRepository } from '../infrastructure/users-banned/banned-users.repository';
+import { DevicesService } from '../../../devices/application/devices.service';
+import { PostsQueryRepository } from '../../../posts/infrastructure/query.repository/posts.query.repository';
+import { BlogsSAQueryRepository } from '../../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
+import { CommentsQueryRepository } from '../../../comments/infrastructure/query.repository/comments.query.repository';
+import { LikesInfo } from '../../../posts/domain/posts.entity';
+import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
+import { BannedUser } from '../../banned/domain/users-banned.entity';
+import { BannedUserModelType } from '../../banned/domain/users-banned.db.types';
+import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
+import { CommentsRepository } from '../../../comments/infrastructure/repository/comments.repository';
+import { LikesInfoRepository } from '../../../likes-info/infrastructure/repository/likes-info.repository';
+import { BannedUsersQueryRepository } from '../../banned/infrastructure/banned-users.query.repository';
+import { BannedUsersRepository } from '../../banned/infrastructure/banned-users.repository';
 @Injectable()
-export class UsersService {
+export class UsersSaService {
   constructor(
     @InjectModel(User.name)
     private UserModel: UserModelType,
@@ -111,7 +111,7 @@ export class UsersService {
       //если найден, то ищем посты
       const posts = await this.postsQueryRepository.getPostsByUserId(userId);
       const comments =
-        await this.commentsQueryRepository.getAllCommentsOfUserDBFormat(
+        await this.commentsQueryRepository.getCommentsOfUserDBFormat(
           new ObjectId(userId),
         );
       const postsLikesInfo =

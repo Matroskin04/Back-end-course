@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
-import { UsersService } from '../../../features/users/application/users.service';
+import { UsersSaService } from '../../../features/users/super-admin/application/users-sa.service';
 
 @Injectable()
 export class JwtAccessNotStrictGuard extends AuthGuard('jwt') {
-  constructor(protected usersService: UsersService) {
+  constructor(protected usersService: UsersSaService) {
     super();
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {

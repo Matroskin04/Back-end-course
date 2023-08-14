@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BannedUser } from '../../domain/users-banned/users-banned.entity';
+import { BannedUser } from '../domain/users-banned.entity';
 import {
   BannedUserDTOType,
   BannedUserModelType,
-} from '../../domain/users-banned/users-banned.db.types';
+} from '../domain/users-banned.db.types';
 
 @Injectable()
 export class BannedUsersQueryRepository {

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users.query.repository';
+import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments.query.repository';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
@@ -9,7 +9,7 @@ import { CommentsRepository } from '../infrastructure/repository/comments.reposi
 import { InjectModel } from '@nestjs/mongoose';
 import { Post } from '../../posts/domain/posts.entity';
 import { PostModelType } from '../../posts/domain/posts.db.types';
-import { mappingComment } from '../../../infrastructure/utils/functions/features/comments.functions.helpers';
+import { modifyComment } from '../../../infrastructure/utils/functions/features/comments.functions.helpers';
 import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
 import { Comment } from '../domain/comments.entity';
 import { CommentModelType } from '../domain/comments.db.types';
@@ -80,7 +80,7 @@ export class CommentsService {
     );
 
     await this.commentsRepository.save(comment);
-    return mappingComment(comment, 'None');
+    return modifyComment(comment, 'None');
   }
 
   async updateLikeStatusOfComment(

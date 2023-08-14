@@ -4,7 +4,7 @@ import { Blog } from '../../domain/blogs.entity';
 import { Injectable } from '@nestjs/common';
 import { BlogsSARepository } from '../infrastructure/repository/blogs-sa-repository';
 import { ObjectId } from 'mongodb';
-import { UsersQueryRepository } from '../../../users/infrastructure/query.repository/users.query.repository';
+import { UsersQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users.query.repository';
 
 @Injectable()
 export class BlogsSAService {

@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '../../../features/users/infrastructure/query.repository/users.query.repository';
+import { UsersQueryRepository } from '../../../features/users/super-admin/infrastructure/query.repository/users.query.repository';
 
 @Injectable() //todo validator Constraints
 export class ValidateConfirmationCodeGuard implements CanActivate {

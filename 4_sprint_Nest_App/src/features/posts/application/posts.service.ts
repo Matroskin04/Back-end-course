@@ -12,7 +12,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
 import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
-import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users.query.repository';
+import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts.query.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
@@ -142,7 +142,9 @@ export class PostsService {
     postId: string,
     inputBodyPost: BodyForUpdatePostDto,
   ) {
-    const blog = await this.blogsBloggerQueryRepository.getBlogById(blogId);
+    const blog = await this.blogsBloggerQueryRepository.getBlogById(
+      new ObjectId(blogId),
+    );
     if (!blog) return false;
 
     const post = await this.postsRepository.getPostById(new ObjectId(postId));

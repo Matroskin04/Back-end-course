@@ -4,7 +4,7 @@ import {
   EmailAndLoginTerm,
   UsersPaginationType,
 } from './users.types.query.repository';
-import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function.helper';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDBType, UserModelType } from '../../domain/users.db.types';
 import { User } from '../../domain/users.entity';

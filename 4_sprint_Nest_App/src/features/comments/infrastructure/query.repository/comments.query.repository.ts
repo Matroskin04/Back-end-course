@@ -5,21 +5,23 @@ import { CommentViewType } from '../repository/comments.types.repositories';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentModelType } from '../../domain/comments.db.types';
 import { QueryPostInputModel } from '../../../posts/api/models/input/query-post.input.model';
-import {
-  CommentOfPostPaginationType,
-  PostsDBType,
-} from '../../../posts/infrastructure/query.repository/posts.types.query.repository';
 import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function.helper';
 import {
-  mappingComment,
-  mappingCommentForAllDocs,
+  modifyComment,
+  modifyCommentsOfBlogger,
+  modifyCommentsOfPost,
 } from '../../../../infrastructure/utils/functions/features/comments.functions.helpers';
 import {
+  CommentOfPostPaginationType,
   CommentsDBType,
+  CommentsOfBloggerPaginationType,
   StatusOfLike,
 } from './comments.types.query.repository';
 import { Comment } from '../../domain/comments.entity';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
+import { BlogsBloggerQueryRepository } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
+import { Post } from '../../../posts/domain/posts.entity';
+import { PostModelType } from '../../../posts/domain/posts.db.types';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -28,6 +30,7 @@ export class CommentsQueryRepository {
     private CommentModel: CommentModelType,
     protected postsQueryRepository: PostsQueryRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected blogsBloggerQueryRepository: BlogsBloggerQueryRepository,
   ) {}
 
   async getCommentById(
@@ -54,7 +57,7 @@ export class CommentsQueryRepository {
       }
     }
 
-    return mappingComment(comment, myStatus);
+    return modifyComment(comment, myStatus);
   }
 
   async getCommentsOfPost(
@@ -85,7 +88,7 @@ export class CommentsQueryRepository {
 
     const allCommentsOfPost = await Promise.all(
       allCommentsOfPostOnPages.map(async (p) =>
-        mappingCommentForAllDocs(p, userId, this.likesInfoQueryRepository),
+        modifyCommentsOfPost(p, userId, this.likesInfoQueryRepository),
       ),
     );
 
@@ -98,7 +101,59 @@ export class CommentsQueryRepository {
     };
   }
 
-  async getAllCommentsOfUserDBFormat(
+  async getCommentsOfBlogger(
+    query: QueryPostInputModel,
+    userId: ObjectId,
+  ): Promise<CommentsOfBloggerPaginationType | null> {
+    const paramsOfElems = await variablesForReturn(query);
+
+    const allBlogsIdOfBlogger =
+      await this.blogsBloggerQueryRepository.getAllBlogsIdOfBlogger(
+        userId.toString(),
+      );
+    console.log('allBlogsId', allBlogsIdOfBlogger);
+
+    const allPostsIdOfBlogger =
+      await this.postsQueryRepository.getAllPostsIdOfBlogger(
+        allBlogsIdOfBlogger,
+      );
+    console.log('allPostsIdOfBlogger', allPostsIdOfBlogger);
+
+    const countAllCommentsOfBlogger = await this.CommentModel.countDocuments({
+      postId: { $in: allPostsIdOfBlogger.map((e) => e._id.toString()) },
+    });
+
+    const allCommentsOfBloggerOnPages = await this.CommentModel.find({
+      postId: { $in: allPostsIdOfBlogger.map((e) => e._id.toString()) },
+    })
+      .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
+      .limit(+paramsOfElems.pageSize)
+      .sort(paramsOfElems.paramSort)
+      .lean();
+
+    const allCommentsOfBlogger = await Promise.all(
+      allCommentsOfBloggerOnPages.map(async (p) =>
+        modifyCommentsOfBlogger(
+          p,
+          userId,
+          this.likesInfoQueryRepository,
+          this.postsQueryRepository,
+        ),
+      ),
+    );
+
+    return {
+      pagesCount: Math.ceil(
+        countAllCommentsOfBlogger / +paramsOfElems.pageSize,
+      ),
+      page: +paramsOfElems.pageNumber,
+      pageSize: +paramsOfElems.pageSize,
+      totalCount: countAllCommentsOfBlogger,
+      items: allCommentsOfBlogger,
+    };
+  }
+
+  async getCommentsOfUserDBFormat(
     userId: ObjectId,
   ): Promise<CommentsDBType | null> {
     const comments = await this.CommentModel.find({

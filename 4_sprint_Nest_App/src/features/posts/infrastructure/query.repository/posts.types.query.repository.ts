@@ -2,8 +2,8 @@ import {
   NewestLikesType,
   PostTypeWithId,
 } from '../repository/posts.types.repositories';
-import { CommentViewType } from '../../../comments/infrastructure/repository/comments.types.repositories';
 import { PostDBType } from '../../domain/posts.db.types';
+import { ObjectId } from 'mongodb';
 
 export type PostPaginationType = {
   pagesCount: number;
@@ -11,14 +11,6 @@ export type PostPaginationType = {
   pageSize: number;
   totalCount: number;
   items: Array<PostTypeWithId>;
-};
-
-export type CommentOfPostPaginationType = {
-  pagesCount: number;
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  items: Array<CommentViewType>;
 };
 
 export type PostViewType = PostTypeWithId & {
@@ -30,4 +22,17 @@ export type PostViewType = PostTypeWithId & {
   };
 };
 
+export type PostMainInfoType = {
+  _id: ObjectId;
+  title: 'string';
+  blogId: 'string';
+  blogName: 'string';
+};
+
 export type PostsDBType = Array<PostDBType>;
+
+export type BlogsIdInputType = Array<{ _id: ObjectId }>;
+
+export type PostsIdOfBloggerType = Array<{
+  _id: ObjectId;
+}>;

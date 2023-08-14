@@ -18,13 +18,16 @@ import { PostsController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsQueryRepository } from './features/posts/infrastructure/query.repository/posts.query.repository';
 import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
-import { User, UserSchema } from './features/users/domain/users.entity';
+import {
+  User,
+  UserSchema,
+} from './features/users/super-admin/domain/users.entity';
 import { CommentsController } from './features/comments/api/comments.controller';
-import { UsersController } from './features/users/api/users.controller';
+import { UsersSaController } from './features/users/super-admin/api/users-sa.controller';
 import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
-import { UsersService } from './features/users/application/users.service';
-import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
-import { UsersQueryRepository } from './features/users/infrastructure/query.repository/users.query.repository';
+import { UsersSaService } from './features/users/super-admin/application/users-sa.service';
+import { UsersRepository } from './features/users/super-admin/infrastructure/repository/users.repository';
+import { UsersQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users.query.repository';
 import { TestingController } from './features/testing/api/testing.controller';
 import { TestingRepository } from './features/testing/repository/testing.repository';
 import { LocalStrategy } from './infrastructure/strategy/local.strategy';
@@ -65,7 +68,7 @@ import {
   EmailConfirmationSchema,
   PasswordRecovery,
   PasswordRecoverySchema,
-} from './features/users/domain/users.subschemas';
+} from './features/users/super-admin/domain/users.subschemas';
 import { BlogsPublicController } from './features/blogs/public-blogs/api/blogs-public.controller';
 import { BlogsBloggerController } from './features/blogs/blogger-blogs/api/blogs-blogger.controller';
 import { BlogsSAController } from './features/blogs/super-admin-blogs/api/blogs-sa.controller';
@@ -79,9 +82,9 @@ import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastruc
 import {
   BannedUser,
   BannedUserSchema,
-} from './features/users/domain/users-banned/users-banned.entity';
-import { BannedUsersQueryRepository } from './features/users/infrastructure/users-banned/banned-users.query.repository';
-import { BannedUsersRepository } from './features/users/infrastructure/users-banned/banned-users.repository';
+} from './features/users/banned/domain/users-banned.entity';
+import { BannedUsersQueryRepository } from './features/users/banned/infrastructure/banned-users.query.repository';
+import { BannedUsersRepository } from './features/users/banned/infrastructure/banned-users.repository';
 
 const services = [
   AuthService,
@@ -91,7 +94,7 @@ const services = [
   DevicesService,
   LikesInfoService,
   JwtService,
-  UsersService,
+  UsersSaService,
   PostsService,
 ];
 const queryRepositories = [
@@ -190,7 +193,7 @@ const repositories = [
     DevicesController,
     PostsController,
     CommentsController,
-    UsersController,
+    UsersSaController,
     TestingController,
   ],
   providers: [

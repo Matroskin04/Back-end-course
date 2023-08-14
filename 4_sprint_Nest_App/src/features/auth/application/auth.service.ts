@@ -2,12 +2,15 @@ import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import * as bcrypt from 'bcryptjs';
-import { UsersQueryRepository } from '../../users/infrastructure/query.repository/users.query.repository';
-import { UserDBType, UserModelType } from '../../users/domain/users.db.types';
+import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import {
+  UserDBType,
+  UserModelType,
+} from '../../users/super-admin/domain/users.db.types';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../users/domain/users.entity';
+import { User } from '../../users/super-admin/domain/users.entity';
 import { CryptoAdapter } from '../../../infrastructure/adapters/crypto.adapter';
-import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
+import { UsersRepository } from '../../users/super-admin/infrastructure/repository/users.repository';
 import { EmailManager } from '../../../infrastructure/managers/email-manager';
 import {
   ARTokensAndUserIdType,

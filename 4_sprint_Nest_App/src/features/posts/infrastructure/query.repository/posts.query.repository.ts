@@ -1,6 +1,9 @@
 import {
+  BlogsIdInputType,
+  PostMainInfoType,
   PostPaginationType,
   PostsDBType,
+  PostsIdOfBloggerType,
   PostViewType,
 } from './posts.types.query.repository';
 import { ObjectId } from 'mongodb';
@@ -18,6 +21,7 @@ import { PostModelType } from '../../domain/posts.db.types';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
 import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
+import { BlogsIdType } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.types.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -131,5 +135,32 @@ export class PostsQueryRepository {
   async getPostsByUserId(userId: string): Promise<PostsDBType | null> {
     const posts = await this.PostModel.find({ userId }).lean();
     return posts.length ? posts : null; //if length === 0 -> return null
+  }
+
+  async getAllPostsIdOfBlogger(
+    arrBlogsId: BlogsIdInputType,
+  ): Promise<PostsIdOfBloggerType> {
+    const allPostsId: any = [];
+    for (const blog of arrBlogsId) {
+      const postsOfBlog = await this.PostModel.find(
+        {
+          blogId: blog._id.toString(),
+        },
+        { _id: 1 },
+      ).lean();
+      allPostsId.push(postsOfBlog);
+    }
+    return allPostsId;
+  }
+
+  async getPostMainInfoById(
+    postId: ObjectId,
+  ): Promise<PostMainInfoType | null> {
+    const post = await this.PostModel.findOne(
+      { _id: postId },
+      { _id: 1, title: 1, blogId: 1, blogName: 1 },
+    ).lean();
+    console.log('getPostMainInfoById', post);
+    return post as PostMainInfoType; //todo type???
   }
 }

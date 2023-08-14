@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '../../features/users/infrastructure/query.repository/users.query.repository';
+import { UsersQueryRepository } from '../../features/users/super-admin/infrastructure/query.repository/users.query.repository';
 
 @Injectable()
 export class BlogOwnerByIdGuard implements CanActivate {
