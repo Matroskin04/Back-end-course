@@ -56,7 +56,7 @@ export class BlogsPublicQueryRepository {
       {
         isBanned: true,
       },
-      { projection: { _id: 1 } },
+      { _id: 1 },
     ).lean();
     return result;
   }

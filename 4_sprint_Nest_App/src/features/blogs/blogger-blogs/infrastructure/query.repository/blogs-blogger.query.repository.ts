@@ -52,7 +52,7 @@ export class BlogsBloggerQueryRepository {
   async getBlogById(id: ObjectId): Promise<null | BlogViewType> {
     const blog = await this.BlogModel.findOne(
       { _id: id },
-      { projection: { blogOwnerInfo: 0 } },
+      { blogOwnerInfo: 0 },
     );
 
     if (blog) {

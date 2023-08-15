@@ -54,19 +54,17 @@ export class UsersBloggerQueryRepository {
     };
   }
 
-  async getUserLoginById(userId: ObjectId): Promise<string | null> {
+  async getUserLoginById(userId: ObjectId): Promise<string | undefined> {
     //todo слой блоггер может обращаться к паблик?
     // todo отдельный логин
 
     const userLogin = await this.UserModel.findOne(
       { _id: userId },
       {
-        projection: {
-          login: 1,
-        },
+        login: 1,
+        _id: 0,
       },
     ).lean();
-    console.log('userLogin', userLogin);
-    return userLogin as any; //todo any
+    return userLogin?.login;
   }
 }
