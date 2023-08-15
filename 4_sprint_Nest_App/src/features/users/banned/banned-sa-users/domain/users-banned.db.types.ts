@@ -1,12 +1,11 @@
-import { ObjectId } from 'mongodb';
-import { CommentDBType } from '../../../comments/domain/comments.db.types';
-import { PostDBType } from '../../../posts/domain/posts.db.types';
+import { CommentDBType } from '../../../../comments/domain/comments.db.types';
+import { PostDBType } from '../../../../posts/domain/posts.db.types';
 import {
   CommentsLikesInfoDBType,
   PostsLikesInfoDBType,
-} from '../../../likes-info/domain/likes-info.db.types';
+} from '../../../../likes-info/domain/likes-info.db.types';
 import { HydratedDocument, Model } from 'mongoose';
-import { BannedUser } from './users-banned.entity';
+import { BannedUserBySA } from './users-banned.entity';
 
 export type BannedUserDTOType = {
   userId: string;
@@ -16,7 +15,7 @@ export type BannedUserDTOType = {
   postsLikesInfo: PostsLikesInfoDBType[] | null;
 };
 
-export type BannedUserDocument = HydratedDocument<BannedUser>;
+export type BannedUserDocument = HydratedDocument<BannedUserBySA>;
 
 export type BannedUserModelType = Model<BannedUserDocument> &
   BannedUserModelStaticMethodsType;

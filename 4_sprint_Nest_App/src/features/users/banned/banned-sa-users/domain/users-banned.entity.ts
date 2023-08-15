@@ -1,24 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CommentDBType } from '../../../comments/domain/comments.db.types';
+import { CommentDBType } from '../../../../comments/domain/comments.db.types';
 import {
   CommentsLikesInfoDBType,
   PostsLikesInfoDBType,
-} from '../../../likes-info/domain/likes-info.db.types';
-import { PostDBType } from '../../../posts/domain/posts.db.types';
-import { PostSchema } from '../../../posts/domain/posts.entity';
+} from '../../../../likes-info/domain/likes-info.db.types';
+import { PostDBType } from '../../../../posts/domain/posts.db.types';
+import { PostSchema } from '../../../../posts/domain/posts.entity';
 import {
   CommentsLikesInfoSchema,
   PostsLikesInfoSchema,
-} from '../../../likes-info/domain/likes-info.entity';
+} from '../../../../likes-info/domain/likes-info.entity';
 import {
   BannedUserDocument,
   BannedUserDTOType,
   BannedUserModelType,
 } from './users-banned.db.types';
-import { CommentsSchema } from '../../../comments/domain/comments.entity';
+import { CommentsSchema } from '../../../../comments/domain/comments.entity';
 
 @Schema()
-export class BannedUser {
+export class BannedUserBySA {
   @Prop({ required: true })
   userId: string;
 
@@ -41,8 +41,9 @@ export class BannedUser {
     return new BannedUserModel(bannedUserDTO);
   }
 }
-export const BannedUserSchema = SchemaFactory.createForClass(BannedUser);
+export const BannedUserBySASchema =
+  SchemaFactory.createForClass(BannedUserBySA); //todo change all names on SA
 
-BannedUserSchema.statics = {
-  createInstance: BannedUser.createInstance,
+BannedUserBySASchema.statics = {
+  createInstance: BannedUserBySA.createInstance,
 };

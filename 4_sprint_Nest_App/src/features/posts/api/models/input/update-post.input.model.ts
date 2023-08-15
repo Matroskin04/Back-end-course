@@ -28,7 +28,6 @@ export class UpdatePostInputModel {
   @MaxLength(1000)
   content: string;
 
-  @IsMongoId()
   @IsString({ message: 'It should be a string' })
   @Validate(IsBlogByIdExistsConstraint)
   blogId: string;
