@@ -16,7 +16,7 @@ import { UsersSAQueryRepository } from '../../users/super-admin/infrastructure/q
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts.query.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
-import { BlogsSARepository } from '../../blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
+import { BlogsSARepository } from '../../blogs/super-admin-blogs/infrastructure/repository/blogs-sa.repository';
 import { BlogsBloggerQueryRepository } from '../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { BodyForUpdatePostDto } from './dto/body-for-update-post.dto';
 import { Injectable } from '@nestjs/common';

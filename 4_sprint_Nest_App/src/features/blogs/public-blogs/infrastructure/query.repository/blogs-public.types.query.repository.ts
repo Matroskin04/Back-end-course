@@ -1,4 +1,5 @@
 import { BlogOutputModel } from '../../../blogger-blogs/api/models/output/blog.output.model';
+import { ObjectId } from 'mongodb';
 
 export type BlogPaginationType = {
   pagesCount: number;
@@ -9,3 +10,7 @@ export type BlogPaginationType = {
 };
 
 export type BlogViewType = BlogOutputModel;
+
+export type BannedBlogsIdType = Array<{
+  _id: ObjectId;
+}>;

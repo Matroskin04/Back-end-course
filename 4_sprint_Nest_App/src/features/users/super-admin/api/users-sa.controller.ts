@@ -36,7 +36,7 @@ export class UsersSaController {
   @Get()
   async getAllUsers(
     @Query() query: QueryUserInputModel,
-    @Res({ passthrough: true }) res: Response<ViewAllUsersModels | string>,
+    @Res() res: Response<ViewAllUsersModels | string>,
   ) {
     const result = await this.usersQueryRepository.getAllUsers(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);

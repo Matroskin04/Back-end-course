@@ -1,8 +1,12 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogModelType } from '../../domain/blogs.db.types';
 import { Blog } from '../../domain/blogs.entity';
-import { Injectable } from '@nestjs/common';
-import { BlogsSARepository } from '../infrastructure/repository/blogs-sa-repository';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { BlogsSARepository } from '../infrastructure/repository/blogs-sa.repository';
 import { ObjectId } from 'mongodb';
 import { UsersSAQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 
@@ -36,6 +40,27 @@ export class BlogsSAService {
     await this.blogsSARepository.save(blog);
 
     return true;
+  }
+
+  async updateBanInfoOfBlog(blogId: string, banInfo: boolean): Promise<void> {
+    const blog = await this.blogsSARepository.getBlogInstance(
+      new ObjectId(blogId),
+    );
+    if (!blog) throw new NotFoundException('Blog is not found');
+
+    if (blog.isBanned === banInfo)
+      throw new BadRequestException([
+        {
+          message: `This blog is already ${banInfo ? 'banned' : 'unbanned'}`,
+          field: 'isBanned',
+        },
+      ]);
+
+    //If new banInfo is different - than update
+    blog.isBanned = banInfo;
+    await this.blogsSARepository.save(blog);
+
+    return;
   }
   /* async createBlog(inputBodyBlog: BodyBlogType): Promise<BlogViewType> {
     const blog = this.BlogModel.createInstance(inputBodyBlog, this.BlogModel);

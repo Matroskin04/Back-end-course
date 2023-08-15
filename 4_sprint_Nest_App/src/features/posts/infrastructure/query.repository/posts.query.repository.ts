@@ -22,6 +22,7 @@ import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/que
 import { reformNewestLikes } from '../../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
 import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
 import { BlogsIdType } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.types.query.repository';
+import { BlogsPublicQueryRepository } from '../../../blogs/public-blogs/infrastructure/query.repository/blogs-public.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -29,6 +30,7 @@ export class PostsQueryRepository {
     @InjectModel(Post.name)
     private PostModel: PostModelType,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
+    protected blogsPublicQueryRepository: BlogsPublicQueryRepository,
   ) {}
 
   async getAllPosts(
@@ -37,6 +39,8 @@ export class PostsQueryRepository {
   ): Promise<PostPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
+    const allBannedBlogsId =
+      await this.blogsPublicQueryRepository.getAllBannedBlogsId();
 
     const countAllPostsSort = await this.PostModel.countDocuments({
       title: { $regex: searchNameTerm ?? '', $options: 'i' },
@@ -44,6 +48,7 @@ export class PostsQueryRepository {
 
     const allPostsOnPages = await this.PostModel.find({
       title: { $regex: searchNameTerm ?? '', $options: 'i' },
+      blogId: { $not: { $in: allBannedBlogsId } },
     })
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)

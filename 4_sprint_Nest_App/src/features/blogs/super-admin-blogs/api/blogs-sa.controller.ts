@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   Put,
   Query,
@@ -15,6 +17,7 @@ import { HTTP_STATUS_CODE } from '../../../../infrastructure/utils/enums/http-st
 import { Response } from 'express';
 import { BasicAuthGuard } from '../../../../infrastructure/guards/authorization-guards/basic-auth.guard';
 import { BlogsSAService } from '../application/blogs-sa.service';
+import { BanInfoInputModel } from './models/input/ban-info.input.model';
 
 @SkipThrottle()
 @Controller('/hometask-nest/sa/blogs')
@@ -45,6 +48,20 @@ export class BlogsSAController {
     result
       ? res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204)
       : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @HttpCode(204)
+  @Put(':id/ban')
+  async updateBanInfoOfBlog(
+    @Param('id') blogId: string,
+    @Body() inputBanInfoModel: BanInfoInputModel,
+  ) {
+    await this.blogsSAService.updateBanInfoOfBlog(
+      blogId,
+      inputBanInfoModel.isBanned,
+    );
+    return;
   }
 
   /* @Get(':id')
