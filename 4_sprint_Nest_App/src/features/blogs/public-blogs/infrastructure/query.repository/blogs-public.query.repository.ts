@@ -23,6 +23,7 @@ export class BlogsPublicQueryRepository {
 
     const countAllBlogsSort = await this.BlogModel.countDocuments({
       name: { $regex: searchNameTerm ?? '', $options: 'i' },
+      isBanned: false,
     });
 
     const allBlogsOnPages = await this.BlogModel.find({

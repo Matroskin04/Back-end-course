@@ -8,10 +8,14 @@ export type ViewAllBlogsModel = {
   items: Array<BlogSAOutputType>;
 };
 
-export type BlogSAOutputType = { id: ObjectId } & BlogBodyType;
+export type BlogSAOutputType = {
+  id: ObjectId;
+  banInfo: { isBanned: boolean; banDate: null | string };
+} & BlogBodyType;
 
 export type BlogSAOutputDBType = {
   _id: ObjectId;
+  isBanned: boolean;
 } & BlogBodyType;
 
 type BlogBodyType = {

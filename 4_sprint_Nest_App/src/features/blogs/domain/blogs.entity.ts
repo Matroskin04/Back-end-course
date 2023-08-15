@@ -32,6 +32,9 @@ export class Blog {
   @Prop({ type: Boolean, default: false })
   isBanned: boolean; //todo плохая реализация? При поиске постов запрашиваю все айди забаненных блогов и сравниваю
 
+  @Prop({ type: String || null, default: new Date().toISOString() })
+  banDate: string | null;
+
   static createInstance(
     blogDTO: BlogDTOType,
     BlogModel: BlogModelType,
@@ -61,6 +64,10 @@ export class Blog {
       blogOwnerInfo: {
         userId: this.blogOwnerInfo.userId,
         userLogin: this.blogOwnerInfo.userLogin,
+      },
+      banInfo: {
+        isBanned: this.isBanned,
+        banDate: this.isBanned ? this.banDate : null,
       },
     };
   }

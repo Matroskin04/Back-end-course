@@ -112,6 +112,14 @@ export class PostsQueryRepository {
       return null;
     }
 
+    const allBannedBlogsId =
+      await this.blogsPublicQueryRepository.getAllBannedBlogsId();
+    if (
+      //if this post belongs to a blog, return null
+      allBannedBlogsId &&
+      allBannedBlogsId.findIndex((e) => e._id.toString() === post.blogId) !== -1
+    )
+      return null;
     //set StatusLike
     let myStatus: StatusOfLike = 'None';
 
