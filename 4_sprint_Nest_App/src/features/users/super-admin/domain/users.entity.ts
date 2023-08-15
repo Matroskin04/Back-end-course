@@ -6,7 +6,7 @@ import {
   UserDTOType,
   UserModelType,
 } from './users.db.types';
-import { UserViewType } from '../infrastructure/query.repository/users.types.query.repository';
+import { UserViewType } from '../infrastructure/query.repository/users-sa.types.query.repository';
 import {
   BanInfo,
   BanInfoSchema,

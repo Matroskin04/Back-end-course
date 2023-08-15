@@ -19,9 +19,11 @@ export class UsersBloggerRepository {
 
   async getBannedUsersByBlogIdInstance(
     blogId: string,
+    userId: string,
   ): Promise<BannedUsersByBloggerInstance | null> {
     const bannedUsers = await this.BannedUsersByBloggerModel.findOne({
       blogId,
+      userId,
     });
     return bannedUsers;
   }
@@ -30,12 +32,10 @@ export class UsersBloggerRepository {
     blogId: string,
     userId: string,
   ): Promise<boolean> {
-    const result = await this.BannedUsersByBloggerModel.updateOne(
-      {
-        blogId,
-      },
-      { $pull: { bannedUsers: userId } },
-    );
-    return result.modifiedCount === 1; //todo через array and deletion - normal?
+    const result = await this.BannedUsersByBloggerModel.deleteOne({
+      blogId,
+      userId,
+    });
+    return result.deletedCount === 1;
   }
 }

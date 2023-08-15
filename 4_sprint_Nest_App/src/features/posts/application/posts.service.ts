@@ -12,7 +12,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
 import { LikeStatus } from '../../../infrastructure/utils/enums/like-status';
-import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
 import { PostsQueryRepository } from '../infrastructure/query.repository/posts.query.repository';
 import { LikesInfoRepository } from '../../likes-info/infrastructure/repository/likes-info.repository';
@@ -30,7 +30,7 @@ export class PostsService {
     protected postsQueryRepository: PostsQueryRepository,
     protected blogsBloggerQueryRepository: BlogsBloggerQueryRepository,
     protected blogsRepository: BlogsSARepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
     protected likesInfoRepository: LikesInfoRepository,
     protected likesInfoService: LikesInfoService,

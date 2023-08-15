@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { BlogsBloggerRepository } from '../infrastructure/repository/blogs-blogger.repository';
 import { BlogModelType } from '../../domain/blogs.db.types';
 import { Blog } from '../../domain/blogs.entity';
-import { UsersQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import { BlogViewType } from '../infrastructure/query.repository/blogs-blogger.types.query.repository';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class BlogsBloggerService {
     @InjectModel(Blog.name)
     private BlogModel: BlogModelType,
     protected blogsRepository: BlogsBloggerRepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
   ) {}
 
   async createBlog(

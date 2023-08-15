@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const request = require('supertest');
 import { ObjectId } from 'mongodb';
-import { UsersQueryRepository } from '../users/infrastructure/query.repository/users-query.repository';
+import { UsersSaQueryRepository } from '../users/infrastructure/query.repository/users-query.repository';
 import { app } from '../setting';
 import { EmailAdapter } from '../infrastructure/adapters/email-adapter';
 import { mongoURL } from '../infrastructure/db';
@@ -16,7 +16,7 @@ let idOfComment: ObjectId;
 let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string;
-const usersQueryRepository = new UsersQueryRepository();
+const usersQueryRepository = new UsersSaQueryRepository();
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
   beforeAll(async () => {

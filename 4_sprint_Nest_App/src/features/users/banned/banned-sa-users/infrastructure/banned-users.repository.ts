@@ -5,7 +5,7 @@ import { BannedUserModelType } from '../domain/users-banned.db.types';
 import {
   BannedUserInstanceType,
   UserInstanceType,
-} from '../../../super-admin/infrastructure/repository/users.types.repositories';
+} from '../../../super-admin/infrastructure/repository/users-sa.types.repositories';
 
 @Injectable()
 export class BannedUsersRepository {

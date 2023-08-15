@@ -14,7 +14,7 @@ export class BannedUsersByBloggerQueryRepository {
     userId: string,
   ): Promise<null | BannedUserByBloggerType> {
     const bannedUser = await this.BannedUsersByBloggerModel.findOne({
-      bannedUsers: { $in: [userId] },
+      bannedUsersInfo: { $in: [userId] },
     }).lean();
     return bannedUser;
   }

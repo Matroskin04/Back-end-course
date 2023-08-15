@@ -4,7 +4,7 @@ import { Blog } from '../../domain/blogs.entity';
 import { Injectable } from '@nestjs/common';
 import { BlogsSARepository } from '../infrastructure/repository/blogs-sa-repository';
 import { ObjectId } from 'mongodb';
-import { UsersQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 
 @Injectable()
 export class BlogsSAService {
@@ -12,7 +12,7 @@ export class BlogsSAService {
     @InjectModel(Blog.name)
     private BlogModel: BlogModelType,
     protected blogsSARepository: BlogsSARepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
   ) {}
 
   async bindBlogWithUser(blogId: string, userId: string): Promise<boolean> {

@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import * as bcrypt from 'bcryptjs';
-import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import {
   UserDBType,
   UserModelType,
@@ -10,7 +10,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../users/super-admin/domain/users.entity';
 import { CryptoAdapter } from '../../../infrastructure/adapters/crypto.adapter';
-import { UsersRepository } from '../../users/super-admin/infrastructure/repository/users.repository';
+import { UsersSARepository } from '../../users/super-admin/infrastructure/repository/users-sa.repository';
 import { EmailManager } from '../../../infrastructure/managers/email-manager';
 import {
   ARTokensAndUserIdType,
@@ -29,8 +29,8 @@ export class AuthService {
     protected cryptoAdapter: CryptoAdapter,
     protected emailManager: EmailManager,
     protected jwtService: JwtService,
-    protected usersRepository: UsersRepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersRepository: UsersSARepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
   ) {}
 
   async validateUser(

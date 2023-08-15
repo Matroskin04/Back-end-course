@@ -1,14 +1,14 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersQueryRepository } from '../../features/users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
   'jwt-access',
 ) {
-  constructor(protected usersQueryRepository: UsersQueryRepository) {
+  constructor(protected usersQueryRepository: UsersSAQueryRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

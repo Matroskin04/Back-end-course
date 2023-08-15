@@ -26,8 +26,8 @@ import { CommentsController } from './features/comments/api/comments.controller'
 import { UsersSaController } from './features/users/super-admin/api/users-sa.controller';
 import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
 import { UsersSaService } from './features/users/super-admin/application/users-sa.service';
-import { UsersRepository } from './features/users/super-admin/infrastructure/repository/users.repository';
-import { UsersQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSARepository } from './features/users/super-admin/infrastructure/repository/users-sa.repository';
+import { UsersSAQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import { TestingController } from './features/testing/api/testing.controller';
 import { TestingRepository } from './features/testing/repository/testing.repository';
 import { LocalStrategy } from './infrastructure/strategy/local.strategy';
@@ -93,6 +93,7 @@ import {
   BannedUsersByBloggerSchema,
 } from './features/users/banned/banned-by-blogger-users/domain/users-banned-by-blogger.entity';
 import { BannedUsersByBloggerQueryRepository } from './features/users/banned/banned-by-blogger-users/infrastructure/banned-users-by-blogger-query.repository';
+import { UsersBloggerQueryRepository } from './features/users/blogger/infrastructure/query.repository/users-blogger.query.repository';
 
 const services = [
   AuthService,
@@ -113,7 +114,8 @@ const queryRepositories = [
   PostsQueryRepository,
   LikesInfoQueryRepository,
   DevicesQueryRepository,
-  UsersQueryRepository,
+  UsersSAQueryRepository,
+  UsersBloggerQueryRepository,
   CommentsQueryRepository,
   BannedUsersQueryRepository,
   BannedUsersByBloggerQueryRepository,
@@ -125,7 +127,7 @@ const repositories = [
   DevicesRepository,
   LikesInfoRepository,
   PostsRepository,
-  UsersRepository,
+  UsersSARepository,
   UsersBloggerRepository,
   BannedUsersRepository,
   JwtQueryRepository,

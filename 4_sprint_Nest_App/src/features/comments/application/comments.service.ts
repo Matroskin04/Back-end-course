@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { UsersQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import { CommentsQueryRepository } from '../infrastructure/query.repository/comments.query.repository';
 import { LikesInfoQueryRepository } from '../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { LikesInfoService } from '../../likes-info/application/likes-info.service';
@@ -25,7 +25,7 @@ export class CommentsService {
     private CommentModel: CommentModelType,
     protected commentsRepository: CommentsRepository,
     protected postsRepository: PostsRepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected likesInfoService: LikesInfoService,
     protected likesInfoRepository: LikesInfoRepository,
