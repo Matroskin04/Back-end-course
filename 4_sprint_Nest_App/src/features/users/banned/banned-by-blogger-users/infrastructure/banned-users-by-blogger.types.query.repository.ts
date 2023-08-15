@@ -1,4 +1,3 @@
-export type BannedUserByBloggerType = {
-  blogId: string;
-  bannedUsers: string[];
-};
+import { BannedUserInfoType } from '../domain/users-banned-by-blogger.db.types';
+
+export type BannedUserByBloggerType = BannedUserInfoType & { blogId: string };

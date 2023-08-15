@@ -1,4 +1,5 @@
 import {
+  BannedBlogsIdType,
   BlogPaginationType,
   BlogViewType,
 } from './blogs-public.types.query.repository';
@@ -47,5 +48,15 @@ export class BlogsPublicQueryRepository {
       return blog.modifyIntoViewGeneralModel();
     }
     return null;
+  }
+
+  async getAllBannedBlogsId(): Promise<null | BannedBlogsIdType> {
+    const result = await this.BlogModel.find(
+      {
+        isBanned: true,
+      },
+      { projection: { _id: 1 } },
+    ).lean();
+    return result;
   }
 }

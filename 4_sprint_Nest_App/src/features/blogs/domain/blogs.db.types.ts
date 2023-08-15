@@ -19,6 +19,8 @@ export type BlogDBType = {
     userId: string;
     userLogin: string;
   };
+
+  isBanned: boolean;
 };
 
 export type BlogDTOType = {

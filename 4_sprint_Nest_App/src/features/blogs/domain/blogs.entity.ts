@@ -28,6 +28,10 @@ export class Blog {
     userId: string;
     userLogin: string;
   };
+
+  @Prop({ type: Boolean, default: false })
+  isBanned: boolean; //todo плохая реализация? При поиске постов запрашиваю все айди забаненных блогов и сравниваю
+
   static createInstance(
     blogDTO: BlogDTOType,
     BlogModel: BlogModelType,

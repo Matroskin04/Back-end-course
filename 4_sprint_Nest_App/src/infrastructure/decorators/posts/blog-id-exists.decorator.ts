@@ -4,7 +4,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { BlogsSARepository } from '../../../features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
+import { BlogsSARepository } from '../../../features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa.repository';
 
 @ValidatorConstraint({ name: 'IsBlogByIdExists', async: true })
 export class IsBlogByIdExistsConstraint

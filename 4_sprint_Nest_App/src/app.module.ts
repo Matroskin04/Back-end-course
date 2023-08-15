@@ -78,7 +78,7 @@ import { BlogsPublicQueryRepository } from './features/blogs/public-blogs/infras
 import { BlogsBloggerQueryRepository } from './features/blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.query.repository';
 import { BlogsSAQueryRepository } from './features/blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
 import { BlogsBloggerRepository } from './features/blogs/blogger-blogs/infrastructure/repository/blogs-blogger.repository';
-import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa-repository';
+import { BlogsSARepository } from './features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa.repository';
 import {
   BannedUserBySA,
   BannedUserBySASchema,
