@@ -8,13 +8,10 @@ import {
   ViewAllCommentsOfPostModel,
   ViewCommentOfPostModel,
 } from './models/output/comments-of-post.output.model';
-import { CreatePostInputModel } from './models/input/create-post.input.model';
 import { PostsService } from '../application/posts.service';
-import { UpdatePostInputModel } from './models/input/update-post.input.model';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -29,12 +26,12 @@ import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-statu
 import { JwtAccessNotStrictGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access-not-strict.guard';
 import { CurrentUserId } from '../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
-import { BasicAuthGuard } from '../../../infrastructure/guards/authorization-guards/basic-auth.guard';
 import { JwtAccessGuard } from '../../../infrastructure/guards/authorization-guards/jwt-access.guard';
 import { CreateCommentByPostIdModel } from '../../comments/api/models/input/create-comment.input.model';
 import { CommentsService } from '../../comments/application/comments.service';
 import { UpdatePostLikeStatusModel } from './models/input/update-like-status.input.model';
 import { SkipThrottle } from '@nestjs/throttler';
+import { IsUserBannedGuard } from '../../../infrastructure/guards/blogs-comments-posts-guards/is-user-banned.guard';
 
 @SkipThrottle()
 @Controller('/hometask-nest/posts')
@@ -105,7 +102,7 @@ export class PostsController {
       : res.status(HTTP_STATUS_CODE.NOT_FOUND_404).json('Blog in not found');
   }*/
 
-  @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard, IsUserBannedGuard)
   @Post(':postId/comments')
   async createCommentByPostId(
     @Param('postId') postId: string,

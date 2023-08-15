@@ -88,6 +88,11 @@ import { BannedUsersRepository } from './features/users/banned/banned-sa-users/i
 import { UsersBloggerRepository } from './features/users/blogger/infrastructure/repository/users-blogger.repository';
 import { UsersBloggerService } from './features/users/blogger/application/users-blogger.service';
 import { UsersBloggerController } from './features/users/blogger/api/users-blogger.controller';
+import {
+  BannedUsersByBlogger,
+  BannedUsersByBloggerSchema,
+} from './features/users/banned/banned-by-blogger-users/domain/users-banned-by-blogger.entity';
+import { BannedUsersByBloggerQueryRepository } from './features/users/banned/banned-by-blogger-users/infrastructure/banned-users-by-blogger-query.repository';
 
 const services = [
   AuthService,
@@ -111,6 +116,7 @@ const queryRepositories = [
   UsersQueryRepository,
   CommentsQueryRepository,
   BannedUsersQueryRepository,
+  BannedUsersByBloggerQueryRepository,
 ];
 const repositories = [
   BlogsBloggerRepository,
@@ -186,6 +192,10 @@ const repositories = [
       {
         name: BannedUserBySA.name,
         schema: BannedUserBySASchema,
+      },
+      {
+        name: BannedUsersByBlogger.name,
+        schema: BannedUsersByBloggerSchema,
       },
     ]),
     JwtModule.register({}),

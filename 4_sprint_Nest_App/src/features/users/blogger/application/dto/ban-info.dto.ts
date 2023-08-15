@@ -1,5 +1,5 @@
-import { BanInfo } from '../../../super-admin/domain/users.subschemas';
-
-export class BanInfoBloggerType extends BanInfo {
+export class BanInfoBloggerType {
+  isBanned: boolean;
+  banReason: string;
   blogId: string;
 }
