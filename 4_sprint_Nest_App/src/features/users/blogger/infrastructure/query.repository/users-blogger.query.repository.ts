@@ -21,7 +21,7 @@ export class UsersBloggerQueryRepository {
   async getBannedUsersOfBlog(
     query: QueryUserInputModel,
     blogId: string,
-  ): Promise<BannedUsersOfBlogPaginationType> {
+  ): Promise<BannedUsersOfBlogPaginationType | null> {
     const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
     const paramsOfSearchLogin = {
@@ -30,6 +30,10 @@ export class UsersBloggerQueryRepository {
         $options: 'i',
       },
     };
+
+    const countBannedUsers =
+      await this.BannedUsersByBloggerModel.countDocuments({ blogId });
+    if (!countBannedUsers) return null;
 
     const countAllBannedUsersSort =
       await this.BannedUsersByBloggerModel.countDocuments({

@@ -28,6 +28,7 @@ export class BlogsPublicQueryRepository {
 
     const allBlogsOnPages = await this.BlogModel.find({
       name: { $regex: searchNameTerm ?? '', $options: 'i' },
+      isBanned: false,
     })
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)

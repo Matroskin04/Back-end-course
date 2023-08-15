@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Put,
   Query,
@@ -33,7 +34,8 @@ export class UsersBloggerController {
       query,
       blogId,
     );
-    return result;
+    if (result) return result;
+    throw new NotFoundException('Info is not found');
   }
 
   @UseGuards(JwtAccessGuard)

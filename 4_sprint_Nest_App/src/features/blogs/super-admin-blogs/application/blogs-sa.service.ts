@@ -58,6 +58,7 @@ export class BlogsSAService {
 
     //If new banInfo is different - than update
     blog.isBanned = banInfo;
+    console.log(blog);
     await this.blogsSARepository.save(blog);
 
     return;
