@@ -3,7 +3,7 @@ import { QueryUserInputModel } from '../../api/models/input/query-user.input.mod
 import {
   EmailAndLoginTerm,
   UsersPaginationType,
-} from './users.types.query.repository';
+} from './users-sa.types.query.repository';
 import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function.helper';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDBType, UserModelType } from '../../domain/users.db.types';
@@ -11,13 +11,14 @@ import { User } from '../../domain/users.entity';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
-export class UsersQueryRepository {
+export class UsersSAQueryRepository {
   constructor(
     @InjectModel(User.name)
     private UserModel: UserModelType,
   ) {}
 
   async getAllUsers(query: QueryUserInputModel): Promise<UsersPaginationType> {
+    //todo отдельное query
     const emailAndLoginTerm: EmailAndLoginTerm = [];
     let paramsOfSearch = {};
     const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
@@ -26,7 +27,7 @@ export class UsersQueryRepository {
 
     if (searchEmailTerm)
       emailAndLoginTerm.push({
-        email: { $regex: searchEmailTerm ?? '', $options: 'i' },
+        email: { $regex: searchEmailTerm ?? '', $options: 'i' }, //todo исправить
       });
     if (searchLoginTerm)
       emailAndLoginTerm.push({

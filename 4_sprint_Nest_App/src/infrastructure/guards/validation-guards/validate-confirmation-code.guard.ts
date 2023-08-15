@@ -4,11 +4,11 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '../../../features/users/super-admin/infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../../../features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 
 @Injectable() //todo validator Constraints
 export class ValidateConfirmationCodeGuard implements CanActivate {
-  constructor(protected usersQueryRepository: UsersQueryRepository) {}
+  constructor(protected usersQueryRepository: UsersSAQueryRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 

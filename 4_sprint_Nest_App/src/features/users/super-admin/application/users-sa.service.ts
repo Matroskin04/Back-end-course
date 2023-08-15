@@ -3,17 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersRepository } from '../infrastructure/repository/users.repository';
-import { BodyUserType } from '../infrastructure/repository/users.types.repositories';
+import { UsersSARepository } from '../infrastructure/repository/users-sa.repository';
+import { BodyUserType } from '../infrastructure/repository/users-sa.types.repositories';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../domain/users.entity';
 import { UserModelType } from '../domain/users.db.types';
-import { UserViewType } from '../infrastructure/query.repository/users.types.query.repository';
+import { UserViewType } from '../infrastructure/query.repository/users-sa.types.query.repository';
 import { CryptoAdapter } from '../../../../infrastructure/adapters/crypto.adapter';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import { BanInfoSAType } from './dto/ban-info.dto';
-import { UsersQueryRepository } from '../infrastructure/query.repository/users.query.repository';
+import { UsersSAQueryRepository } from '../infrastructure/query.repository/users-sa.query.repository';
 import { DevicesService } from '../../../devices/application/devices.service';
 import { PostsQueryRepository } from '../../../posts/infrastructure/query.repository/posts.query.repository';
 import { BlogsSAQueryRepository } from '../../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
@@ -35,8 +35,8 @@ export class UsersSaService {
     @InjectModel(BannedUserBySA.name)
     private BannedUserModel: BannedUserModelType,
     protected cryptoAdapter: CryptoAdapter,
-    protected usersRepository: UsersRepository,
-    protected usersQueryRepository: UsersQueryRepository,
+    protected usersRepository: UsersSARepository,
+    protected usersQueryRepository: UsersSAQueryRepository,
     protected devicesService: DevicesService,
     protected postsQueryRepository: PostsQueryRepository,
     protected blogsSAQueryRepository: BlogsSAQueryRepository,

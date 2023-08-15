@@ -3,13 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../domain/users.entity';
 import { UserModelType } from '../../domain/users.db.types';
-import {
-  BannedUserInstanceType,
-  UserInstanceType,
-} from './users.types.repositories';
+import { UserInstanceType } from './users-sa.types.repositories';
 
 @Injectable()
-export class UsersRepository {
+export class UsersSARepository {
   constructor(
     @InjectModel(User.name)
     private UserModel: UserModelType,
