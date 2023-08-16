@@ -98,6 +98,7 @@ import { RegisterUserUseCase } from './features/auth/application/use-cases/regis
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfirmEmailUseCase } from './features/auth/application/use-cases/confirm-email.use-case';
 import { ResendConfirmationEmailMessageUseCase } from './features/auth/application/use-cases/resend-confirmation-email-message.use-case';
+import { UsersPublicQueryRepository } from './features/users/public/infrastructure/query.repository/users-public.query.repository';
 
 const services = [
   AuthService,
@@ -120,9 +121,11 @@ const queryRepositories = [
   DevicesQueryRepository,
   UsersSAQueryRepository,
   UsersBloggerQueryRepository,
+  UsersPublicQueryRepository,
   CommentsQueryRepository,
   BannedUsersQueryRepository,
   BannedUsersByBloggerQueryRepository,
+  JwtQueryRepository,
 ];
 const repositories = [
   BlogsBloggerRepository,
@@ -134,7 +137,6 @@ const repositories = [
   UsersSARepository,
   UsersBloggerRepository,
   BannedUsersRepository,
-  JwtQueryRepository,
   TestingRepository,
 ];
 const handlers = [

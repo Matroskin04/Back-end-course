@@ -75,20 +75,6 @@ export class AuthService {
     };
   }
 
-  async getUserInformation(userId: ObjectId): Promise<UserInfoType | null> {
-    const user = await this.usersQueryRepository.getUserByUserId(userId);
-
-    if (!user) {
-      return null;
-    }
-
-    return {
-      email: user.email,
-      login: user.login,
-      userId: user._id.toString(),
-    };
-  }
-
   async sendEmailPasswordRecovery(email: string): Promise<void> {
     const user: UserDBType | null =
       await this.usersQueryRepository.getUserByLoginOrEmail(email);

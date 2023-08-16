@@ -42,6 +42,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from '../application/use-cases/register-user.use-case';
 import { ConfirmEmailCommand } from '../application/use-cases/confirm-email.use-case';
 import { ResendConfirmationEmailMessageCommand } from '../application/use-cases/resend-confirmation-email-message.use-case';
+import { UsersPublicQueryRepository } from '../../users/public/infrastructure/query.repository/users-public.query.repository';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -51,6 +52,7 @@ export class AuthController {
     protected jwtService: JwtService,
     protected devicesService: DevicesService,
     protected authService: AuthService,
+    protected usersPublicQueryRepository: UsersPublicQueryRepository,
   ) {}
 
   @SkipThrottle()
@@ -60,7 +62,9 @@ export class AuthController {
     @CurrentUserId() userId: ObjectId,
     @Res() res: Response<AuthOutputModel>,
   ) {
-    const result = await this.authService.getUserInformation(userId);
+    const result = await this.usersPublicQueryRepository.getUserInfoById(
+      userId,
+    );
 
     if (result) {
       res.status(HTTP_STATUS_CODE.OK_200).send(result);
