@@ -15,6 +15,7 @@ import { UpdateBanInfoOfUserInputModel } from './models/input/update-ban-info-of
 import { UsersBloggerService } from '../application/users-blogger.service';
 import { UsersBloggerQueryRepository } from '../infrastructure/query.repository/users-blogger.query.repository';
 import { QueryUsersBloggerInputModel } from './models/input/query-users-blogger.input.model';
+import { BlogOwnerByIdGuard } from '../../../../infrastructure/guards/blog-owner-by-id.guard';
 
 @SkipThrottle()
 @Controller('/hometask-nest/blogger/users')
@@ -38,7 +39,7 @@ export class UsersBloggerController {
     throw new NotFoundException('Info is not found');
   }
 
-  @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard, BlogOwnerByIdGuard)
   @HttpCode(204)
   @Put(':userId/ban')
   async updateBanInfoOfUser(

@@ -25,10 +25,8 @@ export class UsersBloggerQueryRepository {
     const searchLoginTerm: string | null = query?.searchLoginTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
     const paramsOfSearchLogin = {
-      login: {
-        $regex: searchLoginTerm ?? '',
-        $options: 'i',
-      },
+      $regex: searchLoginTerm ?? '',
+      $options: 'i',
     };
 
     const countBannedUsers =
@@ -38,12 +36,12 @@ export class UsersBloggerQueryRepository {
     const countAllBannedUsersSort =
       await this.BannedUsersByBloggerModel.countDocuments({
         blogId,
-        paramsOfSearchLogin, //todo проверка
+        login: paramsOfSearchLogin, //todo проверка
       });
 
     const allBannedUsersOnPages = await this.BannedUsersByBloggerModel.find({
       blogId,
-      paramsOfSearchLogin,
+      login: paramsOfSearchLogin,
     })
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)

@@ -17,7 +17,7 @@ export class BlogOwnerByIdGuard implements CanActivate {
     if (!request.user?.id) throw new Error('userId is not found');
 
     const blog = await this.blogsSAQueryRepository.getBlogById(
-      new ObjectId(request.params.blogId),
+      new ObjectId(request.params.blogId ?? request.body.blogId),
     );
     if (!blog) throw new NotFoundException('This blog is not found');
 

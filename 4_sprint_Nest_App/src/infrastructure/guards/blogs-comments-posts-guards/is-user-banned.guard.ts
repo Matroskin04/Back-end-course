@@ -7,6 +7,7 @@ import {
 import { BannedUsersByBloggerQueryRepository } from '../../../features/users/banned/banned-by-blogger-users/infrastructure/banned-users-by-blogger-query.repository';
 import { BlogsPublicQueryRepository } from '../../../features/blogs/public-blogs/infrastructure/query.repository/blogs-public.query.repository';
 import { PostsQueryRepository } from '../../../features/posts/infrastructure/query.repository/posts.query.repository';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class IsUserBannedGuard implements CanActivate {
@@ -21,7 +22,7 @@ export class IsUserBannedGuard implements CanActivate {
       throw new Error('Post Id in params is not found');
 
     const post = await this.postsQueryRepository.getPostById(
-      request.params.postId,
+      new ObjectId(request.params.postId),
       null,
     );
     if (!post) throw new NotFoundException('Post is not found');
@@ -29,10 +30,9 @@ export class IsUserBannedGuard implements CanActivate {
     if (!request.user?.id) throw new Error('User Id is not found');
     const bannedUser =
       await this.bannedUsersByBloggerQueryRepository.getBannedUserByBlogger(
-        request.userId,
+        request.user.id.toString(),
         post.blogId,
       );
-
     return !bannedUser;
   }
 }
