@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Ip,
   Post,
   Res,
@@ -37,11 +38,14 @@ import { JwtRefreshGuard } from '../../../infrastructure/guards/authorization-gu
 import { RefreshToken } from '../../../infrastructure/decorators/auth/refresh-token-param.decorator';
 import { JwtService } from '../../jwt/jwt.service';
 import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegisterUserCommand } from '../application/use-cases/register-user.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
 export class AuthController {
   constructor(
+    protected commandBus: CommandBus,
     protected jwtService: JwtService,
     protected devicesService: DevicesService,
     protected authService: AuthService,
@@ -94,22 +98,19 @@ export class AuthController {
   }
 
   @UseGuards(ValidateEmailRegistrationGuard)
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('registration')
   async registerUser(
     @Body() inputRegisterModel: RegistrationAuthInputModel,
-    @Res() res: Response<string>,
-  ) {
-    await this.authService.registerUser(
-      inputRegisterModel.email,
-      inputRegisterModel.login,
-      inputRegisterModel.password,
+  ): Promise<string> {
+    await this.commandBus.execute(
+      new RegisterUserCommand(
+        inputRegisterModel.email,
+        inputRegisterModel.login,
+        inputRegisterModel.password,
+      ),
     );
-
-    res
-      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-      .send(
-        'Input data is accepted. Email with confirmation code will be send to passed email address',
-      );
+    return 'Input data is accepted. Email with confirmation code will be send to passed email address';
   }
 
   @UseGuards(ValidateConfirmationCodeGuard)

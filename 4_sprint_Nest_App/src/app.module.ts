@@ -94,6 +94,8 @@ import {
 } from './features/users/banned/banned-by-blogger-users/domain/users-banned-by-blogger.entity';
 import { BannedUsersByBloggerQueryRepository } from './features/users/banned/banned-by-blogger-users/infrastructure/banned-users-by-blogger-query.repository';
 import { UsersBloggerQueryRepository } from './features/users/blogger/infrastructure/query.repository/users-blogger.query.repository';
+import { RegisterUserUseCase } from './features/auth/application/use-cases/register-user.use-case';
+import { CqrsModule } from '@nestjs/cqrs';
 
 const services = [
   AuthService,
@@ -133,9 +135,11 @@ const repositories = [
   JwtQueryRepository,
   TestingRepository,
 ];
+const handlers = [RegisterUserUseCase];
 
 @Module({
   imports: [
+    CqrsModule,
     ThrottlerModule.forRoot({
       ttl: 10,
       limit: 5,
@@ -229,6 +233,9 @@ const repositories = [
     EmailManager,
     CryptoAdapter,
     EmailAdapter,
+
+    //handlers
+    ...handlers,
 
     //Throttler
     {

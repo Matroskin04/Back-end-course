@@ -29,10 +29,6 @@ export class UsersBloggerQueryRepository {
       $options: 'i',
     };
 
-    // const countBannedUsers =
-    //   await this.BannedUsersByBloggerModel.countDocuments({ blogId });
-    // if (!countBannedUsers) return null;
-
     const countAllBannedUsersSort =
       await this.BannedUsersByBloggerModel.countDocuments({
         blogId,

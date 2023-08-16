@@ -75,34 +75,6 @@ export class AuthService {
     };
   }
 
-  async registerUser(
-    email: string,
-    login: string,
-    password: string,
-  ): Promise<void> {
-    const passwordHash = await this.cryptoAdapter._generateHash(password);
-    const userInfo = {
-      email,
-      login,
-      passwordHash,
-      emailConfirmation: {
-        confirmationCode: uuidv4(),
-        expirationDate: add(new Date(), { hours: 5, seconds: 20 }),
-        isConfirmed: false,
-      },
-      passwordRecovery: {},
-    };
-    const user = this.UserModel.createInstance(userInfo, this.UserModel);
-
-    await this.usersRepository.save(user);
-    await this.emailManager.sendEmailConfirmationMessage(
-      user.email,
-      user.emailConfirmation.confirmationCode,
-    );
-
-    return;
-  }
-
   async confirmEmail(inputConfirmationCode: string): Promise<void> {
     const user = await this.usersQueryRepository.getUserByCodeConfirmation(
       inputConfirmationCode,
