@@ -75,24 +75,6 @@ export class AuthService {
     };
   }
 
-  async confirmEmail(inputConfirmationCode: string): Promise<void> {
-    const user = await this.usersQueryRepository.getUserByCodeConfirmation(
-      inputConfirmationCode,
-    );
-    if (!user) {
-      throw new BadRequestException([
-        { message: 'Code is incorrect', field: 'code' },
-      ]);
-    }
-
-    const result = await this.usersRepository.updateConfirmation(user._id);
-    if (!result) {
-      throw new Error('Email confirmation failed.');
-    }
-
-    return;
-  }
-
   async resendConfirmationEmailMessage(
     userId: ObjectId,
     email: string,

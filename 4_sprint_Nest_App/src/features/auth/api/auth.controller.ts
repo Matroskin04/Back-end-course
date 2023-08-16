@@ -40,6 +40,7 @@ import { JwtService } from '../../jwt/jwt.service';
 import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from '../application/use-cases/register-user.use-case';
+import { ConfirmEmailCommand } from '../application/use-cases/confirm-email.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -114,16 +115,15 @@ export class AuthController {
   }
 
   @UseGuards(ValidateConfirmationCodeGuard)
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('registration-confirmation')
   async confirmEmail(
     @Body() inputConfirmationCode: ConfirmationCodeAuthModel,
-    @CurrentUserId() userId: ObjectId,
-    @Res() res: Response<string>,
-  ) {
-    await this.authService.confirmEmail(inputConfirmationCode.code);
-    res
-      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-      .send('Email was verified. Account was activated');
+  ): Promise<string> {
+    await this.commandBus.execute(
+      new ConfirmEmailCommand(inputConfirmationCode.code),
+    );
+    return 'Email was verified. Account was activated';
   }
 
   @UseGuards(ValidateEmailResendingGuard)
