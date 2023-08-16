@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Post,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../application/auth.service';
@@ -46,6 +47,7 @@ import { ResendConfirmationEmailMessageCommand } from '../application/use-cases/
 import { UsersPublicQueryRepository } from '../../users/public/infrastructure/query.repository/users-public.query.repository';
 import { SendEmailPassRecoveryCommand } from '../application/use-cases/send-email-pass-recovery.use-case';
 import { SaveNewPassCommand } from '../application/use-cases/save-new-pass.use-case';
+import { LoginUserCommand } from '../application/use-cases/login-user.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -54,7 +56,6 @@ export class AuthController {
     protected commandBus: CommandBus,
     protected jwtService: JwtService,
     protected devicesService: DevicesService,
-    protected authService: AuthService,
     protected usersPublicQueryRepository: UsersPublicQueryRepository,
   ) {}
 
@@ -76,11 +77,11 @@ export class AuthController {
   @Post('login')
   async loginUser(
     @CurrentUserId() userId: ObjectId,
-    @Res() res: Response<ViewTokenModel>,
+    @Res({ passthrough: true }) res: Response<ViewTokenModel>,
     @Ip() ip: string,
     @TitleOfDevice() title: string,
   ) {
-    const result = await this.authService.loginUser(userId);
+    const result = await this.commandBus.execute(new LoginUserCommand(userId));
 
     if (result) {
       await this.devicesService.createNewDevice(
@@ -98,7 +99,7 @@ export class AuthController {
         .status(HTTP_STATUS_CODE.OK_200)
         .send({ accessToken: result.accessToken });
     } else {
-      res.sendStatus(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+      throw new UnauthorizedException();
     }
   }
 
@@ -169,13 +170,11 @@ export class AuthController {
 
   @SkipThrottle()
   @UseGuards(JwtRefreshGuard)
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('logout')
-  async logoutUser(
-    @RefreshToken() refreshToken: string,
-    @Res() res: Response<void>,
-  ) {
+  async logoutUser(@RefreshToken() refreshToken: string): Promise<void> {
     await this.devicesService.deleteDeviceByRefreshToken(refreshToken);
-    res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
+    return;
   }
 
   @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)

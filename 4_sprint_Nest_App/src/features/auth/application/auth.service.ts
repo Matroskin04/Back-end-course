@@ -34,32 +34,4 @@ export class AuthService {
 
     return (await bcrypt.compare(password, user.passwordHash)) ? user : false;
   }
-
-  async loginUser(userId: ObjectId): Promise<ARTokensAndUserIdType | null> {
-    const user = await this.usersQueryRepository.getUserByUserId(userId);
-    if (!user) {
-      //Если user не существует, значит payload неверный
-      return null;
-    }
-    const accessToken = this.jwtService.sign(
-      { userId: userId.toString() },
-      {
-        secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
-        expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN!,
-      },
-    );
-    const refreshToken = this.jwtService.sign(
-      { userId: userId.toString(), deviceId: uuidv4() },
-      {
-        secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
-        expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
-      },
-    );
-
-    return {
-      accessToken,
-      refreshToken,
-      userId: user._id,
-    };
-  }
 }

@@ -101,6 +101,7 @@ import { ResendConfirmationEmailMessageUseCase } from './features/auth/applicati
 import { UsersPublicQueryRepository } from './features/users/public/infrastructure/query.repository/users-public.query.repository';
 import { UsersPublicRepository } from './features/users/public/infrastructure/repository/users-public.repository';
 import { SaveNewPassUseCase } from './features/auth/application/use-cases/save-new-pass.use-case';
+import { LoginUserUseCase } from './features/auth/application/use-cases/login-user.use-case';
 
 const services = [
   AuthService,
@@ -147,6 +148,7 @@ const handlers = [
   ConfirmEmailUseCase,
   ResendConfirmationEmailMessageUseCase,
   SaveNewPassUseCase,
+  LoginUserUseCase,
 ];
 
 @Module({

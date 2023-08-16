@@ -2,16 +2,40 @@ import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { JwtQueryRepository } from './jwt.query.repository';
 import { AccessRefreshTokens } from './jwt.types.service';
-import { JwtService as NestJwtService } from '@nestjs/jwt';
+import { v4 as uuidv4 } from 'uuid';
+import { JwtService as JwtServiceNest } from '@nestjs/jwt';
 import { DevicesRepository } from '../devices/infrastructure/repository/devices.repository';
 
 @Injectable()
 export class JwtService {
   constructor(
-    protected jwtServiceNest: NestJwtService,
+    protected jwtServiceNest: JwtServiceNest,
     protected jwtQueryRepository: JwtQueryRepository,
     protected devicesRepository: DevicesRepository,
   ) {}
+
+  createAccessJwtToken(userId: string): string {
+    const accessToken = this.jwtServiceNest.sign(
+      { userId: userId.toString() },
+      {
+        secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
+        expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN!,
+      },
+    );
+    return accessToken;
+  }
+
+  createRefreshJwtToken(userId: string): string {
+    const refreshToken = this.jwtServiceNest.sign(
+      { userId: userId.toString(), deviceId: uuidv4() },
+      {
+        secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
+        expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
+      },
+    );
+    return refreshToken;
+  }
+
   async changeTokensByRefreshToken(
     userId: ObjectId,
     cookieRefreshToken: string,
