@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Ip,
+  NotFoundException,
   Post,
   Res,
   UseGuards,
@@ -43,6 +44,7 @@ import { RegisterUserCommand } from '../application/use-cases/register-user.use-
 import { ConfirmEmailCommand } from '../application/use-cases/confirm-email.use-case';
 import { ResendConfirmationEmailMessageCommand } from '../application/use-cases/resend-confirmation-email-message.use-case';
 import { UsersPublicQueryRepository } from '../../users/public/infrastructure/query.repository/users-public.query.repository';
+import { SendEmailPassRecoveryCommand } from '../application/use-cases/send-email-pass-recovery.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -60,17 +62,13 @@ export class AuthController {
   @Get('me')
   async getUserInformation(
     @CurrentUserId() userId: ObjectId,
-    @Res() res: Response<AuthOutputModel>,
-  ) {
+  ): Promise<AuthOutputModel> {
     const result = await this.usersPublicQueryRepository.getUserInfoById(
       userId,
     );
 
-    if (result) {
-      res.status(HTTP_STATUS_CODE.OK_200).send(result);
-    } else {
-      res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
-    }
+    if (result) return result;
+    throw new NotFoundException('User is not found');
   }
 
   @UseGuards(LocalAuthGuard, BlogOwnerByIdGuard)
@@ -179,17 +177,15 @@ export class AuthController {
     res.sendStatus(HTTP_STATUS_CODE.NO_CONTENT_204);
   }
 
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('password-recovery')
   async passwordRecovery(
-    @Body() inputEmail: PasswordRecoveryAuthModel,
-    @Res() res: Response<string>,
-  ) {
-    await this.authService.sendEmailPasswordRecovery(inputEmail.email);
-    res
-      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-      .send(
-        'Email with instruction will be send to passed email address (if a user with such email exists)',
-      );
+    @Body() inputEmailModel: PasswordRecoveryAuthModel,
+  ): Promise<string> {
+    await this.commandBus.execute(
+      new SendEmailPassRecoveryCommand(inputEmailModel.email),
+    );
+    return 'Email with instruction will be send to passed email address (if a user with such email exists)';
   }
 
   @Post('new-password')

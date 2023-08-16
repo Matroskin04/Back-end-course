@@ -75,24 +75,6 @@ export class AuthService {
     };
   }
 
-  async sendEmailPasswordRecovery(email: string): Promise<void> {
-    const user: UserDBType | null =
-      await this.usersQueryRepository.getUserByLoginOrEmail(email);
-    if (!user) return;
-
-    const newCode = uuidv4();
-    const newDate = add(new Date(), { hours: 1 });
-
-    await this.usersRepository.updateCodePasswordRecovery(
-      user._id,
-      newCode,
-      newDate,
-    );
-    await this.emailManager.sendEmailPasswordRecovery(email, newCode);
-
-    return;
-  }
-
   async saveNewPassword(
     newPassword: string,
     recoveryCode: string,
