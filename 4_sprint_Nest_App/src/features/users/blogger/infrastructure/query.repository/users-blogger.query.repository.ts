@@ -6,7 +6,7 @@ import { BannedUsersOfBlogPaginationType } from './users-blogger.types.query.rep
 import { ObjectId } from 'mongodb';
 import { UserModelType } from '../../../super-admin/domain/users.db.types';
 import { User } from '../../../super-admin/domain/users.entity';
-import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function';
 import { QueryUserInputModel } from '../../../super-admin/api/models/input/query-user.input.model';
 
 Injectable();

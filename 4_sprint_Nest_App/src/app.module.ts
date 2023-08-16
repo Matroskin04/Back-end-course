@@ -99,6 +99,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ConfirmEmailUseCase } from './features/auth/application/use-cases/confirm-email.use-case';
 import { ResendConfirmationEmailMessageUseCase } from './features/auth/application/use-cases/resend-confirmation-email-message.use-case';
 import { UsersPublicQueryRepository } from './features/users/public/infrastructure/query.repository/users-public.query.repository';
+import { UsersPublicRepository } from './features/users/public/infrastructure/repository/users-public.repository';
+import { SaveNewPassUseCase } from './features/auth/application/use-cases/save-new-pass.use-case';
 
 const services = [
   AuthService,
@@ -136,6 +138,7 @@ const repositories = [
   PostsRepository,
   UsersSARepository,
   UsersBloggerRepository,
+  UsersPublicRepository,
   BannedUsersRepository,
   TestingRepository,
 ];
@@ -143,6 +146,7 @@ const handlers = [
   RegisterUserUseCase,
   ConfirmEmailUseCase,
   ResendConfirmationEmailMessageUseCase,
+  SaveNewPassUseCase,
 ];
 
 @Module({

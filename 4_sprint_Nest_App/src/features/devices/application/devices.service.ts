@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Device } from '../domain/devices.entity';
 import { DeviceModelType } from '../domain/devices.db.types';
 import { ResponseTypeService } from '../../../infrastructure/utils/functions/types/create-responses-service.types.service';
-import { createResponseService } from '../../../infrastructure/utils/functions/create-response-service.function.helper';
+import { createResponseService } from '../../../infrastructure/utils/functions/create-response-service.function';
 import { JwtQueryRepository } from '../../jwt/jwt.query.repository';
 
 @Injectable()

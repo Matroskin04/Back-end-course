@@ -69,15 +69,4 @@ export class UsersSARepository {
 
     return result.modifiedCount === 1;
   }
-
-  async updatePassword(
-    newPasswordHash: string,
-    _id: ObjectId,
-  ): Promise<boolean> {
-    const result = await this.UserModel.updateOne(
-      { _id },
-      { $set: { passwordHash: newPasswordHash } },
-    );
-    return result.modifiedCount === 1;
-  }
 }

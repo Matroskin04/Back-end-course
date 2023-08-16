@@ -45,6 +45,7 @@ import { ConfirmEmailCommand } from '../application/use-cases/confirm-email.use-
 import { ResendConfirmationEmailMessageCommand } from '../application/use-cases/resend-confirmation-email-message.use-case';
 import { UsersPublicQueryRepository } from '../../users/public/infrastructure/query.repository/users-public.query.repository';
 import { SendEmailPassRecoveryCommand } from '../application/use-cases/send-email-pass-recovery.use-case';
+import { SaveNewPassCommand } from '../application/use-cases/save-new-pass.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -185,19 +186,19 @@ export class AuthController {
     await this.commandBus.execute(
       new SendEmailPassRecoveryCommand(inputEmailModel.email),
     );
+
     return 'Email with instruction will be send to passed email address (if a user with such email exists)';
   }
 
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('new-password')
   async saveNewPassword(
     @Body() inputInfo: NewPasswordAuthModel,
-    @Res() res: Response<string>,
-  ) {
-    await this.authService.saveNewPassword(
-      inputInfo.newPassword,
-      inputInfo.recoveryCode,
+  ): Promise<string> {
+    await this.commandBus.execute(
+      new SaveNewPassCommand(inputInfo.newPassword, inputInfo.recoveryCode),
     );
 
-    res.status(HTTP_STATUS_CODE.NO_CONTENT_204).send('New password is saved');
+    return 'New password is saved';
   }
 }

@@ -6,7 +6,9 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../../super-admin/domain/users.entity';
 import { UsersInfoPublicType } from './users-public.types.query.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UsersPublicQueryRepository {
   constructor(
     @InjectModel(User.name)
@@ -21,5 +23,13 @@ export class UsersPublicQueryRepository {
       login: user.login,
       userId: user._id.toString(),
     };
+  }
+
+  async getUserByRecoveryCode(
+    recoveryCode: string,
+  ): Promise<UserDBType | null> {
+    return this.UserModel.findOne({
+      'passwordRecovery.confirmationCode': recoveryCode,
+    });
   }
 }

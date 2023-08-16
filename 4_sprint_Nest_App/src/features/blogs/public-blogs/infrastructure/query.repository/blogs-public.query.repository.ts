@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Blog } from '../../../domain/blogs.entity';
 import { BlogModelType } from '../../../domain/blogs.db.types';
 import { QueryBlogInputModel } from '../../../blogger-blogs/api/models/input/query-blog.input.model';
-import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function';
 
 @Injectable()
 export class BlogsPublicQueryRepository {

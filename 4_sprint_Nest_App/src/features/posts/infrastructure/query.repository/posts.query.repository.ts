@@ -8,7 +8,7 @@ import {
 } from './posts.types.query.repository';
 import { ObjectId } from 'mongodb';
 import { QueryPostInputModel } from '../../api/models/input/query-post.input.model';
-import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function.helper';
+import { variablesForReturn } from '../../../../infrastructure/utils/functions/variables-for-return.function';
 import {
   modifyPostForAllDocs,
   modifyPostIntoViewModel,

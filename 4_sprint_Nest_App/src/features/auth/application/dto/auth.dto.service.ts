@@ -7,19 +7,6 @@ export type ARTokensAndUserIdType = {
   userId: ObjectId;
 };
 
-export class UserInfoType {
-  email: string;
-  login: string;
-  userId: string;
-}
-
-export type ErrorsTypeService = {
-  errorsMessages: Array<{
-    message: string;
-    field: string;
-  }>;
-};
-
 export type UserDBServiceType = {
   _id: ObjectId;
   login: string;
