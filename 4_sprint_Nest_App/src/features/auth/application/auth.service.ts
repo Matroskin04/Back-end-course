@@ -75,26 +75,6 @@ export class AuthService {
     };
   }
 
-  async resendConfirmationEmailMessage(
-    userId: ObjectId,
-    email: string,
-  ): Promise<void> {
-    const newCode = uuidv4();
-    const newDate = add(new Date(), { hours: 5, seconds: 20 });
-
-    const result = await this.usersRepository.updateCodeConfirmation(
-      userId,
-      newCode,
-      newDate,
-    );
-    if (!result) {
-      throw new Error('Resending confirmation email message failed.');
-    }
-
-    await this.emailManager.sendEmailConfirmationMessage(email, newCode);
-    return;
-  }
-
   async getUserInformation(userId: ObjectId): Promise<UserInfoType | null> {
     const user = await this.usersQueryRepository.getUserByUserId(userId);
 

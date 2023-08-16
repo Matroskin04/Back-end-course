@@ -97,6 +97,7 @@ import { UsersBloggerQueryRepository } from './features/users/blogger/infrastruc
 import { RegisterUserUseCase } from './features/auth/application/use-cases/register-user.use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfirmEmailUseCase } from './features/auth/application/use-cases/confirm-email.use-case';
+import { ResendConfirmationEmailMessageUseCase } from './features/auth/application/use-cases/resend-confirmation-email-message.use-case';
 
 const services = [
   AuthService,
@@ -136,7 +137,11 @@ const repositories = [
   JwtQueryRepository,
   TestingRepository,
 ];
-const handlers = [RegisterUserUseCase, ConfirmEmailUseCase];
+const handlers = [
+  RegisterUserUseCase,
+  ConfirmEmailUseCase,
+  ResendConfirmationEmailMessageUseCase,
+];
 
 @Module({
   imports: [

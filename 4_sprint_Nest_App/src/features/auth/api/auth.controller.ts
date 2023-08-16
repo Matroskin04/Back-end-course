@@ -41,6 +41,7 @@ import { BlogOwnerByIdGuard } from '../../../infrastructure/guards/is-user-ban.g
 import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from '../application/use-cases/register-user.use-case';
 import { ConfirmEmailCommand } from '../application/use-cases/confirm-email.use-case';
+import { ResendConfirmationEmailMessageCommand } from '../application/use-cases/resend-confirmation-email-message.use-case';
 
 @SkipThrottle()
 @Controller('/hometask-nest/auth')
@@ -111,6 +112,7 @@ export class AuthController {
         inputRegisterModel.password,
       ),
     );
+
     return 'Input data is accepted. Email with confirmation code will be send to passed email address';
   }
 
@@ -123,25 +125,22 @@ export class AuthController {
     await this.commandBus.execute(
       new ConfirmEmailCommand(inputConfirmationCode.code),
     );
+
     return 'Email was verified. Account was activated';
   }
 
   @UseGuards(ValidateEmailResendingGuard)
+  @HttpCode(HTTP_STATUS_CODE.NO_CONTENT_204)
   @Post('registration-email-resending')
   async resendEmailConfirmation(
-    @Body() inputEmail: EmailResendingAuthModel,
+    @Body() inputEmailModel: EmailResendingAuthModel,
     @CurrentUserId() userId: ObjectId,
-    @Res() res: Response<string>,
-  ) {
-    await this.authService.resendConfirmationEmailMessage(
-      userId,
-      inputEmail.email,
+  ): Promise<string> {
+    await this.commandBus.execute(
+      new ResendConfirmationEmailMessageCommand(userId, inputEmailModel.email),
     );
-    res
-      .status(HTTP_STATUS_CODE.NO_CONTENT_204)
-      .send(
-        'Input data is accepted. Email with confirmation code will be send to passed email address.',
-      );
+
+    return 'Input data is accepted. Email with confirmation code will be send to passed email address.';
   }
   @SkipThrottle()
   @UseGuards(JwtRefreshGuard)
