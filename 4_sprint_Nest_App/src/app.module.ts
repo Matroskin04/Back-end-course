@@ -96,6 +96,7 @@ import { BannedUsersByBloggerQueryRepository } from './features/users/banned/ban
 import { UsersBloggerQueryRepository } from './features/users/blogger/infrastructure/query.repository/users-blogger.query.repository';
 import { RegisterUserUseCase } from './features/auth/application/use-cases/register-user.use-case';
 import { CqrsModule } from '@nestjs/cqrs';
+import { ConfirmEmailUseCase } from './features/auth/application/use-cases/confirm-email.use-case';
 
 const services = [
   AuthService,
@@ -135,7 +136,7 @@ const repositories = [
   JwtQueryRepository,
   TestingRepository,
 ];
-const handlers = [RegisterUserUseCase];
+const handlers = [RegisterUserUseCase, ConfirmEmailUseCase];
 
 @Module({
   imports: [

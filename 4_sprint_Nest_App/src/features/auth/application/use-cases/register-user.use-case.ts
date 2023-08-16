@@ -28,7 +28,7 @@ export class RegisterUserUseCase
     protected usersRepository: UsersSARepository,
   ) {}
 
-  async execute(command: RegisterUserCommand) {
+  async execute(command: RegisterUserCommand): Promise<void> {
     const { email, login, password } = command;
 
     const passwordHash = await this.cryptoAdapter._generateHash(password);
@@ -51,5 +51,6 @@ export class RegisterUserUseCase
       user.email,
       user.emailConfirmation.confirmationCode,
     );
+    return;
   }
 }
