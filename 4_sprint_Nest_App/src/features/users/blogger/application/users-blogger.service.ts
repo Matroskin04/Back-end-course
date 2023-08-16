@@ -50,14 +50,14 @@ export class UsersBloggerService {
       };
 
       //check of existing info about banned users
-      if (bannedUsersByBlogger) {
-        throw new BadRequestException([
-          {
-            message: `User is already banned`,
-            field: 'isBanned',
-          },
-        ]);
-      }
+      if (bannedUsersByBlogger) return;
+      //   throw new BadRequestException([
+      //     {
+      //       message: `User is already banned`,
+      //       field: 'isBanned',
+      //     },
+      //   ]);
+
       //if info doesn't exist, creates doc
       const newBannedUsersByBlogger =
         this.BannedUsersByBloggerModel.createInstance(
@@ -71,13 +71,13 @@ export class UsersBloggerService {
 
     //!!!if banInfo.isBanned === false:!!!
     //check of existing info about banned users
-    if (!bannedUsersByBlogger)
-      throw new BadRequestException([
-        {
-          message: `User is already unbanned`,
-          field: 'isBanned',
-        },
-      ]);
+    if (!bannedUsersByBlogger) return;
+    // throw new BadRequestException([
+    //   {
+    //     message: `User is already unbanned`,
+    //     field: 'isBanned',
+    //   },
+    // ]);
 
     //if info exist, delete this doc
     const result = await this.usersBloggerRepository.deleteBannedUserFromList(

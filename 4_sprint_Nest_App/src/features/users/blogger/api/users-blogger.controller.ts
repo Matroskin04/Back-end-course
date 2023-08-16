@@ -25,7 +25,7 @@ export class UsersBloggerController {
     protected usersBloggerQueryRepository: UsersBloggerQueryRepository,
   ) {}
 
-  @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard, BlogOwnerByIdGuard)
   @Get('/blog/:blogId')
   async getBannedUsersOfBlog(
     @Query() query: QueryUsersBloggerInputModel,
