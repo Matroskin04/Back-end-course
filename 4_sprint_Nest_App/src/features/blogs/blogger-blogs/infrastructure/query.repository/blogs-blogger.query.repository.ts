@@ -34,7 +34,7 @@ export class BlogsBloggerQueryRepository {
         name: { $regex: searchNameTerm ?? '', $options: 'i' },
         'blogOwnerInfo.userId': userId,
       },
-      { projection: { blogOwnerInfo: 0 } },
+      { blogOwnerInfo: 0 },
     )
       .skip((+paramsOfElems.pageNumber - 1) * +paramsOfElems.pageSize)
       .limit(+paramsOfElems.pageSize)

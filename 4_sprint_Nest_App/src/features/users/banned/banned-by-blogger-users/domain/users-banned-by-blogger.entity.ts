@@ -6,10 +6,6 @@ import {
   BannedUsersByBloggerModelType,
   BannedUsersViewType,
 } from './users-banned-by-blogger.db.types';
-import {
-  BanInfo,
-  BanInfoSchema,
-} from '../../../super-admin/domain/users.subschemas';
 
 @Schema()
 export class BanInfoForBlogger {
@@ -66,4 +62,8 @@ export const BannedUsersByBloggerSchema =
 
 BannedUsersByBloggerSchema.statics = {
   createInstance: BannedUsersByBlogger.createInstance,
+};
+
+BannedUsersByBloggerSchema.methods = {
+  modifyIntoViewModel: BannedUsersByBlogger.prototype.modifyIntoViewModel,
 };

@@ -39,8 +39,3 @@ export type BlogModelStaticMethodsType = {
     BlogModel: BlogModelType,
   ) => BlogDocument;
 };
-
-export type blogOwnerInfoType = {
-  userId: string;
-  userLogin: string;
-};
