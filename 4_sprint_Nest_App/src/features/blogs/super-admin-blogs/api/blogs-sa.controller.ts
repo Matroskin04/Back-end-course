@@ -51,17 +51,17 @@ export class BlogsSAController {
   }
 
   @UseGuards(BasicAuthGuard)
-  @HttpCode(204)
   @Put(':id/ban')
   async updateBanInfoOfBlog(
     @Param('id') blogId: string,
     @Body() inputBanInfoModel: BanInfoInputModel,
+    @Res() res: Response<void>,
   ) {
     await this.blogsSAService.updateBanInfoOfBlog(
       blogId,
       inputBanInfoModel.isBanned,
     );
-    return;
+    res.sendStatus(204); //todo how to do with return
   }
 
   /* @Get(':id')

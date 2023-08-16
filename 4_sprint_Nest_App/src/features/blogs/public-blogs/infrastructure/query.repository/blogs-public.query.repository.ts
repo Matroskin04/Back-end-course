@@ -44,7 +44,10 @@ export class BlogsPublicQueryRepository {
   }
 
   async getBlogById(id: string): Promise<null | BlogViewType> {
-    const blog = await this.BlogModel.findOne({ _id: new ObjectId(id) });
+    const blog = await this.BlogModel.findOne({
+      _id: new ObjectId(id),
+      isBanned: false,
+    });
 
     if (blog) {
       return blog.modifyIntoViewGeneralModel();
