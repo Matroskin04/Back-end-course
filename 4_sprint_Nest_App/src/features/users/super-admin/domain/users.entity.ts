@@ -40,6 +40,13 @@ export class User {
   @Prop({ type: BanInfoSchema, default: {} })
   banInfo: BanInfo;
 
+  static createInstance(
+    userDTO: UserDTOType,
+    UserModel: UserModelType,
+  ): UserDocument {
+    return new UserModel(userDTO);
+  }
+
   modifyIntoViewModel(): UserViewType {
     return {
       id: this._id.toString(),
@@ -59,13 +66,6 @@ export class User {
     user.banInfo.banReason = banInfo.isBanned ? banInfo.banReason : null;
     user.banInfo.banDate = banInfo.isBanned ? new Date().toISOString() : null;
     return;
-  }
-
-  static createInstance(
-    userDTO: UserDTOType,
-    UserModel: UserModelType,
-  ): UserDocument {
-    return new UserModel(userDTO);
   }
 }
 export const UserSchema = SchemaFactory.createForClass(User);

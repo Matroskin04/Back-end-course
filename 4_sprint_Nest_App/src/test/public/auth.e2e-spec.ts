@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { ObjectId } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import { CommentDBType } from '../features/comments/domain/comments.db.types';
-import { AppModule } from '../app.module';
-import { appSettings } from '../app.settings';
-import { EmailManager } from '../infrastructure/managers/email-manager';
-import { HTTP_STATUS_CODE } from '../infrastructure/utils/enums/http-status';
+import { AppModule } from '../../app.module';
+import { appSettings } from '../../app.settings';
+import { EmailManager } from '../../infrastructure/managers/email-manager';
+import { HTTP_STATUS_CODE } from '../../infrastructure/utils/enums/http-status';
+import * as process from 'process';
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
   //vars for starting app and testing
@@ -20,37 +19,52 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
   let emailManager: EmailManager;
 
   //addition vars
-  let accessToken: string;
-  let idOfUser: ObjectId;
-  let idOfPost: ObjectId;
-  let idOfComment: ObjectId;
-  const confirmationCode: string | null = null;
-  const arrayOfComments: Array<CommentDBType> = [];
-  let refreshToken: string;
+  // let accessToken: string;
+  // let idOfUser: ObjectId;
+  // let idOfPost: ObjectId;
+  // let idOfComment: ObjectId;
+  // const confirmationCode: string | null = null;
+  // const arrayOfComments: Array<CommentDBType> = [];
+  // let refreshToken: string;
+
+  let connection;
 
   beforeAll(async () => {
+    //activate mongoServer
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    connection = await mongoose.connect(mongoUri, {});
+
+    jest.resetModules();
+    process.env['MONGO_URL'] = mongoUri;
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [EmailManager],
     }).compile();
+
+    // const userModel = moduleFixture.get<UserModelType>(User);
 
     app = moduleFixture.createNestApplication();
     appSettings(app); //activate settings for app
     await app.init();
 
-    //activate mongoServer
-    mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-    await mongoose.connect(mongoUri);
-
     httpServer = app.getHttpServer();
+
+    //   const emailAdapterMock: jest.Mocked<EmailAdapter> = {
+    //     sendEmailConfirmationMessage: jest.fn(),
+    //     sendEmailPasswordRecnovery: jest.fn(),
+    //   };
   });
 
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
+    await httpServer.close();
+    await app.close();
+    // await closeInMongodConnection();
   });
 
+  jest.useFakeTimers({ timerLimit: 60000 });
   describe('Registration flow (POST)', () => {
     const emailManagerMock = jest
       .spyOn(emailManager, 'sendEmailConfirmationMessage')

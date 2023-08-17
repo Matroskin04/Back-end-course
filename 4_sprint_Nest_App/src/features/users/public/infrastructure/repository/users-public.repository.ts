@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../../super-admin/domain/users.entity';
 import { UserModelType } from '../../../super-admin/domain/users.db.types';
 import { Injectable } from '@nestjs/common';
+import { UserInstanceType } from '../../../super-admin/infrastructure/repository/users-sa.types.repositories';
 
 @Injectable() //todo для чего этот декоратор
 export class UsersPublicRepository {
@@ -19,5 +20,10 @@ export class UsersPublicRepository {
       { $set: { passwordHash: newPasswordHash } },
     );
     return result.modifiedCount === 1;
+  }
+
+  async save(user: UserInstanceType): Promise<void> {
+    await user.save();
+    return;
   }
 }

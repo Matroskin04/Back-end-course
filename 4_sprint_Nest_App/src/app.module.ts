@@ -27,7 +27,6 @@ import { UsersSaController } from './features/users/super-admin/api/users-sa.con
 import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
 import { UsersSaService } from './features/users/super-admin/application/users-sa.service';
 import { UsersSARepository } from './features/users/super-admin/infrastructure/repository/users-sa.repository';
-import { UsersSAQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 import { TestingController } from './features/testing/api/testing.controller';
 import { TestingRepository } from './features/testing/repository/testing.repository';
 import { LocalStrategy } from './infrastructure/strategy/local.strategy';
@@ -102,6 +101,8 @@ import { UsersPublicQueryRepository } from './features/users/public/infrastructu
 import { UsersPublicRepository } from './features/users/public/infrastructure/repository/users-public.repository';
 import { SaveNewPassUseCase } from './features/auth/application/use-cases/save-new-pass.use-case';
 import { LoginUserUseCase } from './features/auth/application/use-cases/login-user.use-case';
+import process from 'process';
+import { UsersSAQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
 
 const services = [
   AuthService,
@@ -121,14 +122,14 @@ const queryRepositories = [
   BlogsSAQueryRepository,
   PostsQueryRepository,
   LikesInfoQueryRepository,
-  DevicesQueryRepository,
-  UsersSAQueryRepository,
-  UsersBloggerQueryRepository,
   UsersPublicQueryRepository,
+  DevicesQueryRepository,
   CommentsQueryRepository,
   BannedUsersQueryRepository,
   BannedUsersByBloggerQueryRepository,
   JwtQueryRepository,
+  UsersSAQueryRepository,
+  UsersBloggerQueryRepository,
 ];
 const repositories = [
   BlogsBloggerRepository,
@@ -137,10 +138,10 @@ const repositories = [
   DevicesRepository,
   LikesInfoRepository,
   PostsRepository,
-  UsersSARepository,
   UsersBloggerRepository,
   UsersPublicRepository,
   BannedUsersRepository,
+  UsersSARepository,
   TestingRepository,
 ];
 const handlers = [
@@ -161,62 +162,20 @@ const handlers = [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL!),
     MongooseModule.forFeature([
-      {
-        name: Blog.name,
-        schema: BlogSchema,
-      },
-      {
-        name: Post.name,
-        schema: PostSchema,
-      },
-      {
-        name: LikesInfo.name,
-        schema: LikesInfoSchema,
-      },
-      {
-        name: Comment.name,
-        schema: CommentsSchema,
-      },
-      {
-        name: CommentatorInfo.name,
-        schema: CommentatorInfoSchema,
-      },
-      {
-        name: User.name,
-        schema: UserSchema,
-      },
-      {
-        name: EmailConfirmation.name,
-        schema: EmailConfirmationSchema,
-      },
-      {
-        name: PasswordRecovery.name,
-        schema: PasswordRecoverySchema,
-      },
-      {
-        name: CommentLikesInfo.name,
-        schema: CommentsLikesInfoSchema,
-      },
-      {
-        name: PostLikesInfo.name,
-        schema: PostsLikesInfoSchema,
-      },
-      {
-        name: Device.name,
-        schema: DeviceSchema,
-      },
-      {
-        name: BanInfo.name,
-        schema: BanInfoSchema,
-      },
-      {
-        name: BannedUserBySA.name,
-        schema: BannedUserBySASchema,
-      },
-      {
-        name: BannedUsersByBlogger.name,
-        schema: BannedUsersByBloggerSchema,
-      },
+      { name: Blog.name, schema: BlogSchema },
+      { name: Post.name, schema: PostSchema },
+      { name: LikesInfo.name, schema: LikesInfoSchema },
+      { name: Comment.name, schema: CommentsSchema },
+      { name: CommentatorInfo.name, schema: CommentatorInfoSchema },
+      { name: EmailConfirmation.name, schema: EmailConfirmationSchema },
+      { name: PasswordRecovery.name, schema: PasswordRecoverySchema },
+      { name: CommentLikesInfo.name, schema: CommentsLikesInfoSchema },
+      { name: PostLikesInfo.name, schema: PostsLikesInfoSchema },
+      { name: Device.name, schema: DeviceSchema },
+      { name: BanInfo.name, schema: BanInfoSchema },
+      { name: BannedUserBySA.name, schema: BannedUserBySASchema },
+      { name: BannedUsersByBlogger.name, schema: BannedUsersByBloggerSchema },
+      { name: User.name, schema: UserSchema },
     ]),
     JwtModule.register({}),
   ],

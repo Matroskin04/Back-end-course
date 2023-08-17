@@ -28,7 +28,7 @@ import { UpdateBanInfoOfUserInputModel } from './models/input/update-ban-info-of
 @Controller('/hometask-nest/sa/users')
 export class UsersSaController {
   constructor(
-    protected usersQueryRepository: UsersSAQueryRepository,
+    protected usersSAQueryRepository: UsersSAQueryRepository,
     protected usersService: UsersSaService,
   ) {}
 
@@ -38,7 +38,7 @@ export class UsersSaController {
     @Query() query: QueryUserInputModel,
     @Res() res: Response<ViewAllUsersModels | string>,
   ) {
-    const result = await this.usersQueryRepository.getAllUsers(query);
+    const result = await this.usersSAQueryRepository.getAllUsers(query);
     res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 

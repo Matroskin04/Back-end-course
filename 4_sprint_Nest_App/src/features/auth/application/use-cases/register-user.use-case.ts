@@ -2,11 +2,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import add from 'date-fns/add';
 import { v4 as uuidv4 } from 'uuid';
 import { CryptoAdapter } from '../../../../infrastructure/adapters/crypto.adapter';
-import { UsersSARepository } from '../../../users/super-admin/infrastructure/repository/users-sa.repository';
 import { EmailManager } from '../../../../infrastructure/managers/email-manager';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../../users/super-admin/domain/users.entity';
 import { UserModelType } from '../../../users/super-admin/domain/users.db.types';
+import { UsersPublicRepository } from '../../../users/public/infrastructure/repository/users-public.repository';
+import { User } from '../../../users/super-admin/domain/users.entity';
 
 export class RegisterUserCommand {
   constructor(
@@ -25,7 +25,7 @@ export class RegisterUserUseCase
     private UserModel: UserModelType,
     protected cryptoAdapter: CryptoAdapter,
     protected emailManager: EmailManager,
-    protected usersRepository: UsersSARepository,
+    protected usersPublicRepository: UsersPublicRepository,
   ) {}
 
   async execute(command: RegisterUserCommand): Promise<void> {
@@ -45,7 +45,7 @@ export class RegisterUserUseCase
     };
     const user = this.UserModel.createInstance(userInfo, this.UserModel);
     console.log(1);
-    await this.usersRepository.save(user);
+    await this.usersPublicRepository.save(user);
 
     this.emailManager.sendEmailConfirmationMessage(
       user.email,

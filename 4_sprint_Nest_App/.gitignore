@@ -43,7 +43,7 @@ lerna-debug.log*
 /src/domain/users.entity.js
 /src/features/users/super-admin/domain/users.db.types.js
 /src/features/users/super-admin/domain/users.entity.js
-/test/app.e2e-spec.d.ts
-/test/app.e2e-spec.js
-/test/app.e2e-spec.js.map
+/src/test/app.e2e-spec.d.ts
+/src/test/app.e2e-spec.js
+/src/test/app.e2e-spec.js.map
 /tsconfig.tsbuildinfo
