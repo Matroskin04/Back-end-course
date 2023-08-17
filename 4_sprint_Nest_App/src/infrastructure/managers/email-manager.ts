@@ -9,6 +9,7 @@ export class EmailManager {
     email: string,
     code: string,
   ): Promise<void> {
+    console.log(2);
     const message = `<h1>Thank you for registration!</h1>
 <p>Please, follow the link to finish your registration:<a href='https://www.youtube.com/?code=${code}'>complete registration</a></p>`;
     await this.emailAdapter.sendEmailConfirmationMessage(

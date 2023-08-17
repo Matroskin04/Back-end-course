@@ -5,8 +5,10 @@ import {
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
 import { BlogsSARepository } from '../../../features/blogs/super-admin-blogs/infrastructure/repository/blogs-sa.repository';
+import { Injectable } from '@nestjs/common';
 
 @ValidatorConstraint({ name: 'IsBlogByIdExists', async: true })
+@Injectable()
 export class IsBlogByIdExistsConstraint
   implements ValidatorConstraintInterface
 {

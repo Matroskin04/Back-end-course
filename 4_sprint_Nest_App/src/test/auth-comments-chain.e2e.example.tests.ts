@@ -1,33 +1,48 @@
-/*
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../app.module';
+import { appSettings } from '../app.settings';
+import { ObjectId } from 'mongodb';
+import { CommentDBType } from '../features/comments/domain/comments.db.types';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
-const request = require('supertest');
-import { ObjectId } from 'mongodb';
-import { UsersSaQueryRepository } from '../users/infrastructure/query.repository/users-query.repository';
-import { app } from '../setting';
-import { EmailAdapter } from '../infrastructure/adapters/email-adapter';
-import { mongoURL } from '../infrastructure/db';
-import { CommentDBType } from '../comments/domain/comments-db-types';
-
-let accessToken: string;
-let idOfUser: ObjectId;
-let idOfPost: ObjectId;
-let idOfComment: ObjectId;
-let confirmationCode: string | null = null;
-const arrayOfComments: Array<CommentDBType> = [];
-let refreshToken: string;
-const usersQueryRepository = new UsersSaQueryRepository();
-
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
-  beforeAll(async () => {
-    await mongoose.connection.close();
-    await mongoose.connect(mongoURL);
+  //vars for starting app and testing
+  let app: INestApplication;
+  let mongoServer: MongoMemoryServer;
+  let httpServer;
 
-    await request(app).delete('/hometask-03/testing/all-data').expect(204);
+  //addition vars
+  let accessToken: string;
+  let idOfUser: ObjectId;
+  let idOfPost: ObjectId;
+  let idOfComment: ObjectId;
+  let confirmationCode: string | null = null;
+  const arrayOfComments: Array<CommentDBType> = [];
+  let refreshToken: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    appSettings(app); //activate settings for app
+    await app.init();
+
+    //activate mongoServer
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+
+    httpServer = app.getHttpServer();
   });
 
   afterAll(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
+    await mongoServer.stop();
   });
 
   it(`(Addition) + POST -> create new user; status 201`, async () => {
@@ -583,4 +598,3 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       .expect(204);
   });
 });
-*/

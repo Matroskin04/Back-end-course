@@ -27,6 +27,7 @@ import { CommentsRepository } from '../../../comments/infrastructure/repository/
 import { LikesInfoRepository } from '../../../likes-info/infrastructure/repository/likes-info.repository';
 import { BannedUsersQueryRepository } from '../../banned/banned-sa-users/infrastructure/banned-users.query.repository';
 import { BannedUsersRepository } from '../../banned/banned-sa-users/infrastructure/banned-users.repository';
+import { createBodyErrorBadRequest } from '../../../../infrastructure/utils/functions/create-error-bad-request.function';
 @Injectable()
 export class UsersSaService {
   constructor(
@@ -39,7 +40,6 @@ export class UsersSaService {
     protected usersQueryRepository: UsersSAQueryRepository,
     protected devicesService: DevicesService,
     protected postsQueryRepository: PostsQueryRepository,
-    protected blogsSAQueryRepository: BlogsSAQueryRepository,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected likesInfoQueryRepository: LikesInfoQueryRepository,
     protected postsRepository: PostsRepository,
@@ -55,18 +55,24 @@ export class UsersSaService {
       inputBodyUser.email,
     );
     if (userByEmail) {
-      throw new BadRequestException([
-        { message: 'User with such email already exists', field: 'email' },
-      ]);
+      throw new BadRequestException(
+        createBodyErrorBadRequest(
+          'User with such email already exists',
+          'email',
+        ),
+      );
     }
 
     const userByLogin = await this.usersQueryRepository.getUserByLoginOrEmail(
       inputBodyUser.login,
     );
     if (userByLogin)
-      throw new BadRequestException([
-        { message: 'User with such email already exists', field: 'email' },
-      ]);
+      throw new BadRequestException(
+        createBodyErrorBadRequest(
+          'User with such email already exists',
+          'email',
+        ),
+      );
 
     //создаем юзера
     const passwordHash = await this.cryptoAdapter._generateHash(
@@ -93,14 +99,12 @@ export class UsersSaService {
     if (!user) throw new NotFoundException('User is not found');
     //проверка, чтобы значение isBanned отличалось от текущего
     if (banInfo.isBanned === user.banInfo.isBanned)
-      throw new BadRequestException([
-        {
-          message: `User is already ${
-            banInfo.isBanned ? 'banned' : 'unbanned'
-          }`,
-          field: 'isBanned',
-        },
-      ]);
+      throw new BadRequestException(
+        createBodyErrorBadRequest(
+          `User is already ${banInfo.isBanned ? 'banned' : 'unbanned'}`,
+          'isBanned',
+        ),
+      );
 
     if (banInfo.isBanned) {
       //Если юзера банят:
