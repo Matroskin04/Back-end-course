@@ -44,7 +44,6 @@ export class RegisterUserUseCase
       passwordRecovery: {},
     };
     const user = this.UserModel.createInstance(userInfo, this.UserModel);
-    console.log(1);
     await this.usersPublicRepository.save(user);
 
     this.emailManager.sendEmailConfirmationMessage(

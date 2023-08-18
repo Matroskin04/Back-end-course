@@ -46,7 +46,7 @@ export class UsersSaController {
   @Post()
   async createUser(
     @Body() inputUserModel: CreateUserInputModel,
-    @Res() res: Response<UserOutputModel | string>,
+    @Res() res: Response<UserOutputModel>,
   ) {
     const result = await this.usersService.createUser(inputUserModel);
     res.status(HTTP_STATUS_CODE.CREATED_201).send(result);
