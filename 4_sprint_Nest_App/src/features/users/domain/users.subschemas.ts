@@ -6,7 +6,7 @@ export class EmailConfirmation {
   @Prop({ required: true, default: uuidv4() })
   confirmationCode: string;
 
-  @Prop({ type: Date, required: true, default: Date.now })
+  @Prop({ type: Date, required: true, default: new Date() })
   expirationDate: Date;
 
   @Prop({ type: Boolean, required: true, default: true })
@@ -20,7 +20,7 @@ export class PasswordRecovery {
   @Prop({ required: true, default: uuidv4() })
   confirmationCode: string;
 
-  @Prop({ type: Date, required: true, default: Date.now })
+  @Prop({ type: Date, required: true, default: new Date() })
   expirationDate: Date;
 }
 export const PasswordRecoverySchema =

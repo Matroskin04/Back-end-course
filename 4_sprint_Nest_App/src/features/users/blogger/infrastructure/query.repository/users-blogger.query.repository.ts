@@ -4,10 +4,10 @@ import { BannedUsersByBlogger } from '../../../banned/banned-by-blogger-users/do
 import { BannedUsersByBloggerModelType } from '../../../banned/banned-by-blogger-users/domain/users-banned-by-blogger.db.types';
 import { BannedUsersOfBlogPaginationType } from './users-blogger.types.query.repository';
 import { ObjectId } from 'mongodb';
-import { UserModelType } from '../../../super-admin/domain/users.db.types';
-import { User } from '../../../super-admin/domain/users.entity';
 import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function';
 import { QueryUserInputModel } from '../../../super-admin/api/models/input/query-user.input.model';
+import { User } from '../../../domain/users.entity';
+import { UserModelType } from '../../../domain/users.db.types';
 
 Injectable();
 export class UsersBloggerQueryRepository {

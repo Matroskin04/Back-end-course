@@ -18,10 +18,6 @@ import { PostsController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsQueryRepository } from './features/posts/infrastructure/query.repository/posts.query.repository';
 import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
-import {
-  User,
-  UserSchema,
-} from './features/users/super-admin/domain/users.entity';
 import { CommentsController } from './features/comments/api/comments.controller';
 import { UsersSaController } from './features/users/super-admin/api/users-sa.controller';
 import { CommentsQueryRepository } from './features/comments/infrastructure/query.repository/comments.query.repository';
@@ -60,14 +56,6 @@ import { DevicesRepository } from './features/devices/infrastructure/repository/
 import { Device, DeviceSchema } from './features/devices/domain/devices.entity';
 import { JwtQueryRepository } from './features/jwt/jwt.query.repository';
 import { JwtService } from './features/jwt/jwt.service';
-import {
-  BanInfo,
-  BanInfoSchema,
-  EmailConfirmation,
-  EmailConfirmationSchema,
-  PasswordRecovery,
-  PasswordRecoverySchema,
-} from './features/users/super-admin/domain/users.subschemas';
 import { BlogsPublicController } from './features/blogs/public-blogs/api/blogs-public.controller';
 import { BlogsBloggerController } from './features/blogs/blogger-blogs/api/blogs-blogger.controller';
 import { BlogsSAController } from './features/blogs/super-admin-blogs/api/blogs-sa.controller';
@@ -103,6 +91,15 @@ import { SaveNewPassUseCase } from './features/auth/application/use-cases/save-n
 import { LoginUserUseCase } from './features/auth/application/use-cases/login-user.use-case';
 import process from 'process';
 import { UsersSAQueryRepository } from './features/users/super-admin/infrastructure/query.repository/users-sa.query.repository';
+import { User, User2Schema } from './features/users/domain/users.entity';
+import {
+  BanInfo,
+  BanInfoSchema,
+  EmailConfirmation,
+  EmailConfirmationSchema,
+  PasswordRecovery,
+  PasswordRecoverySchema,
+} from './features/users/domain/users.subschemas';
 
 const services = [
   AuthService,
@@ -167,15 +164,15 @@ const handlers = [
       { name: LikesInfo.name, schema: LikesInfoSchema },
       { name: Comment.name, schema: CommentsSchema },
       { name: CommentatorInfo.name, schema: CommentatorInfoSchema },
-      { name: EmailConfirmation.name, schema: EmailConfirmationSchema },
-      { name: PasswordRecovery.name, schema: PasswordRecoverySchema },
       { name: CommentLikesInfo.name, schema: CommentsLikesInfoSchema },
       { name: PostLikesInfo.name, schema: PostsLikesInfoSchema },
       { name: Device.name, schema: DeviceSchema },
-      { name: BanInfo.name, schema: BanInfoSchema },
       { name: BannedUserBySA.name, schema: BannedUserBySASchema },
       { name: BannedUsersByBlogger.name, schema: BannedUsersByBloggerSchema },
-      { name: User.name, schema: UserSchema },
+      { name: User.name, schema: User2Schema },
+      { name: EmailConfirmation.name, schema: EmailConfirmationSchema },
+      { name: BanInfo.name, schema: BanInfoSchema },
+      { name: PasswordRecovery.name, schema: PasswordRecoverySchema },
     ]),
     JwtModule.register({}),
   ],

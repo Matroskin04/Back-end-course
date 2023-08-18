@@ -25,7 +25,7 @@ describe('POST: /blogs', () => {
     await mongoose.connect(mongoURL);
 
     await request(app).delete('/hometask-03/testing/all-data').expect(204);
-  });
+  }); 
 
   afterAll(async () => {
     await mongoose.connection.close();

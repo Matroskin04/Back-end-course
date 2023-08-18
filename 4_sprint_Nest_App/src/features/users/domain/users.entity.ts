@@ -1,13 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import {
-  BanInfoType,
-  UserDocument,
-  UserDTOType,
-  UserModelType,
-} from './users.db.types';
-import { UserViewType } from '../infrastructure/query.repository/users-sa.types.query.repository';
-import {
   BanInfo,
   BanInfoSchema,
   EmailConfirmation,
@@ -15,6 +8,14 @@ import {
   PasswordRecovery,
   PasswordRecoverySchema,
 } from './users.subschemas';
+import {
+  BanInfoType,
+  UserDocument,
+  UserModelType,
+  UserDTOType,
+} from './users.db.types';
+import { UserViewType } from '../super-admin/infrastructure/query.repository/users-sa.types.query.repository';
+
 @Schema()
 export class User {
   _id: ObjectId;
@@ -25,11 +26,11 @@ export class User {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true, default: new Date().toISOString() })
-  createdAt: string;
-
   @Prop({ required: true })
   passwordHash: string;
+
+  @Prop({ required: true, default: new Date().toISOString() })
+  createdAt: string;
 
   @Prop({ type: EmailConfirmationSchema, default: {} })
   emailConfirmation: EmailConfirmation;
@@ -61,20 +62,20 @@ export class User {
     };
   }
 
-  updateBanInfo(banInfo: BanInfoType, user: UserDocument): void {
+  updateBanInfo(banInfo: BanInfoType, user: UserDocument) {
     user.banInfo.isBanned = banInfo.isBanned;
     user.banInfo.banReason = banInfo.isBanned ? banInfo.banReason : null;
     user.banInfo.banDate = banInfo.isBanned ? new Date().toISOString() : null;
     return;
   }
 }
-export const UserSchema = SchemaFactory.createForClass(User);
+export const User2Schema = SchemaFactory.createForClass(User);
 
-UserSchema.statics = {
+User2Schema.statics = {
   createInstance: User.createInstance,
 };
 
-UserSchema.methods = {
+User2Schema.methods = {
   modifyIntoViewModel: User.prototype.modifyIntoViewModel,
   updateBanInfo: User.prototype.updateBanInfo,
 };

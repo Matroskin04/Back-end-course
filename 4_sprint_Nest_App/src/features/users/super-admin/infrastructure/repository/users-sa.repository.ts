@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../domain/users.entity';
-import { UserModelType } from '../../domain/users.db.types';
 import { UserInstanceType } from './users-sa.types.repositories';
+import { User } from '../../../domain/users.entity';
+import { UserModelType } from '../../../domain/users.db.types';
 
 @Injectable()
 export class UsersSARepository {

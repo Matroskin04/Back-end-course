@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { CryptoAdapter } from '../../../../infrastructure/adapters/crypto.adapter';
 import { EmailManager } from '../../../../infrastructure/managers/email-manager';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModelType } from '../../../users/super-admin/domain/users.db.types';
 import { UsersPublicRepository } from '../../../users/public/infrastructure/repository/users-public.repository';
-import { User } from '../../../users/super-admin/domain/users.entity';
+import { User } from '../../../users/domain/users.entity';
+import { UserModelType } from '../../../users/domain/users.db.types';
 
 export class RegisterUserCommand {
   constructor(

@@ -5,18 +5,21 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { AppModule } from '../../app.module';
 import { appSettings } from '../../app.settings';
-import { EmailManager } from '../../infrastructure/managers/email-manager';
 import { HTTP_STATUS_CODE } from '../../infrastructure/utils/enums/http-status';
 import * as process from 'process';
+import { EmailAdapter } from '../../infrastructure/adapters/email.adapter';
+import { emailAdapterMock } from './mock.providers/auth.mock.providers';
+import { registerUserTest } from '../helpers/auth.helpers';
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
+  jest.setTimeout(5 * 60 * 1000);
+
   //vars for starting app and testing
   let app: INestApplication;
   let mongoServer: MongoMemoryServer;
   let httpServer;
 
   //providers
-  let emailManager: EmailManager;
 
   //addition vars
   // let accessToken: string;
@@ -33,27 +36,20 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     //activate mongoServer
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    connection = await mongoose.connect(mongoUri, {});
-
-    jest.resetModules();
     process.env['MONGO_URL'] = mongoUri;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-
-    // const userModel = moduleFixture.get<UserModelType>(User);
+    })
+      .overrideProvider(EmailAdapter)
+      .useValue(emailAdapterMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     appSettings(app); //activate settings for app
     await app.init();
 
     httpServer = app.getHttpServer();
-
-    //   const emailAdapterMock: jest.Mocked<EmailAdapter> = {
-    //     sendEmailConfirmationMessage: jest.fn(),
-    //     sendEmailPasswordRecnovery: jest.fn(),
-    //   };
   });
 
   afterAll(async () => {
@@ -61,27 +57,76 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     await mongoServer.stop();
     await httpServer.close();
     await app.close();
-    // await closeInMongodConnection();
   });
 
-  jest.useFakeTimers({ timerLimit: 60000 });
   describe('Registration flow (POST)', () => {
-    const emailManagerMock = jest
-      .spyOn(emailManager, 'sendEmailConfirmationMessage')
-      .mockImplementation();
-
-    it('+ should register user successfully', async () => {
-      await request(httpServer)
-        .post('hometask-nest/auth/registration')
-        .send({
-          login: 'Egor123',
-          password: '123qwe',
-          email: 'meschit9@gmail.com',
-        })
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
-
-      expect(emailManagerMock).toHaveBeenCalled();
+    beforeEach(() => {
+      jest.clearAllMocks();
     });
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+    let busyEmail; //todo как-то организовать
+    let busyLogin;
+    const freeCorrectEmail = 'freeEmail@gmail.com';
+    const freeCorrectLogin = 'freeLogin';
+
+    it('+ (204) should register user successfully', async () => {
+      const result = await registerUserTest(
+        httpServer,
+        'Egor123',
+        '123qwe',
+        'meschit9@gmail.com',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      expect(emailAdapterMock.sendEmailConfirmationMessage).toBeCalled();
+
+      busyEmail = 'meschit9@gmail.com';
+      busyLogin = 'Egor123';
+    });
+
+    //dependent
+    it(`- (400) should not register if user with the given login already exists,
+              - (400) should not register if user with the given email already exists`, async () => {
+      //busy login
+      const result1 = await registerUserTest(
+        httpServer,
+        busyLogin,
+        '123qwe',
+        freeCorrectEmail,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+
+      expect(emailAdapterMock.sendEmailConfirmationMessage).not.toBeCalled();
+
+      //busy email
+      const result2 = await registerUserTest(
+        httpServer,
+        freeCorrectLogin,
+        '123qwe',
+        busyEmail,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+
+      expect(emailAdapterMock.sendEmailConfirmationMessage).not.toBeCalled();
+    });
+
+    it(`- (400) should not register if input data is incorrect,
+              - (400) should not register if user with the given email already exists`, async () => {
+      const result1 = await registerUserTest(
+        httpServer,
+        'Length===11',
+        'Leng5',
+        freeCorrectEmail,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result1.body).toEqual()
+
+      expect(emailAdapterMock.sendEmailConfirmationMessage).not.toBeCalled();
+    }
   });
 
   // it(`(Addition) + POST -> create new user; status 201`, async () => {

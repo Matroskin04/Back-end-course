@@ -6,8 +6,6 @@ import {
 import { UsersSARepository } from '../infrastructure/repository/users-sa.repository';
 import { BodyUserType } from '../infrastructure/repository/users-sa.types.repositories';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../domain/users.entity';
-import { UserModelType } from '../domain/users.db.types';
 import { UserViewType } from '../infrastructure/query.repository/users-sa.types.query.repository';
 import { CryptoAdapter } from '../../../../infrastructure/adapters/crypto.adapter';
 import jwt from 'jsonwebtoken';
@@ -16,9 +14,7 @@ import { BanInfoSAType } from './dto/ban-info.dto';
 import { UsersSAQueryRepository } from '../infrastructure/query.repository/users-sa.query.repository';
 import { DevicesService } from '../../../devices/application/devices.service';
 import { PostsQueryRepository } from '../../../posts/infrastructure/query.repository/posts.query.repository';
-import { BlogsSAQueryRepository } from '../../../blogs/super-admin-blogs/infrastructure/query.repository/blogs-sa.query.repository';
 import { CommentsQueryRepository } from '../../../comments/infrastructure/query.repository/comments.query.repository';
-import { LikesInfo } from '../../../posts/domain/posts.entity';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { BannedUserBySA } from '../../banned/banned-sa-users/domain/users-banned.entity';
 import { BannedUserModelType } from '../../banned/banned-sa-users/domain/users-banned.db.types';
@@ -28,6 +24,8 @@ import { LikesInfoRepository } from '../../../likes-info/infrastructure/reposito
 import { BannedUsersQueryRepository } from '../../banned/banned-sa-users/infrastructure/banned-users.query.repository';
 import { BannedUsersRepository } from '../../banned/banned-sa-users/infrastructure/banned-users.repository';
 import { createBodyErrorBadRequest } from '../../../../infrastructure/utils/functions/create-error-bad-request.function';
+import { User } from '../../domain/users.entity';
+import { UserModelType } from '../../domain/users.db.types';
 @Injectable()
 export class UsersSaService {
   constructor(

@@ -6,9 +6,9 @@ import {
 } from './users-sa.types.query.repository';
 import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserDBType, UserModelType } from '../../domain/users.db.types';
+import { UserDBType, UserModelType } from '../../../domain/users.db.types';
 import { ObjectId } from 'mongodb';
-import { User } from '../../domain/users.entity';
+import { User } from '../../../domain/users.entity';
 
 @Injectable()
 export class UsersSAQueryRepository {

@@ -1,15 +1,15 @@
 import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../../super-admin/domain/users.entity';
-import { UserModelType } from '../../../super-admin/domain/users.db.types';
 import { Injectable } from '@nestjs/common';
 import { UserInstanceType } from '../../../super-admin/infrastructure/repository/users-sa.types.repositories';
+import { User } from '../../../domain/users.entity';
+import { UserModelType } from '../../../domain/users.db.types';
 
 @Injectable() //todo для чего этот декоратор
 export class UsersPublicRepository {
   constructor(
     @InjectModel(User.name)
-    protected UserModel: UserModelType,
+    private UserModel: UserModelType,
   ) {}
   async updatePassword(
     newPasswordHash: string,

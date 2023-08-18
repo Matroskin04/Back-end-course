@@ -10,7 +10,7 @@ export class Blog {
 
   @Prop({ required: true })
   name: string;
-  z;
+
   @Prop({ required: true })
   description: string;
 

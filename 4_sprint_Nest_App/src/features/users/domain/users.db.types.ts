@@ -39,18 +39,15 @@ export type UserDTOType = {
   };
 };
 
+export type BanInfoType = {
+  isBanned: boolean;
+  banReason: string;
+};
+
 export type UserDocument = HydratedDocument<User>;
 
 export type UserModelType = Model<UserDocument> & UserModelStaticMethodsType;
 
 export type UserModelStaticMethodsType = {
-  createInstance: (
-    userDTO: UserDTOType,
-    UserModel: UserModelType,
-  ) => UserDocument;
-};
-
-export type BanInfoType = {
-  isBanned: boolean;
-  banReason: string | null;
+  createInstance: (user2DTO, User2Model: UserModelType) => UserDocument;
 };
