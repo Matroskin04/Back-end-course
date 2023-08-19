@@ -53,9 +53,6 @@ export class UsersBloggerQueryRepository {
   }
 
   async getUserLoginById(userId: ObjectId): Promise<string | undefined> {
-    //todo слой блоггер может обращаться к паблик?
-    // todo отдельный логин
-
     const userLogin = await this.UserModel.findOne(
       { _id: userId },
       {

@@ -42,7 +42,6 @@ export class PostsService {
     );
     if (!blog) {
       throw new BadRequestException([
-        //todo в функцию завернуть создание объекта
         {
           message: 'Such blogId is not found',
           field: 'blogId',

@@ -30,7 +30,7 @@ export class Comment {
   @Prop({ required: true })
   postId: string;
 
-  @Prop({ type: LikesInfoSchema }) //todo перенести из постов схему лайкинфо?
+  @Prop({ type: LikesInfoSchema })
   likesInfo: LikesInfo;
 
   static createInstance(

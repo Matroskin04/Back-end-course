@@ -16,7 +16,6 @@ export class IsUserBannedGuard implements CanActivate {
     protected postsQueryRepository: PostsQueryRepository,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    //todo такая большая логика разная в гарде?
     const request = context.switchToHttp().getRequest();
     if (!request.params.postId)
       throw new Error('Post Id in params is not found');

@@ -32,7 +32,7 @@ export class BannedUsersByBlogger {
   login: string;
 
   @Prop({ type: BanInfoForBloggerSchema, required: true })
-  banInfo: BanInfoForBlogger; //todo separate docs or array?
+  banInfo: BanInfoForBlogger;
 
   static createInstance(
     blogId: string,
