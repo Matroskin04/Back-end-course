@@ -72,7 +72,6 @@ export class AuthController {
     if (result) return result;
     throw new NotFoundException('User is not found');
   }
-
   @UseGuards(LocalAuthGuard, BlogOwnerByIdGuard)
   @Post('login')
   async loginUser(

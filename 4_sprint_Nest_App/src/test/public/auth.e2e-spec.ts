@@ -11,8 +11,12 @@ import { EmailAdapter } from '../../infrastructure/adapters/email.adapter';
 import { emailAdapterMock } from './mock.providers/auth.mock.providers';
 import {
   confirmEmailTest,
+  createNewRefreshAccessTokensTest,
+  getCurrentUserInfoTest,
   loginUserTest,
+  logoutUserTest,
   registerUserTest,
+  resendEmailConfirmationCodeTest,
 } from '../helpers/auth.helpers';
 import { createErrorsMessageTest } from '../helpers/errors-message.helper';
 import { UserModelType } from '../../features/users/domain/users.db.types';
@@ -21,6 +25,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { createUserTest } from '../helpers/users.helpers';
 import { UserOutputModel } from '../../features/users/super-admin/api/models/output/user.output.model';
 import any = jasmine.any;
+import { UserViewType } from '../../features/users/super-admin/infrastructure/query.repository/users-sa.types.query.repository';
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
   jest.setTimeout(5 * 60 * 1000);
@@ -81,6 +86,50 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
   const correctPass = 'correctPass';
   let confirmationCode;
   //todo проверить jwt token
+  describe(`/auth/me (GET) - get user info`, () => {
+    let user;
+    let accessToken;
+
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      user = await createUserTest(
+        //todo How to add type for user.body
+        httpServer,
+        freeCorrectLogin,
+        correctPass,
+        freeCorrectEmail,
+      );
+      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+
+      const result = await loginUserTest(
+        httpServer,
+        user.body.login,
+        correctPass,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      accessToken = result.body.accessToken;
+    });
+
+    it(`- (401) jwt access token is incorrect`, async () => {
+      //jwt is incorrect
+      const result = await getCurrentUserInfoTest(httpServer, 'IncorrectJWT');
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+    });
+
+    it(`+ (200) should return user info`, async () => {
+      //successfully
+      const result = await getCurrentUserInfoTest(httpServer, accessToken);
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      expect(result.body).toEqual({
+        email: user.body.email,
+        login: user.body.login,
+        userId: user.body.id,
+      });
+    });
+  });
 
   describe('/auth/registration (POST) - Registration flow', () => {
     beforeEach(() => {
@@ -181,19 +230,19 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       await request(httpServer)
         .delete('/hometask-nest/testing/all-data')
         .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
-    });
 
-    it(`+ (204) should confirm email successfully
-              - (400) should not confirm email because of confirmation code is already been applied`, async () => {
       //register user
-      const result1 = await registerUserTest(
+      const result = await registerUserTest(
         httpServer,
         freeCorrectLogin,
         correctPass,
         freeCorrectEmail,
       );
-      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
 
+    it(`+ (204) should confirm email successfully
+              - (400) should not confirm email because of confirmation code is already been applied`, async () => {
       //find confirmation code
       const userInfo = await UserModel.findOne(
         { login: freeCorrectLogin },
@@ -202,13 +251,13 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       confirmationCode = userInfo?.emailConfirmation.confirmationCode;
 
       //confirm email
-      const result2 = await confirmEmailTest(httpServer, confirmationCode);
-      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      const result1 = await confirmEmailTest(httpServer, confirmationCode);
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
 
       //code is already been applied
-      const result3 = await confirmEmailTest(httpServer, confirmationCode);
-      expect(result3.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
-      expect(result3.body).toEqual(createErrorsMessageTest(['code']));
+      const result2 = await confirmEmailTest(httpServer, confirmationCode);
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result2.body).toEqual(createErrorsMessageTest(['code']));
     });
 
     //
@@ -246,12 +295,99 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     });
   });
 
-  describe(`/auth/login (POST) - login user
-                  /auth/logout (POST) - logout user`, () => {
-    let user;
+  describe(`/auth/registration-email-resending (POST) - Resend confirmation code on email for registration
+                  /auth/registration-confirmation (POST)`, () => {
+    let pastConfirmationCode;
+    let newConfirmationCode;
     beforeEach(() => {
       jest.clearAllMocks();
     });
+
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data') //todo dropDB?
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      //register user
+      const result = await registerUserTest(
+        httpServer,
+        freeCorrectLogin,
+        correctPass,
+        freeCorrectEmail,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      //find confirmation code
+      const userInfo = await UserModel.findOne(
+        { login: freeCorrectLogin },
+        { 'emailConfirmation.confirmationCode': 1 },
+      );
+      pastConfirmationCode = userInfo?.emailConfirmation.confirmationCode;
+    });
+
+    it(`+ (204) should resend new code`, async () => {
+      //resend new code
+      const result = await resendEmailConfirmationCodeTest(
+        httpServer,
+        freeCorrectEmail,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      expect(emailAdapterMock.sendEmailConfirmationMessage).toBeCalled();
+    });
+
+    //dependent
+    it(`- (400) should not confirm email because it is past code (not new)
+              + (204) should confirm email with new code`, async () => {
+      //find current confirmation code
+      const userInfo = await UserModel.findOne(
+        { login: freeCorrectLogin },
+        { 'emailConfirmation.confirmationCode': 1 },
+      );
+      newConfirmationCode = userInfo?.emailConfirmation.confirmationCode;
+
+      //400 past code
+      const result1 = await confirmEmailTest(httpServer, pastConfirmationCode);
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result1.body).toEqual(createErrorsMessageTest(['code']));
+
+      //204 new code
+      const result2 = await confirmEmailTest(httpServer, newConfirmationCode);
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+
+    //dependent
+    it(`- (400) should not confirm email because it is already confirmed`, async () => {
+      //400 email is already confirmed
+      const result = await confirmEmailTest(httpServer, newConfirmationCode);
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result.body).toEqual(createErrorsMessageTest(['code']));
+    });
+
+    it(`- (400) should not resend code because user with such email haven't registered
+              - (400) should not resend code because email is incorrect`, async () => {
+      const result1 = await resendEmailConfirmationCodeTest(
+        httpServer,
+        'NotExistingEmail@mail.ru',
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result1.body).toEqual(createErrorsMessageTest(['email']));
+      expect(emailAdapterMock.sendEmailConfirmationMessage).not.toBeCalled();
+
+      const result2 = await resendEmailConfirmationCodeTest(
+        httpServer,
+        'incorrectEmail',
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result1.body).toEqual(createErrorsMessageTest(['email']));
+      expect(emailAdapterMock.sendEmailConfirmationMessage).not.toBeCalled();
+    });
+  });
+
+  describe(`/auth/login (POST) - login user
+                  /auth/logout (POST) - logout user`, () => {
+    let user;
+    let accessToken;
+    let refreshToken;
 
     beforeAll(async () => {
       await request(httpServer)
@@ -277,6 +413,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       expect(result1.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
       expect(result1.body.accessToken).toBeDefined();
       expect(result1.headers['set-cookie'][0]).toBeDefined();
+      accessToken = result1.body.accessToken;
+      refreshToken = result1.headers['set-cookie'][0];
 
       const result2 = await loginUserTest(
         httpServer,
@@ -286,31 +424,126 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       expect(result2.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
     });
 
-    it(`- (200) should login user with passed login
-              - (401) should login user with passed email`, async () => {});
-    // describe(`/auth/me (GET) - get user info`, () => {
-    //   beforeEach(() => {
-    //     jest.clearAllMocks();
-    //   });
-    //
-    //   beforeAll(async () => {
-    //     await request(httpServer)
-    //       .delete('/hometask-nest/testing/all-data')
-    //       .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
-    //   });
-    //
-    //   it(`- (401) jwt access token is missed`, async () => {
-    //     //registerUser
-    //     const result1 = await registerUserTest(
-    //       httpServer,
-    //       freeCorrectLogin,
-    //       correctPass,
-    //       freeCorrectEmail,
-    //     );
-    //     expect(result1.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
-    //
-    //     //jwt is missed
-    //     const;
-    //   });
+    it(`- (401) should not login user because login is incorrect
+              - (401) should not login user because password is incorrect`, async () => {
+      //incorrect login
+      const result1 = await loginUserTest(
+        httpServer,
+        'IncorrectLogin',
+        correctPass,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+      //incorrect pass
+      const result2 = await loginUserTest(
+        httpServer,
+        user.body.login,
+        'IncorrectPass',
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+    });
+
+    //dependent
+    it(`- (401) refreshToken is incorrect
+              + (204) should logout user`, async () => {
+      //incorrect refreshToken
+      const result1 = await logoutUserTest(httpServer, 'IncorrectRefreshToken');
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+
+      //logout successfully
+      const result2 = await logoutUserTest(httpServer, refreshToken);
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+
+    //dependent
+    it(`- (401) shouldn't logout user because the user has already logged out
+ and refresh token was deactivated `, async () => {
+      //refreshToken was deactivated
+      const result = await logoutUserTest(httpServer, refreshToken);
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+    });
+  });
+
+  describe(`/auth/refresh-token (POST) - generate new pair of access and refresh tokens
+                  (Addition) /auth/logout (POST) - logout user for checking deactivated refreshToken`, () => {
+    let user;
+    let pastRefreshToken;
+    let newRefreshToken;
+    let pastAccessToken;
+    let newAccessToken;
+
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      //create user
+      user = await createUserTest(
+        httpServer,
+        freeCorrectLogin,
+        correctPass,
+        freeCorrectEmail,
+      );
+      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      //login user
+      const result = await loginUserTest(
+        httpServer,
+        user.body.login,
+        correctPass,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      expect(result.body.accessToken).toBeDefined();
+      expect(result.headers['set-cookie'][0]).toBeDefined();
+      pastAccessToken = result.body.accessToken;
+      pastRefreshToken = result.headers['set-cookie'][0];
+    });
+    it(`- (401) refresh token is invalid`, async () => {
+      const result = await createNewRefreshAccessTokensTest(
+        httpServer,
+        'InvalidRefreshToken',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+    });
+
+    it(`+ (200) should return new pair of access and refresh tokens`, async () => {
+      const result = await createNewRefreshAccessTokensTest(
+        httpServer,
+        pastRefreshToken,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      expect(result.body.accessToken).toBeDefined();
+      expect(result.headers['set-cookie'][0]).toBeDefined();
+      newAccessToken = result.body.accessToken;
+      newRefreshToken = result.headers['set-cookie'][0];
+
+      expect(pastRefreshToken).not.toBe(newRefreshToken);
+      expect(pastAccessToken).not.toBe(newAccessToken);
+    });
+
+    it(`- (401) shouldn't logout user because past refresh token was deactivated
+              - (204) should logout user with new refresh token`, async () => {
+      //refresh token was deactivated
+      const result1 = await logoutUserTest(httpServer, pastRefreshToken);
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+
+      //refresh token
+      const result2 = await logoutUserTest(httpServer, newRefreshToken);
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+  });
+
+  describe(`/auth/password-recovery (POST) - send code for recovery password
+                  /auth/new-password (POST) - update password`, () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+
+    // it(`- (400) shouldn't send code because email is incorrect`, async () => {
+    //   const result = await
+    // });
   });
 });

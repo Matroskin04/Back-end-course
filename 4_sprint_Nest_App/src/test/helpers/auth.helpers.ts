@@ -27,14 +27,37 @@ export async function confirmEmailTest(
 
 export async function loginUserTest(
   httpServer,
-  loginOrEmail: string,
-  password: string,
+  loginOrEmail: any,
+  password: any,
 ) {
   return request(httpServer)
     .post(`/hometask-nest/auth/login`)
     .send({ loginOrEmail, password });
 }
 
-// export async function getCurrentUserInfoTest(httpServer, jwt: string) {
-//   return request(httpServer).get(`/hometask-nest/auth/me`).;
-// }
+export async function logoutUserTest(httpServer, refreshToken: string) {
+  return request(httpServer)
+    .post('/hometask-nest/auth/logout')
+    .set('Cookie', refreshToken);
+}
+
+export async function getCurrentUserInfoTest(httpServer, accessToken: string) {
+  return request(httpServer)
+    .get(`/hometask-nest/auth/me`)
+    .set('Authorization', `Bearer ${accessToken}`);
+}
+
+export async function resendEmailConfirmationCodeTest(httpServer, email) {
+  return request(httpServer)
+    .post(`/hometask-nest/auth/registration-email-resending`)
+    .send({ email });
+}
+
+export async function createNewRefreshAccessTokensTest(
+  httpServer,
+  refreshToken,
+) {
+  return request(httpServer)
+    .post('/hometask-nest/auth/refresh-token')
+    .set('Cookie', refreshToken);
+}
