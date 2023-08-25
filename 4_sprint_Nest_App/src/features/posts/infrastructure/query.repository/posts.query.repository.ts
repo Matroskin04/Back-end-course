@@ -74,7 +74,7 @@ export class PostsQueryRepository {
     blogId: string,
     query: QueryBlogInputModel,
     userId: ObjectId | null,
-  ): Promise<null | PostPaginationType> {
+  ): Promise<PostPaginationType> {
     const paramsOfElems = await variablesForReturn(query);
     const countAllPostsSort = await this.PostModel.countDocuments({
       blogId: blogId,
@@ -86,8 +86,6 @@ export class PostsQueryRepository {
       .sort(paramsOfElems.paramSort)
       .lean();
 
-    if (allPostsOnPages.length === 0) return null;
-
     const allPostsOfBlog = await Promise.all(
       allPostsOnPages.map(async (p) =>
         modifyPostForAllDocs(p, userId, this.likesInfoQueryRepository),
@@ -95,7 +93,7 @@ export class PostsQueryRepository {
     );
 
     return {
-      pagesCount: Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
+      pagesCount: Math.ceil(countAllPostsSort / +paramsOfElems.pageSize) || 1,
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllPostsSort,

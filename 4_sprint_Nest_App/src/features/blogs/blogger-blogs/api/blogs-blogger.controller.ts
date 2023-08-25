@@ -73,9 +73,7 @@ export class BlogsBloggerController {
       query,
       userId,
     );
-    result
-      ? res.status(HTTP_STATUS_CODE.OK_200).send(result)
-      : res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND_404);
+    res.status(HTTP_STATUS_CODE.OK_200).send(result);
   }
 
   @UseGuards(JwtAccessGuard)

@@ -22,6 +22,11 @@ import {
 import { createUserTest } from '../super-admin/users-sa.helpers';
 import { createErrorsMessageTest } from '../helpers/errors-message.helper';
 import { ObjectId } from 'mongodb';
+import {
+  createPostTest,
+  createResponseSinglePost,
+  getAllPostsTest,
+} from './posts-blogger.helpers';
 
 describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
   jest.setTimeout(5 * 60 * 1000);
@@ -60,16 +65,28 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
   let user;
   let accessToken;
 
+  //blogs
+  let correctBlogId;
   const correctBlogName = 'correctName';
   const correctDescription = 'correctDescription';
   const correctWebsiteUrl =
     'https://SoBqgeyargbRK5jx76KYc6XS3qU9LWMJCvbDif9VXOiplGf4-RK0nhw34lvql.zgG73ki0po16f.J4U96ZRvoH3VE_WK';
 
-  const nameLengthIs16 = 'a'.repeat(16);
-  const webSiteLengthIs101 = 'a'.repeat(101);
-  const descritionLengthIs501 = 'a'.repeat(501);
+  //posts
+  let correctPostId;
+  const correctTitle = 'correctTitle';
+  const correctShortDescription = 'correctShortDescription';
+  const correctContent = 'correctContent';
 
-  let correctBlogId;
+  //incorrectData blogs
+  const nameLength16 = 'a'.repeat(16);
+  const blogWebSiteLength101 = 'a'.repeat(101);
+  const blogDescriptionLength501 = 'a'.repeat(501);
+
+  //incorrectData posts
+  const titleLength31 = 'a'.repeat(31);
+  const postShortDescriptionLength101 = 'a'.repeat(101);
+  const postContentLength1001 = 'a'.repeat(1001);
 
   describe(`/blogs (POST) - create blog`, () => {
     beforeAll(async () => {
@@ -111,9 +128,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
       const result1 = await createBlogTest(
         httpServer,
         accessToken,
-        nameLengthIs16,
-        descritionLengthIs501,
-        webSiteLengthIs101,
+        nameLength16,
+        blogDescriptionLength501,
+        blogWebSiteLength101,
       );
       expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
       expect(result1.body).toEqual(
@@ -259,9 +276,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
         httpServer,
         correctBlogId,
         accessToken,
-        nameLengthIs16,
-        descritionLengthIs501,
-        webSiteLengthIs101,
+        nameLength16,
+        blogDescriptionLength501,
+        blogWebSiteLength101,
       );
       expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
       expect(result1.body).toEqual(
@@ -305,9 +322,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
         httpServer,
         correctBlogId,
         accessToken2,
-        nameLengthIs16,
-        descritionLengthIs501,
-        webSiteLengthIs101,
+        nameLength16,
+        blogDescriptionLength501,
+        blogWebSiteLength101,
       );
       expect(result2.statusCode).toBe(HTTP_STATUS_CODE.FORBIDDEN_403);
     });
@@ -461,60 +478,198 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
     it(`- (401) jwt access token is incorrect`, async () => {
       //jwt is incorrect
-      const result = await createBlogTest(
+      const result = await createPostTest(
         httpServer,
+        correctBlogId,
         'IncorrectJWT',
-        correctBlogName,
-        correctDescription,
-        correctWebsiteUrl,
+        correctTitle,
+        correctShortDescription,
+        correctContent,
       );
       expect(result.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
     });
 
-    it(`- (400) values of 'name', 'website' and 'description' are incorrect (large length)
-              - (400) values of 'name' (not string), 'website' (incorrect format) and 'description' (not string) are incorrect`, async () => {
-      const result1 = await createBlogTest(
+    it(`- (404) should not create post because blog doesn't exist with such id`, async () => {
+      const result = await createPostTest(
         httpServer,
+        new ObjectId(),
         accessToken,
-        nameLengthIs16,
-        descritionLengthIs501,
-        webSiteLengthIs101,
+        correctTitle,
+        correctShortDescription,
+        correctContent,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NOT_FOUND_404);
+    });
+
+    it(`- (400) values of 'title', 'shortDescription' and 'content' are incorrect (large length)
+              - (400) values of 'title', 'shortDescription' and 'content' are incorrect (not string)`, async () => {
+      const result1 = await createPostTest(
+        httpServer,
+        correctBlogId,
+        accessToken,
+        titleLength31,
+        postShortDescriptionLength101,
+        postContentLength1001,
       );
       expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
       expect(result1.body).toEqual(
-        createErrorsMessageTest(['name', 'description', 'websiteUrl']),
+        createErrorsMessageTest(['title', 'shortDescription', 'content']),
       );
 
-      const result2 = await createBlogTest(
+      const result2 = await createPostTest(
         httpServer,
+        correctBlogId,
         accessToken,
         null,
         null,
-        'IncorrectURL',
+        null,
       );
       expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
       expect(result2.body).toEqual(
-        createErrorsMessageTest(['name', 'description', 'websiteUrl']),
+        createErrorsMessageTest(['title', 'shortDescription', 'content']),
       );
     });
 
-    it(`+ (201) should create blog`, async () => {
-      const result = await createBlogTest(
+    it(`- (403) shouldn't create post if the blog doesn't belong to current user`, async () => {
+      //creates new user
+      const newUser = await createUserTest(
+        httpServer,
+        'user2',
+        'correctPass',
+        'email2@gmail.com',
+      );
+      expect(newUser.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+
+      const result1 = await loginUserTest(
+        httpServer,
+        newUser.body.login,
+        'correctPass',
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      const accessToken2 = result1.body.accessToken;
+
+      //403 (update blog that doesn't belong this user
+      const result2 = await createPostTest(
+        httpServer,
+        correctBlogId,
+        accessToken2,
+        correctTitle,
+        correctShortDescription,
+        correctContent,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.FORBIDDEN_403);
+    });
+
+    it(`+ (201) should create post`, async () => {
+      const result = await createPostTest(
+        httpServer,
+        correctBlogId,
+        accessToken,
+        correctTitle,
+        correctShortDescription,
+        correctContent,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      expect(result.body).toEqual(
+        createResponseSinglePost(
+          correctTitle,
+          correctShortDescription,
+          correctContent,
+          correctBlogId,
+        ),
+      );
+    });
+  });
+
+  describe(`/blogs/:id/posts (GET) - get all posts of the blog`, () => {
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      user = await createUserTest(
+        httpServer,
+        'correct',
+        'correctPass',
+        'correctEmail@gmail.com',
+      );
+      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+
+      const result = await loginUserTest(
+        httpServer,
+        user.body.login,
+        'correctPass',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      accessToken = result.body.accessToken;
+
+      const blog = await createBlogTest(
         httpServer,
         accessToken,
         correctBlogName,
         correctDescription,
         correctWebsiteUrl,
       );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-      expect(result.body).toEqual({
-        id: expect.any(String),
-        name: correctBlogName,
-        description: correctDescription,
-        websiteUrl: correctWebsiteUrl,
-        createdAt: expect.any(String),
-        isMembership: false,
-      });
+      expect(blog.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      correctBlogId = blog.body.id;
+    });
+
+    it(`- (401) jwt access token is incorrect`, async () => {
+      //jwt is incorrect
+      const result = await getAllPostsTest(
+        httpServer,
+        correctBlogId,
+        'IncorrectJWT',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.UNAUTHORIZED_401);
+    });
+
+    it(`- (404) should not return posts because blog is not found`, async () => {
+      const result = await getAllPostsTest(
+        httpServer,
+        new ObjectId(),
+        accessToken,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NOT_FOUND_404);
+    });
+
+    it(`- (403) shouldn't return posts if the blog doesn't belong to current user`, async () => {
+      //creates new user
+      const newUser = await createUserTest(
+        httpServer,
+        'user2',
+        'correctPass',
+        'email2@gmail.com',
+      );
+      expect(newUser.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+
+      const result1 = await loginUserTest(
+        httpServer,
+        newUser.body.login,
+        'correctPass',
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      const accessToken2 = result1.body.accessToken;
+
+      //403 (update blog that doesn't belong this user
+      const result2 = await getAllPostsTest(
+        httpServer,
+        correctBlogId,
+        accessToken2,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.FORBIDDEN_403);
+    });
+
+    //todo query + banned
+    it(`+ (200) should return empty array of posts`, async () => {
+      console.log(correctBlogId);
+      const result = await getAllPostsTest(
+        httpServer,
+        correctBlogId,
+        accessToken,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      expect(result.body).toEqual(createResponseAllBlogsTest(1, 1, 10, 0, []));
     });
   });
 });
