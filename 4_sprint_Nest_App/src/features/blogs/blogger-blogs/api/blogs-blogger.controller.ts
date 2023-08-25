@@ -33,7 +33,6 @@ import { CreatePostByBlogIdModel } from '../../../posts/api/models/input/create-
 import { PostTypeWithId } from '../../../posts/infrastructure/repository/posts.types.repositories';
 import { BlogOwnerByIdGuard } from '../../../../infrastructure/guards/blog-owner-by-id.guard';
 import { UpdatePostByBlogIdInputModel } from './models/input/update-post-by-blog-id.input.model';
-import { CommentsService } from '../../../comments/application/comments.service';
 import { CommentsQueryRepository } from '../../../comments/infrastructure/query.repository/comments.query.repository';
 
 @SkipThrottle()

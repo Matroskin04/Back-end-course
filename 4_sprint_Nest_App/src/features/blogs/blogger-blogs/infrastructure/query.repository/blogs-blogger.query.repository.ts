@@ -41,7 +41,7 @@ export class BlogsBloggerQueryRepository {
       .sort(paramsOfElems.paramSort);
 
     return {
-      pagesCount: Math.ceil(countAllBlogsSort / +paramsOfElems.pageSize),
+      pagesCount: Math.ceil(countAllBlogsSort / +paramsOfElems.pageSize) || 1,
       page: +paramsOfElems.pageNumber,
       pageSize: +paramsOfElems.pageSize,
       totalCount: countAllBlogsSort,
