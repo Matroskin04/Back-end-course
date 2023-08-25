@@ -8,7 +8,7 @@ export async function createBlogTest(
   websiteUrl,
 ) {
   return request(httpServer)
-    .post('/hometask-nest/blogger/blogs')
+    .post(`/hometask-nest/blogger/blogs`)
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
       name,
@@ -22,6 +22,30 @@ export async function getAllBlogsBloggerTest(httpServer, accessToken, query) {
     .get(`/hometask-nest/blogger/blogs`)
     .set('Authorization', `Bearer ${accessToken}`)
     .query(query);
+}
+
+export async function updateBlogBloggerTest(
+  httpServer,
+  blogId,
+  accessToken,
+  name,
+  description,
+  websiteUrl,
+) {
+  return request(httpServer)
+    .put(`/hometask-nest/blogger/blogs/${blogId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      name,
+      description,
+      websiteUrl,
+    });
+}
+
+export async function deleteBlogBloggerTest(httpServer, blogId, accessToken) {
+  return request(httpServer)
+    .delete(`/hometask-nest/blogger/blogs/${blogId}`)
+    .set('Authorization', `Bearer ${accessToken}`);
 }
 
 export function createResponseAllBlogsTest(
