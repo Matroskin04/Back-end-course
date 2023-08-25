@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { HTTP_STATUS_CODE } from '../../infrastructure/utils/enums/http-status';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
 
 export async function registerUserTest(
   httpServer,
@@ -47,7 +47,10 @@ export async function getCurrentUserInfoTest(httpServer, accessToken: string) {
     .set('Authorization', `Bearer ${accessToken}`);
 }
 
-export async function resendEmailConfirmationCodeTest(httpServer, email) {
+export async function resendEmailConfirmationCodeTest(
+  httpServer,
+  email: string,
+) {
   return request(httpServer)
     .post(`/hometask-nest/auth/registration-email-resending`)
     .send({ email });
@@ -60,4 +63,20 @@ export async function createNewRefreshAccessTokensTest(
   return request(httpServer)
     .post('/hometask-nest/auth/refresh-token')
     .set('Cookie', refreshToken);
+}
+
+export async function sendCodeRecoveryPasswordTest(httpServer, email: string) {
+  return request(httpServer)
+    .post(`/hometask-nest/auth/password-recovery`)
+    .send({ email });
+}
+
+export async function updatePasswordTest(
+  httpServer,
+  newPassword,
+  recoveryCode,
+) {
+  return request(httpServer)
+    .post(`/hometask-nest/auth/new-password`)
+    .send({ newPassword, recoveryCode });
 }

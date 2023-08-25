@@ -100,6 +100,7 @@ import {
   PasswordRecovery,
   PasswordRecoverySchema,
 } from './features/users/domain/users.subschemas';
+import { SendEmailPassRecoveryUseCase } from './features/auth/application/use-cases/send-email-pass-recovery.use-case';
 
 const services = [
   AuthService,
@@ -147,6 +148,7 @@ const handlers = [
   ResendConfirmationEmailMessageUseCase,
   SaveNewPassUseCase,
   LoginUserUseCase,
+  SendEmailPassRecoveryUseCase,
 ];
 
 @Module({

@@ -27,6 +27,7 @@ export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
     const accessToken = this.jwtService.createAccessJwtToken(userId.toString());
     const refreshToken = this.jwtService.createRefreshJwtToken(
       userId.toString(),
+      null,
     );
 
     return {

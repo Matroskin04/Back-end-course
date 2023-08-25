@@ -3,12 +3,12 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import { AppModule } from '../../app.module';
-import { appSettings } from '../../app.settings';
-import { HTTP_STATUS_CODE } from '../../infrastructure/utils/enums/http-status';
+import { AppModule } from '../../../app.module';
+import { appSettings } from '../../../app.settings';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
 import * as process from 'process';
-import { EmailAdapter } from '../../infrastructure/adapters/email.adapter';
-import { emailAdapterMock } from './mock.providers/auth.mock.providers';
+import { EmailAdapter } from '../../../infrastructure/adapters/email.adapter';
+import { emailAdapterMock } from '../mock.providers/auth.mock.providers';
 import {
   confirmEmailTest,
   createNewRefreshAccessTokensTest,
@@ -17,17 +17,16 @@ import {
   logoutUserTest,
   registerUserTest,
   resendEmailConfirmationCodeTest,
-} from '../helpers/auth.helpers';
-import { createErrorsMessageTest } from '../helpers/errors-message.helper';
-import { UserModelType } from '../../features/users/domain/users.db.types';
-import { User } from '../../features/users/domain/users.entity';
+  sendCodeRecoveryPasswordTest,
+  updatePasswordTest,
+} from './auth-public.helpers';
+import { createErrorsMessageTest } from '../../helpers/errors-message.helper';
+import { UserModelType } from '../../../features/users/domain/users.db.types';
+import { User } from '../../../features/users/domain/users.entity';
 import { getModelToken } from '@nestjs/mongoose';
-import { createUserTest } from '../helpers/users.helpers';
-import { UserOutputModel } from '../../features/users/super-admin/api/models/output/user.output.model';
-import any = jasmine.any;
-import { UserViewType } from '../../features/users/super-admin/infrastructure/query.repository/users-sa.types.query.repository';
+import { createUserTest } from '../../super-admin/users-sa.helpers';
 
-describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
+describe('Auth (Public); /auth', () => {
   jest.setTimeout(5 * 60 * 1000);
 
   //vars for starting app and testing
@@ -35,19 +34,6 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
   let UserModel: UserModelType;
   let mongoServer: MongoMemoryServer;
   let httpServer;
-
-  //providers
-
-  //addition vars
-  // let accessToken: string;
-  // let idOfUser: ObjectId;
-  // let idOfPost: ObjectId;
-  // let idOfComment: ObjectId;
-  // const confirmationCode: string | null = null;
-  // const arrayOfComments: Array<CommentDBType> = [];
-  // let refreshToken: string;
-
-  let connection;
 
   beforeAll(async () => {
     //activate mongoServer
@@ -69,7 +55,6 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     httpServer = app.getHttpServer();
 
     UserModel = moduleFixture.get<UserModelType>(getModelToken(User.name));
-    console.log(UserModel);
   });
 
   afterAll(async () => {
@@ -85,6 +70,9 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
   const freeCorrectLogin = 'freeLogin';
   const correctPass = 'correctPass';
   let confirmationCode;
+
+  const lengthIs5 = '12345';
+  const lengthIs21 = '123456789123456789123';
   //todo проверить jwt token
   describe(`/auth/me (GET) - get user info`, () => {
     let user;
@@ -495,6 +483,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       pastAccessToken = result.body.accessToken;
       pastRefreshToken = result.headers['set-cookie'][0];
     });
+
     it(`- (401) refresh token is invalid`, async () => {
       const result = await createNewRefreshAccessTokensTest(
         httpServer,
@@ -514,10 +503,11 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       newAccessToken = result.body.accessToken;
       newRefreshToken = result.headers['set-cookie'][0];
 
-      expect(pastRefreshToken).not.toBe(newRefreshToken);
+      expect(pastRefreshToken).not.toBe(newRefreshToken); //todo почему иногда не проходит? Одинаковые токены
       expect(pastAccessToken).not.toBe(newAccessToken);
     });
 
+    //dependent
     it(`- (401) shouldn't logout user because past refresh token was deactivated
               - (204) should logout user with new refresh token`, async () => {
       //refresh token was deactivated
@@ -532,6 +522,9 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
 
   describe(`/auth/password-recovery (POST) - send code for recovery password
                   /auth/new-password (POST) - update password`, () => {
+    let user;
+    let pastRecoveryCode;
+    let newRecoveryCode;
     beforeEach(() => {
       jest.clearAllMocks();
     });
@@ -540,10 +533,157 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
       await request(httpServer)
         .delete('/hometask-nest/testing/all-data')
         .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      //create user
+      user = await createUserTest(
+        httpServer,
+        freeCorrectLogin,
+        correctPass,
+        freeCorrectEmail,
+      );
+      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
     });
 
-    // it(`- (400) shouldn't send code because email is incorrect`, async () => {
-    //   const result = await
-    // });
+    it(`- (400) shouldn't send code because email is incorrect`, async () => {
+      const result = await sendCodeRecoveryPasswordTest(
+        httpServer,
+        'incorrectEmail@.ru',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result.body).toEqual(createErrorsMessageTest(['email']));
+    });
+
+    it(`+ (204) should return status 204 but not send code 
+                      if user with such email doesn't exist`, async () => {
+      const result = await sendCodeRecoveryPasswordTest(
+        httpServer,
+        'NotExistEmail@mail.ru',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).not.toBeCalled();
+    });
+
+    it(`+ (204) should send 2 codes password recovery`, async () => {
+      const result1 = await sendCodeRecoveryPasswordTest(
+        httpServer,
+        user.body.email,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).toBeCalled();
+
+      //find recovery pass code
+      const userInfo1 = await UserModel.findOne(
+        { login: user.body.login },
+        { passwordRecovery: 1 },
+      );
+      expect(userInfo1).not.toBeNull();
+      pastRecoveryCode = userInfo1!.passwordRecovery.confirmationCode;
+
+      const result2 = await sendCodeRecoveryPasswordTest(
+        httpServer,
+        user.body.email,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).toBeCalled();
+
+      //find recovery new pass code
+      const userInfo2 = await UserModel.findOne(
+        { login: user.body.login },
+        { passwordRecovery: 1 },
+      );
+      expect(userInfo2).not.toBeNull();
+      newRecoveryCode = userInfo2!.passwordRecovery.confirmationCode;
+    });
+
+    //dependent
+    it(`- (400) shouldn't update password because code is incorrect
+              - (400) shouldn't update password because code is past (it was deactivated)`, async () => {
+      const result1 = await updatePasswordTest(
+        httpServer,
+        'newPassword',
+        'incorrectPasswordRecoveryCode',
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).not.toBeCalled();
+      expect(result1.body).toEqual(createErrorsMessageTest(['recoveryCode']));
+
+      const result2 = await updatePasswordTest(
+        httpServer,
+        'newPassword',
+        pastRecoveryCode,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).not.toBeCalled();
+      expect(result2.body).toEqual(createErrorsMessageTest(['recoveryCode']));
+    });
+
+    //dependent
+    it(`+ (204) should update password with new code`, async () => {
+      const result = await updatePasswordTest(
+        httpServer,
+        'newPassword',
+        newRecoveryCode,
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+    });
+
+    it(`- (400) shouldn't update password because new password is not string;
+              - (400) shouldn't update password because length of new password is less 6;
+              - (400) shouldn't update password because length of new password is more 20`, async () => {
+      //new password is not string
+      const result1 = await updatePasswordTest(
+        httpServer,
+        undefined,
+        newRecoveryCode,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(emailAdapterMock.sendEmailPasswordRecovery).not.toBeCalled();
+      expect(result1.body).toEqual(createErrorsMessageTest(['newPassword']));
+
+      //length is less than 6;
+      const result2 = await updatePasswordTest(
+        httpServer,
+        lengthIs5,
+        newRecoveryCode,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result2.body).toEqual(createErrorsMessageTest(['newPassword']));
+
+      //length is more than 20;
+      const result3 = await updatePasswordTest(
+        httpServer,
+        lengthIs21,
+        newRecoveryCode,
+      );
+      expect(result3.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result3.body).toEqual(createErrorsMessageTest(['newPassword']));
+    });
+
+    it(`(Addition) + (204) should send code password recovery and change date of expiration of this code
+              - (400) - shouldn't update password (because code is expired)`, async () => {
+      const result1 = await sendCodeRecoveryPasswordTest(
+        httpServer,
+        user.body.email,
+      );
+      expect(result1.statusCode).toBe(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      //find recovery pass code
+      const userModel = await UserModel.findOne({ login: user.body.login });
+      expect(userModel).not.toBeNull();
+      newRecoveryCode = userModel!.passwordRecovery.confirmationCode;
+
+      //change date of expiration
+      userModel!.passwordRecovery.expirationDate = new Date();
+      await userModel!.save();
+
+      //400 code is expired
+      const result2 = await updatePasswordTest(
+        httpServer,
+        'newPassword2',
+        newRecoveryCode,
+      );
+      expect(result2.statusCode).toBe(HTTP_STATUS_CODE.BAD_REQUEST_400);
+      expect(result2.body).toEqual(createErrorsMessageTest(['recoveryCode']));
+    });
   });
 });

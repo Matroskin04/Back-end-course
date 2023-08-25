@@ -25,9 +25,9 @@ export class JwtService {
     return accessToken;
   }
 
-  createRefreshJwtToken(userId: string): string {
+  createRefreshJwtToken(userId: string, deviceId: string | null): string {
     const refreshToken = this.jwtServiceNest.sign(
-      { userId: userId.toString(), deviceId: uuidv4() },
+      { userId: userId.toString(), deviceId: deviceId ?? uuidv4() },
       {
         secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
         expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
@@ -46,19 +46,10 @@ export class JwtService {
       throw new Error('Refresh token is invalid.');
     }
 
-    const accessToken = this.jwtServiceNest.sign(
-      { userId: userId.toString() },
-      {
-        secret: process.env.PRIVATE_KEY_ACCESS_TOKEN!,
-        expiresIn: process.env.EXPIRATION_TIME_ACCESS_TOKEN!,
-      },
-    );
-    const refreshToken = this.jwtServiceNest.sign(
-      { userId: userId.toString(), deviceId: payloadToken.deviceId },
-      {
-        secret: process.env.PRIVATE_KEY_REFRESH_TOKEN!,
-        expiresIn: process.env.EXPIRATION_TIME_REFRESH_TOKEN!,
-      },
+    const accessToken = this.createAccessJwtToken(userId.toString());
+    const refreshToken = this.createRefreshJwtToken(
+      userId.toString(),
+      payloadToken.deviceId,
     );
 
     const payloadNewRefresh =
