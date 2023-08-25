@@ -24,6 +24,31 @@ export async function getAllPostsTest(httpServer, blogId, accessToken) {
     .set('Authorization', `Bearer ${accessToken}`);
 }
 
+export async function updatePostTest(
+  httpServer,
+  blogId,
+  postId,
+  accessToken,
+  title,
+  shortDescription,
+  content,
+) {
+  return request(httpServer)
+    .put(`/hometask-nest/blogger/blogs/${blogId}/posts/${postId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      title,
+      shortDescription,
+      content,
+    });
+}
+
+export async function deletePostTest(httpServer, blogId, postId, accessToken) {
+  return request(httpServer)
+    .delete(`/hometask-nest/blogger/blogs/${blogId}/posts/${postId}`)
+    .set('Authorization', `Bearer ${accessToken}`);
+}
+
 export function createResponseSinglePost(
   title,
   shortDescription,

@@ -63,3 +63,20 @@ export function createResponseAllBlogsTest(
     items,
   };
 }
+
+export function createResponseSingleBlog(
+  id,
+  name,
+  description,
+  websiteUrl,
+  isMembership?,
+) {
+  return {
+    id,
+    name,
+    description,
+    websiteUrl,
+    createdAt: expect.any(String),
+    isMembership: isMembership ?? false,
+  };
+}
