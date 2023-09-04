@@ -1,17 +1,16 @@
 import { INestApplication } from '@nestjs/common';
-import { UserModelType } from '../../features/users/domain/users.db.types';
+import { UserModelType } from '../../../features/users/domain/users.db.types';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import process from 'process';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../../app.module';
-import { appSettings } from '../../app.settings';
+import { AppModule } from '../../../app.module';
+import { appSettings } from '../../../app.settings';
 import { getModelToken } from '@nestjs/mongoose';
-import { User } from '../../features/users/domain/users.entity';
+import { User } from '../../../features/users/domain/users.entity';
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 import request from 'supertest';
-import { HTTP_STATUS_CODE } from '../../infrastructure/utils/enums/http-status';
-import { loginUserTest } from '../public/auth/auth-public.helpers';
+import { HTTP_STATUS_CODE } from '../../../infrastructure/utils/enums/http-status';
+import { loginUserTest } from '../../public/auth/auth-public.helpers';
 import {
   createBlogTest,
   createResponseAllBlogsTest,
@@ -20,8 +19,8 @@ import {
   getAllBlogsBloggerTest,
   updateBlogBloggerTest,
 } from './blogs-blogger.helpers';
-import { createUserTest } from '../super-admin/users-sa.helpers';
-import { createErrorsMessageTest } from '../helpers/errors-message.helper';
+import { createUserTest } from '../../super-admin/users-sa.helpers';
+import { createErrorsMessageTest } from '../../helpers/errors-message.helper';
 import { ObjectId } from 'mongodb';
 import {
   createPostTest,
@@ -29,11 +28,17 @@ import {
   deletePostTest,
   getAllPostsTest,
   updatePostTest,
-} from './posts-blogger.helpers';
-import { getPostByIdPublicTest } from '../public/posts-public.helpers';
-import { getBlogByIdPublicTest } from '../public/blogs-public.helpers';
+} from '../posts-blogger.helpers';
+import { getPostByIdPublicTest } from '../../public/posts-public.helpers';
+import { getBlogByIdPublicTest } from '../../public/blogs-public.helpers';
+import { deleteAllDataTest } from '../../helpers/delete-all-data.helper';
+import {
+  createCorrectBlogTest,
+  createCorrectUserTest,
+  loginCorrectUserTest,
+} from '../../helpers/chains-of-requests.helpers';
 
-describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
+describe('Blogs, Post, Comments (Blogger); /blogger', () => {
   jest.setTimeout(5 * 60 * 1000);
   //todo flow with comments need to test
   //vars for starting app and testing
@@ -69,6 +74,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
   });
   let user;
   let accessToken;
+  const correctLogin = 'correct';
+  const correctPass = 'correctPass';
+  const correctEmail = 'correctEmail@gmail.com';
 
   //blogs
   let correctBlogId;
@@ -95,25 +103,11 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
   describe(`/blogs (POST) - create blog`, () => {
     beforeAll(async () => {
-      await request(httpServer)
-        .delete('/hometask-nest/testing/all-data')
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      await deleteAllDataTest(httpServer);
 
-      user = await createUserTest(
-        httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
-      );
-      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-
-      const result = await loginUserTest(
-        httpServer,
-        user.body.login,
-        'correctPass',
-      );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
-      accessToken = result.body.accessToken;
+      user = await createCorrectUserTest(httpServer);
+      const result = await loginCorrectUserTest(httpServer);
+      accessToken = result.accessToken;
     });
 
     it(`- (401) jwt access token is incorrect`, async () => {
@@ -177,25 +171,11 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
   describe(`/blogs (GET) - get all blogs`, () => {
     beforeAll(async () => {
-      await request(httpServer)
-        .delete('/hometask-nest/testing/all-data')
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      await deleteAllDataTest(httpServer);
 
-      user = await createUserTest(
-        httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
-      );
-      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-
-      const result = await loginUserTest(
-        httpServer,
-        user.body.login,
-        'correctPass',
-      );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
-      accessToken = result.body.accessToken;
+      user = await createCorrectUserTest(httpServer);
+      const result = await loginCorrectUserTest(httpServer);
+      accessToken = result.accessToken;
     });
 
     it(`- (401) jwt access token is incorrect`, async () => {
@@ -231,35 +211,14 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
   describe(`/blogs/:id (PUT) - update blog by id`, () => {
     beforeAll(async () => {
-      await request(httpServer)
-        .delete('/hometask-nest/testing/all-data')
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      await deleteAllDataTest(httpServer);
 
-      user = await createUserTest(
-        httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
-      );
-      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      user = await createCorrectUserTest(httpServer);
+      const result = await loginCorrectUserTest(httpServer);
+      accessToken = result.accessToken;
 
-      const result = await loginUserTest(
-        httpServer,
-        user.body.login,
-        'correctPass',
-      );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
-      accessToken = result.body.accessToken;
-
-      const blog = await createBlogTest(
-        httpServer,
-        accessToken,
-        correctBlogName,
-        correctDescription,
-        correctWebsiteUrl,
-      );
-      expect(blog.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-      correctBlogId = blog.body.id;
+      const blog = await createCorrectBlogTest(httpServer, accessToken);
+      correctBlogId = blog.id;
     });
 
     it(`- (401) jwt access token is incorrect`, async () => {
@@ -373,35 +332,14 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
   describe(`/blogs/:id (DELETE) - delete blog by id`, () => {
     beforeAll(async () => {
-      await request(httpServer)
-        .delete('/hometask-nest/testing/all-data')
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      await deleteAllDataTest(httpServer);
 
-      user = await createUserTest(
-        httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
-      );
-      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      user = await createCorrectUserTest(httpServer);
+      const result = await loginCorrectUserTest(httpServer);
+      accessToken = result.accessToken;
 
-      const result = await loginUserTest(
-        httpServer,
-        user.body.login,
-        'correctPass',
-      );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
-      accessToken = result.body.accessToken;
-
-      const blog = await createBlogTest(
-        httpServer,
-        accessToken,
-        correctBlogName,
-        correctDescription,
-        correctWebsiteUrl,
-      );
-      expect(blog.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-      correctBlogId = blog.body.id;
+      const blog = await createCorrectBlogTest(httpServer, accessToken);
+      correctBlogId = blog.id;
     });
 
     it(`- (401) jwt access token is incorrect`, async () => {
@@ -472,9 +410,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
       user = await createUserTest(
         httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
+        correctLogin,
+        correctPass,
+        correctEmail,
       );
       expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
 
@@ -610,9 +548,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
       user = await createUserTest(
         httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
+        correctLogin,
+        correctPass,
+        correctEmail,
       );
       expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
 
@@ -701,9 +639,9 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
       user = await createUserTest(
         httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
+        correctLogin,
+        correctPass,
+        correctEmail,
       );
       expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
 
@@ -867,46 +805,12 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
 
   describe(`/blogs/:id/posts/:id (DELETE) - delete post by blogId and postId`, () => {
     beforeAll(async () => {
-      await request(httpServer)
-        .delete('/hometask-nest/testing/all-data')
-        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+      await deleteAllDataTest(httpServer);
+      //const result = await createUserBlogPostTest(httpServer);
 
-      user = await createUserTest(
-        httpServer,
-        'correct',
-        'correctPass',
-        'correctEmail@gmail.com',
-      );
-      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-
-      const result = await loginUserTest(
-        httpServer,
-        user.body.login,
-        'correctPass',
-      );
-      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
-      accessToken = result.body.accessToken;
-
-      const blog = await createBlogTest(
-        httpServer,
-        accessToken,
-        correctBlogName,
-        correctDescription,
-        correctWebsiteUrl,
-      );
-      expect(blog.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-      correctBlogId = blog.body.id;
-
-      const post = await createPostTest(
-        httpServer,
-        correctBlogId,
-        accessToken,
-        correctTitle,
-        correctShortDescription,
-        correctContent,
-      );
-      expect(post.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
-      correctPostId = post.body.id;
+      //accessToken = result.accessToken;
+      // correctBlogId = result.blog.id;
+      //correctPostId = result.post.id;
     });
 
     it(`- (401) jwt access token is incorrect`, async () => {
@@ -980,6 +884,41 @@ describe('Blogs, Post, Comments (Blogger); /blogger/blogs', () => {
       //check that post is deleted
       const post = await getPostByIdPublicTest(httpServer, correctPostId, '');
       expect(post.statusCode).toBe(HTTP_STATUS_CODE.NOT_FOUND_404);
+    });
+  });
+
+  describe(`/blogs/comments (GET) - get all comments of the blogger`, () => {
+    beforeAll(async () => {
+      await request(httpServer)
+        .delete('/hometask-nest/testing/all-data')
+        .expect(HTTP_STATUS_CODE.NO_CONTENT_204);
+
+      //todo можно вынести
+      user = await createUserTest(
+        httpServer,
+        'correct',
+        'correctPass',
+        'correctEmail@gmail.com',
+      );
+      expect(user.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+
+      const result = await loginUserTest(
+        httpServer,
+        user.body.login,
+        'correctPass',
+      );
+      expect(result.statusCode).toBe(HTTP_STATUS_CODE.OK_200);
+      accessToken = result.body.accessToken;
+
+      const blog = await createBlogTest(
+        httpServer,
+        accessToken,
+        correctBlogName,
+        correctDescription,
+        correctWebsiteUrl,
+      );
+      expect(blog.statusCode).toBe(HTTP_STATUS_CODE.CREATED_201);
+      correctBlogId = blog.body.id;
     });
   });
 });
