@@ -81,7 +81,7 @@ export class BlogsSAController {
   async getAllPostsOfBlog(
     @Param('blogId') blogId: string,
     @CurrentUserId() userId: ObjectId,
-    @Query() query: QueryBlogInputModel,
+    @Query() query: QueryBlogBloggerInputModel,
     @Res() res: Response<ViewPostsOfBlogModel>,
   ) {
     const result = await this.postsQueryRepository.getPostsOfBlog(

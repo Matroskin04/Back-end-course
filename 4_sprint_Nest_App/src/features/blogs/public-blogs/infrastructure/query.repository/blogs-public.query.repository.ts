@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog } from '../../../domain/blogs.entity';
 import { BlogModelType } from '../../../domain/blogs.db.types';
-import { QueryBlogInputModel } from '../../../blogger-blogs/api/models/input/query-blog.input.model';
+import { QueryBlogBloggerInputModel } from '../../../blogger-blogs/api/models/input/query-blog-blogger.input.model';
 import { variablesForReturn } from '../../../../../infrastructure/utils/functions/variables-for-return.function';
 
 @Injectable()
@@ -17,7 +17,9 @@ export class BlogsPublicQueryRepository {
     @InjectModel(Blog.name)
     private BlogModel: BlogModelType,
   ) {}
-  async getAllBlogs(query: QueryBlogInputModel): Promise<BlogPaginationType> {
+  async getAllBlogs(
+    query: QueryBlogBloggerInputModel,
+  ): Promise<BlogPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;
     const paramsOfElems = await variablesForReturn(query);
 

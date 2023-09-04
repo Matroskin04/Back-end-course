@@ -4,7 +4,7 @@ import {
   BlogViewType,
 } from './blogs-blogger.types.query.repository';
 import { ObjectId } from 'mongodb';
-import { QueryBlogInputModel } from '../../api/models/input/query-blog.input.model';
+import { QueryBlogBloggerInputModel } from '../../api/models/input/query-blog-blogger.input.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog } from '../../../domain/blogs.entity';
@@ -18,7 +18,7 @@ export class BlogsBloggerQueryRepository {
     private BlogModel: BlogModelType,
   ) {}
   async getAllBlogs(
-    query: QueryBlogInputModel,
+    query: QueryBlogBloggerInputModel,
     userId: string,
   ): Promise<BlogPaginationType> {
     const searchNameTerm: string | null = query?.searchNameTerm ?? null;

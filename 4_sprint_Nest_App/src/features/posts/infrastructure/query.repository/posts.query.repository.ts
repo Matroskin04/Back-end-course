@@ -20,7 +20,7 @@ import { Post } from '../../domain/posts.entity';
 import { PostModelType } from '../../domain/posts.db.types';
 import { LikesInfoQueryRepository } from '../../../likes-info/infrastructure/query.repository/likes-info.query.repository';
 import { reformNewestLikes } from '../../../../infrastructure/utils/functions/features/likes-info.functions.helpers';
-import { QueryBlogInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog.input.model';
+import { QueryBlogBloggerInputModel } from '../../../blogs/blogger-blogs/api/models/input/query-blog-blogger.input.model';
 import { BlogsIdType } from '../../../blogs/blogger-blogs/infrastructure/query.repository/blogs-blogger.types.query.repository';
 import { BlogsPublicQueryRepository } from '../../../blogs/public-blogs/infrastructure/query.repository/blogs-public.query.repository';
 
@@ -72,7 +72,7 @@ export class PostsQueryRepository {
 
   async getPostsOfBlog(
     blogId: string,
-    query: QueryBlogInputModel,
+    query: QueryBlogBloggerInputModel,
     userId: ObjectId | null,
   ): Promise<PostPaginationType> {
     const paramsOfElems = await variablesForReturn(query);

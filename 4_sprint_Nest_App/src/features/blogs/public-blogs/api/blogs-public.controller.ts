@@ -6,7 +6,7 @@ import { JwtAccessNotStrictGuard } from '../../../../infrastructure/guards/autho
 import { CurrentUserId } from '../../../../infrastructure/decorators/auth/current-user-id.param.decorator';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
-import { QueryBlogInputModel } from '../../blogger-blogs/api/models/input/query-blog.input.model';
+import { QueryBlogBloggerInputModel } from '../../blogger-blogs/api/models/input/query-blog-blogger.input.model';
 import {
   BlogOutputModel,
   ViewAllBlogsModel,
@@ -24,7 +24,7 @@ export class BlogsPublicController {
 
   @Get()
   async getAllBlogs(
-    @Query() query: QueryBlogInputModel,
+    @Query() query: QueryBlogBloggerInputModel,
     @Res() res: Response<ViewAllBlogsModel>,
   ) {
     const result = await this.blogsPublicQueryRepository.getAllBlogs(query);
@@ -47,7 +47,7 @@ export class BlogsPublicController {
   async getAllPostsOfBlog(
     @Param('blogId') blogId: string,
     @CurrentUserId() userId: ObjectId,
-    @Query() query: QueryBlogInputModel,
+    @Query() query: QueryBlogBloggerInputModel,
     @Res() res: Response<ViewPostsOfBlogModel>,
   ) {
     const result = await this.postsQueryRepository.getPostsOfBlog(

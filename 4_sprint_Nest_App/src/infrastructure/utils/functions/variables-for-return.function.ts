@@ -1,8 +1,8 @@
 import { VariablesForReturnType } from './types/variables-for-return.types';
-import { QueryBlogInputModel } from '../../../features/blogs/blogger-blogs/api/models/input/query-blog.input.model';
+import { QueryBlogBloggerInputModel } from '../../../features/blogs/blogger-blogs/api/models/input/query-blog-blogger.input.model';
 
 export async function variablesForReturn(
-  query: QueryBlogInputModel,
+  query: QueryBlogBloggerInputModel,
 ): Promise<VariablesForReturnType> {
   const pageNumber = query?.pageNumber ?? 1;
   const pageSize = query?.pageSize ?? 10;
