@@ -5,6 +5,7 @@ import {QueryBlogModel} from "../../models/BlogsModels/QueryBlogModel";
 import {variablesForReturn} from "./utils/variables-for-return";
 import {BlogModel} from "../../domain/blogs-schema-model";
 import { injectable } from "inversify";
+import {HydratedBlogType} from "../../domain/db-types/blogs-db-types";
 
 
 @injectable()
@@ -14,7 +15,6 @@ export class BlogsQueryRepository {
 
         const searchNameTerm: string | null = query?.searchNameTerm ?? null;
         const paramsOfElems = await variablesForReturn(query);
-
 
         const countAllBlogsSort = await BlogModel
             .countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'} });

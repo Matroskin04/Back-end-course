@@ -29,7 +29,7 @@ export type PostDBStaticMethodsType = {
 };
 
 
-export type PostDBFullType = Model<BlogDBType> & PostDBStaticMethodsType;
+export type PostDBFullType = Model<PostDBType> & PostDBStaticMethodsType;
 
 // export type PostDBType = {
 //     _id: ObjectId

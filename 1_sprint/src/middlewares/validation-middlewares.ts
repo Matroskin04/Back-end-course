@@ -16,7 +16,7 @@ export const getErrors = (req: RequestWithBody<CreateBlogModel | CreatePostModel
             }
         }
     });
-    const errors = myValidationResult(req); //TODO полученные ошибки перемещаются в req? Зачем передаем req
+    const errors = myValidationResult(req);
 
     if ( errors.array().length > 0 ) {
 

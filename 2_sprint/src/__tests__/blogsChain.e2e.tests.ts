@@ -1,7 +1,7 @@
 import {describe} from "node:test";
 import {blogsCollection, client} from "../db";
+import {app} from "../setting"
 import request from "supertest";
-import app from "../setting";
 import {BlogTypeWithId} from "../repositories/repositories-types/blogs-types-repositories";
 
 let idOfBlog: string;

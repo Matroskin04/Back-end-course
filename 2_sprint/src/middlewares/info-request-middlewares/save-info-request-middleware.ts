@@ -14,7 +14,5 @@ export const saveInfoRequest = async (req: Request, res: Response, next: NextFun
         date: new Date()
     }
     await infoRequestService.saveInfoRequest(infoRequest);
-    const result = await infoRequestCollection.find({}).toArray()
-    console.log(result)
     next();
 }

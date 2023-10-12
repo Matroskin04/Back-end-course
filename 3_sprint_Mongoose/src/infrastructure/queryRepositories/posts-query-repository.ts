@@ -6,7 +6,7 @@ import {variablesForReturn} from "./utils/variables-for-return";
 import {QueryBlogModel} from "../../models/BlogsModels/QueryBlogModel";
 import {PostsOfBlogPaginationType} from "./query-repository-types/blogs-types-query-repository";
 import {PostModel} from "../../domain/posts-schema-model";
-import {mappingPostForAllDocs, renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
+import {mapPostForAllDocsIntoViewModel, renameMongoIdPost} from "../../helpers/functions/posts-functions-helpers";
 import { injectable } from "inversify";
 import {StatusOfLike} from "./query-repository-types/comments-types-query-repository";
 import {LikesInfoQueryRepository} from "./likes-info-query-repository";
@@ -34,7 +34,7 @@ export class PostsQueryRepository {
             .limit(+paramsOfElems.pageSize)
             .sort(paramsOfElems.paramSort).lean();
 
-        const allPosts = await Promise.all(allPostsOnPages.map(async p => mappingPostForAllDocs(p, userId)));
+        const allPosts = await Promise.all(allPostsOnPages.map(async p => mapPostForAllDocsIntoViewModel(p, userId)));
 
         return {
             pagesCount:  Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
@@ -64,7 +64,7 @@ export class PostsQueryRepository {
         if ( allPostsOnPages.length === 0 ) return null
 
 
-        const allPostsOfBlog = await Promise.all(allPostsOnPages.map(async p => mappingPostForAllDocs(p, userId)));
+        const allPostsOfBlog = await Promise.all(allPostsOnPages.map(async p => mapPostForAllDocsIntoViewModel(p, userId)));
         return {
             pagesCount:  Math.ceil(countAllPostsSort / +paramsOfElems.pageSize),
             page: +paramsOfElems.pageNumber,

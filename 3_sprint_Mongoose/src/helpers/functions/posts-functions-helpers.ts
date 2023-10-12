@@ -26,7 +26,7 @@ export function renameMongoIdPost(post: PostDBType, newestLikes: NewestLikesType
     }
 }
 
-export async function mappingPostForAllDocs(post: PostDBType, userId: ObjectId | null): Promise<PostViewType> {
+export async function mapPostForAllDocsIntoViewModel(post: PostDBType, userId: ObjectId | null): Promise<PostViewType> {
 
     const likesInfoQueryRepository = new LikesInfoQueryRepository();
 

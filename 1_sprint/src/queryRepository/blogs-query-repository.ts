@@ -12,7 +12,6 @@ export async function variablesForReturn(query: QueryBlogsModel | null = null): 
     const pageSize = query?.pageSize ?? 10;
     const sortBy = query?.sortBy ?? "createdAt";
     const sortDirection = query?.sortDirection === 'asc' ? 1 : -1;
-    const totalCount = await blogsCollection.countDocuments();
     const paramSort = {[sortBy]: sortDirection};
 
     return {
@@ -20,7 +19,6 @@ export async function variablesForReturn(query: QueryBlogsModel | null = null): 
         pageSize,
         sortBy,
         sortDirection,
-        totalCount,
         paramSort
     }
 }
