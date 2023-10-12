@@ -34,10 +34,10 @@ BlogSchema.method('renameIntoViewModel', function renameIntoViewModel(): BlogTyp
         isMembership: that.isMembership
     }
 });
-BlogSchema.method('updateBlogInfo', function updateBlogInfo(blog: HydratedBlogType, updateData: BodyBlogType): void {
-    blog.name = updateData.name;
-    blog.description = updateData.description;
-    blog.websiteUrl = updateData.websiteUrl;
+BlogSchema.method('updateBlogInfo', function updateBlogInfo(updateData: BodyBlogType): void {
+    this.name = updateData.name;
+    this.description = updateData.description;
+    this.websiteUrl = updateData.websiteUrl;
     return;
 })
 

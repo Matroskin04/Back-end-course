@@ -30,7 +30,7 @@ export class BlogsService {
             return false
         }
 
-        blog.updateBlogInfo(blog, bodyBlog);
+        blog.updateBlogInfo(bodyBlog);
         await this.blogsRepository.saveBlog(blog);
 
         return true

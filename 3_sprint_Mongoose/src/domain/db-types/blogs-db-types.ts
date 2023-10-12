@@ -25,7 +25,7 @@ export type HydratedBlogType = HydratedDocument<BlogDBType, BlogDBInstanceMethod
 
 export type BlogDBInstanceMethodsType = {
     renameIntoViewModel: () => BlogTypeWithId;
-    updateBlogInfo: () => void
+    updateBlogInfo: (updateData: BodyBlogType) => void
 };
 
 export type BlogDBStaticMethodsType = {
