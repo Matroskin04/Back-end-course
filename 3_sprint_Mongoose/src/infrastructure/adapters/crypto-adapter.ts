@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
+import {injectable} from "inversify";
 
+@injectable()
 export class CryptoAdapter {
     constructor() {
     }

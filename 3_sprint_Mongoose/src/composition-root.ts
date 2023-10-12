@@ -31,6 +31,7 @@ import {LikesInfoRepository} from "./infrastructure/repositories/likes-info-repo
 import { Container } from "inversify";
 import {EmailAdapter} from "./infrastructure/adapters/email-adapter";
 import {EmailManager} from "./application/managers/email-manager";
+import {CryptoAdapter} from "./infrastructure/adapters/crypto-adapter";
 
 
 export const container = new Container();
@@ -74,3 +75,5 @@ container.bind(AuthController).to(AuthController);
 
 container.bind(EmailAdapter).to(EmailAdapter);
 container.bind(EmailManager).to(EmailManager);
+
+container.bind(CryptoAdapter).to(CryptoAdapter);

@@ -11,10 +11,10 @@ import {validateFormatOfUrlParams} from "../../middlewares/urlParams-validation-
 import {container} from "../../composition-root";
 import {PostsController} from "../controllers/posts-controller";
 import {validateBodyOfLikeStatus} from "../../middlewares/validation-middlewares/likes-validation-middlewares";
+import {PostsService} from "../../application/services/posts-service";
 
 export const postsRoutes = Router();
 const postsController = container.resolve(PostsController);
-
 
 postsRoutes.get('/',
     validateAccessTokenGetRequests,
