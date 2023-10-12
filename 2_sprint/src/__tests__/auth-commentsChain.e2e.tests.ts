@@ -3,7 +3,7 @@ import {client} from "../db";
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
 import {CommentDBType} from "../types/types";
-import app from "../setting";
+import {app} from "../setting"
 
 
 let accessToken: string;
