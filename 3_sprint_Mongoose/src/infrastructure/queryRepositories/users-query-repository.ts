@@ -1,11 +1,11 @@
 import {EmailAndLoginTerm, UsersPaginationType} from "./query-repository-types/users-types-query-repository";
 import {QueryUserModel} from "../../models/UsersModels/QueryUserModel";
 import {ObjectId} from "mongodb";
-import {variablesForReturn} from "./utils/variables-for-return";
+import {UserDBType} from "../../domain/db-types/users-db-types";
 import {UserModel} from "../../domain/users-schema-model";
 import {mappingUser} from "../../helpers/functions/users-functions-helpers";
-import { injectable } from "inversify";
-import {UserDBType} from "../../domain/db-types/users-db-types";
+import {variablesForReturn} from "./utils/variables-for-return";
+import {injectable} from "inversify";
 
 
 @injectable()

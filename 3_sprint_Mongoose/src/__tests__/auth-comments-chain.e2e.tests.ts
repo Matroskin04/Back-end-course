@@ -1,5 +1,5 @@
+import "reflect-metadata"
 import mongoose from "mongoose";
-
 const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {UsersQueryRepository} from "../infrastructure/queryRepositories/users-query-repository";
@@ -365,8 +365,7 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
               -POST -> '/auth/registration' user with the given email already exists; status: 400;
               -POST -> '/auth/registration' user with the given login already exists; status: 400;`, async () => {
 
-        jest.spyOn(EmailAdapter.prototype, 'sendEmailConfirmationMessage').mockReturnValue(Promise.resolve(true));
-        const sendEmailConfirmation = new EmailAdapter().sendEmailConfirmationMessage;
+        const sendEmailConfirmation = jest.spyOn(EmailAdapter.prototype, 'sendEmailConfirmationMessage').mockReturnValue(Promise.resolve(true));
 
         const response1 = await request(app)
             .post(`/hometask-03/auth/registration`)

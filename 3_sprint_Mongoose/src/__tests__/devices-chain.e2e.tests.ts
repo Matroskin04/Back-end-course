@@ -5,6 +5,15 @@ import {ObjectId} from "mongodb";
 import {AuthService} from "../application/services/auth-service";
 import {DevicesService} from "../application/services/devices-service";
 import mongoose from "mongoose";
+import {JwtQueryRepository} from "../infrastructure/queryRepositories/jwt-query-repository";
+import {DevicesQueryRepository} from "../infrastructure/queryRepositories/devices-query-repository";
+import {DevicesRepository} from "../infrastructure/repositories/devices-repository";
+import {CryptoAdapter} from "../infrastructure/adapters/crypto-adapter";
+import {UsersQueryRepository} from "../infrastructure/queryRepositories/users-query-repository";
+import {UsersRepository} from "../infrastructure/repositories/users-repository";
+import {UsersService} from "../application/services/users-service";
+import {JwtService} from "../application/services/jwt-service";
+import {EmailManager} from "../application/managers/email-manager";
 
 
 //refresh 60 sec, access - 30 sec
@@ -213,20 +222,21 @@ describe('devices: /security/devices', () => {
               - POST -> '/security/devices' - more than 5 attempts (6) from one IP-address during 10 seconds; status 429;
               + POST -> '/auth/login' - one more login after 10 seconds; status 200;`, async () => {
 
-        jest.spyOn(AuthService.prototype, 'loginUser')
-        const loginUser = new AuthService(emailManager, jwtService, usersService, usersRepository, usersQueryRepository).loginUser;
+        const spyLogin = jest.spyOn(AuthService.prototype, 'loginUser')
 
-
-        jest.spyOn(DevicesService.prototype, 'createNewDevice');
-        const createNewDevice = new DevicesService(jwtQueryRepository, devicesQueryRepository, devicesRepository).createNewDevice;
+        const spyCreateNewDevice = jest.spyOn(DevicesService.prototype, 'createNewDevice');
+        const createNewDevice = new DevicesService(
+            new JwtQueryRepository(),
+            new DevicesQueryRepository(),
+            new DevicesRepository()).createNewDevice;
 
         //1
         await request(app)
             .post(`/hometask-03/auth/login`)
             .send({loginOrEmail: 'Dima123', password: '123qwe'})
             .expect(200);
-        expect(loginUser).toHaveBeenCalled();
-        expect(createNewDevice).toHaveBeenCalled();
+        expect(spyLogin).toHaveBeenCalled();
+        expect(spyCreateNewDevice).toHaveBeenCalled();
         //2
         await request(app)
             .post(`/hometask-03/auth/login`)
