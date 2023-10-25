@@ -2,7 +2,7 @@ import {describe} from "node:test";
 const request = require("supertest");
 import {blogsCollection, client, postsCollection} from "../db";
 import {app} from "../setting"
-import {ObjectId} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 
 const generalBlogInputData = {
     name: "Blog1-IT-beard",
@@ -17,10 +17,10 @@ let idOfPost: ObjectId | null= null;
 
 describe('POST: /blogs', () => {
 
-
     beforeAll(async () => {
         await client.close();
         await client.connect();
+
 
         await request(app)
             .delete('/hometask-02/testing/all-data')

@@ -21,6 +21,7 @@ if (!mongoUri) {
 export const client = new MongoClient(mongoUri);
 const db = client.db()
 export const blogsCollection = db.collection<BlogDBType>('blogs');
+
 export const postsCollection = db.collection<PostDBType>('posts');
 export const usersCollection = db.collection<UserDBType>('users');
 export const commentsCollection = db.collection<CommentDBType>('comments');

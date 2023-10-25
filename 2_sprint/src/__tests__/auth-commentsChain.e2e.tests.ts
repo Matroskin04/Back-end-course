@@ -1,8 +1,8 @@
 import request from "supertest";
 import {client} from "../db";
-import {ObjectId} from "mongodb";
+import {Db, ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {CommentDBType} from "../types/types";
+import {BlogDBType, CommentDBType} from "../types/types";
 import {app} from "../setting"
 
 
@@ -16,10 +16,13 @@ let refreshToken: string | null = null;
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
-
+let connection: any
+    let db: Db
     beforeAll( async () => {
         await client.close();
-        await client.connect();
+        const connection = await client.connect();
+        db = connection.db()
+
 
         await request(app)
             .delete('/hometask-02/testing/all-data')
@@ -31,14 +34,16 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
     })
 
     it(`(Addition) + POST -> create new user; status 201`, async () => {
-
-        const user = await request(app)
+        const userRepo = await db.collection('blogs');
+        const user = await userRepo.find().toArray()
+        console.log(user)
+        const use2r = await request(app)
             .post(`/hometask-02/users`)
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
             .expect(201);
 
-        idOfUser = user.body.id;
+        idOfUser = use2r.body.id;
     })
 
     it(`- POST -> '/login' Incorrect: small pass and large login; status: 400;

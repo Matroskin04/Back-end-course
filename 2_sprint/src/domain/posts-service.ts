@@ -69,7 +69,7 @@ export const postsService = {
         }
 
         const comment: CommentDBType = {
-            _id: new ObjectId(),
+             _id: new ObjectId(),
             content: body.content,
             commentatorInfo: {
                 userId: userId.toString(),
