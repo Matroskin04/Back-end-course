@@ -1,8 +1,8 @@
 import request from "supertest";
 import {client} from "../db";
-import {ObjectId} from "mongodb";
+import {Db, MongoClient, ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepository/users-query-repository";
-import {CommentDBType} from "../types/types";
+import {BlogDBType, CommentDBType} from "../types/types";
 import {app} from "../setting"
 
 
@@ -15,12 +15,11 @@ const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string | null = null;
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
-
-
+let db: Db
     beforeAll( async () => {
         await client.close();
-        await client.connect();
-
+        const connection: MongoClient = await client.connect();
+        db = connection.db()
         await request(app)
             .delete('/hometask-02/testing/all-data')
             .expect(204)
@@ -37,6 +36,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
             .expect(201);
+
+        db.collection('users').findOne({login: 'Dima123'})
 
         idOfUser = user.body.id;
     })

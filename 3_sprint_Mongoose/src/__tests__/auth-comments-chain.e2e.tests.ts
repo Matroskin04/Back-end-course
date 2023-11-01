@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import mongoose from "mongoose";
+import mongoose, {Connection, Mongoose} from "mongoose";
 const request = require("supertest");
 import {ObjectId} from "mongodb";
 import {UsersQueryRepository} from "../infrastructure/queryRepositories/users-query-repository";
@@ -7,6 +7,9 @@ import {app} from "../setting";
 import {EmailAdapter} from "../infrastructure/adapters/email-adapter";
 import {mongoURL} from "../infrastructure/db";
 import {CommentDBType} from "../domain/db-types/comments-db-types";
+import {container} from "../composition-root";
+import {AuthController} from "../api/controllers/auth-controller";
+import {UserModel, UserSchema} from "../domain/users-schema-model";
 
 
 let accessToken: string;
@@ -16,15 +19,17 @@ let idOfComment: ObjectId;
 let confirmationCode: string | null = null;
 const arrayOfComments: Array<CommentDBType> = [];
 let refreshToken: string;
-const usersQueryRepository = new UsersQueryRepository();
+const usersQueryRepository = container.resolve(UsersQueryRepository);
+
 
 
 describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /comments', () => {
 
-
+let connection: Mongoose;
     beforeAll(async () => {
         await mongoose.connection.close();
-        await mongoose.connect(mongoURL);
+        connection = await mongoose.connect(mongoURL);
+
 
         await request(app)
             .delete('/hometask-03/testing/all-data')
@@ -42,7 +47,8 @@ describe('auth+comments All operation, chains: /auth + /posts/{id}/comments + /c
             .auth('admin', 'qwerty')
             .send({login: 'Dima123', password: '123qwe', email: 'dim@mail.ru'})
             .expect(201);
-
+        const user2 = await connection.model('users').findOne({login: 'Dima123'}) //подключение к бд в тестах
+        console.log(user2)
         idOfUser = user.body.id;
     })
 
