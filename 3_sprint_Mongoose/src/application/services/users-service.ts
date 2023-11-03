@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import jwt from "jsonwebtoken";
-import {env} from "../../config";
 import {mappingUser} from "../../helpers/functions/users-functions-helpers";
 import {UsersRepository} from "../../infrastructure/repositories/users-repository";
 import {UsersQueryRepository} from "../../infrastructure/queryRepositories/users-query-repository";
@@ -66,7 +65,7 @@ export class UsersService {
     async getUserIdByAccessToken(token: string): Promise<null | ObjectId> {
 
         try {
-            const decode = jwt.verify(token, env.PRIVATE_KEY_ACCESS_TOKEN) as { userId: string };
+            const decode = jwt.verify(token, process.env.PRIVATE_KEY_ACCESS_TOKEN!) as { userId: string };
             return new ObjectId(decode.userId)
 
         } catch (err) {
